@@ -29,6 +29,12 @@
   },
   "overrides": [
     {
+      "files": ["./src/*.ts"],
+      "rules": {
+        "import/no-extraneous-dependencies": ["error", {"peerDependencies": true}]
+      }
+    },
+    {
       "files": [
         "./tools/*.ts",
         "./tests/*.ts",

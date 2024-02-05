@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Action, Handler } from "./action";
 import { EmissionMap } from "./emission";
-import { SocketsConfig } from "./sockets";
+import { SocketsConfig } from "./index";
 
 export interface SimpleActionDef<
   IN extends z.AnyZodTuple,

@@ -1,5 +1,5 @@
 import http from "node:http";
-import { attachSockets } from "../src/sockets";
+import { attachSockets } from "../src";
 import { socketsConfig } from "./config";
 import { actions } from "./routing";
 import { Server } from "socket.io";

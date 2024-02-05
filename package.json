@@ -30,6 +30,10 @@
     "url": "https://robintail.cz",
     "email": "me@robintail.cz"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobinTail/zod-sockets.git"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint src example",

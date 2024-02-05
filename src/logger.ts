@@ -1,6 +1,6 @@
 /**
  * @desc Using module augmentation approach you can set the type of the actual logger used
- * @example declare module "express-zod-api" { interface LoggerOverrides extends winston.Logger {} }
+ * @example declare module "zod-sockets" { interface LoggerOverrides extends winston.Logger {} }
  * @link https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation
  * */
 export interface LoggerOverrides {}

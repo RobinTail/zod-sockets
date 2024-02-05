@@ -13,7 +13,7 @@ export const createSocketsConfig = <E extends EmissionMap>(
   config: SocketsConfig<E>,
 ) => config;
 
-export const attachSockets = <T extends Server, E extends EmissionMap>({
+export const attachSockets = <E extends EmissionMap>({
   io,
   actions,
   logger,
@@ -24,7 +24,7 @@ export const attachSockets = <T extends Server, E extends EmissionMap>({
   onAnyEvent = ({ input: [event], socketId }) =>
     logger.debug(`${event} from ${socketId}`),
 }: {
-  io: T;
+  io: Server;
   actions: ActionMap;
   logger: AbstractLogger;
   target: http.Server;
@@ -32,7 +32,7 @@ export const attachSockets = <T extends Server, E extends EmissionMap>({
   onConnection?: Handler<[], void, E>;
   onDisconnect?: Handler<[], void, E>;
   onAnyEvent?: Handler<[string], void, E>;
-}): T => {
+}): Server => {
   logger.info("ZOD-SOCKETS", target.address());
   io.on("connection", async (socket) => {
     const commons: SocketFeatures = {

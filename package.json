@@ -11,7 +11,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src example",
-    "start": "tsx example/index.ts"
+    "start": "tsx example/index.ts",
+    "build": "tsup && attw --pack"
   },
   "dependencies": {
     "ramda": "^0.29.1"

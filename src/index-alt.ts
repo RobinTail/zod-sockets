@@ -3,16 +3,22 @@ import { z } from "zod";
 
 interface ValidEvent {
   schema: z.AnyZodTuple;
-  ack: z.AnyZodTuple;
+  ack?: z.AnyZodTuple;
 }
 
 interface ValidEventsMap {
   [name: string]: ValidEvent;
 }
 
-type ToFunction<T extends ValidEvent> = (
-  ...params: [...z.output<T["schema"]>, (...params: z.output<T["ack"]>) => void]
+type WithAck<A extends z.AnyZodTuple, B extends z.AnyZodTuple> = (
+  ...params: [...z.output<A>, (...params: z.output<B>) => void]
 ) => void;
+
+type WithoutAck<A extends z.AnyZodTuple> = (...params: z.output<A>) => void;
+
+type ToFunction<T extends ValidEvent> = T["ack"] extends z.AnyZodTuple
+  ? WithAck<T["schema"], T["ack"]>
+  : WithoutAck<T["schema"]>;
 
 const wrap = <
   I extends ValidEventsMap,
@@ -39,7 +45,7 @@ const test = wrap({
     example: { schema: z.tuple([z.number()]), ack: z.tuple([z.string()]) },
   },
   emission: {
-    second: { schema: z.tuple([z.date()]), ack: z.tuple([z.boolean()]) },
+    second: { schema: z.tuple([z.date()]) },
   },
   internal: {
     side: { schema: z.tuple([z.literal("test")]), ack: z.tuple([z.number()]) },
@@ -53,6 +59,6 @@ test.on("connect", (socket) => {
   socket.on("example", (a, b) => {
     b("");
   });
-  socket.emit("second", new Date(), (a) => {});
+  socket.emit("second", new Date());
 });
-test.emit("second"); // only events without ack
+test.emit("second", new Date()); // only events without ack

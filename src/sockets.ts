@@ -33,9 +33,7 @@ export const attachSockets = <T extends Server, E extends EmissionMap>({
   onDisconnect?: Handler<[], void, E>;
   onAnyEvent?: Handler<[string], void, E>;
 }): T => {
-  logger.warn(
-    "Sockets.IO support is an experimental feature. It can be changed or removed at any time regardless of SemVer.",
-  );
+  logger.info("ZOD-SOCKETS", target.address());
   io.on("connection", async (socket) => {
     const commons: SocketFeatures = {
       socketId: socket.id,

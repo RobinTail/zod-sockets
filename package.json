@@ -10,7 +10,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src"
+    "lint": "eslint src example",
+    "start": "tsx example/index.ts"
   },
   "dependencies": {
     "ramda": "^0.29.1"

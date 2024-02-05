@@ -11,7 +11,7 @@ interface ValidEventsMap {
 }
 
 type ToFunction<T extends ValidEvent> = (
-  ...params: [...z.output<T["schema"]>, ...z.output<T["ack"]>]
+  ...params: [...z.output<T["schema"]>, (...params: z.output<T["ack"]>) => void]
 ) => void;
 
 const wrap = <
@@ -46,8 +46,13 @@ const test = wrap({
   },
 });
 
-test.on("side", (a, b) => {});
-test.on("connect", (socket) => {
-  socket.on("example", (a, b) => {});
+test.on("side", (a, b) => {
+  b(1);
 });
-test.emit("second", new Date(), true);
+test.on("connect", (socket) => {
+  socket.on("example", (a, b) => {
+    b("");
+  });
+  socket.emit("second", new Date(), (a) => {});
+});
+test.emit("second"); // only events without ack

@@ -2,7 +2,29 @@
   "name": "zod-sockets",
   "version": "0.0.1",
   "description": "Socket.IO Websockets with Zod validation",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "*.md"
+  ],
+  "engines": {
+    "node": "^18.0.0 || ^20.0.0"
+  },
   "author": {
     "name": "Anna Bocharova",
     "url": "https://robintail.cz",

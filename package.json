@@ -37,6 +37,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src example",
+    "test": "tsc --noEmit",
     "start": "tsx example/index.ts",
     "build": "tsup && attw --pack"
   },

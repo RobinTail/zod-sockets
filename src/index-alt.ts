@@ -1,24 +1,53 @@
-import { Server, ServerOptions } from "socket.io";
+import { Server } from "socket.io";
 import { z } from "zod";
 
-interface ValidEventsMap {
-  [name: string]: z.AnyZodTuple;
+interface ValidEvent {
+  schema: z.AnyZodTuple;
+  ack: z.AnyZodTuple;
 }
 
-export class ZodSockets<
+interface ValidEventsMap {
+  [name: string]: ValidEvent;
+}
+
+type ToFunction<T extends ValidEvent> = (
+  ...params: [...z.output<T["schema"]>, ...z.output<T["ack"]>]
+) => void;
+
+const wrap = <
   I extends ValidEventsMap,
   O extends ValidEventsMap,
-> extends Server<
-  { [K in keyof I]: z.output<I[K]> },
-  { [K in keyof O]: z.output<O[K]> }
-> {
-  constructor({
-    options,
-  }: {
-    options?: Partial<ServerOptions>;
-    actions: I;
-    emission: O;
-  }) {
-    super(options);
-  }
-}
+  S extends ValidEventsMap,
+>({
+  server,
+}: {
+  server: Server;
+  actions: I;
+  emission: O;
+  internal: S;
+}): Server<
+  { [K in keyof I]: ToFunction<I[K]> },
+  { [K in keyof O]: ToFunction<O[K]> },
+  { [K in keyof S]: ToFunction<S[K]> }
+> => {
+  return server;
+};
+
+const test = wrap({
+  server: new Server(),
+  actions: {
+    example: { schema: z.tuple([z.number()]), ack: z.tuple([z.string()]) },
+  },
+  emission: {
+    second: { schema: z.tuple([z.date()]), ack: z.tuple([z.boolean()]) },
+  },
+  internal: {
+    side: { schema: z.tuple([z.literal("test")]), ack: z.tuple([z.number()]) },
+  },
+});
+
+test.on("side", (a, b) => {});
+test.on("connect", (socket) => {
+  socket.on("example", (a, b) => {});
+});
+test.emit("second", new Date(), true);

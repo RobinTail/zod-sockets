@@ -1,0 +1,33 @@
+{
+  "name": "zod-sockets",
+  "version": "0.0.1",
+  "description": "Socket.IO Websockets with Zod validation",
+  "main": "dist/index.js",
+  "author": {
+    "name": "Anna Bocharova",
+    "url": "https://robintail.cz",
+    "email": "me@robintail.cz"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.13.6",
+    "@tsconfig/node18": "^18.2.2",
+    "@types/node": "^20.11.16",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-unicorn": "^50.0.1",
+    "prettier": "^3.2.5",
+    "socket.io": "^4.7.4",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2",
+    "zod": "^3.22.4"
+  }
+}

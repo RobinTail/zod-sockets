@@ -26,6 +26,10 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
+/**
+ * @throws z.ZodError on validation
+ * @throws Error on ack timeout
+ * */
 const makeGenericEmitter =
   ({
     emission,
@@ -55,10 +59,6 @@ const makeGenericEmitter =
     return (isSocket ? ack : ack.array()).parse(response);
   };
 
-/**
- * @throws z.ZodError on validation
- * @throws Error on ack timeout
- * */
 export const makeEmitter = <E extends EmissionMap>({
   socket: target,
   ...rest
@@ -69,10 +69,6 @@ export const makeEmitter = <E extends EmissionMap>({
   timeout: number;
 }) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
 
-/**
- * @throws z.ZodError on validation
- * @throws Error on ack timeout
- * */
 export const makeBroadcaster = <E extends EmissionMap>({
   socket: { broadcast: target },
   ...rest

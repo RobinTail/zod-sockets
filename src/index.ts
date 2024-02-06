@@ -1,7 +1,8 @@
 import http from "node:http";
 import type { Server } from "socket.io";
 import { ActionMap, Handler, SocketFeatures } from "./action";
-import { EmissionMap, makeGenericEmitter } from "./emission";
+import { makeBroadcaster } from "./broadcasting";
+import { EmissionMap, makeEmitter } from "./emission";
 import { AbstractLogger } from "./logger";
 
 export interface SocketsConfig<E extends EmissionMap> {
@@ -39,18 +40,8 @@ export const attachSockets = <E extends EmissionMap>({
       socketId: socket.id,
       isConnected: () => socket.connected,
     };
-    const emit = makeGenericEmitter({
-      emission,
-      logger,
-      timeout,
-      target: socket,
-    });
-    const broadcast = makeGenericEmitter({
-      emission,
-      logger,
-      timeout,
-      target: socket.broadcast,
-    });
+    const emit = makeEmitter({ emission, socket, logger, timeout });
+    const broadcast = makeBroadcaster({ emission, socket, logger, timeout });
     await onConnection({ input: [], logger, emit, broadcast, ...commons });
     socket.onAny((event) =>
       onAnyEvent({ input: [event], logger, emit, broadcast, ...commons }),

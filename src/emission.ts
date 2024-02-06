@@ -12,37 +12,49 @@ export interface EmissionMap {
 }
 
 type TupleOrTrue<T> = T extends z.AnyZodTuple ? T : z.ZodLiteral<true>;
+type TuplesOrTrue<T> = T extends z.AnyZodTuple
+  ? z.ZodArray<T>
+  : z.ZodLiteral<true>;
 
 export type Emitter<E extends EmissionMap> = <K extends keyof E>(
   evt: K,
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TupleOrTrue<E[K]["ack"]>>>;
 
+export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
+  evt: K,
+  ...args: z.input<E[K]["schema"]>
+) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
+
 /**
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
  * */
-export const makeEmitter =
-  <E extends EmissionMap>({
+export const makeGenericEmitter =
+  <T extends Socket | Socket["broadcast"], E extends EmissionMap>({
     emission,
     logger,
-    socket,
+    target,
     timeout,
   }: {
     emission: E;
     logger: AbstractLogger;
-    socket: Socket;
+    target: T;
     timeout: number;
-  }): Emitter<E> =>
+  }): T extends Socket ? Emitter<E> : Broadcaster<E> =>
   async (event, ...args) => {
-    const { schema, ack: ackSchema } = emission[event];
+    const isSocket = "id" in target;
+    const { schema, ack } = emission[event];
     const payload = schema.parse(args);
-    logger.debug(`Emitting ${String(event)}`, payload);
-    if (!ackSchema) {
-      return socket.emit(String(event), ...payload) || true;
+    logger.debug(
+      `${isSocket ? "Emitting" : "Broadcasting"} ${String(event)}`,
+      payload,
+    );
+    if (!ack) {
+      return target.emit(String(event), ...payload) || true;
     }
-    const ack = await socket
+    const response = await target
       .timeout(timeout)
       .emitWithAck(String(event), ...payload);
-    return ackSchema.parse(ack);
+    return (isSocket ? ack : ack.array()).parse(response);
   };

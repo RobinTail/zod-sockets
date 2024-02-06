@@ -1,17 +1,9 @@
 import http from "node:http";
 import type { Server } from "socket.io";
 import { ActionMap, Handler, SocketFeatures } from "./action";
+import { SocketsConfig } from "./config";
 import { EmissionMap, makeBroadcaster, makeEmitter } from "./emission";
 import { AbstractLogger } from "./logger";
-
-export interface SocketsConfig<E extends EmissionMap> {
-  timeout: number;
-  emission: E;
-}
-
-export const createSocketsConfig = <E extends EmissionMap>(
-  config: SocketsConfig<E>,
-) => config;
 
 export const attachSockets = <E extends EmissionMap>({
   io,

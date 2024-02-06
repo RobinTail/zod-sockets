@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { createSocketsConfig } from "../src";
+
+import { createSocketsConfig } from "../src/config";
 
 export const socketsConfig = createSocketsConfig({
   timeout: 2000,

@@ -29,7 +29,7 @@ describe("Emission", () => {
   describe.each([
     { maker: makeEmitter, target: socketMock, ack: ["test"] },
     { maker: makeBroadcaster, target: broadcastMock, ack: [["test"]] },
-  ])("%s", ({ maker, target, ack }) => {
+  ])("$maker.name", ({ maker, target, ack }) => {
     const emitter = maker({
       socket: socketMock as unknown as Socket,
       logger: loggerMock as unknown as AbstractLogger,

@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { createSocketsConfig } from "../src";
 
 export const socketsConfig = createSocketsConfig({

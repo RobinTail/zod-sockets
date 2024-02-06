@@ -7,6 +7,9 @@ export const socketsConfig = createSocketsConfig({
     time: {
       schema: z.tuple([z.date().transform((date) => date.toISOString())]),
     },
+    chat: {
+      schema: z.tuple([z.string()]),
+    },
   },
 });
 

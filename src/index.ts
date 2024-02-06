@@ -1,6 +1,7 @@
 import http from "node:http";
 import type { Server } from "socket.io";
 import { ActionMap, Handler, SocketFeatures } from "./action";
+import { makeBroadcaster } from "./broadcasting";
 import { EmissionMap, makeEmitter } from "./emission";
 import { AbstractLogger } from "./logger";
 
@@ -40,17 +41,18 @@ export const attachSockets = <E extends EmissionMap>({
       isConnected: () => socket.connected,
     };
     const emit = makeEmitter({ emission, socket, logger, timeout });
-    await onConnection({ input: [], logger, emit, ...commons });
+    const broadcast = makeBroadcaster({ emission, socket, logger, timeout });
+    await onConnection({ input: [], logger, emit, broadcast, ...commons });
     socket.onAny((event) =>
-      onAnyEvent({ input: [event], logger, emit, ...commons }),
+      onAnyEvent({ input: [event], logger, emit, broadcast, ...commons }),
     );
     for (const [event, action] of Object.entries(actions)) {
       socket.on(event, async (...params) =>
-        action.execute({ event, params, logger, emit, ...commons }),
+        action.execute({ event, params, logger, emit, broadcast, ...commons }),
       );
     }
     socket.on("disconnect", () =>
-      onDisconnect({ input: [], logger, emit, ...commons }),
+      onDisconnect({ input: [], logger, emit, broadcast, ...commons }),
     );
   });
   return io.attach(target);

@@ -7,18 +7,21 @@ export const onSubscribe = actionsFactory.build({
   handler: async ({ logger, emit, isConnected }) => {
     logger.info("Subscribed");
     while (true) {
-      emit("time", new Date()); // <— payload type constraints
       try {
+        emit("time", new Date()); // <— payload type constraints
         await new Promise<void>((resolve, reject) => {
           const timer = setTimeout(() => {
             clearTimeout(timer);
-            (isConnected() ? resolve : reject)();
+            if (!isConnected()) {
+              reject("Disconnected");
+            }
+            resolve();
           }, 1000);
         });
-      } catch {
+      } catch (error) {
+        logger.error("Unsubscribed due to", error);
         break;
       }
     }
-    logger.info("Unsubscribed by disconnecting");
   },
 });

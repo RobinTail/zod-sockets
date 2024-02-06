@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { AbstractLogger } from "./logger";
@@ -12,37 +13,70 @@ export interface EmissionMap {
 }
 
 type TupleOrTrue<T> = T extends z.AnyZodTuple ? T : z.ZodLiteral<true>;
+type TuplesOrTrue<T> = T extends z.AnyZodTuple
+  ? z.ZodArray<T>
+  : z.ZodLiteral<true>;
 
 export type Emitter<E extends EmissionMap> = <K extends keyof E>(
   evt: K,
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TupleOrTrue<E[K]["ack"]>>>;
 
+export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
+  evt: K,
+  ...args: z.input<E[K]["schema"]>
+) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
+
 /**
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
  * */
-export const makeEmitter =
-  <E extends EmissionMap>({
+const makeGenericEmitter =
+  ({
     emission,
     logger,
-    socket,
+    target,
     timeout,
   }: {
-    emission: E;
+    emission: EmissionMap;
     logger: AbstractLogger;
-    socket: Socket;
+    target: Socket | Socket["broadcast"];
     timeout: number;
-  }): Emitter<E> =>
-  async (event, ...args) => {
-    const { schema, ack: ackSchema } = emission[event];
+  }) =>
+  async (event: string, ...args: unknown[]) => {
+    const isSocket = "id" in target;
+    assert(event in emission, new Error(`Unsupported event ${event}`));
+    const { schema, ack } = emission[event];
     const payload = schema.parse(args);
-    logger.debug(`Emitting ${String(event)}`, payload);
-    if (!ackSchema) {
-      return socket.emit(String(event), ...payload) || true;
+    logger.debug(
+      `${isSocket ? "Emitting" : "Broadcasting"} ${String(event)}`,
+      payload,
+    );
+    if (!ack) {
+      return target.emit(String(event), ...payload) || true;
     }
-    const ack = await socket
+    const response = await target
       .timeout(timeout)
       .emitWithAck(String(event), ...payload);
-    return ackSchema.parse(ack);
+    return (isSocket ? ack : ack.array()).parse(response);
   };
+
+export const makeEmitter = <E extends EmissionMap>({
+  socket: target,
+  ...rest
+}: {
+  emission: E;
+  logger: AbstractLogger;
+  socket: Socket;
+  timeout: number;
+}) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
+
+export const makeBroadcaster = <E extends EmissionMap>({
+  socket: { broadcast: target },
+  ...rest
+}: {
+  emission: E;
+  logger: AbstractLogger;
+  socket: Socket;
+  timeout: number;
+}) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;

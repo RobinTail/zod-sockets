@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { AbstractLogger } from "./logger";
@@ -44,6 +45,7 @@ const makeGenericEmitter =
   }) =>
   async (event: string, ...args: unknown[]) => {
     const isSocket = "id" in target;
+    assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
     const payload = schema.parse(args);
     logger.debug(

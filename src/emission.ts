@@ -18,7 +18,10 @@ export type Emitter<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TupleOrBool<E[K]["ack"]>>>;
 
-/** @throws z.ZodError */
+/**
+ * @throws z.ZodError on validation
+ * @throws Error on ack timeout
+ * */
 export const makeEmitter =
   <E extends EmissionMap>({
     emission,
@@ -33,18 +36,13 @@ export const makeEmitter =
   }): Emitter<E> =>
   async (event, ...args) => {
     const { schema, ack: ackSchema } = emission[event];
-    try {
-      const payload = schema.parse(args);
-      logger.debug(`Emitting ${String(event)}`, payload);
-      if (!ackSchema) {
-        return socket.emit(String(event), ...payload);
-      }
-      const ack = await socket
-        .timeout(timeout)
-        .emitWithAck(String(event), ...payload);
-      return ackSchema.parse(ack);
-    } catch (error) {
-      logger.error(`Failed to emit ${String(event)}`, error);
-      return false;
+    const payload = schema.parse(args);
+    logger.debug(`Emitting ${String(event)}`, payload);
+    if (!ackSchema) {
+      return socket.emit(String(event), ...payload);
     }
+    const ack = await socket
+      .timeout(timeout)
+      .emitWithAck(String(event), ...payload);
+    return ackSchema.parse(ack);
   };

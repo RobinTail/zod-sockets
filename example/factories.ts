@@ -1,4 +1,4 @@
-import { ActionsFactory } from "../src/actions-factory";
+import { ActionsFactory } from "../src";
 import { socketsConfig } from "./config";
 
 /** @desc this factory is for producing actions - handlers of the incoming socket.io events */

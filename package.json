@@ -40,7 +40,8 @@
     "test": "tsc --noEmit",
     "mdfix": "prettier *.md --write",
     "start": "tsx example/index.ts",
-    "build": "tsup && attw --pack"
+    "build": "tsup && attw --pack",
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
     "ramda": "^0.29.1"

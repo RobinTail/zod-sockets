@@ -11,12 +11,12 @@ export interface EmissionMap {
   [event: string]: Emission;
 }
 
-type TupleOrTrue<T> = T extends z.AnyZodTuple ? T : z.ZodLiteral<true>;
+type TupleOrBool<T> = T extends z.AnyZodTuple ? T : z.ZodBoolean;
 
 export type Emitter<E extends EmissionMap> = <K extends keyof E>(
   evt: K,
   ...args: z.input<E[K]["schema"]>
-) => Promise<z.output<TupleOrTrue<E[K]["ack"]>>>;
+) => Promise<z.output<TupleOrBool<E[K]["ack"]>>>;
 
 /** @throws z.ZodError */
 export const makeEmitter =
@@ -33,19 +33,18 @@ export const makeEmitter =
   }): Emitter<E> =>
   async (event, ...args) => {
     const { schema, ack: ackSchema } = emission[event];
-    const emitValidation = schema.safeParse(args);
-    if (!emitValidation.success) {
-      return logger.error(
-        `${String(event)} emission validation error`,
-        emitValidation.error,
-      );
+    try {
+      const payload = schema.parse(args);
+      logger.debug(`Emitting ${String(event)}`, payload);
+      if (!ackSchema) {
+        return socket.emit(String(event), ...payload);
+      }
+      const ack = await socket
+        .timeout(timeout)
+        .emitWithAck(String(event), ...payload);
+      return ackSchema.parse(ack);
+    } catch (error) {
+      logger.error(`Failed to emit ${String(event)}`, error);
+      return false;
     }
-    logger.debug(`Emitting ${String(event)}`, emitValidation.data);
-    if (!ackSchema) {
-      return socket.emit(String(event), ...emitValidation.data) || true;
-    }
-    const ack = await socket
-      .timeout(timeout)
-      .emitWithAck(String(event), ...emitValidation.data);
-    return ackSchema.parse(ack);
   };

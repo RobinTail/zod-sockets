@@ -3,14 +3,12 @@ import { z } from "zod";
 import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
 
-type TuplesOrTrue<T> = T extends z.AnyZodTuple
-  ? z.ZodArray<T>
-  : z.ZodLiteral<true>;
+type TuplesOrBool<T> = T extends z.AnyZodTuple ? z.ZodArray<T> : z.ZodBoolean;
 
 export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   evt: K,
   ...args: z.input<E[K]["schema"]>
-) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
+) => Promise<z.output<TuplesOrBool<E[K]["ack"]>>>;
 
 export const makeBroadcaster =
   <E extends EmissionMap>({
@@ -26,22 +24,18 @@ export const makeBroadcaster =
   }): Broadcaster<E> =>
   async (event, ...args) => {
     const { schema, ack: ackSchema } = emission[event];
-    const broadcastValidation = schema.safeParse(args);
-    if (!broadcastValidation.success) {
-      return logger.error(
-        `${String(event)} broadcast validation error`,
-        broadcastValidation.error,
-      );
+    try {
+      const payload = schema.parse(args);
+      logger.debug(`Broadcasting ${String(event)}`, payload);
+      if (!ackSchema) {
+        return socket.broadcast.emit(String(event), ...payload);
+      }
+      const ack = await socket.broadcast
+        .timeout(timeout)
+        .emitWithAck(String(event), ...payload);
+      return ackSchema.array().parse(ack);
+    } catch (error) {
+      logger.error(`Failed to broadcast ${String(event)}`, error);
+      return false;
     }
-    logger.debug(`Broadcasting ${String(event)}`, broadcastValidation.data);
-    if (!ackSchema) {
-      return (
-        socket.broadcast.emit(String(event), ...broadcastValidation.data) ||
-        true
-      );
-    }
-    const ack = await socket.broadcast
-      .timeout(timeout)
-      .emitWithAck(String(event), ...broadcastValidation.data);
-    return ackSchema.array().parse(ack);
   };

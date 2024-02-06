@@ -32,7 +32,7 @@
       "files": [
         "./tools/*.ts",
         "./tests/*.ts",
-        "./tsup.config.ts",
+        "./*.config.ts",
         "./example/*.ts"
       ],
       "rules": {

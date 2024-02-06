@@ -2,6 +2,11 @@
 
 ## Version 0
 
+### v0.0.3
+
+- Ensure emitting the declared events only.
+- Generic implementation for `emit()` and `broadcast()`.
+
 ### v0.0.2
 
 - Added broadcasting feature.

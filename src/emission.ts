@@ -11,12 +11,12 @@ export interface EmissionMap {
   [event: string]: Emission;
 }
 
-type TupleOrBool<T> = T extends z.AnyZodTuple ? T : z.ZodBoolean;
+type TupleOrTrue<T> = T extends z.AnyZodTuple ? T : z.ZodLiteral<true>;
 
 export type Emitter<E extends EmissionMap> = <K extends keyof E>(
   evt: K,
   ...args: z.input<E[K]["schema"]>
-) => Promise<z.output<TupleOrBool<E[K]["ack"]>>>;
+) => Promise<z.output<TupleOrTrue<E[K]["ack"]>>>;
 
 /**
  * @throws z.ZodError on validation
@@ -39,7 +39,7 @@ export const makeEmitter =
     const payload = schema.parse(args);
     logger.debug(`Emitting ${String(event)}`, payload);
     if (!ackSchema) {
-      return socket.emit(String(event), ...payload);
+      return socket.emit(String(event), ...payload) || true;
     }
     const ack = await socket
       .timeout(timeout)

@@ -3,12 +3,14 @@ import { z } from "zod";
 import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
 
-type TuplesOrBool<T> = T extends z.AnyZodTuple ? z.ZodArray<T> : z.ZodBoolean;
+type TuplesOrTrue<T> = T extends z.AnyZodTuple
+  ? z.ZodArray<T>
+  : z.ZodLiteral<true>;
 
 export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   evt: K,
   ...args: z.input<E[K]["schema"]>
-) => Promise<z.output<TuplesOrBool<E[K]["ack"]>>>;
+) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
 /**
  * @throws z.ZodError on validation
@@ -31,7 +33,7 @@ export const makeBroadcaster =
     const payload = schema.parse(args);
     logger.debug(`Broadcasting ${String(event)}`, payload);
     if (!ackSchema) {
-      return socket.broadcast.emit(String(event), ...payload);
+      return socket.broadcast.emit(String(event), ...payload) || true;
     }
     const ack = await socket.broadcast
       .timeout(timeout)

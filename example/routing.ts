@@ -1,4 +1,4 @@
-import { ActionMap } from "../src/action";
+import { ActionMap } from "../src";
 import { onChat } from "./actions/chat";
 import { onSubscribe } from "./actions/subscribe";
 import { onPing } from "./actions/ping";

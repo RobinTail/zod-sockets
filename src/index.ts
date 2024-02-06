@@ -1,8 +1,7 @@
 import http from "node:http";
 import type { Server } from "socket.io";
 import { ActionMap, Handler, SocketFeatures } from "./action";
-import { makeBroadcaster } from "./broadcasting";
-import { EmissionMap, makeEmitter } from "./emission";
+import { EmissionMap, makeBroadcaster, makeEmitter } from "./emission";
 import { AbstractLogger } from "./logger";
 
 export interface SocketsConfig<E extends EmissionMap> {

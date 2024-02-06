@@ -29,7 +29,7 @@ export const makeBroadcaster =
     const broadcastValidation = schema.safeParse(args);
     if (!broadcastValidation.success) {
       return logger.error(
-        `${String(event)} broadcase validation error`,
+        `${String(event)} broadcast validation error`,
         broadcastValidation.error,
       );
     }

@@ -2,6 +2,7 @@ import { init, last } from "ramda";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { AckActionDef, SimpleActionDef } from "./actions-factory";
+import { Broadcaster } from "./broadcasting";
 import { EmissionMap, Emitter } from "./emission";
 import { AbstractLogger } from "./logger";
 
@@ -15,6 +16,7 @@ export type Handler<IN, OUT, E extends EmissionMap> = (
     input: IN;
     logger: AbstractLogger;
     emit: Emitter<E>;
+    broadcast: Broadcaster<E>;
   } & SocketFeatures,
 ) => Promise<OUT>;
 
@@ -25,6 +27,7 @@ export abstract class AbstractAction {
       params: unknown[];
       logger: AbstractLogger;
       emit: Emitter<EmissionMap>;
+      broadcast: Broadcaster<EmissionMap>;
     } & SocketFeatures,
   ): Promise<void>;
 }
@@ -79,12 +82,14 @@ export class Action<
     params,
     logger,
     emit,
+    broadcast,
     ...rest
   }: {
     event: string;
     params: unknown[];
     logger: AbstractLogger;
     emit: Emitter<EmissionMap>;
+    broadcast: Broadcaster<EmissionMap>;
   } & SocketFeatures): Promise<void> {
     try {
       const input = this.#parseInput(params);
@@ -93,7 +98,13 @@ export class Action<
         input,
       );
       const ack = this.#parseAckCb(params);
-      const output = await this.#handler({ input, logger, emit, ...rest });
+      const output = await this.#handler({
+        input,
+        logger,
+        emit,
+        broadcast,
+        ...rest,
+      });
       const response = this.#parseOutput(output);
       if (ack && response) {
         logger.debug("parsed output", response);

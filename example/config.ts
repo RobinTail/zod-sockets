@@ -9,7 +9,7 @@ export const config = createConfig({
       schema: z.tuple([z.date().transform((date) => date.toISOString())]),
     },
     chat: {
-      schema: z.tuple([z.string()]),
+      schema: z.tuple([z.string(), z.object({ from: z.string() })]),
     },
   },
 });

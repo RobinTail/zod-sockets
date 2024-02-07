@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { createSocketsConfig } from "../src";
+import { createConfig } from "../src";
 
-export const socketsConfig = createSocketsConfig({
+export const config = createConfig({
   timeout: 2000,
   emission: {
     time: {

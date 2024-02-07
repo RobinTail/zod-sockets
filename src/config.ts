@@ -5,6 +5,5 @@ export interface SocketsConfig<E extends EmissionMap> {
   emission: E;
 }
 
-export const createSocketsConfig = <E extends EmissionMap>(
-  config: SocketsConfig<E>,
-) => config;
+export const createConfig = <E extends EmissionMap>(config: SocketsConfig<E>) =>
+  config;

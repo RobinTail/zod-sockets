@@ -1,0 +1,12 @@
+{
+  "name": "zod-sockets-esm-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "zod-sockets": "link:../..",
+    "zod": "^3",
+    "socket.io": "^4",
+    "typescript": "^5"
+  }
+}

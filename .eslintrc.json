@@ -31,7 +31,7 @@
     {
       "files": [
         "./tools/*.ts",
-        "./tests/*.ts",
+        "./tests/**/*.ts",
         "./*.config.ts",
         "./example/*.ts"
       ],

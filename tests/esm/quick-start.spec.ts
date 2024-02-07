@@ -8,7 +8,7 @@ describe("ESM Test", async () => {
     out += chunk.toString();
   };
   const quickStart = spawn("tsx", ["quick-start.ts"], {
-    cwd: "./tests/cjs",
+    cwd: "./tests/esm",
   });
   quickStart.stdout.on("data", listener);
   quickStart.stderr.on("data", listener);

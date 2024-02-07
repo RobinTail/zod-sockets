@@ -79,5 +79,16 @@
     "typescript": "^5.3.3",
     "vitest": "^1.2.2",
     "zod": "^3.22.4"
-  }
+  },
+  "keywords": [
+    "nodejs",
+    "socket",
+    "validation",
+    "server",
+    "sockets",
+    "websocket",
+    "websockets",
+    "socket-io",
+    "zod"
+  ]
 }

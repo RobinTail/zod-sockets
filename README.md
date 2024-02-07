@@ -67,12 +67,11 @@ import http from "node:http";
 import { Server } from "socket.io";
 import { attachSockets } from "zod-sockets";
 
-const target = new http.Server().listen(8090);
 attachSockets({
   io: new Server(),
   config: config,
   actions: { ping: onPing },
-  target,
+  target: http.createServer().listen(8090),
 });
 ```
 

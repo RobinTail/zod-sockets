@@ -6,14 +6,11 @@ import { onSubscribe } from "./actions/subscribe";
 import { config } from "./config";
 import { Server } from "socket.io";
 
-const target = new http.Server().listen(8090);
-
 attachSockets({
   io: new Server(),
   config,
-  target,
+  target: http.createServer().listen(8090),
   actions: {
-    /** @desc the object declares handling rules of the incoming socket.io events */
     ping: onPing,
     subscribe: onSubscribe,
     chat: onChat,

@@ -27,6 +27,12 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
+export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
+  broadcast: Broadcaster<E>;
+  join: () => void | Promise<void>;
+  leave: () => void | Promise<void>;
+};
+
 /**
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
@@ -80,3 +86,25 @@ export const makeBroadcaster = <E extends EmissionMap>({
   socket: Socket;
   timeout: number;
 }) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+
+export const makeRoomService =
+  <E extends EmissionMap>({
+    socket,
+    ...rest
+  }: {
+    emission: E;
+    logger: AbstractLogger;
+    socket: Socket;
+    timeout: number;
+  }): RoomService<E> =>
+  (rooms) => ({
+    join: () => socket.join(rooms),
+    leave: () =>
+      typeof rooms === "string"
+        ? socket.leave(rooms)
+        : Promise.all(rooms.map((room) => socket.leave(room))).then(() => {}),
+    broadcast: makeGenericEmitter({
+      ...rest,
+      target: socket.to(rooms),
+    }) as Broadcaster<E>,
+  });

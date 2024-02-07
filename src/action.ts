@@ -2,7 +2,7 @@ import { init, last } from "ramda";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { AckActionDef, SimpleActionDef } from "./actions-factory";
-import { Broadcaster, EmissionMap, Emitter } from "./emission";
+import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 
 export interface SocketFeatures {
@@ -16,6 +16,7 @@ export type Handler<IN, OUT, E extends EmissionMap> = (
     logger: AbstractLogger;
     emit: Emitter<E>;
     broadcast: Broadcaster<E>;
+    rooms: RoomService<E>;
   } & SocketFeatures,
 ) => Promise<OUT>;
 
@@ -27,6 +28,7 @@ export abstract class AbstractAction {
       logger: AbstractLogger;
       emit: Emitter<EmissionMap>;
       broadcast: Broadcaster<EmissionMap>;
+      rooms: RoomService<EmissionMap>;
     } & SocketFeatures,
   ): Promise<void>;
 }
@@ -82,6 +84,7 @@ export class Action<
     logger,
     emit,
     broadcast,
+    rooms,
     ...rest
   }: {
     event: string;
@@ -89,6 +92,7 @@ export class Action<
     logger: AbstractLogger;
     emit: Emitter<EmissionMap>;
     broadcast: Broadcaster<EmissionMap>;
+    rooms: RoomService<EmissionMap>;
   } & SocketFeatures): Promise<void> {
     try {
       const input = this.#parseInput(params);
@@ -102,6 +106,7 @@ export class Action<
         logger,
         emit,
         broadcast,
+        rooms,
         ...rest,
       });
       const response = this.#parseOutput(output);

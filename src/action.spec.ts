@@ -31,6 +31,7 @@ describe("Action", () => {
     const emitMock = vi.fn();
     const broadcastMock = vi.fn();
     const isConnectedMock = vi.fn();
+    const roomsMock = vi.fn();
 
     test("should handle simple action", async () => {
       await simpleAction.execute({
@@ -39,12 +40,14 @@ describe("Action", () => {
         params: ["some"],
         emit: emitMock,
         broadcast: broadcastMock,
+        rooms: roomsMock,
         isConnected: isConnectedMock,
         socketId: "ID",
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(simpleHandler).toHaveBeenLastCalledWith({
         broadcast: broadcastMock,
+        rooms: roomsMock,
         emit: emitMock,
         input: ["some"],
         isConnected: isConnectedMock,
@@ -61,12 +64,14 @@ describe("Action", () => {
         params: ["some", ackMock],
         emit: emitMock,
         broadcast: broadcastMock,
+        rooms: roomsMock,
         isConnected: isConnectedMock,
         socketId: "ID",
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(ackHandler).toHaveBeenLastCalledWith({
         broadcast: broadcastMock,
+        rooms: roomsMock,
         emit: emitMock,
         input: ["some"],
         isConnected: isConnectedMock,
@@ -83,6 +88,7 @@ describe("Action", () => {
         params: [], // too short
         emit: emitMock,
         broadcast: broadcastMock,
+        rooms: roomsMock,
         isConnected: isConnectedMock,
         socketId: "ID",
       });

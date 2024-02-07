@@ -66,6 +66,7 @@ describe("Attach", () => {
       await call[1]([123, 456]);
       expect(actionsMock.test.execute).toHaveBeenLastCalledWith({
         broadcast: expect.any(Function),
+        rooms: expect.any(Function),
         emit: expect.any(Function),
         event: "test",
         isConnected: expect.any(Function),

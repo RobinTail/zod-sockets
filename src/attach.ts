@@ -2,7 +2,12 @@ import http from "node:http";
 import type { Server } from "socket.io";
 import { ActionMap, Handler, SocketFeatures } from "./action";
 import { SocketsConfig } from "./config";
-import { EmissionMap, makeBroadcaster, makeEmitter } from "./emission";
+import {
+  EmissionMap,
+  makeBroadcaster,
+  makeEmitter,
+  makeRoomService,
+} from "./emission";
 
 export const attachSockets = <E extends EmissionMap>({
   io,
@@ -44,17 +49,40 @@ export const attachSockets = <E extends EmissionMap>({
     };
     const emit = makeEmitter({ emission, socket, logger, timeout });
     const broadcast = makeBroadcaster({ emission, socket, logger, timeout });
-    await onConnection({ input: [], logger, emit, broadcast, ...commons });
+    const rooms = makeRoomService({ emission, socket, logger, timeout });
+    await onConnection({
+      input: [],
+      logger,
+      emit,
+      broadcast,
+      rooms,
+      ...commons,
+    });
     socket.onAny((event) =>
-      onAnyEvent({ input: [event], logger, emit, broadcast, ...commons }),
+      onAnyEvent({
+        input: [event],
+        logger,
+        emit,
+        broadcast,
+        rooms,
+        ...commons,
+      }),
     );
     for (const [event, action] of Object.entries(actions)) {
       socket.on(event, async (...params) =>
-        action.execute({ event, params, logger, emit, broadcast, ...commons }),
+        action.execute({
+          event,
+          params,
+          logger,
+          emit,
+          broadcast,
+          rooms,
+          ...commons,
+        }),
       );
     }
     socket.on("disconnect", () =>
-      onDisconnect({ input: [], logger, emit, broadcast, ...commons }),
+      onDisconnect({ input: [], logger, emit, broadcast, rooms, ...commons }),
     );
   });
   return io.attach(target);

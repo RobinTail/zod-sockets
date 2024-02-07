@@ -5,5 +5,5 @@ import { actionsFactory } from "../factories";
 export const onPing = actionsFactory.build({
   input: z.tuple([]).rest(z.unknown()),
   output: z.tuple([z.literal("pong")]).rest(z.unknown()),
-  handler: async ({ input }) => ["pong" as const, ...input],
+  handler: async ({ input }) => ["pong", ...input] as const,
 });

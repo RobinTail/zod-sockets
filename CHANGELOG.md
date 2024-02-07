@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.2.2
+
+- Adjusting documentation.
+
 ### v0.2.1
 
 - Concept description and a workflow diagram.

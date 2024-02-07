@@ -16,7 +16,7 @@ the Emission types and is equipped with the emission and broadcasting methods, w
 acknowledgement for the Action. This configuration is used to validate the input and output data against the specified
 schemas, thus ensuring that the established contract is followed.
 
-![Workflow Diagram](flow.svg)
+![Workflow Diagram](flow.png)
 
 # Quick start
 

@@ -2,6 +2,12 @@
 
 ## Version 0
 
+### v0.1.0
+
+- Fixed module exports.
+- Unit and integration tests.
+- `createSocketsConfig()` renamed to `createConfig()`.
+
 ### v0.0.3
 
 - Ensure emitting the declared events only.

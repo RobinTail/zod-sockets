@@ -6,6 +6,16 @@ Socket.IO Websockets with Zod validation.
 
 Experimental solution for testing purposes only.
 
+## Concept
+
+The library distinguishes between incoming and outgoing events. The first are called Actions, and the second — Emission.
+Emission is configured first, representing the schemas for validating the outgoing data, as well as optionally received
+acknowledgements. Based on this configuration, an Actions Factory is created, where Actions are produced that have
+schemas for checking the incoming data and an optionally sent acknowledgement, and a handler. This handler is aware of
+the Emission types and is equipped with the emission and broadcasting methods, while its returns become an
+acknowledgement for the Action. This configuration is used to validate the input and output data against the specified
+schemas, thus ensuring that the established contract is followed.
+
 # Quick start
 
 ## Installation

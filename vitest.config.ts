@@ -5,7 +5,6 @@ export default defineConfig({
     testTimeout: 10000,
     reporters: "verbose",
     coverage: {
-      enabled: true,
       provider: "istanbul",
       reporter: [["text", { maxCols: 120 }], "json-summary", "html", "lcov"],
       include: ["src/**"],

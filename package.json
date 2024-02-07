@@ -37,11 +37,16 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src example",
-    "test": "tsc --noEmit && vitest run",
+    "test": "tsc --noEmit && vitest run --coverage",
+    "test:cjs": "yarn --cwd tests/cjs && vitest run -r tests/cjs",
+    "test:esm": "yarn --cwd tests/esm && vitest run -r tests/esm",
+    "test:952": "yarn --cwd tests/issue952 && yarn --cwd tests/issue952 test",
     "posttest": "make-coverage-badge --output-path coverage.svg",
     "mdfix": "prettier *.md --write",
     "start": "tsx example/index.ts",
-    "build": "tsup && attw --pack",
+    "build": "yarn build:compile && yarn build:tests",
+    "build:compile": "tsup && attw --pack",
+    "build:tests": "tsx tools/make-tests.ts",
     "postversion": "git push && git push --tags"
   },
   "dependencies": {

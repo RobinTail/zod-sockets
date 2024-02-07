@@ -11,5 +11,4 @@ attachSockets({
   config,
   target,
   actions,
-  logger: console,
 });

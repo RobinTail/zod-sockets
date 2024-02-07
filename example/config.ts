@@ -3,6 +3,7 @@ import { createConfig } from "../src";
 
 export const config = createConfig({
   timeout: 2000,
+  logger: console,
   emission: {
     time: {
       schema: z.tuple([z.date().transform((date) => date.toISOString())]),

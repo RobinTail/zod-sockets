@@ -85,8 +85,14 @@ curl "http://localhost:8090/socket.io/?EIO=4&transport=polling"
 
 The expected response should be similar to:
 
-```text
-0{"sid":"***","upgrades":["websocket"],"pingInterval":25000,"pingTimeout":20000,"maxPayload":1000000}%
+```json
+{
+  "sid": "***",
+  "upgrades": ["websocket"],
+  "pingInterval": 25000,
+  "pingTimeout": 20000,
+  "maxPayload": 1000000
+}
 ```
 
 Then consider using [Postman](https://learning.postman.com/docs/sending-requests/websocket/create-a-socketio-request/)

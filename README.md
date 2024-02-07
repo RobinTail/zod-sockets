@@ -77,7 +77,7 @@ attachSockets({
 
 ## Try it
 
-Start the application and execute the following command:
+Start the application and execute the following [command](https://socket.io/docs/v4/troubleshooting-connection-issues/):
 
 ```shell
 curl "http://localhost:8090/socket.io/?EIO=4&transport=polling"

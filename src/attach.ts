@@ -3,14 +3,12 @@ import type { Server } from "socket.io";
 import { ActionMap, Handler, SocketFeatures } from "./action";
 import { SocketsConfig } from "./config";
 import { EmissionMap, makeBroadcaster, makeEmitter } from "./emission";
-import { AbstractLogger } from "./logger";
 
 export const attachSockets = <E extends EmissionMap>({
   io,
   actions,
-  logger,
   target,
-  config: { emission, timeout },
+  config: { emission, timeout, logger },
   onConnection = ({ socketId }) => logger.debug("User connected", socketId),
   onDisconnect = ({ socketId }) => logger.debug("User disconnected", socketId),
   onAnyEvent = ({ input: [event], socketId }) =>
@@ -18,7 +16,6 @@ export const attachSockets = <E extends EmissionMap>({
 }: {
   io: Server;
   actions: ActionMap;
-  logger: AbstractLogger;
   target: http.Server;
   config: SocketsConfig<E>;
   onConnection?: Handler<[], void, E>;

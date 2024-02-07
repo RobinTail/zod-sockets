@@ -24,6 +24,7 @@ import { createConfig } from "zod-sockets";
 const config = createConfig({
   timeout: 2000,
   emission: {},
+  logger: console,
 });
 ```
 
@@ -58,9 +59,8 @@ const target = new http.Server().listen(8090);
 attachSockets({
   io: new Server(),
   config: config,
-  target,
   actions: { ping: onPing },
-  logger: console,
+  target,
 });
 ```
 

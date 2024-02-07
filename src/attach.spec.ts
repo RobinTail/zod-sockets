@@ -26,9 +26,12 @@ describe("Attach", () => {
       attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
-        logger: loggerMock as unknown as AbstractLogger,
         actions: actionsMock,
-        config: { timeout: 100, emission: {} },
+        config: {
+          timeout: 100,
+          emission: {},
+          logger: loggerMock as unknown as AbstractLogger,
+        },
       });
       expect(ioMock.attach).toHaveBeenCalledWith(targetMock);
       expect(ioMock.on).toHaveBeenLastCalledWith(

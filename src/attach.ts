@@ -14,10 +14,24 @@ export const attachSockets = <E extends EmissionMap>({
   onAnyEvent = ({ input: [event], socketId }) =>
     logger.debug(`${event} from ${socketId}`),
 }: {
+  /**
+   * @desc The Socket.IO server
+   * @example new Server()
+   * */
   io: Server;
+  /**
+   * @desc the object declares handling rules of the incoming socket.io events
+   * @example { ping: onPing }
+   * */
   actions: ActionMap;
+  /**
+   * @desc HTTP or HTTPS server to attach the sockets to
+   * @example http.createServer().listen(8090)
+   * */
   target: http.Server;
+  /** @desc The configuration describing the emission (outgoing events) */
   config: SocketsConfig<E>;
+  /** @desc A place for emitting events unrelated to the incoming events */
   onConnection?: Handler<[], void, E>;
   onDisconnect?: Handler<[], void, E>;
   onAnyEvent?: Handler<[string], void, E>;

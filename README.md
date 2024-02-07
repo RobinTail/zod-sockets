@@ -68,6 +68,7 @@ import { Server } from "socket.io";
 import { attachSockets } from "zod-sockets";
 
 attachSockets({
+  /** @see https://socket.io/docs/v4/server-options/ */
   io: new Server(),
   config: config,
   actions: { ping: onPing },
@@ -99,3 +100,6 @@ Then consider using [Postman](https://learning.postman.com/docs/sending-requests
 for sending the `ping` event to `ws://localhost:8090` with acknowledgement.
 
 # Next
+
+More information is coming soon when the public API becomes stable (v1).
+Meanwhile, use the JSDoc annotations, IDE type assistance and explore the sources of the repo for informing yourself.

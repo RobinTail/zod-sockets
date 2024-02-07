@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.2.1
+
+- Concept description and a workflow diagram.
+
 ### v0.2.0
 
 - Moved `logger` from `attachSockets()` to `createConfig()` argument.

@@ -8,7 +8,7 @@ const target = new http.Server().listen(8090);
 
 attachSockets({
   io: new Server(),
-  config: config,
+  config,
   target,
   actions,
   logger: console,

@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.2.0
+
+- Moved `logger` from `attachSockets()` to `createConfig()` argument.
+
 ### v0.1.0
 
 - Fixed module exports.

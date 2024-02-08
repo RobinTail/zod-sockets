@@ -10,14 +10,18 @@ export interface SocketFeatures {
   socketId: Socket["id"];
 }
 
+export interface HandlingFeatures<E extends EmissionMap> {
+  logger: AbstractLogger;
+  emit: Emitter<E>;
+  broadcast: Broadcaster<E>;
+  rooms: RoomService<E>;
+}
+
 export type Handler<IN, OUT, E extends EmissionMap> = (
   params: {
     input: IN;
-    logger: AbstractLogger;
-    emit: Emitter<E>;
-    broadcast: Broadcaster<E>;
-    rooms: RoomService<E>;
-  } & SocketFeatures,
+  } & SocketFeatures &
+    HandlingFeatures<E>,
 ) => Promise<OUT>;
 
 export abstract class AbstractAction {
@@ -25,11 +29,8 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-      logger: AbstractLogger;
-      emit: Emitter<EmissionMap>;
-      broadcast: Broadcaster<EmissionMap>;
-      rooms: RoomService<EmissionMap>;
-    } & SocketFeatures,
+    } & SocketFeatures &
+      HandlingFeatures<EmissionMap>,
   ): Promise<void>;
 }
 
@@ -82,18 +83,12 @@ export class Action<
     event,
     params,
     logger,
-    emit,
-    broadcast,
-    rooms,
     ...rest
   }: {
     event: string;
     params: unknown[];
-    logger: AbstractLogger;
-    emit: Emitter<EmissionMap>;
-    broadcast: Broadcaster<EmissionMap>;
-    rooms: RoomService<EmissionMap>;
-  } & SocketFeatures): Promise<void> {
+  } & SocketFeatures &
+    HandlingFeatures<EmissionMap>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(
@@ -101,14 +96,7 @@ export class Action<
         input,
       );
       const ack = this.#parseAckCb(params);
-      const output = await this.#handler({
-        input,
-        logger,
-        emit,
-        broadcast,
-        rooms,
-        ...rest,
-      });
+      const output = await this.#handler({ input, logger, ...rest });
       const response = this.#parseOutput(output);
       if (ack && response) {
         logger.debug("parsed output", response);

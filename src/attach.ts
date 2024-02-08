@@ -1,6 +1,6 @@
 import http from "node:http";
 import type { Server } from "socket.io";
-import { ActionMap, Handler, SocketFeatures } from "./action";
+import { ActionMap, Handler, HandlingFeatures, SocketFeatures } from "./action";
 import { SocketsConfig } from "./config";
 import {
   EmissionMap,
@@ -43,47 +43,25 @@ export const attachSockets = <E extends EmissionMap>({
 }): Server => {
   logger.info("ZOD-SOCKETS", target.address());
   io.on("connection", async (socket) => {
-    const commons: SocketFeatures = {
-      socketId: socket.id,
-      isConnected: () => socket.connected,
-    };
     const emit = makeEmitter({ emission, socket, logger, timeout });
     const broadcast = makeBroadcaster({ emission, socket, logger, timeout });
     const rooms = makeRoomService({ emission, socket, logger, timeout });
-    await onConnection({
-      input: [],
+    const commons: SocketFeatures & HandlingFeatures<E> = {
+      socketId: socket.id,
+      isConnected: () => socket.connected,
       logger,
       emit,
       broadcast,
       rooms,
-      ...commons,
-    });
-    socket.onAny((event) =>
-      onAnyEvent({
-        input: [event],
-        logger,
-        emit,
-        broadcast,
-        rooms,
-        ...commons,
-      }),
-    );
+    };
+    await onConnection({ input: [], ...commons });
+    socket.onAny((event) => onAnyEvent({ input: [event], ...commons }));
     for (const [event, action] of Object.entries(actions)) {
       socket.on(event, async (...params) =>
-        action.execute({
-          event,
-          params,
-          logger,
-          emit,
-          broadcast,
-          rooms,
-          ...commons,
-        }),
+        action.execute({ event, params, ...commons }),
       );
     }
-    socket.on("disconnect", () =>
-      onDisconnect({ input: [], logger, emit, broadcast, rooms, ...commons }),
-    );
+    socket.on("disconnect", () => onDisconnect({ input: [], ...commons }));
   });
   return io.attach(target);
 };

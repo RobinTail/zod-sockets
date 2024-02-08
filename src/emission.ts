@@ -67,36 +67,28 @@ const makeGenericEmitter =
     return (isSocket ? ack : ack.array()).parse(response);
   };
 
-export const makeEmitter = <E extends EmissionMap>({
-  socket: target,
-  ...rest
-}: {
+interface MakerParams<E extends EmissionMap> {
   emission: E;
   logger: AbstractLogger;
   socket: Socket;
   timeout: number;
-}) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
+}
+
+export const makeEmitter = <E extends EmissionMap>({
+  socket: target,
+  ...rest
+}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
 
 export const makeBroadcaster = <E extends EmissionMap>({
   socket: { broadcast: target },
   ...rest
-}: {
-  emission: E;
-  logger: AbstractLogger;
-  socket: Socket;
-  timeout: number;
-}) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
 
 export const makeRoomService =
   <E extends EmissionMap>({
     socket,
     ...rest
-  }: {
-    emission: E;
-    logger: AbstractLogger;
-    socket: Socket;
-    timeout: number;
-  }): RoomService<E> =>
+  }: MakerParams<E>): RoomService<E> =>
   (rooms) => ({
     join: () => socket.join(rooms),
     leave: () =>

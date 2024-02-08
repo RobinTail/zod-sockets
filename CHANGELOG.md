@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.2.3
+
+- Adding `getRooms()` and `withRooms()` providing `join()`, `leave()` and `broadcast()` methods to the Action handler.
+
 ### v0.2.2
 
 - Adjusting documentation.

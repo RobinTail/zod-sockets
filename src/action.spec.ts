@@ -33,6 +33,8 @@ describe("Action", () => {
     const isConnectedMock = vi.fn();
     const withRoomsMock = vi.fn();
     const getRoomsMock = vi.fn();
+    const getAllRoomsMock = vi.fn();
+    const getAllClientsMock = vi.fn();
 
     test("should handle simple action", async () => {
       await simpleAction.execute({
@@ -42,6 +44,8 @@ describe("Action", () => {
         emit: emitMock,
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
         client: {
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
@@ -52,6 +56,8 @@ describe("Action", () => {
       expect(simpleHandler).toHaveBeenLastCalledWith({
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
         emit: emitMock,
         input: ["some"],
         logger: loggerMock,
@@ -72,6 +78,8 @@ describe("Action", () => {
         emit: emitMock,
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
         client: {
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
@@ -87,6 +95,8 @@ describe("Action", () => {
         },
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
         emit: emitMock,
         input: ["some"],
         logger: loggerMock,
@@ -102,6 +112,8 @@ describe("Action", () => {
         emit: emitMock,
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
         client: {
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,

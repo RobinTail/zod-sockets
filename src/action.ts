@@ -17,6 +17,8 @@ export interface HandlingFeatures<E extends EmissionMap> {
   emit: Emitter<E>;
   broadcast: Broadcaster<E>;
   withRooms: RoomService<E>;
+  getAllRooms: () => string[];
+  getAllClients: () => Promise<{ id: string; rooms: string[] }[]>;
 }
 
 export type Handler<IN, OUT, E extends EmissionMap> = (

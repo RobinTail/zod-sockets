@@ -27,6 +27,7 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
+// @todo add clients there
 export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
   broadcast: Broadcaster<E>;
   join: () => void | Promise<void>;

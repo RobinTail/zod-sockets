@@ -13,9 +13,23 @@ describe("Attach", () => {
       on: vi.fn(),
       onAny: vi.fn(),
     };
+    const adapterMock = {
+      rooms: new Map([
+        ["room1", ["ID"]],
+        ["room2", ["ID"]],
+        ["room3", ["other"]],
+      ]),
+    };
     const ioMock = {
       on: vi.fn(),
       attach: vi.fn(),
+      of: vi.fn(() => ({
+        adapter: adapterMock,
+      })),
+      fetchSockets: vi.fn(async () => [
+        { id: "ID", rooms: new Set(["room1", "room2"]) },
+        { id: "other", rooms: new Set(["room3"]) },
+      ]),
     };
     const targetMock = {
       address: vi.fn(),
@@ -68,25 +82,44 @@ describe("Attach", () => {
       expect(actionsMock.test.execute).toHaveBeenLastCalledWith({
         broadcast: expect.any(Function),
         withRooms: expect.any(Function),
-        getRooms: expect.any(Function),
+        getAllClients: expect.any(Function),
+        getAllRooms: expect.any(Function),
         emit: expect.any(Function),
         event: "test",
-        isConnected: expect.any(Function),
         logger: loggerMock,
         params: [[123, 456]],
-        socketId: "ID",
+        client: {
+          id: "ID",
+          isConnected: expect.any(Function),
+          getRooms: expect.any(Function),
+        },
       });
 
       // getRooms:
-      expect(actionsMock.test.execute.mock.lastCall[0].getRooms()).toEqual([
-        "room1",
-        "room2",
-      ]);
+      expect(
+        actionsMock.test.execute.mock.lastCall[0].client.getRooms(),
+      ).toEqual(["room1", "room2"]);
 
       // isConnected:
       expect(
-        actionsMock.test.execute.mock.lastCall[0].isConnected(),
+        actionsMock.test.execute.mock.lastCall[0].client.isConnected(),
       ).toBeFalsy();
+
+      // getAllRooms:
+      expect(actionsMock.test.execute.mock.lastCall[0].getAllRooms()).toEqual([
+        "room1",
+        "room2",
+        "room3",
+      ]);
+      expect(ioMock.of).toHaveBeenLastCalledWith("/");
+
+      // getAllClients:
+      await expect(
+        actionsMock.test.execute.mock.lastCall[0].getAllClients(),
+      ).resolves.toEqual([
+        { id: "ID", rooms: ["room1", "room2"] },
+        { id: "other", rooms: ["room3"] },
+      ]);
     });
   });
 });

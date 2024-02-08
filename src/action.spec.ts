@@ -33,6 +33,8 @@ describe("Action", () => {
     const isConnectedMock = vi.fn();
     const withRoomsMock = vi.fn();
     const getRoomsMock = vi.fn();
+    const getAllRoomsMock = vi.fn();
+    const getAllClientsMock = vi.fn();
 
     test("should handle simple action", async () => {
       await simpleAction.execute({
@@ -42,20 +44,28 @@ describe("Action", () => {
         emit: emitMock,
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getRooms: getRoomsMock,
-        isConnected: isConnectedMock,
-        socketId: "ID",
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
+        client: {
+          getRooms: getRoomsMock,
+          isConnected: isConnectedMock,
+          id: "ID",
+        },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(simpleHandler).toHaveBeenLastCalledWith({
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getRooms: getRoomsMock,
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
         emit: emitMock,
         input: ["some"],
-        isConnected: isConnectedMock,
         logger: loggerMock,
-        socketId: "ID",
+        client: {
+          isConnected: isConnectedMock,
+          getRooms: getRoomsMock,
+          id: "ID",
+        },
       });
     });
 
@@ -68,20 +78,28 @@ describe("Action", () => {
         emit: emitMock,
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getRooms: getRoomsMock,
-        isConnected: isConnectedMock,
-        socketId: "ID",
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
+        client: {
+          getRooms: getRoomsMock,
+          isConnected: isConnectedMock,
+          id: "ID",
+        },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(ackHandler).toHaveBeenLastCalledWith({
+        client: {
+          id: "ID",
+          getRooms: getRoomsMock,
+          isConnected: isConnectedMock,
+        },
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getRooms: getRoomsMock,
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
         emit: emitMock,
         input: ["some"],
-        isConnected: isConnectedMock,
         logger: loggerMock,
-        socketId: "ID",
       });
       expect(ackMock).toHaveBeenLastCalledWith(123); // from ackHandler
     });
@@ -94,9 +112,13 @@ describe("Action", () => {
         emit: emitMock,
         broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getRooms: getRoomsMock,
-        isConnected: isConnectedMock,
-        socketId: "ID",
+        getAllClients: getAllClientsMock,
+        getAllRooms: getAllRoomsMock,
+        client: {
+          getRooms: getRoomsMock,
+          isConnected: isConnectedMock,
+          id: "ID",
+        },
       });
       expect(loggerMock.error).toHaveBeenCalled();
     });

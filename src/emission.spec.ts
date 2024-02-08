@@ -6,12 +6,16 @@ import { AbstractLogger } from "./logger";
 
 describe("Emission", () => {
   const broadcastMock: Record<
-    "emit" | "timeout" | "emitWithAck",
+    "emit" | "timeout" | "emitWithAck" | "fetchSockets",
     MockedFunction<any>
   > = {
     emit: vi.fn(),
     timeout: vi.fn(() => broadcastMock),
     emitWithAck: vi.fn(),
+    fetchSockets: vi.fn(async () => [
+      { id: "ID", rooms: new Set(["room1", "room2"]) },
+      { id: "other", rooms: new Set(["room3"]) },
+    ]),
   };
 
   const socketMock: Record<
@@ -21,6 +25,7 @@ describe("Emission", () => {
     id: string;
     broadcast: typeof broadcastMock;
     to: (rooms: string | string[]) => typeof broadcastMock;
+    in: (rooms: string | string[]) => typeof broadcastMock;
   } = {
     id: "ID",
     emit: vi.fn(),
@@ -28,6 +33,7 @@ describe("Emission", () => {
     emitWithAck: vi.fn(),
     broadcast: broadcastMock,
     to: vi.fn(() => broadcastMock),
+    in: vi.fn(() => broadcastMock),
     join: vi.fn(),
     leave: vi.fn(),
   };
@@ -80,7 +86,7 @@ describe("Emission", () => {
           config,
         });
         expect(typeof withRooms).toBe("function");
-        const { broadcast, leave, join } = withRooms(rooms);
+        const { broadcast, leave, join, getClients } = withRooms(rooms);
         expect(socketMock.to).toHaveBeenLastCalledWith(rooms);
         for (const method of [broadcast, leave, join]) {
           expect(typeof method).toBe("function");
@@ -96,6 +102,10 @@ describe("Emission", () => {
             expect(socketMock.leave).toHaveBeenCalledWith(room);
           }
         }
+        await expect(getClients()).resolves.toEqual([
+          { id: "ID", rooms: ["room1", "room2"] },
+          { id: "other", rooms: ["room3"] },
+        ]);
       },
     );
   });

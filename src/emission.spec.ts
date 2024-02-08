@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { MockedFunction, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { makeBroadcaster, makeEmitter } from "./emission";
+import { makeBroadcaster, makeEmitter, makeRoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 
 describe("Emission", () => {
@@ -15,14 +15,21 @@ describe("Emission", () => {
   };
 
   const socketMock: Record<
-    "emit" | "timeout" | "emitWithAck",
+    "emit" | "timeout" | "emitWithAck" | "join" | "leave",
     MockedFunction<any>
-  > & { id: string; broadcast: typeof broadcastMock } = {
+  > & {
+    id: string;
+    broadcast: typeof broadcastMock;
+    to: (rooms: string | string[]) => typeof broadcastMock;
+  } = {
     id: "ID",
     emit: vi.fn(),
     timeout: vi.fn(() => socketMock),
     emitWithAck: vi.fn(),
     broadcast: broadcastMock,
+    to: vi.fn(() => broadcastMock),
+    join: vi.fn(),
+    leave: vi.fn(),
   };
   const loggerMock = { debug: vi.fn() };
   const config = {
@@ -62,5 +69,34 @@ describe("Emission", () => {
       target.emitWithAck.mockImplementationOnce(async () => ack);
       expect(await emitter("two", 123)).toEqual(ack);
     });
+  });
+
+  describe("makeRoomService", () => {
+    test.each(["room1", ["room2", "room3"]])(
+      "should provide methods in rooms context %#",
+      async (rooms) => {
+        const withRooms = makeRoomService({
+          socket: socketMock as unknown as Socket,
+          config,
+        });
+        expect(typeof withRooms).toBe("function");
+        const { broadcast, leave, join } = withRooms(rooms);
+        expect(socketMock.to).toHaveBeenLastCalledWith(rooms);
+        for (const method of [broadcast, leave, join]) {
+          expect(typeof method).toBe("function");
+        }
+        join();
+        expect(socketMock.join).toHaveBeenLastCalledWith(rooms);
+        if (typeof rooms === "string") {
+          leave();
+          expect(socketMock.leave).toHaveBeenLastCalledWith(rooms);
+        } else {
+          await leave();
+          for (const room of rooms) {
+            expect(socketMock.leave).toHaveBeenCalledWith(room);
+          }
+        }
+      },
+    );
   });
 });

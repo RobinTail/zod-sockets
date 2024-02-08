@@ -67,6 +67,7 @@ describe("Attach", () => {
       expect(actionsMock.test.execute).toHaveBeenLastCalledWith({
         broadcast: expect.any(Function),
         withRooms: expect.any(Function),
+        getRooms: expect.any(Function),
         emit: expect.any(Function),
         event: "test",
         isConnected: expect.any(Function),

@@ -8,6 +8,7 @@ import { AbstractLogger } from "./logger";
 export interface SocketFeatures {
   isConnected: () => boolean;
   socketId: Socket["id"];
+  getRooms: () => string[];
 }
 
 export interface HandlingFeatures<E extends EmissionMap> {

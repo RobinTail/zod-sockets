@@ -51,6 +51,7 @@ export const attachSockets = <E extends EmissionMap>({
     const commons: SocketFeatures & HandlingFeatures<E> = {
       socketId: socket.id,
       isConnected: () => socket.connected,
+      getRooms: () => Array.from(socket.rooms),
       logger: config.logger,
       emit,
       broadcast,

@@ -14,7 +14,7 @@ export interface HandlingFeatures<E extends EmissionMap> {
   logger: AbstractLogger;
   emit: Emitter<E>;
   broadcast: Broadcaster<E>;
-  rooms: RoomService<E>;
+  withRooms: RoomService<E>;
 }
 
 export type Handler<IN, OUT, E extends EmissionMap> = (

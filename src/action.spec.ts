@@ -40,14 +40,14 @@ describe("Action", () => {
         params: ["some"],
         emit: emitMock,
         broadcast: broadcastMock,
-        rooms: roomsMock,
+        withRooms: roomsMock,
         isConnected: isConnectedMock,
         socketId: "ID",
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(simpleHandler).toHaveBeenLastCalledWith({
         broadcast: broadcastMock,
-        rooms: roomsMock,
+        withRooms: roomsMock,
         emit: emitMock,
         input: ["some"],
         isConnected: isConnectedMock,
@@ -64,14 +64,14 @@ describe("Action", () => {
         params: ["some", ackMock],
         emit: emitMock,
         broadcast: broadcastMock,
-        rooms: roomsMock,
+        withRooms: roomsMock,
         isConnected: isConnectedMock,
         socketId: "ID",
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(ackHandler).toHaveBeenLastCalledWith({
         broadcast: broadcastMock,
-        rooms: roomsMock,
+        withRooms: roomsMock,
         emit: emitMock,
         input: ["some"],
         isConnected: isConnectedMock,
@@ -88,7 +88,7 @@ describe("Action", () => {
         params: [], // too short
         emit: emitMock,
         broadcast: broadcastMock,
-        rooms: roomsMock,
+        withRooms: roomsMock,
         isConnected: isConnectedMock,
         socketId: "ID",
       });

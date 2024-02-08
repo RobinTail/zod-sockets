@@ -47,14 +47,14 @@ export const attachSockets = <E extends EmissionMap>({
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });
-    const rooms = makeRoomService({ socket, config });
+    const withRooms = makeRoomService({ socket, config });
     const commons: SocketFeatures & HandlingFeatures<E> = {
       socketId: socket.id,
       isConnected: () => socket.connected,
       logger: config.logger,
       emit,
       broadcast,
-      rooms,
+      withRooms,
     };
     await onConnection({ input: [], ...commons });
     socket.onAny((event) => onAnyEvent({ input: [event], ...commons }));

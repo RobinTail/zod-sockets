@@ -9,6 +9,7 @@ describe("Attach", () => {
     const socketMock = {
       id: "ID",
       connected: false,
+      rooms: new Set(["room1", "room2"]),
       on: vi.fn(),
       onAny: vi.fn(),
     };
@@ -75,6 +76,12 @@ describe("Attach", () => {
         params: [[123, 456]],
         socketId: "ID",
       });
+
+      // getRooms:
+      expect(actionsMock.test.execute.mock.lastCall[0].getRooms()).toEqual([
+        "room1",
+        "room2",
+      ]);
 
       // isConnected:
       expect(

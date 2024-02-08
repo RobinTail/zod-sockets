@@ -26,7 +26,7 @@ describe("Attach", () => {
       of: vi.fn(() => ({
         adapter: adapterMock,
       })),
-      fetchSockets: vi.fn(() => [
+      fetchSockets: vi.fn(async () => [
         { id: "ID", rooms: new Set(["room1", "room2"]) },
         { id: "other", rooms: new Set(["room3"]) },
       ]),

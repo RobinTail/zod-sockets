@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
+import { RemoteClint } from "./utils";
 
 export interface Client {
   isConnected: () => boolean;
@@ -18,7 +19,7 @@ export interface HandlingFeatures<E extends EmissionMap> {
   broadcast: Broadcaster<E>;
   withRooms: RoomService<E>;
   getAllRooms: () => string[];
-  getAllClients: () => Promise<{ id: string; rooms: string[] }[]>;
+  getAllClients: () => Promise<RemoteClint[]>;
 }
 
 export type Handler<IN, OUT, E extends EmissionMap> = (

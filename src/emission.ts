@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { Config } from "./config";
+import { RemoteClint, mapFetchedSockets } from "./utils";
 
 export interface Emission {
   schema: z.AnyZodTuple;
@@ -27,11 +28,11 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
-// @todo add clients there
 export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
   broadcast: Broadcaster<E>;
   join: () => void | Promise<void>;
   leave: () => void | Promise<void>;
+  getClients: () => Promise<RemoteClint[]>;
 };
 
 /**
@@ -85,6 +86,8 @@ export const makeRoomService =
     ...rest
   }: MakerParams<E>): RoomService<E> =>
   (rooms) => ({
+    getClients: async () =>
+      mapFetchedSockets(await socket.in(rooms).fetchSockets()),
     join: () => socket.join(rooms),
     leave: () =>
       typeof rooms === "string"

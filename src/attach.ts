@@ -8,6 +8,7 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
+import { mapFetchedSockets } from "./utils";
 
 export const attachSockets = <E extends EmissionMap>({
   io,
@@ -45,11 +46,7 @@ export const attachSockets = <E extends EmissionMap>({
 }): Server => {
   config.logger.info("ZOD-SOCKETS", target.address());
   const getAllRooms = () => Array.from(io.of("/").adapter.rooms.keys());
-  const getAllClients = async () =>
-    (await io.fetchSockets()).map(({ id, rooms }) => ({
-      id,
-      rooms: Array.from(rooms),
-    }));
+  const getAllClients = async () => mapFetchedSockets(await io.fetchSockets());
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });

@@ -13,12 +13,21 @@ export interface Client {
 }
 
 export interface HandlingFeatures<E extends EmissionMap> {
+  /** @desc The owner of the received event */
   client: Client;
   logger: AbstractLogger;
+  /**
+   * @desc Emits towards the owner of the received event
+   * @todo consider moving to "client"
+   * */
   emit: Emitter<E>;
+  /** @desc Emits to everyone */
   broadcast: Broadcaster<E>;
+  /** @desc Provides room(s)-scope methods */
   withRooms: RoomService<E>;
+  /** @desc Returns the list of available rooms */
   getAllRooms: () => string[];
+  /** @desc Returns the list of familiar client */
   getAllClients: () => Promise<RemoteClint[]>;
 }
 

@@ -2,21 +2,27 @@ import { init, last } from "ramda";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { AckActionDef, SimpleActionDef } from "./actions-factory";
-import { Broadcaster, EmissionMap, Emitter } from "./emission";
+import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 
 export interface SocketFeatures {
   isConnected: () => boolean;
   socketId: Socket["id"];
+  getRooms: () => string[];
+}
+
+export interface HandlingFeatures<E extends EmissionMap> {
+  logger: AbstractLogger;
+  emit: Emitter<E>;
+  broadcast: Broadcaster<E>;
+  withRooms: RoomService<E>;
 }
 
 export type Handler<IN, OUT, E extends EmissionMap> = (
   params: {
     input: IN;
-    logger: AbstractLogger;
-    emit: Emitter<E>;
-    broadcast: Broadcaster<E>;
-  } & SocketFeatures,
+  } & SocketFeatures &
+    HandlingFeatures<E>,
 ) => Promise<OUT>;
 
 export abstract class AbstractAction {
@@ -24,10 +30,8 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-      logger: AbstractLogger;
-      emit: Emitter<EmissionMap>;
-      broadcast: Broadcaster<EmissionMap>;
-    } & SocketFeatures,
+    } & SocketFeatures &
+      HandlingFeatures<EmissionMap>,
   ): Promise<void>;
 }
 
@@ -80,16 +84,12 @@ export class Action<
     event,
     params,
     logger,
-    emit,
-    broadcast,
     ...rest
   }: {
     event: string;
     params: unknown[];
-    logger: AbstractLogger;
-    emit: Emitter<EmissionMap>;
-    broadcast: Broadcaster<EmissionMap>;
-  } & SocketFeatures): Promise<void> {
+  } & SocketFeatures &
+    HandlingFeatures<EmissionMap>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(
@@ -97,13 +97,7 @@ export class Action<
         input,
       );
       const ack = this.#parseAckCb(params);
-      const output = await this.#handler({
-        input,
-        logger,
-        emit,
-        broadcast,
-        ...rest,
-      });
+      const output = await this.#handler({ input, logger, ...rest });
       const response = this.#parseOutput(output);
       if (ack && response) {
         logger.debug("parsed output", response);

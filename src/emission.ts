@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
-import { AbstractLogger } from "./logger";
+import { SocketsConfig } from "./config";
 
 export interface Emission {
   schema: z.AnyZodTuple;
@@ -27,21 +27,23 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
+export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
+  broadcast: Broadcaster<E>;
+  join: () => void | Promise<void>;
+  leave: () => void | Promise<void>;
+};
+
 /**
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
  * */
 const makeGenericEmitter =
   ({
-    emission,
-    logger,
     target,
-    timeout,
+    config: { logger, emission, timeout },
   }: {
-    emission: EmissionMap;
-    logger: AbstractLogger;
+    config: SocketsConfig<EmissionMap>;
     target: Socket | Socket["broadcast"];
-    timeout: number;
   }) =>
   async (event: string, ...args: unknown[]) => {
     const isSocket = "id" in target;
@@ -61,22 +63,34 @@ const makeGenericEmitter =
     return (isSocket ? ack : ack.array()).parse(response);
   };
 
+interface MakerParams<E extends EmissionMap> {
+  socket: Socket;
+  config: SocketsConfig<E>;
+}
+
 export const makeEmitter = <E extends EmissionMap>({
   socket: target,
   ...rest
-}: {
-  emission: E;
-  logger: AbstractLogger;
-  socket: Socket;
-  timeout: number;
-}) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
+}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
 
 export const makeBroadcaster = <E extends EmissionMap>({
   socket: { broadcast: target },
   ...rest
-}: {
-  emission: E;
-  logger: AbstractLogger;
-  socket: Socket;
-  timeout: number;
-}) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+
+export const makeRoomService =
+  <E extends EmissionMap>({
+    socket,
+    ...rest
+  }: MakerParams<E>): RoomService<E> =>
+  (rooms) => ({
+    join: () => socket.join(rooms),
+    leave: () =>
+      typeof rooms === "string"
+        ? socket.leave(rooms)
+        : Promise.all(rooms.map((room) => socket.leave(room))).then(() => {}),
+    broadcast: makeGenericEmitter({
+      ...rest,
+      target: socket.to(rooms),
+    }) as Broadcaster<E>,
+  });

@@ -1,18 +1,25 @@
 import http from "node:http";
 import type { Server } from "socket.io";
-import { ActionMap, Handler, SocketFeatures } from "./action";
+import { ActionMap, Handler, HandlingFeatures, SocketFeatures } from "./action";
 import { SocketsConfig } from "./config";
-import { EmissionMap, makeBroadcaster, makeEmitter } from "./emission";
+import {
+  EmissionMap,
+  makeBroadcaster,
+  makeEmitter,
+  makeRoomService,
+} from "./emission";
 
 export const attachSockets = <E extends EmissionMap>({
   io,
   actions,
   target,
-  config: { emission, timeout, logger },
-  onConnection = ({ socketId }) => logger.debug("User connected", socketId),
-  onDisconnect = ({ socketId }) => logger.debug("User disconnected", socketId),
+  config,
+  onConnection = ({ socketId }) =>
+    config.logger.debug("User connected", socketId),
+  onDisconnect = ({ socketId }) =>
+    config.logger.debug("User disconnected", socketId),
   onAnyEvent = ({ input: [event], socketId }) =>
-    logger.debug(`${event} from ${socketId}`),
+    config.logger.debug(`${event} from ${socketId}`),
 }: {
   /**
    * @desc The Socket.IO server
@@ -36,26 +43,28 @@ export const attachSockets = <E extends EmissionMap>({
   onDisconnect?: Handler<[], void, E>;
   onAnyEvent?: Handler<[string], void, E>;
 }): Server => {
-  logger.info("ZOD-SOCKETS", target.address());
+  config.logger.info("ZOD-SOCKETS", target.address());
   io.on("connection", async (socket) => {
-    const commons: SocketFeatures = {
+    const emit = makeEmitter({ socket, config });
+    const broadcast = makeBroadcaster({ socket, config });
+    const withRooms = makeRoomService({ socket, config });
+    const commons: SocketFeatures & HandlingFeatures<E> = {
       socketId: socket.id,
       isConnected: () => socket.connected,
+      getRooms: () => Array.from(socket.rooms),
+      logger: config.logger,
+      emit,
+      broadcast,
+      withRooms,
     };
-    const emit = makeEmitter({ emission, socket, logger, timeout });
-    const broadcast = makeBroadcaster({ emission, socket, logger, timeout });
-    await onConnection({ input: [], logger, emit, broadcast, ...commons });
-    socket.onAny((event) =>
-      onAnyEvent({ input: [event], logger, emit, broadcast, ...commons }),
-    );
+    await onConnection({ input: [], ...commons });
+    socket.onAny((event) => onAnyEvent({ input: [event], ...commons }));
     for (const [event, action] of Object.entries(actions)) {
       socket.on(event, async (...params) =>
-        action.execute({ event, params, logger, emit, broadcast, ...commons }),
+        action.execute({ event, params, ...commons }),
       );
     }
-    socket.on("disconnect", () =>
-      onDisconnect({ input: [], logger, emit, broadcast, ...commons }),
-    );
+    socket.on("disconnect", () => onDisconnect({ input: [], ...commons }));
   });
   return io.attach(target);
 };

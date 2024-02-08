@@ -68,24 +68,25 @@ describe("Attach", () => {
       expect(actionsMock.test.execute).toHaveBeenLastCalledWith({
         broadcast: expect.any(Function),
         withRooms: expect.any(Function),
-        getRooms: expect.any(Function),
         emit: expect.any(Function),
         event: "test",
-        isConnected: expect.any(Function),
         logger: loggerMock,
         params: [[123, 456]],
-        socketId: "ID",
+        client: {
+          id: "ID",
+          isConnected: expect.any(Function),
+          getRooms: expect.any(Function),
+        },
       });
 
       // getRooms:
-      expect(actionsMock.test.execute.mock.lastCall[0].getRooms()).toEqual([
-        "room1",
-        "room2",
-      ]);
+      expect(
+        actionsMock.test.execute.mock.lastCall[0].client.getRooms(),
+      ).toEqual(["room1", "room2"]);
 
       // isConnected:
       expect(
-        actionsMock.test.execute.mock.lastCall[0].isConnected(),
+        actionsMock.test.execute.mock.lastCall[0].client.isConnected(),
       ).toBeFalsy();
     });
   });

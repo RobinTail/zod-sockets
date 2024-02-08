@@ -5,13 +5,14 @@ import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 
-export interface SocketFeatures {
+export interface Client {
   isConnected: () => boolean;
-  socketId: Socket["id"];
+  id: Socket["id"];
   getRooms: () => string[];
 }
 
 export interface HandlingFeatures<E extends EmissionMap> {
+  client: Client;
   logger: AbstractLogger;
   emit: Emitter<E>;
   broadcast: Broadcaster<E>;
@@ -21,8 +22,7 @@ export interface HandlingFeatures<E extends EmissionMap> {
 export type Handler<IN, OUT, E extends EmissionMap> = (
   params: {
     input: IN;
-  } & SocketFeatures &
-    HandlingFeatures<E>,
+  } & HandlingFeatures<E>,
 ) => Promise<OUT>;
 
 export abstract class AbstractAction {
@@ -30,8 +30,7 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-    } & SocketFeatures &
-      HandlingFeatures<EmissionMap>,
+    } & HandlingFeatures<EmissionMap>,
   ): Promise<void>;
 }
 
@@ -88,8 +87,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & SocketFeatures &
-    HandlingFeatures<EmissionMap>): Promise<void> {
+  } & HandlingFeatures<EmissionMap>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

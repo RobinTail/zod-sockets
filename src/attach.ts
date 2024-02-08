@@ -1,6 +1,6 @@
 import http from "node:http";
 import type { Server } from "socket.io";
-import { ActionMap, Handler, HandlingFeatures, SocketFeatures } from "./action";
+import { ActionMap, Handler, HandlingFeatures } from "./action";
 import { Config } from "./config";
 import {
   EmissionMap,
@@ -14,12 +14,12 @@ export const attachSockets = <E extends EmissionMap>({
   actions,
   target,
   config,
-  onConnection = ({ socketId }) =>
-    config.logger.debug("User connected", socketId),
-  onDisconnect = ({ socketId }) =>
-    config.logger.debug("User disconnected", socketId),
-  onAnyEvent = ({ input: [event], socketId }) =>
-    config.logger.debug(`${event} from ${socketId}`),
+  onConnection = ({ client }) =>
+    config.logger.debug("User connected", client.id),
+  onDisconnect = ({ client }) =>
+    config.logger.debug("User disconnected", client.id),
+  onAnyEvent = ({ input: [event], client }) =>
+    config.logger.debug(`${event} from ${client.id}`),
 }: {
   /**
    * @desc The Socket.IO server
@@ -48,10 +48,12 @@ export const attachSockets = <E extends EmissionMap>({
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });
     const withRooms = makeRoomService({ socket, config });
-    const commons: SocketFeatures & HandlingFeatures<E> = {
-      socketId: socket.id,
-      isConnected: () => socket.connected,
-      getRooms: () => Array.from(socket.rooms),
+    const commons: HandlingFeatures<E> = {
+      client: {
+        id: socket.id,
+        isConnected: () => socket.connected,
+        getRooms: () => Array.from(socket.rooms),
+      },
       logger: config.logger,
       emit,
       broadcast,

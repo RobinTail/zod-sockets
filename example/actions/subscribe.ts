@@ -4,7 +4,7 @@ import { actionsFactory } from "../factories";
 /** @desc The action demonstrates no acknowledgement and constraints on emission awareness */
 export const onSubscribe = actionsFactory.build({
   input: z.tuple([]).rest(z.unknown()),
-  handler: async ({ logger, emit, isConnected }) => {
+  handler: async ({ logger, emit, client }) => {
     logger.info("Subscribed");
     while (true) {
       try {
@@ -12,7 +12,7 @@ export const onSubscribe = actionsFactory.build({
         await new Promise<void>((resolve, reject) => {
           const timer = setTimeout(() => {
             clearTimeout(timer);
-            if (!isConnected()) {
+            if (!client.isConnected()) {
               reject("Disconnected");
             }
             resolve();

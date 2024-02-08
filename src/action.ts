@@ -7,8 +7,11 @@ import { AbstractLogger } from "./logger";
 import { RemoteClint } from "./utils";
 
 export interface Client {
+  /** @alias Socket.connected */
   isConnected: () => boolean;
+  /** @alias Socket.id */
   id: Socket["id"];
+  /** @desc Returns the list of the rooms the client in */
   getRooms: () => string[];
 }
 

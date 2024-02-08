@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { Action, Handler } from "./action";
-import { SocketsConfig } from "./config";
+import { Config } from "./config";
 import { EmissionMap } from "./emission";
 
-export interface SimpleActionDef<
+export interface ActionNoAckDef<
   IN extends z.AnyZodTuple,
   E extends EmissionMap,
 > {
@@ -11,7 +11,7 @@ export interface SimpleActionDef<
   handler: Handler<z.output<IN>, void, E>;
 }
 
-export interface AckActionDef<
+export interface ActionWithAckDef<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
   E extends EmissionMap,
@@ -22,10 +22,10 @@ export interface AckActionDef<
 }
 
 export class ActionsFactory<E extends EmissionMap> {
-  constructor(protected config: SocketsConfig<E>) {}
+  constructor(protected config: Config<E>) {}
 
   public build<IN extends z.AnyZodTuple, OUT extends z.AnyZodTuple>(
-    def: SimpleActionDef<IN, E> | AckActionDef<IN, OUT, E>,
+    def: ActionNoAckDef<IN, E> | ActionWithAckDef<IN, OUT, E>,
   ): Action<IN, OUT> {
     return new Action(def);
   }

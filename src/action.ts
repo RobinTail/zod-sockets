@@ -1,7 +1,7 @@
 import { init, last } from "ramda";
 import type { Socket } from "socket.io";
 import { z } from "zod";
-import { AckActionDef, SimpleActionDef } from "./actions-factory";
+import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 
@@ -49,8 +49,8 @@ export class Action<
 
   public constructor(
     action:
-      | AckActionDef<IN, OUT, EmissionMap>
-      | SimpleActionDef<IN, EmissionMap>,
+      | ActionWithAckDef<IN, OUT, EmissionMap>
+      | ActionNoAckDef<IN, EmissionMap>,
   ) {
     super();
     this.#inputSchema = action.input;

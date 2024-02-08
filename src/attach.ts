@@ -1,7 +1,7 @@
 import http from "node:http";
 import type { Server } from "socket.io";
 import { ActionMap, Handler, HandlingFeatures, SocketFeatures } from "./action";
-import { SocketsConfig } from "./config";
+import { Config } from "./config";
 import {
   EmissionMap,
   makeBroadcaster,
@@ -37,7 +37,7 @@ export const attachSockets = <E extends EmissionMap>({
    * */
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
-  config: SocketsConfig<E>;
+  config: Config<E>;
   /** @desc A place for emitting events unrelated to the incoming events */
   onConnection?: Handler<[], void, E>;
   onDisconnect?: Handler<[], void, E>;

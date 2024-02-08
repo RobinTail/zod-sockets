@@ -13,11 +13,13 @@ export const attachSockets = <E extends EmissionMap>({
   io,
   actions,
   target,
-  config: { emission, timeout, logger },
-  onConnection = ({ socketId }) => logger.debug("User connected", socketId),
-  onDisconnect = ({ socketId }) => logger.debug("User disconnected", socketId),
+  config,
+  onConnection = ({ socketId }) =>
+    config.logger.debug("User connected", socketId),
+  onDisconnect = ({ socketId }) =>
+    config.logger.debug("User disconnected", socketId),
   onAnyEvent = ({ input: [event], socketId }) =>
-    logger.debug(`${event} from ${socketId}`),
+    config.logger.debug(`${event} from ${socketId}`),
 }: {
   /**
    * @desc The Socket.IO server
@@ -41,15 +43,15 @@ export const attachSockets = <E extends EmissionMap>({
   onDisconnect?: Handler<[], void, E>;
   onAnyEvent?: Handler<[string], void, E>;
 }): Server => {
-  logger.info("ZOD-SOCKETS", target.address());
+  config.logger.info("ZOD-SOCKETS", target.address());
   io.on("connection", async (socket) => {
-    const emit = makeEmitter({ emission, socket, logger, timeout });
-    const broadcast = makeBroadcaster({ emission, socket, logger, timeout });
-    const rooms = makeRoomService({ emission, socket, logger, timeout });
+    const emit = makeEmitter({ socket, config });
+    const broadcast = makeBroadcaster({ socket, config });
+    const rooms = makeRoomService({ socket, config });
     const commons: SocketFeatures & HandlingFeatures<E> = {
       socketId: socket.id,
       isConnected: () => socket.connected,
-      logger,
+      logger: config.logger,
       emit,
       broadcast,
       rooms,

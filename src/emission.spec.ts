@@ -25,6 +25,14 @@ describe("Emission", () => {
     broadcast: broadcastMock,
   };
   const loggerMock = { debug: vi.fn() };
+  const config = {
+    logger: loggerMock as unknown as AbstractLogger,
+    timeout: 100,
+    emission: {
+      one: { schema: z.tuple([z.string()]) },
+      two: { schema: z.tuple([z.number()]), ack: z.tuple([z.string()]) },
+    },
+  };
 
   describe.each([
     { maker: makeEmitter, target: socketMock, ack: ["test"] },
@@ -32,12 +40,7 @@ describe("Emission", () => {
   ])("$maker.name", ({ maker, target, ack }) => {
     const emitter = maker({
       socket: socketMock as unknown as Socket,
-      logger: loggerMock as unknown as AbstractLogger,
-      timeout: 100,
-      emission: {
-        one: { schema: z.tuple([z.string()]) },
-        two: { schema: z.tuple([z.number()]), ack: z.tuple([z.string()]) },
-      },
+      config,
     });
 
     test("should create an emitter", () => {

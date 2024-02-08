@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
-import { AbstractLogger } from "./logger";
+import { SocketsConfig } from "./config";
 
 export interface Emission {
   schema: z.AnyZodTuple;
@@ -39,15 +39,11 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
  * */
 const makeGenericEmitter =
   ({
-    emission,
-    logger,
     target,
-    timeout,
+    config: { logger, emission, timeout },
   }: {
-    emission: EmissionMap;
-    logger: AbstractLogger;
+    config: SocketsConfig<EmissionMap>;
     target: Socket | Socket["broadcast"];
-    timeout: number;
   }) =>
   async (event: string, ...args: unknown[]) => {
     const isSocket = "id" in target;
@@ -68,10 +64,8 @@ const makeGenericEmitter =
   };
 
 interface MakerParams<E extends EmissionMap> {
-  emission: E;
-  logger: AbstractLogger;
   socket: Socket;
-  timeout: number;
+  config: SocketsConfig<E>;
 }
 
 export const makeEmitter = <E extends EmissionMap>({

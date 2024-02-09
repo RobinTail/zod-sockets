@@ -1,23 +1,58 @@
 import { init, last } from "ramda";
 import type { Socket } from "socket.io";
 import { z } from "zod";
-import { AckActionDef, SimpleActionDef } from "./actions-factory";
-import { Broadcaster } from "./broadcasting";
-import { EmissionMap, Emitter } from "./emission";
+import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
+import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
+import { RemoteClient } from "./remote-client";
 
-export interface SocketFeatures {
+export interface Client<E extends EmissionMap> {
+  /** @alias Socket.connected */
   isConnected: () => boolean;
-  socketId: Socket["id"];
+  /** @alias Socket.id */
+  id: Socket["id"];
+  /** @desc Returns the list of the rooms the client in */
+  getRooms: () => string[];
+  /**
+   * @desc Sends a new event to the client (this is not acknowledgement)
+   * @throws z.ZodError on validation
+   * @throws Error on ack timeout
+   * */
+  emit: Emitter<E>;
+  /** @desc Returns the client metadata according to the specified type or empty object */
+  getData: <D extends object>() => Readonly<Partial<D>>;
+  /**
+   * @desc Sets the client metadata according to the specified type
+   * @throws z.ZodError on validation
+   * */
+  setData: <D extends object>(value: D) => void;
+}
+
+export interface HandlingFeatures<E extends EmissionMap> {
+  logger: AbstractLogger;
+  /** @desc The scope of the owner of the received event */
+  client: Client<E>;
+  /** @desc The global scope */
+  all: {
+    /**
+     * @desc Emits to everyone
+     * @throws z.ZodError on validation
+     * @throws Error on ack timeout
+     * */
+    broadcast: Broadcaster<E>;
+    /** @desc Returns the list of available rooms */
+    getRooms: () => string[];
+    /** @desc Returns the list of familiar clients */
+    getClients: () => Promise<RemoteClient[]>;
+  };
+  /** @desc Provides room(s)-scope methods */
+  withRooms: RoomService<E>;
 }
 
 export type Handler<IN, OUT, E extends EmissionMap> = (
   params: {
     input: IN;
-    logger: AbstractLogger;
-    emit: Emitter<E>;
-    broadcast: Broadcaster<E>;
-  } & SocketFeatures,
+  } & HandlingFeatures<E>,
 ) => Promise<OUT>;
 
 export abstract class AbstractAction {
@@ -25,10 +60,7 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-      logger: AbstractLogger;
-      emit: Emitter<EmissionMap>;
-      broadcast: Broadcaster<EmissionMap>;
-    } & SocketFeatures,
+    } & HandlingFeatures<EmissionMap>,
   ): Promise<void>;
 }
 
@@ -46,8 +78,8 @@ export class Action<
 
   public constructor(
     action:
-      | AckActionDef<IN, OUT, EmissionMap>
-      | SimpleActionDef<IN, EmissionMap>,
+      | ActionWithAckDef<IN, OUT, EmissionMap>
+      | ActionNoAckDef<IN, EmissionMap>,
   ) {
     super();
     this.#inputSchema = action.input;
@@ -81,16 +113,11 @@ export class Action<
     event,
     params,
     logger,
-    emit,
-    broadcast,
     ...rest
   }: {
     event: string;
     params: unknown[];
-    logger: AbstractLogger;
-    emit: Emitter<EmissionMap>;
-    broadcast: Broadcaster<EmissionMap>;
-  } & SocketFeatures): Promise<void> {
+  } & HandlingFeatures<EmissionMap>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(
@@ -98,13 +125,7 @@ export class Action<
         input,
       );
       const ack = this.#parseAckCb(params);
-      const output = await this.#handler({
-        input,
-        logger,
-        emit,
-        broadcast,
-        ...rest,
-      });
+      const output = await this.#handler({ input, logger, ...rest });
       const response = this.#parseOutput(output);
       if (ack && response) {
         logger.debug("parsed output", response);

@@ -37,8 +37,8 @@
     {
       "files": [
         "./tools/*.ts",
-        "./tests/*.ts",
-        "./tsup.config.ts",
+        "./tests/**/*.ts",
+        "./*.config.ts",
         "./example/*.ts"
       ],
       "rules": {

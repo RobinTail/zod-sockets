@@ -2,6 +2,50 @@
 
 ## Version 0
 
+### v0.3.2
+
+- Ability to interact with the client's metadata: `getData<T>()` and `setData<T>()` methods.
+
+### v0.3.1
+
+- Using `io.of("/")` for both `all.getRooms()` and `all.getClients()`.
+
+### v0.3.0
+
+- New argument for the Action handler: `all` having methods:
+  - `broadcast()` (moved);
+  - `getRooms()` — returns all the available rooms;
+  - `getClients()` — returns all the familiar clients.
+- The argument `emit()` of the Action handler moved into `client` one.
+- The argument `withRooms()` of the Action handler now also provides the `getClients()` method (clients in the rooms).
+
+### v0.2.3
+
+- Adding `getRooms()` and `withRooms()` providing `join()`, `leave()` and `broadcast()` methods to the Action handler.
+
+### v0.2.2
+
+- Adjusting documentation.
+
+### v0.2.1
+
+- Concept description and a workflow diagram.
+
+### v0.2.0
+
+- Moved `logger` from `attachSockets()` to `createConfig()` argument.
+
+### v0.1.0
+
+- Fixed module exports.
+- Unit and integration tests.
+- `createSocketsConfig()` renamed to `createConfig()`.
+
+### v0.0.3
+
+- Ensure emitting the declared events only.
+- Generic implementation for `emit()` and `broadcast()`.
+
 ### v0.0.2
 
 - Added broadcasting feature.

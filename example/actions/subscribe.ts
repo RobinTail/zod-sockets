@@ -4,15 +4,15 @@ import { actionsFactory } from "../factories";
 /** @desc The action demonstrates no acknowledgement and constraints on emission awareness */
 export const onSubscribe = actionsFactory.build({
   input: z.tuple([]).rest(z.unknown()),
-  handler: async ({ logger, emit, isConnected }) => {
+  handler: async ({ logger, client }) => {
     logger.info("Subscribed");
     while (true) {
       try {
-        emit("time", new Date()); // <— payload type constraints
+        await client.emit("time", new Date()); // <— payload type constraints
         await new Promise<void>((resolve, reject) => {
           const timer = setTimeout(() => {
             clearTimeout(timer);
-            if (!isConnected()) {
+            if (!client.isConnected()) {
               reject("Disconnected");
             }
             resolve();

@@ -1,15 +1,18 @@
 import http from "node:http";
 import { attachSockets } from "../src";
-import { socketsConfig } from "./config";
-import { actions } from "./routing";
+import { onChat } from "./actions/chat";
+import { onPing } from "./actions/ping";
+import { onSubscribe } from "./actions/subscribe";
+import { config } from "./config";
 import { Server } from "socket.io";
-
-const target = new http.Server().listen(8090);
 
 attachSockets({
   io: new Server(),
-  config: socketsConfig,
-  target,
-  actions,
-  logger: console,
+  config,
+  target: http.createServer().listen(8090),
+  actions: {
+    ping: onPing,
+    subscribe: onSubscribe,
+    chat: onChat,
+  },
 });

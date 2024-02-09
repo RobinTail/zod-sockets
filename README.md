@@ -105,7 +105,9 @@ for sending the `ping` event to `ws://localhost:8090` with acknowledgement.
 
 The outgoing events should be configured using `z.tuple()` schemas. Those tuples describe the types of the arguments
 supplied to the `Socket::emit()` method, excluding an optional acknowledgment, which has its own optional schema being
-a callback function having ordered arguments. The schemas also may have transformations. Consider the examples:
+a callback function having ordered arguments. The schemas may also have transformations. This declaration establishes
+the constraints on your further implementation as well as payload validation and helps to avoid mistakes during the
+development. Consider the following examples of two outgoing events, with and without acknowledgment:
 
 ```typescript
 import { z } from "zod";

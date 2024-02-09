@@ -2,6 +2,15 @@
 
 ## Version 0
 
+### v0.3.0
+
+- New argument for the Action handler: `all` having methods:
+  - `broadcast()` (moved);
+  - `getRooms()` — returns all the available rooms;
+  - `getClients()` — returns all the familiar clients.
+- The argument `emit()` of the Action handler moved into `client` one.
+- The argument `withRooms()` of the Action handler now also provides the `getClients()` method (clients in the rooms).
+
 ### v0.2.3
 
 - Adding `getRooms()` and `withRooms()` providing `join()`, `leave()` and `broadcast()` methods to the Action handler.

@@ -99,6 +99,38 @@ The expected response should be similar to:
 Then consider using [Postman](https://learning.postman.com/docs/sending-requests/websocket/create-a-socketio-request/)
 for sending the `ping` event to `ws://localhost:8090` with acknowledgement.
 
+# Basic features
+
+## Emission
+
+The outgoing events should be configured using `z.tuple()` schemas. Those tuples describe the types of the arguments
+supplied to the `Socket::emit()` method, excluding an optional acknowledgment, which has its own optional schema being
+a callback function having ordered arguments. The schemas also may have transformations. Consider the examples:
+
+```typescript
+import { z } from "zod";
+import { createConfig } from "zod-sockets";
+
+const config = createConfig({
+  emission: {
+    // enabling Socket::emit("chat", "message", { from: "someone" })
+    chat: {
+      schema: z.tuple([z.string(), z.object({ from: z.string() })]),
+    },
+    // enabling Socket::emit("secret", "message", ([readAt]: [Date]) => {})
+    secret: {
+      schema: z.tuple([z.string()]),
+      ack: z.tuple([
+        z
+          .string()
+          .datetime()
+          .transform((str) => new Date(str)),
+      ]),
+    },
+  },
+});
+```
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

@@ -19,6 +19,12 @@ export interface Client<E extends EmissionMap> {
    * @throws Error on ack timeout
    * */
   emit: Emitter<E>;
+  /**
+   * @desc Emits to others
+   * @throws z.ZodError on validation
+   * @throws Error on ack timeout
+   * */
+  broadcast: Broadcaster<E>;
   /** @desc Returns the client metadata according to the specified type or empty object */
   getData: <D extends object>() => Readonly<Partial<D>>;
   /**
@@ -32,19 +38,10 @@ export interface HandlingFeatures<E extends EmissionMap> {
   logger: AbstractLogger;
   /** @desc The scope of the owner of the received event */
   client: Client<E>;
-  /** @desc The global scope */
-  all: {
-    /**
-     * @desc Emits to everyone
-     * @throws z.ZodError on validation
-     * @throws Error on ack timeout
-     * */
-    broadcast: Broadcaster<E>;
-    /** @desc Returns the list of available rooms */
-    getRooms: () => string[];
-    /** @desc Returns the list of familiar clients */
-    getClients: () => Promise<RemoteClient[]>;
-  };
+  /** @desc Returns the list of available rooms */
+  getAllRooms: () => string[];
+  /** @desc Returns the list of familiar clients */
+  getAllClients: () => Promise<RemoteClient[]>;
   /** @desc Provides room(s)-scope methods */
   withRooms: RoomService<E>;
 }

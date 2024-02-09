@@ -45,9 +45,10 @@ export const attachSockets = <E extends EmissionMap>({
   onAnyEvent?: Handler<[string], void, E>;
 }): Server => {
   config.logger.info("ZOD-SOCKETS", target.address());
-  const getAllRooms = () => Array.from(io.of("/").adapter.rooms.keys());
+  const rootNS = io.of("/");
+  const getAllRooms = () => Array.from(rootNS.adapter.rooms.keys());
   const getAllClients = async () =>
-    mapFetchedSockets(await io.of("/").fetchSockets());
+    mapFetchedSockets(await rootNS.fetchSockets());
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });

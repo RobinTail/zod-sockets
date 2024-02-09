@@ -13,8 +13,19 @@ export interface Client<E extends EmissionMap> {
   id: Socket["id"];
   /** @desc Returns the list of the rooms the client in */
   getRooms: () => string[];
-  /** @desc Sends a new event to the client (this is not acknowledgement) */
+  /**
+   * @desc Sends a new event to the client (this is not acknowledgement)
+   * @throws z.ZodError on validation
+   * @throws Error on ack timeout
+   * */
   emit: Emitter<E>;
+  /** @desc Returns the client metadata according to the specified type or empty object */
+  getData: <D extends object>() => Readonly<Partial<D>>;
+  /**
+   * @desc Sets the client metadata according to the specified type
+   * @throws z.ZodError on validation
+   * */
+  setData: <D extends object>(value: D) => void;
 }
 
 export interface HandlingFeatures<E extends EmissionMap> {
@@ -23,7 +34,11 @@ export interface HandlingFeatures<E extends EmissionMap> {
   client: Client<E>;
   /** @desc The global scope */
   all: {
-    /** @desc Emits to everyone */
+    /**
+     * @desc Emits to everyone
+     * @throws z.ZodError on validation
+     * @throws Error on ack timeout
+     * */
     broadcast: Broadcaster<E>;
     /** @desc Returns the list of available rooms */
     getRooms: () => string[];

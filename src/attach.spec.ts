@@ -56,10 +56,9 @@ describe("Attach", () => {
 
       // on connection:
       await ioMock.on.mock.lastCall![1](socketMock);
-      expect(loggerMock.debug).toHaveBeenLastCalledWith(
-        "Client connected",
-        "ID",
-      );
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("Client connected", {
+        id: "ID",
+      });
       expect(socketMock.onAny).toHaveBeenLastCalledWith(expect.any(Function));
       expect(socketMock.on).toHaveBeenCalledWith("test", expect.any(Function));
       expect(socketMock.on).toHaveBeenLastCalledWith(
@@ -69,14 +68,13 @@ describe("Attach", () => {
 
       // on disconnect:
       socketMock.on.mock.lastCall![1]();
-      expect(loggerMock.debug).toHaveBeenLastCalledWith(
-        "Client disconnected",
-        "ID",
-      );
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("Client disconnected", {
+        id: "ID",
+      });
 
       // on any event:
       socketMock.onAny.mock.lastCall![0]("test");
-      expect(loggerMock.debug).toHaveBeenLastCalledWith("test from ID");
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("test from ID", {});
 
       // on the listened event:
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");
@@ -92,6 +90,8 @@ describe("Attach", () => {
           isConnected: expect.any(Function),
           getRooms: expect.any(Function),
           emit: expect.any(Function),
+          getData: expect.any(Function),
+          setData: expect.any(Function),
         },
         all: {
           broadcast: expect.any(Function),
@@ -122,9 +122,29 @@ describe("Attach", () => {
       await expect(
         actionsMock.test.execute.mock.lastCall[0].all.getClients(),
       ).resolves.toEqual([
-        { id: "ID", rooms: ["room1", "room2"] },
-        { id: "other", rooms: ["room3"] },
+        {
+          id: "ID",
+          rooms: ["room1", "room2"],
+          getData: expect.any(Function),
+        },
+        {
+          id: "other",
+          rooms: ["room3"],
+          getData: expect.any(Function),
+        },
       ]);
+
+      // client.setData:
+      actionsMock.test.execute.mock.lastCall[0].client.setData({
+        name: "user",
+      });
+
+      // client.getData:
+      expect(
+        actionsMock.test.execute.mock.lastCall[0].client.getData(),
+      ).toEqual({
+        name: "user",
+      });
     });
   });
 });

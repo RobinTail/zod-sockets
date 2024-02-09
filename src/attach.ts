@@ -15,12 +15,12 @@ export const attachSockets = <E extends EmissionMap>({
   actions,
   target,
   config,
-  onConnection = ({ client }) =>
-    config.logger.debug("Client connected", client.id),
-  onDisconnect = ({ client }) =>
-    config.logger.debug("Client disconnected", client.id),
-  onAnyEvent = ({ input: [event], client }) =>
-    config.logger.debug(`${event} from ${client.id}`),
+  onConnection = ({ client: { id, getData } }) =>
+    config.logger.debug("Client connected", { ...getData(), id }),
+  onDisconnect = ({ client: { id, getData } }) =>
+    config.logger.debug("Client disconnected", { ...getData(), id }),
+  onAnyEvent = ({ input: [event], client: { id, getData } }) =>
+    config.logger.debug(`${event} from ${id}`, getData()),
 }: {
   /**
    * @desc The Socket.IO server
@@ -59,6 +59,8 @@ export const attachSockets = <E extends EmissionMap>({
         id: socket.id,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
+        getData: () => socket.data || {},
+        setData: (value) => (socket.data = value),
       },
       all: {
         broadcast,

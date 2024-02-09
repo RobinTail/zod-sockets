@@ -29,6 +29,11 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
 export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
+  /**
+   * @desc Emits an event to everyone in the specified room(s)
+   * @throws z.ZodError on validation
+   * @throws Error on ack timeout
+   * */
   broadcast: Broadcaster<E>;
   join: () => void | Promise<void>;
   leave: () => void | Promise<void>;

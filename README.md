@@ -197,6 +197,28 @@ const actions: ActionMap = {
 };
 ```
 
+# Dispatching events
+
+Depending on your application's needs and architecture, you can choose different ways to send events.
+The emission methods have constraints on emission types declared in the configuration.
+
+```typescript
+actionsFactory.build({
+  handler: async ({ client, all, withRooms }) => {
+    // sending to the sender of the received event:
+    await client.emit("event", ...payload);
+    // sending to everyong except the client:
+    await all.broadcast("event", ...payload);
+    // sending to everyone in a room:
+    withRooms("room1").broadcast("event", ...payload);
+    // sending to everyone within several rooms:
+    withRooms(["room1", "room2"]).broadcast("event", ...payload);
+    // sending to everyone everywhere including the client:
+    withRooms(all.getRooms()).broadcast("event", ...payload);
+  },
+});
+```
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

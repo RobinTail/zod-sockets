@@ -35,7 +35,7 @@ export interface HandlingFeatures<E extends EmissionMap> {
   /** @desc The global scope */
   all: {
     /**
-     * @desc Emits to everyone
+     * @desc Emits to everyone except the client
      * @throws z.ZodError on validation
      * @throws Error on ack timeout
      * */

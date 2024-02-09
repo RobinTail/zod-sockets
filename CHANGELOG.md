@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.3.2
+
+- Ability to interact with the client's metadata: `getData<T>()` and `setData<T>()` methods.
+
 ### v0.3.1
 
 - Using `io.of("/")` for both `all.getRooms()` and `all.getClients()`.

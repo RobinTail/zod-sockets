@@ -148,18 +148,35 @@ export const actionsFactory = new ActionsFactory(config);
 The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
 incoming event. This should not be confused with acknowledgments that are basically direct and immediate responses to
 the one that sent the incoming event. Produce actions using the `build()` method accepting an object having `input`
-schema for the event payload (excluding acknowledgment), optional `output` schema for the acknowledgment and `handler`.
-The `handler` is a function where you place your implementation for handling the event. Please note that the incoming
-event name is not assigned yet. The argument of the `handler` in an object having several handy entities, the most
-important of them is `input` property, being the validated event payload:
+schema for the event payload (excluding acknowledgment) and a `handler`, which is a function where you place your
+implementation for handling the event. Please note that the incoming event name is not assigned yet. The argument of
+the `handler` in an object having several handy entities, the most important of them is `input` property, being the
+validated event payload:
 
 ```typescript
 export const onChat = actionsFactory.build({
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, all, withRooms, logger }) => {
     /* your implementation here */
-    // typeof message === "string" 
+    // typeof message === "string"
   },
+});
+```
+
+### Acknowledgements
+
+Actions may also have an acknowledgement, which is acquired from the returns of the `handler` and being validated
+against additionally specified `output` schema. When the number of payload arguments is flexible, you can use `rest()`
+method of `z.tuple()`. When the data type is not important at all, consider describing it using `z.unknown()`.
+When using `z.literal()`, Typescript may assume the type of the actually returned value more loose, therefore the
+`as const` expression might be required. The following example illustrates an action acknowledging "ping" event with
+"pong" and an echo of the received payload:
+
+```typescript
+export const onPing = actionsFactory.build({
+  input: z.tuple([]).rest(z.unknown()),
+  output: z.tuple([z.literal("pong")]).rest(z.unknown()),
+  handler: async ({ input }) => ["pong" as const, ...input],
 });
 ```
 

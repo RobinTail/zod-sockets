@@ -140,7 +140,7 @@ in separate self-descriptive files.
 ```typescript
 import { ActionsFactory } from "zod-sockets";
 
-export const actionsFactory = new ActionsFactory(config);
+const actionsFactory = new ActionsFactory(config);
 ```
 
 ## Actions
@@ -154,7 +154,7 @@ the `handler` in an object having several handy entities, the most important of 
 validated event payload:
 
 ```typescript
-export const onChat = actionsFactory.build({
+const onChat = actionsFactory.build({
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, all, withRooms, logger }) => {
     /* your implementation here */
@@ -173,11 +173,26 @@ When using `z.literal()`, Typescript may assume the type of the actually returne
 "pong" and an echo of the received payload:
 
 ```typescript
-export const onPing = actionsFactory.build({
+const onPing = actionsFactory.build({
   input: z.tuple([]).rest(z.unknown()),
   output: z.tuple([z.literal("pong")]).rest(z.unknown()),
   handler: async ({ input }) => ["pong" as const, ...input],
 });
+```
+
+### Action Map
+
+Independently declared Actions should be assigned to the incoming event names within a structure called `ActionMap`.
+That implies that in some cases you can reuse an Action for assigning it to different event names. Consider this as a
+router for the incoming events.
+
+```typescript
+import { ActionMap } from "zod-sockets";
+
+const actions: ActionMap = {
+  chat: onChat,
+  ping: onPing,
+};
 ```
 
 # Next

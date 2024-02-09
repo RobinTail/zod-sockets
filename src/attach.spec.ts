@@ -90,14 +90,12 @@ describe("Attach", () => {
           isConnected: expect.any(Function),
           getRooms: expect.any(Function),
           emit: expect.any(Function),
+          broadcast: expect.any(Function),
           getData: expect.any(Function),
           setData: expect.any(Function),
         },
-        all: {
-          broadcast: expect.any(Function),
-          getClients: expect.any(Function),
-          getRooms: expect.any(Function),
-        },
+        getAllClients: expect.any(Function),
+        getAllRooms: expect.any(Function),
       });
 
       // client.getRooms:
@@ -110,17 +108,17 @@ describe("Attach", () => {
         actionsMock.test.execute.mock.lastCall[0].client.isConnected(),
       ).toBeFalsy();
 
-      // all.getRooms:
-      expect(actionsMock.test.execute.mock.lastCall[0].all.getRooms()).toEqual([
+      // getAllRooms:
+      expect(actionsMock.test.execute.mock.lastCall[0].getAllRooms()).toEqual([
         "room1",
         "room2",
         "room3",
       ]);
       expect(ioMock.of).toHaveBeenLastCalledWith("/");
 
-      // all.getClients:
+      // getAllClients:
       await expect(
-        actionsMock.test.execute.mock.lastCall[0].all.getClients(),
+        actionsMock.test.execute.mock.lastCall[0].getAllClients(),
       ).resolves.toEqual([
         {
           id: "ID",

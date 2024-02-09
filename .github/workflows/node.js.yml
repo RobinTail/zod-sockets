@@ -37,8 +37,10 @@ jobs:
       run: yarn install
     - name: Lint
       run: yarn lint
-    - name: Test
+    - name: Unit test
       run: yarn test
+    - name: System test
+      run: yarn test:system
     - name: Build
       run: yarn build
     - name: CJS test

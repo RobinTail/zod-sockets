@@ -1,0 +1,9 @@
+{
+  "name": "zod-sockets-system-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "socket.io-client": "^4.7.4"
+  }
+}

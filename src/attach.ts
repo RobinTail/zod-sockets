@@ -56,17 +56,15 @@ export const attachSockets = <E extends EmissionMap>({
     const commons: HandlingFeatures<E> = {
       client: {
         emit,
+        broadcast,
         id: socket.id,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
         getData: () => socket.data || {},
         setData: (value) => (socket.data = value),
       },
-      all: {
-        broadcast,
-        getClients: getAllClients,
-        getRooms: getAllRooms,
-      },
+      getAllClients,
+      getAllRooms,
       logger: config.logger,
       withRooms,
     };

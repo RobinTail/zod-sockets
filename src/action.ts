@@ -22,7 +22,7 @@ export interface Client<E extends EmissionMap> {
   /** @desc Returns the client metadata according to the specified type or empty object */
   getData: <D extends object>() => Readonly<Partial<D>>;
   /**
-   * @desc Sets the client metadata according to the schema specified in config
+   * @desc Sets the client metadata according to the specified type
    * @throws z.ZodError on validation
    * */
   setData: <D extends object>(value: D) => void;

@@ -32,6 +32,11 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
 export type RoomService<E extends EmissionMap, D extends Metadata> = (
   rooms: string | string[],
 ) => {
+  /**
+   * @desc Emits an event to everyone in the specified room(s)
+   * @throws z.ZodError on validation
+   * @throws Error on ack timeout
+   * */
   broadcast: Broadcaster<E>;
   join: () => void | Promise<void>;
   leave: () => void | Promise<void>;

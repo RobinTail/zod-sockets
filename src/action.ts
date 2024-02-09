@@ -13,15 +13,15 @@ export interface Client<E extends EmissionMap> {
   id: Socket["id"];
   /** @desc Returns the list of the rooms the client in */
   getRooms: () => string[];
-  /** @desc Sends an event to the client */
+  /** @desc Sends a new event to the client (this is not acknowledgement) */
   emit: Emitter<E>;
 }
 
 export interface HandlingFeatures<E extends EmissionMap> {
   logger: AbstractLogger;
-  /** @desc The owner of the received event */
+  /** @desc The scope of the owner of the received event */
   client: Client<E>;
-  /** @desc Provides global scope methods */
+  /** @desc The global scope */
   all: {
     /** @desc Emits to everyone */
     broadcast: Broadcaster<E>;

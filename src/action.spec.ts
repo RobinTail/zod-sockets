@@ -41,12 +41,14 @@ describe("Action", () => {
         event: "test",
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some"],
-        emit: emitMock,
-        broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          broadcast: broadcastMock,
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+        },
         client: {
+          emit: emitMock,
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
           id: "ID",
@@ -54,14 +56,16 @@ describe("Action", () => {
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(simpleHandler).toHaveBeenLastCalledWith({
-        broadcast: broadcastMock,
-        withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
-        emit: emitMock,
         input: ["some"],
         logger: loggerMock,
+        withRooms: withRoomsMock,
+        all: {
+          broadcast: broadcastMock,
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+        },
         client: {
+          emit: emitMock,
           isConnected: isConnectedMock,
           getRooms: getRoomsMock,
           id: "ID",
@@ -75,12 +79,14 @@ describe("Action", () => {
         event: "test",
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some", ackMock],
-        emit: emitMock,
-        broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          broadcast: broadcastMock,
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+        },
         client: {
+          emit: emitMock,
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
           id: "ID",
@@ -92,12 +98,14 @@ describe("Action", () => {
           id: "ID",
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
+          emit: emitMock,
         },
-        broadcast: broadcastMock,
+        all: {
+          broadcast: broadcastMock,
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+        },
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
-        emit: emitMock,
         input: ["some"],
         logger: loggerMock,
       });
@@ -109,15 +117,17 @@ describe("Action", () => {
         event: "test",
         logger: loggerMock as unknown as AbstractLogger,
         params: [], // too short
-        emit: emitMock,
-        broadcast: broadcastMock,
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          broadcast: broadcastMock,
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+        },
         client: {
+          id: "ID",
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
-          id: "ID",
+          emit: emitMock,
         },
       });
       expect(loggerMock.error).toHaveBeenCalled();

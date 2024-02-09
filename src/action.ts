@@ -6,32 +6,32 @@ import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 import { RemoteClint } from "./utils";
 
-export interface Client {
+export interface Client<E extends EmissionMap> {
   /** @alias Socket.connected */
   isConnected: () => boolean;
   /** @alias Socket.id */
   id: Socket["id"];
   /** @desc Returns the list of the rooms the client in */
   getRooms: () => string[];
+  /** @desc Sends a new event to the client (this is not acknowledgement) */
+  emit: Emitter<E>;
 }
 
 export interface HandlingFeatures<E extends EmissionMap> {
-  /** @desc The owner of the received event */
-  client: Client;
   logger: AbstractLogger;
-  /**
-   * @desc Emits towards the owner of the received event
-   * @todo consider moving to "client"
-   * */
-  emit: Emitter<E>;
-  /** @desc Emits to everyone */
-  broadcast: Broadcaster<E>;
+  /** @desc The scope of the owner of the received event */
+  client: Client<E>;
+  /** @desc The global scope */
+  all: {
+    /** @desc Emits to everyone */
+    broadcast: Broadcaster<E>;
+    /** @desc Returns the list of available rooms */
+    getRooms: () => string[];
+    /** @desc Returns the list of familiar clients */
+    getClients: () => Promise<RemoteClint[]>;
+  };
   /** @desc Provides room(s)-scope methods */
   withRooms: RoomService<E>;
-  /** @desc Returns the list of available rooms */
-  getAllRooms: () => string[];
-  /** @desc Returns the list of familiar client */
-  getAllClients: () => Promise<RemoteClint[]>;
 }
 
 export type Handler<IN, OUT, E extends EmissionMap> = (

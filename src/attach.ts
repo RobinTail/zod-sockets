@@ -53,16 +53,18 @@ export const attachSockets = <E extends EmissionMap>({
     const withRooms = makeRoomService({ socket, config });
     const commons: HandlingFeatures<E> = {
       client: {
+        emit,
         id: socket.id,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
       },
+      all: {
+        broadcast,
+        getClients: getAllClients,
+        getRooms: getAllRooms,
+      },
       logger: config.logger,
-      emit,
-      broadcast,
       withRooms,
-      getAllClients,
-      getAllRooms,
     };
     await onConnection({ input: [], ...commons });
     socket.onAny((event) => onAnyEvent({ input: [event], ...commons }));

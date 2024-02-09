@@ -80,11 +80,7 @@ describe("Attach", () => {
       expect(call).toBeTruthy();
       await call[1]([123, 456]);
       expect(actionsMock.test.execute).toHaveBeenLastCalledWith({
-        broadcast: expect.any(Function),
         withRooms: expect.any(Function),
-        getAllClients: expect.any(Function),
-        getAllRooms: expect.any(Function),
-        emit: expect.any(Function),
         event: "test",
         logger: loggerMock,
         params: [[123, 456]],
@@ -92,30 +88,36 @@ describe("Attach", () => {
           id: "ID",
           isConnected: expect.any(Function),
           getRooms: expect.any(Function),
+          emit: expect.any(Function),
+        },
+        all: {
+          broadcast: expect.any(Function),
+          getClients: expect.any(Function),
+          getRooms: expect.any(Function),
         },
       });
 
-      // getRooms:
+      // client.getRooms:
       expect(
         actionsMock.test.execute.mock.lastCall[0].client.getRooms(),
       ).toEqual(["room1", "room2"]);
 
-      // isConnected:
+      // client.isConnected:
       expect(
         actionsMock.test.execute.mock.lastCall[0].client.isConnected(),
       ).toBeFalsy();
 
-      // getAllRooms:
-      expect(actionsMock.test.execute.mock.lastCall[0].getAllRooms()).toEqual([
+      // all.getRooms:
+      expect(actionsMock.test.execute.mock.lastCall[0].all.getRooms()).toEqual([
         "room1",
         "room2",
         "room3",
       ]);
       expect(ioMock.of).toHaveBeenLastCalledWith("/");
 
-      // getAllClients:
+      // all.getClients:
       await expect(
-        actionsMock.test.execute.mock.lastCall[0].getAllClients(),
+        actionsMock.test.execute.mock.lastCall[0].all.getClients(),
       ).resolves.toEqual([
         { id: "ID", rooms: ["room1", "room2"] },
         { id: "other", rooms: ["room3"] },

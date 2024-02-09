@@ -7,4 +7,4 @@ export const defaultMeta = z.object({}).passthrough();
 export const parseMeta = <D extends Metadata>(
   data: unknown,
   schema: D | undefined,
-): z.output<D> => (schema || defaultMeta).parse(data);
+): z.output<D> => (schema || defaultMeta).parse(data || {});

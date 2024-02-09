@@ -31,10 +31,10 @@ export interface HandlingFeatures<E extends EmissionMap, D extends Metadata> {
     /** @desc Returns the list of available rooms */
     getRooms: () => string[];
     /** @desc Returns the list of familiar clients */
-    getClients: () => Promise<RemoteClient[]>;
+    getClients: () => Promise<RemoteClient<D>[]>;
   };
   /** @desc Provides room(s)-scope methods */
-  withRooms: RoomService<E>;
+  withRooms: RoomService<E, D>;
 }
 
 export type Handler<IN, OUT, E extends EmissionMap, D extends Metadata> = (

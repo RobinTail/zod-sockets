@@ -8,7 +8,7 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
-import { Metadata, defaultMeta } from "./metadata";
+import { Metadata, parseMeta } from "./metadata";
 import { getRemoteClients } from "./remote-client";
 
 export const attachSockets = <E extends EmissionMap, D extends Metadata>({
@@ -49,7 +49,7 @@ export const attachSockets = <E extends EmissionMap, D extends Metadata>({
   const rootNS = io.of("/");
   const getAllRooms = () => Array.from(rootNS.adapter.rooms.keys());
   const getAllClients = async () =>
-    getRemoteClients(await rootNS.fetchSockets());
+    getRemoteClients(await rootNS.fetchSockets(), config.metadata);
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });
@@ -60,9 +60,8 @@ export const attachSockets = <E extends EmissionMap, D extends Metadata>({
         id: socket.id,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
-        getData: () => socket.data,
-        setData: (next) =>
-          (socket.data = (config.metadata || defaultMeta).parse(next)),
+        getData: () => parseMeta(socket.data, config.metadata),
+        setData: (next) => (socket.data = parseMeta(next, config.metadata)),
       },
       all: {
         broadcast,

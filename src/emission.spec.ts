@@ -103,8 +103,18 @@ describe("Emission", () => {
           }
         }
         await expect(getClients()).resolves.toEqual([
-          { id: "ID", rooms: ["room1", "room2"] },
-          { id: "other", rooms: ["room3"] },
+          {
+            id: "ID",
+            rooms: ["room1", "room2"],
+            getData: expect.any(Function),
+            setData: expect.any(Function),
+          },
+          {
+            id: "other",
+            rooms: ["room3"],
+            getData: expect.any(Function),
+            setData: expect.any(Function),
+          },
         ]);
       },
     );

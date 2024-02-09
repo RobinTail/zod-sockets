@@ -29,11 +29,13 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
-export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
+export type RoomService<E extends EmissionMap, D extends Metadata> = (
+  rooms: string | string[],
+) => {
   broadcast: Broadcaster<E>;
   join: () => void | Promise<void>;
   leave: () => void | Promise<void>;
-  getClients: () => Promise<RemoteClient[]>;
+  getClients: () => Promise<RemoteClient<D>[]>;
 };
 
 /**
@@ -85,11 +87,12 @@ export const makeBroadcaster = <E extends EmissionMap, D extends Metadata>({
 export const makeRoomService =
   <E extends EmissionMap, D extends Metadata>({
     socket,
+    config,
     ...rest
-  }: MakerParams<E, D>): RoomService<E> =>
+  }: MakerParams<E, D>): RoomService<E, D> =>
   (rooms) => ({
     getClients: async () =>
-      getRemoteClients(await socket.in(rooms).fetchSockets()),
+      getRemoteClients(await socket.in(rooms).fetchSockets(), config.metadata),
     join: () => socket.join(rooms),
     leave: () =>
       typeof rooms === "string"
@@ -97,6 +100,7 @@ export const makeRoomService =
         : Promise.all(rooms.map((room) => socket.leave(room))).then(() => {}),
     broadcast: makeGenericEmitter({
       ...rest,
+      config,
       target: socket.to(rooms),
     }) as Broadcaster<E>,
   });

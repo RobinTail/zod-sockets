@@ -16,9 +16,9 @@ export const attachSockets = <E extends EmissionMap>({
   target,
   config,
   onConnection = ({ client }) =>
-    config.logger.debug("User connected", client.id),
+    config.logger.debug("Client connected", client.id),
   onDisconnect = ({ client }) =>
-    config.logger.debug("User disconnected", client.id),
+    config.logger.debug("Client disconnected", client.id),
   onAnyEvent = ({ input: [event], client }) =>
     config.logger.debug(`${event} from ${client.id}`),
 }: {
@@ -46,7 +46,8 @@ export const attachSockets = <E extends EmissionMap>({
 }): Server => {
   config.logger.info("ZOD-SOCKETS", target.address());
   const getAllRooms = () => Array.from(io.of("/").adapter.rooms.keys());
-  const getAllClients = async () => mapFetchedSockets(await io.fetchSockets());
+  const getAllClients = async () =>
+    mapFetchedSockets(await io.of("/").fetchSockets());
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });

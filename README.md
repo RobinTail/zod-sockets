@@ -131,19 +131,19 @@ const config = createConfig({
 });
 ```
 
-## Factory
+## Actions
 
-Factory is an entity made aware of the Emission types (possible outgoing events) by supplying the config and is capable
-of producing Actions (declarations of incoming events). This architecture enables you to keep the produced Actions
-in separate self-descriptive files.
+### Making actions
+
+Actions (the declarations of incoming events) are produced on an `ActionFactory` which is an entity made aware of the
+Emission types (possible outgoing events) by supplying the config to its constructor. This architecture enables you to
+keep the produced Actions in separate self-descriptive files.
 
 ```typescript
 import { ActionsFactory } from "zod-sockets";
 
 const actionsFactory = new ActionsFactory(config);
 ```
-
-## Actions
 
 The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
 incoming event. This should not be confused with acknowledgments that are basically direct and immediate responses to

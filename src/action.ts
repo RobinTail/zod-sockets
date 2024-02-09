@@ -4,7 +4,7 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
-import { RemoteClint } from "./utils";
+import { RemoteClint } from "./remote-client";
 
 export interface Client<E extends EmissionMap> {
   /** @alias Socket.connected */

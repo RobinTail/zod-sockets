@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { Config } from "./config";
-import { RemoteClint, mapFetchedSockets } from "./utils";
+import { RemoteClint, getRemoteClients } from "./remote-client";
 
 export interface Emission {
   schema: z.AnyZodTuple;
@@ -87,7 +87,7 @@ export const makeRoomService =
   }: MakerParams<E>): RoomService<E> =>
   (rooms) => ({
     getClients: async () =>
-      mapFetchedSockets(await socket.in(rooms).fetchSockets()),
+      getRemoteClients(await socket.in(rooms).fetchSockets()),
     join: () => socket.join(rooms),
     leave: () =>
       typeof rooms === "string"

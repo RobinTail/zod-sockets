@@ -5,7 +5,7 @@ export interface RemoteClint {
   rooms: string[];
 }
 
-export const mapFetchedSockets = (
+export const getRemoteClients = (
   sockets: RemoteSocket<{}, unknown>[],
 ): RemoteClint[] =>
   sockets.map(({ id, rooms }) => ({ id, rooms: Array.from(rooms) }));

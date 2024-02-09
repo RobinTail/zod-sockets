@@ -8,7 +8,7 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
-import { mapFetchedSockets } from "./utils";
+import { getRemoteClients } from "./remote-client";
 
 export const attachSockets = <E extends EmissionMap>({
   io,
@@ -48,7 +48,7 @@ export const attachSockets = <E extends EmissionMap>({
   const rootNS = io.of("/");
   const getAllRooms = () => Array.from(rootNS.adapter.rooms.keys());
   const getAllClients = async () =>
-    mapFetchedSockets(await rootNS.fetchSockets());
+    getRemoteClients(await rootNS.fetchSockets());
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });

@@ -92,6 +92,8 @@ describe("Attach", () => {
           isConnected: expect.any(Function),
           getRooms: expect.any(Function),
           emit: expect.any(Function),
+          getData: expect.any(Function),
+          setData: expect.any(Function),
         },
         all: {
           broadcast: expect.any(Function),
@@ -125,6 +127,18 @@ describe("Attach", () => {
         { id: "ID", rooms: ["room1", "room2"] },
         { id: "other", rooms: ["room3"] },
       ]);
+
+      // client.setData:
+      actionsMock.test.execute.mock.lastCall[0].client.setData({
+        name: "user",
+      });
+
+      // client.getData:
+      expect(
+        actionsMock.test.execute.mock.lastCall[0].client.getData(),
+      ).toEqual({
+        name: "user",
+      });
     });
   });
 });

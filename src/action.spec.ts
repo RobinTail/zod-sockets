@@ -35,6 +35,8 @@ describe("Action", () => {
     const getRoomsMock = vi.fn();
     const getAllRoomsMock = vi.fn();
     const getAllClientsMock = vi.fn();
+    const getDataMock = vi.fn();
+    const setDataMock = vi.fn();
 
     test("should handle simple action", async () => {
       await simpleAction.execute({
@@ -48,10 +50,12 @@ describe("Action", () => {
           getRooms: getAllRoomsMock,
         },
         client: {
+          id: "ID",
           emit: emitMock,
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
-          id: "ID",
+          getData: getDataMock,
+          setData: setDataMock,
         },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
@@ -65,10 +69,12 @@ describe("Action", () => {
           getRooms: getAllRoomsMock,
         },
         client: {
+          id: "ID",
           emit: emitMock,
           isConnected: isConnectedMock,
           getRooms: getRoomsMock,
-          id: "ID",
+          getData: getDataMock,
+          setData: setDataMock,
         },
       });
     });
@@ -86,10 +92,12 @@ describe("Action", () => {
           getRooms: getAllRoomsMock,
         },
         client: {
+          id: "ID",
           emit: emitMock,
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
-          id: "ID",
+          getData: getDataMock,
+          setData: setDataMock,
         },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
@@ -99,6 +107,8 @@ describe("Action", () => {
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
           emit: emitMock,
+          getData: getDataMock,
+          setData: setDataMock,
         },
         all: {
           broadcast: broadcastMock,
@@ -128,6 +138,8 @@ describe("Action", () => {
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
           emit: emitMock,
+          getData: getDataMock,
+          setData: setDataMock,
         },
       });
       expect(loggerMock.error).toHaveBeenCalled();

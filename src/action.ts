@@ -4,9 +4,10 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
+import { Metadata } from "./metadata";
 import { RemoteClient } from "./remote-client";
 
-export interface Client<E extends EmissionMap> {
+export interface Client<E extends EmissionMap, D extends Metadata> {
   /** @alias Socket.connected */
   isConnected: () => boolean;
   /** @alias Socket.id */
@@ -15,12 +16,14 @@ export interface Client<E extends EmissionMap> {
   getRooms: () => string[];
   /** @desc Sends a new event to the client (this is not acknowledgement) */
   emit: Emitter<E>;
+  getData: () => Readonly<z.output<D>>;
+  setData: (next: z.input<D>) => void;
 }
 
-export interface HandlingFeatures<E extends EmissionMap> {
+export interface HandlingFeatures<E extends EmissionMap, D extends Metadata> {
   logger: AbstractLogger;
   /** @desc The scope of the owner of the received event */
-  client: Client<E>;
+  client: Client<E, D>;
   /** @desc The global scope */
   all: {
     /** @desc Emits to everyone */
@@ -34,10 +37,10 @@ export interface HandlingFeatures<E extends EmissionMap> {
   withRooms: RoomService<E>;
 }
 
-export type Handler<IN, OUT, E extends EmissionMap> = (
+export type Handler<IN, OUT, E extends EmissionMap, D extends Metadata> = (
   params: {
     input: IN;
-  } & HandlingFeatures<E>,
+  } & HandlingFeatures<E, D>,
 ) => Promise<OUT>;
 
 export abstract class AbstractAction {
@@ -45,7 +48,7 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-    } & HandlingFeatures<EmissionMap>,
+    } & HandlingFeatures<EmissionMap, Metadata>,
   ): Promise<void>;
 }
 
@@ -59,12 +62,17 @@ export class Action<
 > extends AbstractAction {
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
-  readonly #handler: Handler<z.output<IN>, z.input<OUT> | void, EmissionMap>;
+  readonly #handler: Handler<
+    z.output<IN>,
+    z.input<OUT> | void,
+    EmissionMap,
+    Metadata
+  >;
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, EmissionMap>
-      | ActionNoAckDef<IN, EmissionMap>,
+      | ActionWithAckDef<IN, OUT, EmissionMap, Metadata>
+      | ActionNoAckDef<IN, EmissionMap, Metadata>,
   ) {
     super();
     this.#inputSchema = action.input;
@@ -102,7 +110,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & HandlingFeatures<EmissionMap>): Promise<void> {
+  } & HandlingFeatures<EmissionMap, Metadata>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

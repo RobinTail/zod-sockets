@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { Config } from "./config";
+import { Metadata } from "./metadata";
 import { RemoteClient, getRemoteClients } from "./remote-client";
 
 export interface Emission {
@@ -44,7 +45,7 @@ const makeGenericEmitter =
     target,
     config: { logger, emission, timeout },
   }: {
-    config: Config<EmissionMap>;
+    config: Config<EmissionMap, Metadata>;
     target: Socket | Socket["broadcast"];
   }) =>
   async (event: string, ...args: unknown[]) => {
@@ -65,26 +66,27 @@ const makeGenericEmitter =
     return (isSocket ? ack : ack.array()).parse(response);
   };
 
-interface MakerParams<E extends EmissionMap> {
+interface MakerParams<E extends EmissionMap, D extends Metadata> {
   socket: Socket;
-  config: Config<E>;
+  config: Config<E, D>;
 }
 
-export const makeEmitter = <E extends EmissionMap>({
+export const makeEmitter = <E extends EmissionMap, D extends Metadata>({
   socket: target,
   ...rest
-}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
+}: MakerParams<E, D>) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
 
-export const makeBroadcaster = <E extends EmissionMap>({
+export const makeBroadcaster = <E extends EmissionMap, D extends Metadata>({
   socket: { broadcast: target },
   ...rest
-}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+}: MakerParams<E, D>) =>
+  makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
 
 export const makeRoomService =
-  <E extends EmissionMap>({
+  <E extends EmissionMap, D extends Metadata>({
     socket,
     ...rest
-  }: MakerParams<E>): RoomService<E> =>
+  }: MakerParams<E, D>): RoomService<E> =>
   (rooms) => ({
     getClients: async () =>
       getRemoteClients(await socket.in(rooms).fetchSockets()),

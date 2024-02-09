@@ -8,9 +8,10 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
+import { Metadata, defaultMeta } from "./metadata";
 import { getRemoteClients } from "./remote-client";
 
-export const attachSockets = <E extends EmissionMap>({
+export const attachSockets = <E extends EmissionMap, D extends Metadata>({
   io,
   actions,
   target,
@@ -38,11 +39,11 @@ export const attachSockets = <E extends EmissionMap>({
    * */
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
-  config: Config<E>;
+  config: Config<E, D>;
   /** @desc A place for emitting events unrelated to the incoming events */
-  onConnection?: Handler<[], void, E>;
-  onDisconnect?: Handler<[], void, E>;
-  onAnyEvent?: Handler<[string], void, E>;
+  onConnection?: Handler<[], void, E, D>;
+  onDisconnect?: Handler<[], void, E, D>;
+  onAnyEvent?: Handler<[string], void, E, D>;
 }): Server => {
   config.logger.info("ZOD-SOCKETS", target.address());
   const rootNS = io.of("/");
@@ -53,12 +54,15 @@ export const attachSockets = <E extends EmissionMap>({
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });
     const withRooms = makeRoomService({ socket, config });
-    const commons: HandlingFeatures<E> = {
+    const commons: HandlingFeatures<E, D> = {
       client: {
         emit,
         id: socket.id,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
+        getData: () => socket.data,
+        setData: (next) =>
+          (socket.data = (config.metadata || defaultMeta).parse(next)),
       },
       all: {
         broadcast,

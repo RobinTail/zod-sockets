@@ -19,6 +19,7 @@ describe("System test on Example", async () => {
   await waitFor(() => client.connected);
 
   afterAll(async () => {
+    client.disconnect();
     example.stdout.removeListener("data", listener);
     example.kill();
     await waitFor(() => example.killed);

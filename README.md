@@ -131,6 +131,38 @@ const config = createConfig({
 });
 ```
 
+## Factory
+
+Factory is an entity made aware of the Emission types (possible outgoing events) by supplying the config and is capable
+of producing Actions (declarations of incoming events). This architecture enables you to keep the produced Actions
+in separate self-descriptive files.
+
+```typescript
+import { ActionsFactory } from "zod-sockets";
+
+export const actionsFactory = new ActionsFactory(config);
+```
+
+## Actions
+
+The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
+incoming event. This should not be confused with acknowledgments that are basically direct and immediate responses to
+the one that sent the incoming event. Produce actions using the `build()` method accepting an object having `input`
+schema for the event payload (excluding acknowledgment), optional `output` schema for the acknowledgment and `handler`.
+The `handler` is a function where you place your implementation for handling the event. Please note that the incoming
+event name is not assigned yet. The argument of the `handler` in an object having several handy entities, the most
+important of them is `input` property, being the validated event payload:
+
+```typescript
+export const onChat = actionsFactory.build({
+  input: z.tuple([z.string()]),
+  handler: async ({ input: [message], client, all, withRooms, logger }) => {
+    /* your implementation here */
+    // typeof message === "string" 
+  },
+});
+```
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { Config } from "./config";
-import { RemoteClint, getRemoteClients } from "./remote-client";
+import { RemoteClient, getRemoteClients } from "./remote-client";
 
 export interface Emission {
   schema: z.AnyZodTuple;
@@ -32,7 +32,7 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
   broadcast: Broadcaster<E>;
   join: () => void | Promise<void>;
   leave: () => void | Promise<void>;
-  getClients: () => Promise<RemoteClint[]>;
+  getClients: () => Promise<RemoteClient[]>;
 };
 
 /**

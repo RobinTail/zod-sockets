@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.3.1
+
+- Using `io.of("/")` for both `all.getRooms()` and `all.getClients()`.
+
 ### v0.3.0
 
 - New argument for the Action handler: `all` having methods:

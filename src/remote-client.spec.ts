@@ -9,10 +9,7 @@ describe("RemoteClient", () => {
     ];
 
     test("should map RemoteSockets to RemoteClients", () => {
-      const clients = getRemoteClients(
-        socketsMock as RemoteSocket<any, any>[],
-        undefined,
-      );
+      const clients = getRemoteClients(socketsMock as RemoteSocket<any, any>[]);
       expect(clients).toEqual([
         {
           id: "ONE",

@@ -1,19 +1,16 @@
 import { RemoteSocket } from "socket.io";
-import { z } from "zod";
-import { Metadata, parseMeta } from "./metadata";
 
-export interface RemoteClient<D extends Metadata> {
+export interface RemoteClient {
   id: string;
   rooms: string[];
-  getData: () => Readonly<z.output<D>>;
+  getData: <D extends object>() => Readonly<D>;
 }
 
-export const getRemoteClients = <D extends Metadata>(
-  sockets: RemoteSocket<{}, z.output<D>>[],
-  metaSchema: D | undefined,
-): RemoteClient<D>[] =>
+export const getRemoteClients = (
+  sockets: RemoteSocket<{}, unknown>[],
+): RemoteClient[] =>
   sockets.map(({ id, rooms, data }) => ({
     id: id,
     rooms: Array.from(rooms),
-    getData: () => parseMeta(data, metaSchema),
+    getData: <D>() => data as D,
   }));

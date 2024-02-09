@@ -4,10 +4,9 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
-import { Metadata } from "./metadata";
 import { RemoteClient } from "./remote-client";
 
-export interface Client<E extends EmissionMap, D extends Metadata> {
+export interface Client<E extends EmissionMap> {
   /** @alias Socket.connected */
   isConnected: () => boolean;
   /** @alias Socket.id */
@@ -24,18 +23,18 @@ export interface Client<E extends EmissionMap, D extends Metadata> {
    * @desc Returns the client metadata according to the schema specified in config
    * @throws z.ZodError on validation
    * */
-  getData: () => Readonly<z.output<D>>;
+  getData: <D extends object>() => Readonly<D>;
   /**
    * @desc Sets the client metadata according to the schema specified in config
    * @throws z.ZodError on validation
    * */
-  setData: (next: z.input<D>) => void;
+  setData: <D extends object>(value: D) => void;
 }
 
-export interface HandlingFeatures<E extends EmissionMap, D extends Metadata> {
+export interface HandlingFeatures<E extends EmissionMap> {
   logger: AbstractLogger;
   /** @desc The scope of the owner of the received event */
-  client: Client<E, D>;
+  client: Client<E>;
   /** @desc The global scope */
   all: {
     /**
@@ -47,16 +46,16 @@ export interface HandlingFeatures<E extends EmissionMap, D extends Metadata> {
     /** @desc Returns the list of available rooms */
     getRooms: () => string[];
     /** @desc Returns the list of familiar clients */
-    getClients: () => Promise<RemoteClient<D>[]>;
+    getClients: () => Promise<RemoteClient[]>;
   };
   /** @desc Provides room(s)-scope methods */
-  withRooms: RoomService<E, D>;
+  withRooms: RoomService<E>;
 }
 
-export type Handler<IN, OUT, E extends EmissionMap, D extends Metadata> = (
+export type Handler<IN, OUT, E extends EmissionMap> = (
   params: {
     input: IN;
-  } & HandlingFeatures<E, D>,
+  } & HandlingFeatures<E>,
 ) => Promise<OUT>;
 
 export abstract class AbstractAction {
@@ -64,7 +63,7 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-    } & HandlingFeatures<EmissionMap, Metadata>,
+    } & HandlingFeatures<EmissionMap>,
   ): Promise<void>;
 }
 
@@ -78,17 +77,12 @@ export class Action<
 > extends AbstractAction {
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
-  readonly #handler: Handler<
-    z.output<IN>,
-    z.input<OUT> | void,
-    EmissionMap,
-    Metadata
-  >;
+  readonly #handler: Handler<z.output<IN>, z.input<OUT> | void, EmissionMap>;
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, EmissionMap, Metadata>
-      | ActionNoAckDef<IN, EmissionMap, Metadata>,
+      | ActionWithAckDef<IN, OUT, EmissionMap>
+      | ActionNoAckDef<IN, EmissionMap>,
   ) {
     super();
     this.#inputSchema = action.input;
@@ -126,7 +120,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & HandlingFeatures<EmissionMap, Metadata>): Promise<void> {
+  } & HandlingFeatures<EmissionMap>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

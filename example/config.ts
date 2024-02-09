@@ -4,7 +4,7 @@ import { createConfig } from "../src";
 /** @desc Client metadata */
 export interface Metadata {
   /** @desc Number of messages sent using the chat event */
-  msgCount?: number;
+  msgCount: number;
 }
 
 export const config = createConfig({

@@ -3,7 +3,7 @@ import { RemoteSocket } from "socket.io";
 export interface RemoteClient {
   id: string;
   rooms: string[];
-  getData: <D extends object>() => Readonly<D>;
+  getData: <D extends object>() => Readonly<Partial<D>>;
 }
 
 export const getRemoteClients = (sockets: RemoteSocket<{}, unknown>[]) =>

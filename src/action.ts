@@ -19,11 +19,8 @@ export interface Client<E extends EmissionMap> {
    * @throws Error on ack timeout
    * */
   emit: Emitter<E>;
-  /**
-   * @desc Returns the client metadata according to the schema specified in config
-   * @throws z.ZodError on validation
-   * */
-  getData: <D extends object>() => Readonly<D>;
+  /** @desc Returns the client metadata according to the specified type or empty object */
+  getData: <D extends object>() => Readonly<Partial<D>>;
   /**
    * @desc Sets the client metadata according to the schema specified in config
    * @throws z.ZodError on validation

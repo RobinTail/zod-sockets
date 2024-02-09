@@ -10,5 +10,5 @@ export const getRemoteClients = (sockets: RemoteSocket<{}, unknown>[]) =>
   sockets.map<RemoteClient>(({ id, rooms, data }) => ({
     id: id,
     rooms: Array.from(rooms),
-    getData: <D extends object>() => data as D,
+    getData: <D extends object>() => (data as D) || {},
   }));

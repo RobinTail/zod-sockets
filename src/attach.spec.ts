@@ -56,10 +56,9 @@ describe("Attach", () => {
 
       // on connection:
       await ioMock.on.mock.lastCall![1](socketMock);
-      expect(loggerMock.debug).toHaveBeenLastCalledWith(
-        "Client connected",
-        "ID",
-      );
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("Client connected", {
+        id: "ID",
+      });
       expect(socketMock.onAny).toHaveBeenLastCalledWith(expect.any(Function));
       expect(socketMock.on).toHaveBeenCalledWith("test", expect.any(Function));
       expect(socketMock.on).toHaveBeenLastCalledWith(
@@ -69,14 +68,13 @@ describe("Attach", () => {
 
       // on disconnect:
       socketMock.on.mock.lastCall![1]();
-      expect(loggerMock.debug).toHaveBeenLastCalledWith(
-        "Client disconnected",
-        "ID",
-      );
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("Client disconnected", {
+        id: "ID",
+      });
 
       // on any event:
       socketMock.onAny.mock.lastCall![0]("test");
-      expect(loggerMock.debug).toHaveBeenLastCalledWith("test from ID");
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("test from ID", {});
 
       // on the listened event:
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");

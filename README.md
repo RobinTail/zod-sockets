@@ -199,8 +199,10 @@ const actions: ActionMap = {
 
 # Dispatching events
 
-Depending on your application's needs and architecture, you can choose different ways to send events.
-The emission methods have constraints on emission types declared in the configuration.
+## From Actions
+
+Depending on your application's needs and architecture, you can choose different ways to send events. The emission
+methods have constraints on emission types declared in the configuration.
 
 ```typescript
 actionsFactory.build({
@@ -215,6 +217,20 @@ actionsFactory.build({
     withRooms(["room1", "room2"]).broadcast("event", ...payload);
     // sending to everyone everywhere including the client:
     withRooms(getAllRooms()).broadcast("event", ...payload);
+  },
+});
+```
+
+## Independent dispatch
+
+The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
+make your own customized implementation that acts independently. To do this, you can supply the `onConnection` property
+to the argument of `attachSockets()`, which has a similar interface as the handlers illustrated above:
+
+```typescript
+attachSockets({
+  onConnection: async ({ client, withRooms, getAllRooms }) => {
+    /* your implementation here */
   },
 });
 ```

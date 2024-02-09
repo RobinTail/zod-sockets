@@ -49,4 +49,19 @@ describe("System test on Example", async () => {
       client.off("time", onTime);
     });
   });
+
+  describe("chat", async () => {
+    const partner = io("ws://localhost:8090");
+    await waitFor(() => partner.connected);
+
+    test("should broadcast a message", async () => {
+      const onChat = vi.fn((...response) => {
+        expect(response).toEqual(["Glory to Science!", { from: client.id }]);
+      });
+      partner.on("chat", onChat);
+      client.emit("chat", "Glory to Science!");
+      await waitFor(() => onChat.mock.calls.length === 1);
+      partner.off("chat", onChat);
+    });
+  });
 });

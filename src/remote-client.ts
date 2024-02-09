@@ -6,11 +6,9 @@ export interface RemoteClient {
   getData: <D extends object>() => Readonly<D>;
 }
 
-export const getRemoteClients = (
-  sockets: RemoteSocket<{}, unknown>[],
-): RemoteClient[] =>
-  sockets.map(({ id, rooms, data }) => ({
+export const getRemoteClients = (sockets: RemoteSocket<{}, unknown>[]) =>
+  sockets.map<RemoteClient>(({ id, rooms, data }) => ({
     id: id,
     rooms: Array.from(rooms),
-    getData: <D>() => data as D,
+    getData: <D extends object>() => data as D,
   }));

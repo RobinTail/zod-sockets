@@ -8,7 +8,7 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
-import { mapFetchedSockets } from "./utils";
+import { getRemoteClients } from "./remote-client";
 
 export const attachSockets = <E extends EmissionMap>({
   io,
@@ -16,9 +16,9 @@ export const attachSockets = <E extends EmissionMap>({
   target,
   config,
   onConnection = ({ client }) =>
-    config.logger.debug("User connected", client.id),
+    config.logger.debug("Client connected", client.id),
   onDisconnect = ({ client }) =>
-    config.logger.debug("User disconnected", client.id),
+    config.logger.debug("Client disconnected", client.id),
   onAnyEvent = ({ input: [event], client }) =>
     config.logger.debug(`${event} from ${client.id}`),
 }: {
@@ -45,8 +45,10 @@ export const attachSockets = <E extends EmissionMap>({
   onAnyEvent?: Handler<[string], void, E>;
 }): Server => {
   config.logger.info("ZOD-SOCKETS", target.address());
-  const getAllRooms = () => Array.from(io.of("/").adapter.rooms.keys());
-  const getAllClients = async () => mapFetchedSockets(await io.fetchSockets());
+  const rootNS = io.of("/");
+  const getAllRooms = () => Array.from(rootNS.adapter.rooms.keys());
+  const getAllClients = async () =>
+    getRemoteClients(await rootNS.fetchSockets());
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });

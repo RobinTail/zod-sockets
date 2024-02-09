@@ -4,7 +4,7 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
-import { RemoteClint } from "./utils";
+import { RemoteClient } from "./remote-client";
 
 export interface Client<E extends EmissionMap> {
   /** @alias Socket.connected */
@@ -28,7 +28,7 @@ export interface HandlingFeatures<E extends EmissionMap> {
     /** @desc Returns the list of available rooms */
     getRooms: () => string[];
     /** @desc Returns the list of familiar clients */
-    getClients: () => Promise<RemoteClint[]>;
+    getClients: () => Promise<RemoteClient[]>;
   };
   /** @desc Provides room(s)-scope methods */
   withRooms: RoomService<E>;

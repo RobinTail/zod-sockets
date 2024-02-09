@@ -25,11 +25,11 @@ describe("Attach", () => {
       attach: vi.fn(),
       of: vi.fn(() => ({
         adapter: adapterMock,
+        fetchSockets: vi.fn(async () => [
+          { id: "ID", rooms: new Set(["room1", "room2"]) },
+          { id: "other", rooms: new Set(["room3"]) },
+        ]),
       })),
-      fetchSockets: vi.fn(async () => [
-        { id: "ID", rooms: new Set(["room1", "room2"]) },
-        { id: "other", rooms: new Set(["room3"]) },
-      ]),
     };
     const targetMock = {
       address: vi.fn(),
@@ -56,7 +56,10 @@ describe("Attach", () => {
 
       // on connection:
       await ioMock.on.mock.lastCall![1](socketMock);
-      expect(loggerMock.debug).toHaveBeenLastCalledWith("User connected", "ID");
+      expect(loggerMock.debug).toHaveBeenLastCalledWith(
+        "Client connected",
+        "ID",
+      );
       expect(socketMock.onAny).toHaveBeenLastCalledWith(expect.any(Function));
       expect(socketMock.on).toHaveBeenCalledWith("test", expect.any(Function));
       expect(socketMock.on).toHaveBeenLastCalledWith(
@@ -67,7 +70,7 @@ describe("Attach", () => {
       // on disconnect:
       socketMock.on.mock.lastCall![1]();
       expect(loggerMock.debug).toHaveBeenLastCalledWith(
-        "User disconnected",
+        "Client disconnected",
         "ID",
       );
 

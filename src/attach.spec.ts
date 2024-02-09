@@ -128,13 +128,11 @@ describe("Attach", () => {
           id: "ID",
           rooms: ["room1", "room2"],
           getData: expect.any(Function),
-          setData: expect.any(Function),
         },
         {
           id: "other",
           rooms: ["room3"],
           getData: expect.any(Function),
-          setData: expect.any(Function),
         },
       ]);
 

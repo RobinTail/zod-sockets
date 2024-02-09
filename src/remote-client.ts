@@ -6,7 +6,6 @@ export interface RemoteClient<D extends Metadata> {
   id: string;
   rooms: string[];
   getData: () => Readonly<z.output<D>>;
-  setData: (next: z.input<D>) => void;
 }
 
 export const getRemoteClients = <D extends Metadata>(
@@ -14,8 +13,7 @@ export const getRemoteClients = <D extends Metadata>(
   metaSchema: D | undefined,
 ): RemoteClient<D>[] =>
   sockets.map(({ id, rooms, data }) => ({
-    id,
+    id: id,
     rooms: Array.from(rooms),
     getData: () => parseMeta(data, metaSchema),
-    setData: (next) => (data = parseMeta(next, metaSchema)),
   }));

@@ -170,7 +170,7 @@ attachSockets({ target: createServer(app).listen(port) });
 
 ### With Express Zod API
 
-For using with `express-zod-api`, take the `httpServer` or `httpsServer` returned by the `createServer` method and
+For using with `express-zod-api`, take the `httpServer` or `httpsServer` returned by the `createServer()` method and
 assign it to the `target` property.
 
 ```typescript
@@ -179,6 +179,51 @@ import { attachSockets } from "zod-sockets";
 
 const { httpServer, httpsServer } = await createServer();
 attachSockets({ target: httpsServer || httpServer });
+```
+
+## Logger compatibility
+
+### Customizing logger
+
+The library supports any logger having `info()`, `debug()`, `error()` and
+`warn()` methods. For example, `pino` logger with `pino-pretty` extension:
+
+```typescript
+import pino, { Logger } from "pino";
+import { createConfig } from "zod-sockets";
+
+const logger = pino({
+  transport: {
+    target: "pino-pretty",
+    options: { colorize: true },
+  },
+});
+const config = createConfig({ logger });
+
+// Setting the type of logger used
+declare module "zod-sockets" {
+  interface LoggerOverrides extends Logger {}
+}
+```
+
+### With Express Zod API
+
+If you're using `express-zod-api`, you can reuse the same logger. If it's a custom logger — supply the same instance to
+both `createConfig()` methods of two libraries. In case you're using the default `winston` logger provided by
+`express-zod-api`, you can obtain its instance from the returns of the `createServer()` method.
+
+```typescript
+import { createServer } from "express-zod-api";
+import { createConfig } from "zod-sockets";
+import type { Logger } from "winston";
+
+const { logger } = await createServer();
+const config = createConfig({ logger });
+
+// Setting the type of logger used
+declare module "zod-sockets" {
+  interface LoggerOverrides extends Logger {}
+}
 ```
 
 ## Receiving events

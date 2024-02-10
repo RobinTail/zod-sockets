@@ -2,9 +2,9 @@
 
 ![coverage](coverage.svg)
 
-Socket.IO Websockets with Zod validation.
+Socket.IO solution with I/O validation.
 
-Experimental solution for testing purposes only.
+Version 0 is unstable — public API may be changed at any time.
 
 ## Concept
 

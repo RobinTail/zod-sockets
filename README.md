@@ -133,7 +133,7 @@ const config = createConfig({
 });
 ```
 
-## Actions
+## Receiving events
 
 ### Making actions
 

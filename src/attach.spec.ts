@@ -40,7 +40,7 @@ describe("Attach", () => {
     const actionsMock = { test: { execute: vi.fn() } };
 
     test("should set the listeners", async () => {
-      attachSockets({
+      await attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
         actions: actionsMock,

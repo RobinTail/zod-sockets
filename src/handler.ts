@@ -3,7 +3,7 @@ import { EmissionMap, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 import { RemoteClient } from "./remote-client";
 
-interface IndependentContext<E extends EmissionMap> {
+export interface IndependentContext<E extends EmissionMap> {
   logger: AbstractLogger;
   /** @desc Returns the list of available rooms */
   getAllRooms: () => string[];

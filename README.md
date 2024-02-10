@@ -237,7 +237,7 @@ attachSockets({
 
 ## Independent context
 
-Moreover, you can emit events regardless the client actions at all by setting the `onStartup` property to the argument
+Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property to the argument
 of `attachSockets()`. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript

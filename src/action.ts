@@ -2,16 +2,14 @@ import { init, last } from "ramda";
 import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
-import { ActionContext, Handler } from "./handler";
-
-type CtxNoInput = Omit<ActionContext<never, EmissionMap>, "input">;
+import { ActionContext, ClientContext, Handler } from "./handler";
 
 export abstract class AbstractAction {
   public abstract execute(
     params: {
       event: string;
       params: unknown[];
-    } & CtxNoInput,
+    } & ClientContext<EmissionMap>,
   ): Promise<void>;
 }
 
@@ -71,7 +69,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & CtxNoInput): Promise<void> {
+  } & ClientContext<EmissionMap>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

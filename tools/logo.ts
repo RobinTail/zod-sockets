@@ -24,7 +24,7 @@ const logo = georgia11
     const color =
       index < 3 || index > 7
         ? chalk.blueBright
-        : index < 4 || index > 6
+        : index < 4 || index > 5
           ? chalk.magentaBright
           : chalk.whiteBright;
     return color(line);

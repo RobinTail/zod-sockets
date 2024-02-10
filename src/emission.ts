@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import { z } from "zod";
 import { Config } from "./config";
 import { RemoteClient, getRemoteClients } from "./remote-client";
@@ -42,54 +42,41 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
  * */
-const makeGenericEmitter =
-  ({
-    target,
-    config: { logger, emission, timeout },
-  }: {
-    config: Config<EmissionMap>;
-    target: Socket | Socket["broadcast"];
-  }) =>
-  async (event: string, ...args: unknown[]) => {
-    const isSocket = "id" in target;
+export const makeEmitter = <T>({
+  subject,
+  config: { logger, emission, timeout },
+}: {
+  config: Config<EmissionMap>;
+  subject: Socket | Socket["broadcast"];
+}) =>
+  (async (event: string, ...args: unknown[]) => {
+    const isSocket = "id" in subject;
     assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
     const payload = schema.parse(args);
     logger.debug(`Sending ${String(event)}`, payload);
     if (!ack) {
-      return target.emit(String(event), ...payload) || true;
+      return subject.emit(String(event), ...payload) || true;
     }
-    const response = await target
+    const response = await subject
       .timeout(timeout)
       .emitWithAck(String(event), ...payload);
     return (isSocket ? ack : ack.array()).parse(response);
-  };
-
-interface MakerParams<E extends EmissionMap> {
-  socket: Socket;
-  config: Config<E>;
-}
-
-export const makeEmitter = <E extends EmissionMap>({
-  socket: target,
-  ...rest
-}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
-
-export const makeBroadcaster = <E extends EmissionMap>({
-  socket: { broadcast: target },
-  ...rest
-}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+  }) as T;
 
 export const makeRoomService =
   <E extends EmissionMap>({
-    socket,
+    subject,
     ...rest
-  }: MakerParams<E>): RoomService<E> =>
+  }: {
+    subject: Socket | Server;
+    config: Config<E>;
+  }): RoomService<E> =>
   (rooms) => ({
     getClients: async () =>
-      getRemoteClients(await socket.in(rooms).fetchSockets()),
-    broadcast: makeGenericEmitter({
+      getRemoteClients(await subject.in(rooms).fetchSockets()),
+    broadcast: makeEmitter<Broadcaster<E>>({
       ...rest,
-      target: socket.to(rooms),
-    }) as Broadcaster<E>,
+      subject: subject.to(rooms),
+    }),
   });

@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { MockedFunction, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { makeBroadcaster, makeEmitter, makeRoomService } from "./emission";
+import { Broadcaster, Emitter, makeEmitter, makeRoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 
 describe("Emission", () => {
@@ -45,33 +45,35 @@ describe("Emission", () => {
     },
   };
 
-  describe.each([
-    { maker: makeEmitter, target: socketMock, ack: ["test"] },
-    { maker: makeBroadcaster, target: broadcastMock, ack: [["test"]] },
-  ])("$maker.name", ({ maker, target, ack }) => {
-    const emitter = maker({
-      socket: socketMock as unknown as Socket,
-      config,
-    });
+  describe("makeEmitter()", () => {
+    describe.each([
+      { name: "socket", subject: socketMock, ack: ["test"] },
+      { name: "broadcast", subject: broadcastMock, ack: [["test"]] },
+    ])("with $name", ({ subject, ack }) => {
+      const emitter = makeEmitter<Emitter<any> | Broadcaster<any>>({
+        subject: subject as unknown as Socket,
+        config,
+      });
 
-    test("should create an emitter", () => {
-      expect(typeof emitter).toBe("function");
-    });
+      test("should create an emitter", () => {
+        expect(typeof emitter).toBe("function");
+      });
 
-    test("should throw on unknown events", async () => {
-      await expect(emitter("invalid" as "one")).rejects.toThrowError(
-        "Unsupported event invalid",
-      );
-    });
+      test("should throw on unknown events", async () => {
+        await expect(emitter("invalid")).rejects.toThrowError(
+          "Unsupported event invalid",
+        );
+      });
 
-    test("should emit simple events", async () => {
-      expect(await emitter("one", "test")).toBeTruthy();
-      expect(target.emit).toHaveBeenLastCalledWith("one", "test");
-    });
+      test("should emit simple events", async () => {
+        expect(await emitter("one", "test")).toBeTruthy();
+        expect(subject.emit).toHaveBeenLastCalledWith("one", "test");
+      });
 
-    test("should emit events with ack", async () => {
-      target.emitWithAck.mockImplementationOnce(async () => ack);
-      expect(await emitter("two", 123)).toEqual(ack);
+      test("should emit events with ack", async () => {
+        subject.emitWithAck.mockImplementationOnce(async () => ack);
+        expect(await emitter("two", 123)).toEqual(ack);
+      });
     });
   });
 
@@ -80,7 +82,7 @@ describe("Emission", () => {
       "should provide methods in rooms context %#",
       async (rooms) => {
         const withRooms = makeRoomService({
-          socket: socketMock as unknown as Socket,
+          subject: socketMock as unknown as Socket,
           config,
         });
         expect(typeof withRooms).toBe("function");

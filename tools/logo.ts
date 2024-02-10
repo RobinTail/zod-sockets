@@ -5,9 +5,6 @@ import { writeFile } from "node:fs/promises";
 import { format } from "prettier";
 const f = ts.factory;
 
-/**
- * @author Georgia 11 by Richard Sabey <cryptic_fan@hotmail.com> 9.2003
- * */
 const georgia11 = `
                            ,,
 MMM"""AMV                `7MM       .M"""bgd                   `7MM                 mm

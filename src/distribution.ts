@@ -8,7 +8,7 @@ export interface Distribution {
 export const makeDistribution = (
   subject: Socket | RemoteSocket<{}, unknown>,
 ): Distribution => ({
-  join: subject.join,
+  join: subject.join.bind(subject),
   leave: (rooms) =>
     typeof rooms === "string"
       ? subject.leave(rooms)

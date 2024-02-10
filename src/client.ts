@@ -1,7 +1,8 @@
 import type { Socket } from "socket.io";
+import { Distribution } from "./distribution";
 import { Broadcaster, EmissionMap, Emitter } from "./emission";
 
-export interface Client<E extends EmissionMap> {
+export interface Client<E extends EmissionMap> extends Distribution {
   /** @alias Socket.connected */
   isConnected: () => boolean;
   /** @alias Socket.id */
@@ -27,6 +28,4 @@ export interface Client<E extends EmissionMap> {
    * @throws z.ZodError on validation
    * */
   setData: <D extends object>(value: D) => void;
-  join: (rooms: string | string[]) => void | Promise<void>;
-  leave: (rooms: string | string[]) => void | Promise<void>;
 }

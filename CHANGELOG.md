@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.6.1
+
+- Adding `join()` and `leave()` methods to `RemoteClient` (the ones returned by `getClients()`).
+
 ### v0.6.0
 
 - Restoring the `all` argument of the Action handler (removed in v0.4.0), but now it works as expected, by providing:

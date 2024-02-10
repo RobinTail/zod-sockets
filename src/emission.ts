@@ -55,10 +55,7 @@ const makeGenericEmitter =
     assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
     const payload = schema.parse(args);
-    logger.debug(
-      `${isSocket ? "Emitting" : "Broadcasting"} ${String(event)}`,
-      payload,
-    );
+    logger.debug(`Sending ${String(event)}`, payload);
     if (!ack) {
       return target.emit(String(event), ...payload) || true;
     }

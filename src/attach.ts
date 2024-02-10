@@ -4,8 +4,9 @@ import { ActionMap } from "./action";
 import { Client } from "./client";
 import { Config } from "./config";
 import {
+  Broadcaster,
   EmissionMap,
-  makeBroadcaster,
+  Emitter,
   makeEmitter,
   makeRoomService,
 } from "./emission";
@@ -65,8 +66,11 @@ export const attachSockets = async <E extends EmissionMap>({
     withRooms: makeRoomService({ subject: io, config }),
   };
   io.on("connection", async (socket) => {
-    const emit = makeEmitter({ socket, config });
-    const broadcast = makeBroadcaster({ socket, config });
+    const emit = makeEmitter<Emitter<E>>({ subject: socket, config });
+    const broadcast = makeEmitter<Broadcaster<E>>({
+      subject: socket.broadcast,
+      config,
+    });
     const client: Client<E> = {
       emit,
       broadcast,

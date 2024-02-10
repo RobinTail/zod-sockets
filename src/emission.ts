@@ -42,43 +42,27 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
  * */
-const makeGenericEmitter = <T>({
-  target,
+export const makeEmitter = <T>({
+  subject,
   config: { logger, emission, timeout },
 }: {
   config: Config<EmissionMap>;
-  target: Socket | Socket["broadcast"];
+  subject: Socket | Socket["broadcast"];
 }) =>
   (async (event: string, ...args: unknown[]) => {
-    const isSocket = "id" in target;
+    const isSocket = "id" in subject;
     assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
     const payload = schema.parse(args);
     logger.debug(`Sending ${String(event)}`, payload);
     if (!ack) {
-      return target.emit(String(event), ...payload) || true;
+      return subject.emit(String(event), ...payload) || true;
     }
-    const response = await target
+    const response = await subject
       .timeout(timeout)
       .emitWithAck(String(event), ...payload);
     return (isSocket ? ack : ack.array()).parse(response);
   }) as T;
-
-export const makeEmitter = <E extends EmissionMap>({
-  socket: target,
-  ...rest
-}: {
-  socket: Socket;
-  config: Config<E>;
-}) => makeGenericEmitter<Emitter<E>>({ ...rest, target });
-
-export const makeBroadcaster = <E extends EmissionMap>({
-  socket: { broadcast: target },
-  ...rest
-}: {
-  socket: Socket;
-  config: Config<E>;
-}) => makeGenericEmitter<Broadcaster<E>>({ ...rest, target });
 
 export const makeRoomService =
   <E extends EmissionMap>({
@@ -91,8 +75,8 @@ export const makeRoomService =
   (rooms) => ({
     getClients: async () =>
       getRemoteClients(await subject.in(rooms).fetchSockets()),
-    broadcast: makeGenericEmitter<Broadcaster<E>>({
+    broadcast: makeEmitter<Broadcaster<E>>({
       ...rest,
-      target: subject.to(rooms),
+      subject: subject.to(rooms),
     }),
   });

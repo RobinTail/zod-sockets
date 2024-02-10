@@ -294,8 +294,8 @@ const handler = async ({ withRooms }) => {
 };
 ```
 
-Alternatively, you can request `getClients()` within `all` argument, which returns an array of all familiar clients
-having `rooms` property, being an array of the room identifiers that client is located.
+Alternatively, you can request `getClients()` method of the `all` argument, which returns an array of all familiar
+clients having `rooms` property, being an array of the room identifiers that client is located.
 
 ```typescript
 const handler = async ({ all, logger }) => {

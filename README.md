@@ -285,6 +285,7 @@ const handler = async ({ client }) => {
 
 Regardless the context, each handler has `withRooms()` argument accepting a single or multiple rooms identifiers. The
 method returns an object providing the `getClients()` async method, returning an array of clients within those rooms.
+Those clients are also equipped with distribution methods `join()` and `leave()`.
 
 ```typescript
 const handler = async ({ withRooms }) => {

@@ -2,14 +2,16 @@ import { init, last } from "ramda";
 import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
-import { Handler, HandlingFeatures } from "./handler";
+import { ActionContext, Handler } from "./handler";
+
+type CtxNoInput = Omit<ActionContext<never, EmissionMap>, "input">;
 
 export abstract class AbstractAction {
   public abstract execute(
     params: {
       event: string;
       params: unknown[];
-    } & HandlingFeatures<EmissionMap>,
+    } & CtxNoInput,
   ): Promise<void>;
 }
 
@@ -23,7 +25,10 @@ export class Action<
 > extends AbstractAction {
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
-  readonly #handler: Handler<z.output<IN>, z.input<OUT> | void, EmissionMap>;
+  readonly #handler: Handler<
+    ActionContext<z.output<IN>, EmissionMap>,
+    z.input<OUT> | void
+  >;
 
   public constructor(
     action:
@@ -66,7 +71,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & HandlingFeatures<EmissionMap>): Promise<void> {
+  } & CtxNoInput): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

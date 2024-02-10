@@ -12,6 +12,8 @@ describe("Attach", () => {
       rooms: new Set(["room1", "room2"]),
       on: vi.fn(),
       onAny: vi.fn(),
+      join: vi.fn(),
+      leave: vi.fn(),
     };
     const adapterMock = {
       rooms: new Map([
@@ -93,6 +95,8 @@ describe("Attach", () => {
           broadcast: expect.any(Function),
           getData: expect.any(Function),
           setData: expect.any(Function),
+          join: expect.any(Function),
+          leave: expect.any(Function),
         },
         getAllClients: expect.any(Function),
         getAllRooms: expect.any(Function),
@@ -143,6 +147,21 @@ describe("Attach", () => {
       ).toEqual({
         name: "user",
       });
+
+      // join/leave:
+      for (const rooms of ["room1", ["room2", "room3"]]) {
+        actionsMock.test.execute.mock.lastCall[0].client.join(rooms);
+        expect(socketMock.join).toHaveBeenLastCalledWith(rooms);
+        if (typeof rooms === "string") {
+          actionsMock.test.execute.mock.lastCall[0].client.leave(rooms);
+          expect(socketMock.leave).toHaveBeenLastCalledWith(rooms);
+        } else {
+          await actionsMock.test.execute.mock.lastCall[0].client.leave(rooms);
+          for (const room of rooms) {
+            expect(socketMock.leave).toHaveBeenCalledWith(room);
+          }
+        }
+      }
     });
   });
 });

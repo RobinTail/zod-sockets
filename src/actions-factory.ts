@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Action } from "./action";
 import { Config } from "./config";
 import { EmissionMap } from "./emission";
-import { Handler } from "./handler";
+import { ActionContext, Handler } from "./handler";
 
 export interface ActionNoAckDef<
   IN extends z.AnyZodTuple,
@@ -11,7 +11,7 @@ export interface ActionNoAckDef<
   /** @desc The incoming event payload validation schema (no acknowledgement) */
   input: IN;
   /** @desc No output schema => no returns => no acknowledgement */
-  handler: Handler<z.output<IN>, void, E>;
+  handler: Handler<ActionContext<z.output<IN>, E>, void>;
 }
 
 export interface ActionWithAckDef<
@@ -24,7 +24,7 @@ export interface ActionWithAckDef<
   /** @desc The acknowledgement validation schema */
   output: OUT;
   /** @desc The returns become an Acknowledgement */
-  handler: Handler<z.output<IN>, z.input<OUT>, E>;
+  handler: Handler<ActionContext<z.output<IN>, E>, z.input<OUT>>;
 }
 
 export class ActionsFactory<E extends EmissionMap> {

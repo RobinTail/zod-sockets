@@ -37,6 +37,8 @@ describe("Action", () => {
     const getAllClientsMock = vi.fn();
     const getDataMock = vi.fn();
     const setDataMock = vi.fn();
+    const joinMock = vi.fn();
+    const leaveMock = vi.fn();
 
     test("should handle simple action", async () => {
       await simpleAction.execute({
@@ -54,6 +56,8 @@ describe("Action", () => {
           isConnected: isConnectedMock,
           getData: getDataMock,
           setData: setDataMock,
+          join: joinMock,
+          leave: leaveMock,
         },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
@@ -71,6 +75,8 @@ describe("Action", () => {
           getRooms: getRoomsMock,
           getData: getDataMock,
           setData: setDataMock,
+          join: joinMock,
+          leave: leaveMock,
         },
       });
     });
@@ -92,6 +98,8 @@ describe("Action", () => {
           isConnected: isConnectedMock,
           getData: getDataMock,
           setData: setDataMock,
+          join: joinMock,
+          leave: leaveMock,
         },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
@@ -104,6 +112,8 @@ describe("Action", () => {
           broadcast: broadcastMock,
           getData: getDataMock,
           setData: setDataMock,
+          join: joinMock,
+          leave: leaveMock,
         },
         getAllClients: getAllClientsMock,
         getAllRooms: getAllRoomsMock,
@@ -130,6 +140,8 @@ describe("Action", () => {
           broadcast: broadcastMock,
           getData: getDataMock,
           setData: setDataMock,
+          join: joinMock,
+          leave: leaveMock,
         },
       });
       expect(loggerMock.error).toHaveBeenCalled();

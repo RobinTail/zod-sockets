@@ -30,13 +30,11 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
 
 export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
   /**
-   * @desc Emits an event to everyone in the specified room(s)
+   * @desc Emits an event to others in the specified room(s)
    * @throws z.ZodError on validation
    * @throws Error on ack timeout
    * */
   broadcast: Broadcaster<E>;
-  join: () => void | Promise<void>;
-  leave: () => void | Promise<void>;
   getClients: () => Promise<RemoteClient[]>;
 };
 
@@ -93,11 +91,6 @@ export const makeRoomService =
   (rooms) => ({
     getClients: async () =>
       getRemoteClients(await socket.in(rooms).fetchSockets()),
-    join: () => socket.join(rooms),
-    leave: () =>
-      typeof rooms === "string"
-        ? socket.leave(rooms)
-        : Promise.all(rooms.map((room) => socket.leave(room))).then(() => {}),
     broadcast: makeGenericEmitter({
       ...rest,
       target: socket.to(rooms),

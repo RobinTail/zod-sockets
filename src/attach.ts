@@ -8,7 +8,7 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
-import { Handler, HandlingFeatures } from "./handler";
+import { ActionContext, ClientContext, Handler } from "./handler";
 import { getRemoteClients } from "./remote-client";
 
 export const attachSockets = <E extends EmissionMap>({
@@ -41,9 +41,9 @@ export const attachSockets = <E extends EmissionMap>({
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<E>;
   /** @desc A place for emitting events unrelated to the incoming events */
-  onConnection?: Handler<[], void, E>;
-  onDisconnect?: Handler<[], void, E>;
-  onAnyEvent?: Handler<[string], void, E>;
+  onConnection?: Handler<ClientContext<E>, void>;
+  onDisconnect?: Handler<ClientContext<E>, void>;
+  onAnyEvent?: Handler<ActionContext<[string], E>, void>;
 }): Server => {
   config.logger.info("ZOD-SOCKETS", target.address());
   const rootNS = io.of("/");
@@ -54,7 +54,7 @@ export const attachSockets = <E extends EmissionMap>({
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });
     const withRooms = makeRoomService({ socket, config });
-    const commons: HandlingFeatures<E> = {
+    const ctx: ClientContext<E> = {
       client: {
         emit,
         broadcast,
@@ -63,20 +63,27 @@ export const attachSockets = <E extends EmissionMap>({
         getRooms: () => Array.from(socket.rooms),
         getData: () => socket.data || {},
         setData: (value) => (socket.data = value),
+        join: (rooms) => socket.join(rooms),
+        leave: (rooms) =>
+          typeof rooms === "string"
+            ? socket.leave(rooms)
+            : Promise.all(rooms.map((room) => socket.leave(room))).then(
+                () => {},
+              ),
       },
       getAllClients,
       getAllRooms,
       logger: config.logger,
       withRooms,
     };
-    await onConnection({ input: [], ...commons });
-    socket.onAny((event) => onAnyEvent({ input: [event], ...commons }));
+    await onConnection(ctx);
+    socket.onAny((event) => onAnyEvent({ input: [event], ...ctx }));
     for (const [event, action] of Object.entries(actions)) {
       socket.on(event, async (...params) =>
-        action.execute({ event, params, ...commons }),
+        action.execute({ event, params, ...ctx }),
       );
     }
-    socket.on("disconnect", () => onDisconnect({ input: [], ...commons }));
+    socket.on("disconnect", () => onDisconnect(ctx));
   });
   return io.attach(target);
 };

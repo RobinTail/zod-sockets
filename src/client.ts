@@ -27,4 +27,6 @@ export interface Client<E extends EmissionMap> {
    * @throws z.ZodError on validation
    * */
   setData: <D extends object>(value: D) => void;
+  join: (rooms: string | string[]) => void | Promise<void>;
+  leave: (rooms: string | string[]) => void | Promise<void>;
 }

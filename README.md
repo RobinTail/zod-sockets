@@ -225,7 +225,7 @@ actionsFactory.build({
 ## In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-emit events regardless the incoming ones by setting the `onConnection` property to the argument of `attachSockets()`,
+emit events regardless the incoming ones by setting the `onConnection` property of the `attachSockets()` argument,
 which has a similar interface except `input` and fires for every connected client:
 
 ```typescript
@@ -238,8 +238,8 @@ attachSockets({
 
 ## Independent context
 
-Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property to the argument
-of `attachSockets()`. The implementation may have a `setInterval()` for recurring emission.
+Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property of the
+`attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript
 attachSockets({

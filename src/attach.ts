@@ -79,7 +79,7 @@ export const attachSockets = async <E extends EmissionMap>({
       getRooms: () => Array.from(socket.rooms),
       getData: () => socket.data || {},
       setData: (value) => (socket.data = value),
-      join: (rooms) => socket.join(rooms),
+      join: socket.join,
       leave: (rooms) =>
         typeof rooms === "string"
           ? socket.leave(rooms)

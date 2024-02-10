@@ -20,4 +20,9 @@ attachSockets({
       from: client.id,
     });
   },
+  onStartup: async ({ all }) => {
+    setInterval(() => {
+      all.broadcast("rooms", all.getRooms());
+    }, 30000);
+  },
 });

@@ -142,6 +142,45 @@ const config = createConfig({
 });
 ```
 
+## Server compatibility
+
+### With HTTP(S)
+
+You can attach the sockets server to any HTTP or HTTPS server created using native Node.js methods.
+
+```typescript
+import { createServer } from "node:http"; // or node:https
+import { attachSockets } from "zod-sockets";
+
+attachSockets({ target: createServer().listen(port) });
+```
+
+### With Express
+
+For using with Express.js, supply the `app` as an argument of the `createServer()` (avoid ~~`app.listen()`~~).
+
+```typescript
+import express from "express";
+import { createServer } from "node:http"; // or node:https
+import { attachSockets } from "zod-sockets";
+
+const app = express();
+attachSockets({ target: createServer(app).listen(port) });
+```
+
+### With Express Zod API
+
+For using with `express-zod-api`, take the `httpServer` or `httpsServer` returned by the `createServer` method and
+assign it to the `target` property.
+
+```typescript
+import { createServer } from "express-zod-api";
+import { attachSockets } from "zod-sockets";
+
+const { httpServer, httpsServer } = await createServer();
+attachSockets({ target: httpsServer || httpServer });
+```
+
 ## Receiving events
 
 ### Making actions

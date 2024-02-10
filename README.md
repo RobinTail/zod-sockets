@@ -254,6 +254,58 @@ attachSockets({
 });
 ```
 
+# Rooms
+
+## Available rooms
+
+Rooms are the server side concept. Initially, each newly connected Client is located within a room having the same
+identifier as the Client itself. The list of available rooms is accessible via the `getRooms()` method of the `all`
+handler's argument.
+
+```typescript
+const handler = async ({ all, logger }) => {
+  logger.debug("All rooms", all.getRooms());
+};
+```
+
+## Distribution
+
+The `client` argument of a handler (of a Client or an Action context) provides methods `join()` and `leave()` in order
+to distribute the clients to rooms. Those methods accept a single or multiple room identifiers and _may_ be async
+depending on adapter, therefore consider calling them with `await` anyway.
+
+```typescript
+const handler = async ({ client }) => {
+  await client.leave(["room2", "room3"]);
+  await client.join("room1");
+};
+```
+
+## Who is where
+
+Regardless the context, each handler has `withRooms()` argument accepting a single or multiple rooms identifiers. The
+method returns an object providing the `getClients()` async method, returning an array of clients within those rooms.
+Those clients are also equipped with distribution methods `join()` and `leave()`.
+
+```typescript
+const handler = async ({ withRooms }) => {
+  await withRooms("room1").getClients();
+  await withRooms(["room1", "room2"]).getClients();
+};
+```
+
+Alternatively, you can request `getClients()` method of the `all` argument, which returns an array of all familiar
+clients having `rooms` property, being an array of the room identifiers that client is located.
+
+```typescript
+const handler = async ({ all, logger }) => {
+  const clients = await all.getClients();
+  for (const client of clients) {
+    logger.debug(`${client.id} is within`, client.rooms);
+  }
+};
+```
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

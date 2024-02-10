@@ -207,7 +207,7 @@ validated payload of the Action.
 
 ```typescript
 actionsFactory.build({
-  handler: async ({ input, client, withRooms, getAllRooms, all }) => {
+  handler: async ({ input, client, withRooms, all }) => {
     // sending to the sender of the received event:
     await client.emit("event", ...payload);
     // sending to everyone except the client:
@@ -230,7 +230,7 @@ which has a similar interface except `input` and fires for every connected clien
 
 ```typescript
 attachSockets({
-  onConnection: async ({ client, withRooms, getAllRooms }) => {
+  onConnection: async ({ client, withRooms, all }) => {
     /* your implementation here */
   },
 });

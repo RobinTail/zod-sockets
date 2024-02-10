@@ -206,31 +206,49 @@ methods have constraints on emission types declared in the configuration.
 
 ```typescript
 actionsFactory.build({
-  handler: async ({ client, withRooms, getAllRooms }) => {
+  handler: async ({ client, withRooms, getAllRooms, all }) => {
     // sending to the sender of the received event:
     await client.emit("event", ...payload);
-    // sending to everyong except the client:
+    // sending to everyone except the client:
     await client.broadcast("event", ...payload);
-    // sending to everyone in a room:
+    // sending to everyone except the client in a room:
     withRooms("room1").broadcast("event", ...payload);
-    // sending to everyone within several rooms:
+    // sending to everyone except the client within several rooms:
     withRooms(["room1", "room2"]).broadcast("event", ...payload);
     // sending to everyone everywhere including the client:
-    withRooms(getAllRooms()).broadcast("event", ...payload);
+    all.broadcast("event", ...payload);
   },
 });
 ```
 
-## In connection context
+## In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-make your own customized implementation that acts regardless the client behavior. To do this, you can supply the
-`onConnection` property to the argument of `attachSockets()`, which has a similar interface:
+emit events regardless the incoming ones by setting the `onConnection` property to the argument of `attachSockets()`,
+which has a similar interface and fires for every connected client:
 
 ```typescript
 attachSockets({
   onConnection: async ({ client, withRooms, getAllRooms }) => {
     /* your implementation here */
+  },
+});
+```
+
+## Independent context
+
+Moreover, you can emit events regardless the client actions at all by setting the `onStartup` property to the argument
+of `attachSockets()`. The implementation may have a `setInterval()` for recurring emission.
+
+```typescript
+attachSockets({
+  onStartup: async ({ all, withRooms }) => {
+    // sending to everyone in a room
+    withRooms("room1").broadcast("event", ...payload);
+    // sending to everyone within several rooms:
+    withRooms(["room1", "room2"]).broadcast("event", ...payload);
+    // sending to everyone everywhere
+    all.broadcast("event", ...payload);
   },
 });
 ```

@@ -8,3 +8,4 @@ export type { EmissionMap } from "./emission";
 export type { LoggerOverrides } from "./logger";
 export type { Client } from "./client";
 export type { RemoteClient } from "./remote-client";
+export type { ClientContext } from "./handler";

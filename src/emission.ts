@@ -30,7 +30,7 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
 
 export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
   /**
-   * @desc Emits an event to others in the specified room(s)
+   * @desc Emits an event to all/others in the specified room(s)
    * @throws z.ZodError on validation
    * @throws Error on ack timeout
    * */
@@ -47,7 +47,7 @@ export const makeEmitter = <T>({
   config: { logger, emission, timeout },
 }: {
   config: Config<EmissionMap>;
-  subject: Socket | Socket["broadcast"];
+  subject: Socket | Socket["broadcast"] | Server;
 }) =>
   (async (event: string, ...args: unknown[]) => {
     const isSocket = "id" in subject;

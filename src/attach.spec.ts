@@ -28,8 +28,18 @@ describe("Attach", () => {
       of: vi.fn(() => ({
         adapter: adapterMock,
         fetchSockets: vi.fn(async () => [
-          { id: "ID", rooms: new Set(["room1", "room2"]) },
-          { id: "other", rooms: new Set(["room3"]) },
+          {
+            id: "ID",
+            rooms: new Set(["room1", "room2"]),
+            join: vi.fn(),
+            leave: vi.fn(),
+          },
+          {
+            id: "other",
+            rooms: new Set(["room3"]),
+            join: vi.fn(),
+            leave: vi.fn(),
+          },
         ]),
       })),
     };
@@ -131,11 +141,15 @@ describe("Attach", () => {
           id: "ID",
           rooms: ["room1", "room2"],
           getData: expect.any(Function),
+          join: expect.any(Function),
+          leave: expect.any(Function),
         },
         {
           id: "other",
           rooms: ["room3"],
           getData: expect.any(Function),
+          join: expect.any(Function),
+          leave: expect.any(Function),
         },
       ]);
 

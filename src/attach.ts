@@ -3,6 +3,7 @@ import type { Server } from "socket.io";
 import { ActionMap } from "./action";
 import { Client } from "./client";
 import { Config } from "./config";
+import { makeDistribution } from "./distribution";
 import {
   Broadcaster,
   EmissionMap,
@@ -79,11 +80,7 @@ export const attachSockets = async <E extends EmissionMap>({
       getRooms: () => Array.from(socket.rooms),
       getData: () => socket.data || {},
       setData: (value) => (socket.data = value),
-      join: socket.join,
-      leave: (rooms) =>
-        typeof rooms === "string"
-          ? socket.leave(rooms)
-          : Promise.all(rooms.map((room) => socket.leave(room))).then(() => {}),
+      ...makeDistribution(socket),
     };
     const ctx: ClientContext<E> = {
       ...rootCtx,

@@ -202,11 +202,12 @@ const actions: ActionMap = {
 ## In Action context
 
 Depending on your application's needs and architecture, you can choose different ways to send events. The emission
-methods have constraints on emission types declared in the configuration.
+methods have constraints on emission types declared in the configuration. The `input` is available for processing the
+validated payload of the Action.
 
 ```typescript
 actionsFactory.build({
-  handler: async ({ client, withRooms, getAllRooms, all }) => {
+  handler: async ({ input, client, withRooms, getAllRooms, all }) => {
     // sending to the sender of the received event:
     await client.emit("event", ...payload);
     // sending to everyone except the client:
@@ -225,7 +226,7 @@ actionsFactory.build({
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
 emit events regardless the incoming ones by setting the `onConnection` property to the argument of `attachSockets()`,
-which has a similar interface and fires for every connected client:
+which has a similar interface except `input` and fires for every connected client:
 
 ```typescript
 attachSockets({

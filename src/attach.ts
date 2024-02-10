@@ -9,7 +9,12 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
-import { ActionContext, ClientContext, Handler } from "./handler";
+import {
+  ActionContext,
+  ClientContext,
+  Handler,
+  IndependentContext,
+} from "./handler";
 import { getRemoteClients } from "./remote-client";
 
 export const attachSockets = <E extends EmissionMap>({
@@ -51,6 +56,12 @@ export const attachSockets = <E extends EmissionMap>({
   const getAllRooms = () => Array.from(rootNS.adapter.rooms.keys());
   const getAllClients = async () =>
     getRemoteClients(await rootNS.fetchSockets());
+  const rootCtx: Omit<IndependentContext<E>, "withRooms"> = {
+    logger: config.logger,
+    getAllClients,
+    getAllRooms,
+    // withRooms // @todo
+  };
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });
@@ -68,13 +79,10 @@ export const attachSockets = <E extends EmissionMap>({
           ? socket.leave(rooms)
           : Promise.all(rooms.map((room) => socket.leave(room))).then(() => {}),
     };
-    const withRooms = makeRoomService({ socket, config });
     const ctx: ClientContext<E> = {
+      ...rootCtx,
       client,
-      getAllClients,
-      getAllRooms,
-      logger: config.logger,
-      withRooms,
+      withRooms: makeRoomService({ socket, config }),
     };
     await onConnection(ctx);
     socket.onAny((event) => onAnyEvent({ input: [event], ...ctx }));

@@ -2,6 +2,13 @@
 
 ## Version 0
 
+### v0.4.0
+
+- Reverted some changed made in v0.3.0: removed `all` argument from the Action handler:
+  - The nested `broadcast` method moved to `client` argument,
+  - The nested `getRooms()` renamed to `getAllRooms()`,
+  - The nested `getClients()` renamed to `getAllClients()`.
+
 ### v0.3.2
 
 - Ability to interact with the client's metadata: `getData<T>()` and `setData<T>()` methods.

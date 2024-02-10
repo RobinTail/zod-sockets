@@ -48,6 +48,7 @@
     "build": "yarn build:compile && yarn build:tests",
     "build:compile": "tsup && attw --pack",
     "build:tests": "tsx tools/make-tests.ts",
+    "build:logo": "tsx tools/logo.ts",
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
@@ -65,6 +66,7 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitest/coverage-istanbul": "^1.2.2",
+    "chalk": "^5.3.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",

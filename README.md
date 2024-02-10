@@ -206,9 +206,9 @@ const actions: ActionMap = {
 };
 ```
 
-# Dispatching events
+## Dispatching events
 
-## In Action context
+### In Action context
 
 Depending on your application's needs and architecture, you can choose different ways to send events. The emission
 methods have constraints on emission types declared in the configuration. The `input` is available for processing the
@@ -231,7 +231,7 @@ actionsFactory.build({
 });
 ```
 
-## In Client context
+### In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
 emit events regardless the incoming ones by setting the `onConnection` property of the `attachSockets()` argument,
@@ -245,7 +245,7 @@ attachSockets({
 });
 ```
 
-## Independent context
+### Independent context
 
 Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property of the
 `attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
@@ -263,9 +263,9 @@ attachSockets({
 });
 ```
 
-# Rooms
+## Rooms
 
-## Available rooms
+### Available rooms
 
 Rooms are the server side concept. Initially, each newly connected Client is located within a room having the same
 identifier as the Client itself. The list of available rooms is accessible via the `getRooms()` method of the `all`
@@ -277,7 +277,7 @@ const handler = async ({ all, logger }) => {
 };
 ```
 
-## Distribution
+### Distribution
 
 The `client` argument of a handler (of a Client or an Action context) provides methods `join()` and `leave()` in order
 to distribute the clients to rooms. Those methods accept a single or multiple room identifiers and _may_ be async
@@ -290,7 +290,7 @@ const handler = async ({ client }) => {
 };
 ```
 
-## Who is where
+### Who is where
 
 Regardless the context, each handler has `withRooms()` argument accepting a single or multiple rooms identifiers. The
 method returns an object providing the `getClients()` async method, returning an array of clients within those rooms.

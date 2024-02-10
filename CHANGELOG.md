@@ -2,6 +2,13 @@
 
 ## Version 0
 
+### v0.5.0
+
+- Introducing `onStartup` option for `attachSockets()` method:
+  - Ability to interact with rooms regardless of incoming events.
+- `join()` and `leave()` methods are moved from `withRooms()` to `client`.
+- `attachSockets()` became async.
+
 ### v0.4.0
 
 - Reverted some changed made in v0.3.0: removed `all` argument from the Action handler:

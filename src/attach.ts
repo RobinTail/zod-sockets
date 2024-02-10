@@ -1,6 +1,7 @@
 import http from "node:http";
 import type { Server } from "socket.io";
 import { ActionMap } from "./action";
+import { Client } from "./client";
 import { Config } from "./config";
 import {
   EmissionMap,
@@ -53,24 +54,23 @@ export const attachSockets = <E extends EmissionMap>({
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
     const broadcast = makeBroadcaster({ socket, config });
+    const client: Client<E> = {
+      emit,
+      broadcast,
+      id: socket.id,
+      isConnected: () => socket.connected,
+      getRooms: () => Array.from(socket.rooms),
+      getData: () => socket.data || {},
+      setData: (value) => (socket.data = value),
+      join: (rooms) => socket.join(rooms),
+      leave: (rooms) =>
+        typeof rooms === "string"
+          ? socket.leave(rooms)
+          : Promise.all(rooms.map((room) => socket.leave(room))).then(() => {}),
+    };
     const withRooms = makeRoomService({ socket, config });
     const ctx: ClientContext<E> = {
-      client: {
-        emit,
-        broadcast,
-        id: socket.id,
-        isConnected: () => socket.connected,
-        getRooms: () => Array.from(socket.rooms),
-        getData: () => socket.data || {},
-        setData: (value) => (socket.data = value),
-        join: (rooms) => socket.join(rooms),
-        leave: (rooms) =>
-          typeof rooms === "string"
-            ? socket.leave(rooms)
-            : Promise.all(rooms.map((room) => socket.leave(room))).then(
-                () => {},
-              ),
-      },
+      client,
       getAllClients,
       getAllRooms,
       logger: config.logger,

@@ -199,7 +199,7 @@ const actions: ActionMap = {
 
 # Dispatching events
 
-## From Actions
+## From Action context
 
 Depending on your application's needs and architecture, you can choose different ways to send events. The emission
 methods have constraints on emission types declared in the configuration.
@@ -221,11 +221,11 @@ actionsFactory.build({
 });
 ```
 
-## Independent dispatch
+## From connection context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-make your own customized implementation that acts independently. To do this, you can supply the `onConnection` property
-to the argument of `attachSockets()`, which has a similar interface as the handlers illustrated above:
+make your own customized implementation that acts regardless the client behavior. To do this, you can supply the
+`onConnection` property to the argument of `attachSockets()`, which has a similar interface:
 
 ```typescript
 attachSockets({

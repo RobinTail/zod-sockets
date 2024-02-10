@@ -80,7 +80,7 @@ describe("Emission", () => {
       "should provide methods in rooms context %#",
       async (rooms) => {
         const withRooms = makeRoomService({
-          socket: socketMock as unknown as Socket,
+          subject: socketMock as unknown as Socket,
           config,
         });
         expect(typeof withRooms).toBe("function");

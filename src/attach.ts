@@ -17,7 +17,7 @@ import {
 } from "./handler";
 import { getRemoteClients } from "./remote-client";
 
-export const attachSockets = <E extends EmissionMap>({
+export const attachSockets = async <E extends EmissionMap>({
   io,
   actions,
   target,
@@ -28,6 +28,7 @@ export const attachSockets = <E extends EmissionMap>({
     config.logger.debug("Client disconnected", { ...getData(), id }),
   onAnyEvent = ({ input: [event], client: { id, getData } }) =>
     config.logger.debug(`${event} from ${id}`, getData()),
+  onStartup = () => config.logger.debug("Ready"),
 }: {
   /**
    * @desc The Socket.IO server
@@ -50,17 +51,18 @@ export const attachSockets = <E extends EmissionMap>({
   onConnection?: Handler<ClientContext<E>, void>;
   onDisconnect?: Handler<ClientContext<E>, void>;
   onAnyEvent?: Handler<ActionContext<[string], E>, void>;
-}): Server => {
+  onStartup?: Handler<IndependentContext<E>, void>;
+}): Promise<Server> => {
   config.logger.info("ZOD-SOCKETS", target.address());
   const rootNS = io.of("/");
   const getAllRooms = () => Array.from(rootNS.adapter.rooms.keys());
   const getAllClients = async () =>
     getRemoteClients(await rootNS.fetchSockets());
-  const rootCtx: Omit<IndependentContext<E>, "withRooms"> = {
+  const rootCtx: IndependentContext<E> = {
     logger: config.logger,
     getAllClients,
     getAllRooms,
-    // withRooms // @todo
+    withRooms: makeRoomService({ subject: io, config }),
   };
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ socket, config });
@@ -82,7 +84,7 @@ export const attachSockets = <E extends EmissionMap>({
     const ctx: ClientContext<E> = {
       ...rootCtx,
       client,
-      withRooms: makeRoomService({ socket, config }),
+      withRooms: makeRoomService({ subject: socket, config }),
     };
     await onConnection(ctx);
     socket.onAny((event) => onAnyEvent({ input: [event], ...ctx }));
@@ -93,5 +95,6 @@ export const attachSockets = <E extends EmissionMap>({
     }
     socket.on("disconnect", () => onDisconnect(ctx));
   });
+  await onStartup(rootCtx);
   return io.attach(target);
 };

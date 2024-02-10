@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import { z } from "zod";
 import { Config } from "./config";
 import { RemoteClient, getRemoteClients } from "./remote-client";
@@ -65,31 +65,35 @@ const makeGenericEmitter =
     return (isSocket ? ack : ack.array()).parse(response);
   };
 
-interface MakerParams<E extends EmissionMap> {
-  socket: Socket;
-  config: Config<E>;
-}
-
 export const makeEmitter = <E extends EmissionMap>({
   socket: target,
   ...rest
-}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
+}: {
+  socket: Socket;
+  config: Config<E>;
+}) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
 
 export const makeBroadcaster = <E extends EmissionMap>({
   socket: { broadcast: target },
   ...rest
-}: MakerParams<E>) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+}: {
+  socket: Socket;
+  config: Config<E>;
+}) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
 
 export const makeRoomService =
   <E extends EmissionMap>({
-    socket,
+    subject,
     ...rest
-  }: MakerParams<E>): RoomService<E> =>
+  }: {
+    subject: Socket | Server;
+    config: Config<E>;
+  }): RoomService<E> =>
   (rooms) => ({
     getClients: async () =>
-      getRemoteClients(await socket.in(rooms).fetchSockets()),
+      getRemoteClients(await subject.in(rooms).fetchSockets()),
     broadcast: makeGenericEmitter({
       ...rest,
-      target: socket.to(rooms),
+      target: subject.to(rooms),
     }) as Broadcaster<E>,
   });

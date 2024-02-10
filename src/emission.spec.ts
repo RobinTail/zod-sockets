@@ -19,7 +19,7 @@ describe("Emission", () => {
   };
 
   const socketMock: Record<
-    "emit" | "timeout" | "emitWithAck" | "join" | "leave",
+    "emit" | "timeout" | "emitWithAck",
     MockedFunction<any>
   > & {
     id: string;
@@ -34,8 +34,6 @@ describe("Emission", () => {
     broadcast: broadcastMock,
     to: vi.fn(() => broadcastMock),
     in: vi.fn(() => broadcastMock),
-    join: vi.fn(),
-    leave: vi.fn(),
   };
   const loggerMock = { debug: vi.fn() };
   const config = {
@@ -86,22 +84,9 @@ describe("Emission", () => {
           config,
         });
         expect(typeof withRooms).toBe("function");
-        const { broadcast, leave, join, getClients } = withRooms(rooms);
+        const { broadcast, getClients } = withRooms(rooms);
         expect(socketMock.to).toHaveBeenLastCalledWith(rooms);
-        for (const method of [broadcast, leave, join]) {
-          expect(typeof method).toBe("function");
-        }
-        join();
-        expect(socketMock.join).toHaveBeenLastCalledWith(rooms);
-        if (typeof rooms === "string") {
-          leave();
-          expect(socketMock.leave).toHaveBeenLastCalledWith(rooms);
-        } else {
-          await leave();
-          for (const room of rooms) {
-            expect(socketMock.leave).toHaveBeenCalledWith(room);
-          }
-        }
+        expect(typeof broadcast).toBe("function");
         await expect(getClients()).resolves.toEqual([
           {
             id: "ID",

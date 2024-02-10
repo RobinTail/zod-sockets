@@ -1,63 +1,15 @@
 import { init, last } from "ramda";
-import type { Socket } from "socket.io";
 import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
-import { Broadcaster, EmissionMap, Emitter, RoomService } from "./emission";
-import { AbstractLogger } from "./logger";
-import { RemoteClient } from "./remote-client";
-
-export interface Client<E extends EmissionMap> {
-  /** @alias Socket.connected */
-  isConnected: () => boolean;
-  /** @alias Socket.id */
-  id: Socket["id"];
-  /** @desc Returns the list of the rooms the client in */
-  getRooms: () => string[];
-  /**
-   * @desc Sends a new event to the client (this is not acknowledgement)
-   * @throws z.ZodError on validation
-   * @throws Error on ack timeout
-   * */
-  emit: Emitter<E>;
-  /**
-   * @desc Emits to others
-   * @throws z.ZodError on validation
-   * @throws Error on ack timeout
-   * */
-  broadcast: Broadcaster<E>;
-  /** @desc Returns the client metadata according to the specified type or empty object */
-  getData: <D extends object>() => Readonly<Partial<D>>;
-  /**
-   * @desc Sets the client metadata according to the specified type
-   * @throws z.ZodError on validation
-   * */
-  setData: <D extends object>(value: D) => void;
-}
-
-export interface HandlingFeatures<E extends EmissionMap> {
-  logger: AbstractLogger;
-  /** @desc The scope of the owner of the received event */
-  client: Client<E>;
-  /** @desc Returns the list of available rooms */
-  getAllRooms: () => string[];
-  /** @desc Returns the list of familiar clients */
-  getAllClients: () => Promise<RemoteClient[]>;
-  /** @desc Provides room(s)-scope methods */
-  withRooms: RoomService<E>;
-}
-
-export type Handler<IN, OUT, E extends EmissionMap> = (
-  params: {
-    input: IN;
-  } & HandlingFeatures<E>,
-) => Promise<OUT>;
+import { EmissionMap } from "./emission";
+import { ActionContext, ClientContext, Handler } from "./handler";
 
 export abstract class AbstractAction {
   public abstract execute(
     params: {
       event: string;
       params: unknown[];
-    } & HandlingFeatures<EmissionMap>,
+    } & ClientContext<EmissionMap>,
   ): Promise<void>;
 }
 
@@ -71,7 +23,10 @@ export class Action<
 > extends AbstractAction {
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
-  readonly #handler: Handler<z.output<IN>, z.input<OUT> | void, EmissionMap>;
+  readonly #handler: Handler<
+    ActionContext<z.output<IN>, EmissionMap>,
+    z.input<OUT> | void
+  >;
 
   public constructor(
     action:
@@ -114,7 +69,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & HandlingFeatures<EmissionMap>): Promise<void> {
+  } & ClientContext<EmissionMap>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

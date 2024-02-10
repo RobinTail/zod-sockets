@@ -6,6 +6,15 @@ Socket.IO solution with I/O validation.
 
 Version 0 is unstable — public API may be changed at any time.
 
+# How it works
+
+## Technologies
+
+- [Typescript](https://www.typescriptlang.org/) first.
+- Sockets — [Socket.IO](https://socket.io/), using [WebSocket](https://github.com/websockets/ws) for transport.
+- Schema validation — [Zod 3.x](https://github.com/colinhacks/zod).
+- Supports any logger having `info()`, `debug()`, `error()` and `warn()` methods.
+
 ## Concept
 
 The library distinguishes between incoming and outgoing events. The first are called Actions, and the second — Emission.

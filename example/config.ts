@@ -17,6 +17,9 @@ export const config = createConfig({
     chat: {
       schema: z.tuple([z.string(), z.object({ from: z.string() })]),
     },
+    rooms: {
+      schema: z.tuple([z.string().array()]),
+    },
   },
 });
 

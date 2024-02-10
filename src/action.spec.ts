@@ -35,6 +35,7 @@ describe("Action", () => {
     const getRoomsMock = vi.fn();
     const getAllRoomsMock = vi.fn();
     const getAllClientsMock = vi.fn();
+    const allBroadcastMock = vi.fn();
     const getDataMock = vi.fn();
     const setDataMock = vi.fn();
     const joinMock = vi.fn();
@@ -46,8 +47,11 @@ describe("Action", () => {
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some"],
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+          broadcast: allBroadcastMock,
+        },
         client: {
           id: "ID",
           emit: emitMock,
@@ -65,8 +69,11 @@ describe("Action", () => {
         input: ["some"],
         logger: loggerMock,
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+          broadcast: allBroadcastMock,
+        },
         client: {
           id: "ID",
           emit: emitMock,
@@ -88,8 +95,11 @@ describe("Action", () => {
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some", ackMock],
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+          broadcast: allBroadcastMock,
+        },
         client: {
           id: "ID",
           emit: emitMock,
@@ -115,8 +125,11 @@ describe("Action", () => {
           join: joinMock,
           leave: leaveMock,
         },
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+          broadcast: allBroadcastMock,
+        },
         withRooms: withRoomsMock,
         input: ["some"],
         logger: loggerMock,
@@ -130,8 +143,11 @@ describe("Action", () => {
         logger: loggerMock as unknown as AbstractLogger,
         params: [], // too short
         withRooms: withRoomsMock,
-        getAllClients: getAllClientsMock,
-        getAllRooms: getAllRoomsMock,
+        all: {
+          getClients: getAllClientsMock,
+          getRooms: getAllRoomsMock,
+          broadcast: allBroadcastMock,
+        },
         client: {
           id: "ID",
           getRooms: getRoomsMock,

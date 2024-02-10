@@ -1,6 +1,6 @@
 import http from "node:http";
 import type { Server } from "socket.io";
-import { ActionMap, Handler, HandlingFeatures } from "./action";
+import { ActionMap } from "./action";
 import { Config } from "./config";
 import {
   EmissionMap,
@@ -8,6 +8,7 @@ import {
   makeEmitter,
   makeRoomService,
 } from "./emission";
+import { Handler, HandlingFeatures } from "./handler";
 import { getRemoteClients } from "./remote-client";
 
 export const attachSockets = <E extends EmissionMap>({

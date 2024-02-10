@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.6.2
+
+- Upgrading dependencies and improving the documentation.
+
 ### v0.6.1
 
 - Adding `join()` and `leave()` methods to `RemoteClient` (the ones returned by `getClients()`).

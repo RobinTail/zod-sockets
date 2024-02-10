@@ -2,6 +2,13 @@
 
 ## Version 0
 
+### v0.6.0
+
+- Restoring the `all` argument of the Action handler (removed in v0.4.0), but now it works as expected, by providing:
+  - `getRooms()` — all available rooms,
+  - `getClients()` — all familiar clients,
+  - `broadcast()` — sends an event to everyone.
+
 ### v0.5.0
 
 - Introducing `onStartup` option for `attachSockets()` method:

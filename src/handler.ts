@@ -1,14 +1,18 @@
 import { Client } from "./client";
-import { EmissionMap, RoomService } from "./emission";
+import { Broadcaster, EmissionMap, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 import { RemoteClient } from "./remote-client";
 
 export interface IndependentContext<E extends EmissionMap> {
   logger: AbstractLogger;
-  /** @desc Returns the list of available rooms */
-  getAllRooms: () => string[];
-  /** @desc Returns the list of familiar clients */
-  getAllClients: () => Promise<RemoteClient[]>;
+  all: {
+    /** @desc Returns the list of available rooms */
+    getRooms: () => string[];
+    /** @desc Returns the list of familiar clients */
+    getClients: () => Promise<RemoteClient[]>;
+    /** @desc Emits an event to everyone */
+    broadcast: Broadcaster<E>;
+  };
   /** @desc Provides room(s)-scope methods */
   withRooms: RoomService<E>;
 }

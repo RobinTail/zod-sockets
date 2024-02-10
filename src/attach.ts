@@ -56,14 +56,14 @@ export const attachSockets = async <E extends EmissionMap>({
 }): Promise<Server> => {
   config.logger.info("ZOD-SOCKETS", target.address());
   const rootNS = io.of("/");
-  const getAllRooms = () => Array.from(rootNS.adapter.rooms.keys());
-  const getAllClients = async () =>
-    getRemoteClients(await rootNS.fetchSockets());
   const rootCtx: IndependentContext<E> = {
     logger: config.logger,
-    getAllClients,
-    getAllRooms,
     withRooms: makeRoomService({ subject: io, config }),
+    all: {
+      getClients: async () => getRemoteClients(await rootNS.fetchSockets()),
+      getRooms: () => Array.from(rootNS.adapter.rooms.keys()),
+      broadcast: makeEmitter<Broadcaster<E>>({ subject: io, config }),
+    },
   };
   io.on("connection", async (socket) => {
     const emit = makeEmitter<Emitter<E>>({ subject: socket, config });

@@ -6,3 +6,5 @@ export type { ActionMap } from "./action";
 // issue 952
 export type { EmissionMap } from "./emission";
 export type { LoggerOverrides } from "./logger";
+export type { Client } from "./client";
+export type { RemoteClient } from "./remote-client";

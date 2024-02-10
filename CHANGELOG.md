@@ -8,6 +8,7 @@
   - `getRooms()` — all available rooms,
   - `getClients()` — all familiar clients,
   - `broadcast()` — sends an event to everyone.
+- Describing the basic features in the documentation (Readme).
 
 ### v0.5.0
 

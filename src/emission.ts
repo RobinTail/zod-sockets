@@ -42,15 +42,14 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
  * */
-const makeGenericEmitter =
-  ({
-    target,
-    config: { logger, emission, timeout },
-  }: {
-    config: Config<EmissionMap>;
-    target: Socket | Socket["broadcast"];
-  }) =>
-  async (event: string, ...args: unknown[]) => {
+const makeGenericEmitter = <T>({
+  target,
+  config: { logger, emission, timeout },
+}: {
+  config: Config<EmissionMap>;
+  target: Socket | Socket["broadcast"];
+}) =>
+  (async (event: string, ...args: unknown[]) => {
     const isSocket = "id" in target;
     assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
@@ -63,7 +62,7 @@ const makeGenericEmitter =
       .timeout(timeout)
       .emitWithAck(String(event), ...payload);
     return (isSocket ? ack : ack.array()).parse(response);
-  };
+  }) as T;
 
 export const makeEmitter = <E extends EmissionMap>({
   socket: target,
@@ -71,7 +70,7 @@ export const makeEmitter = <E extends EmissionMap>({
 }: {
   socket: Socket;
   config: Config<E>;
-}) => makeGenericEmitter({ ...rest, target }) as Emitter<E>;
+}) => makeGenericEmitter<Emitter<E>>({ ...rest, target });
 
 export const makeBroadcaster = <E extends EmissionMap>({
   socket: { broadcast: target },
@@ -79,7 +78,7 @@ export const makeBroadcaster = <E extends EmissionMap>({
 }: {
   socket: Socket;
   config: Config<E>;
-}) => makeGenericEmitter({ ...rest, target }) as Broadcaster<E>;
+}) => makeGenericEmitter<Broadcaster<E>>({ ...rest, target });
 
 export const makeRoomService =
   <E extends EmissionMap>({
@@ -92,8 +91,8 @@ export const makeRoomService =
   (rooms) => ({
     getClients: async () =>
       getRemoteClients(await subject.in(rooms).fetchSockets()),
-    broadcast: makeGenericEmitter({
+    broadcast: makeGenericEmitter<Broadcaster<E>>({
       ...rest,
       target: subject.to(rooms),
-    }) as Broadcaster<E>,
+    }),
   });

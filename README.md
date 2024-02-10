@@ -199,7 +199,7 @@ const actions: ActionMap = {
 
 # Dispatching events
 
-## From Action context
+## In Action context
 
 Depending on your application's needs and architecture, you can choose different ways to send events. The emission
 methods have constraints on emission types declared in the configuration.
@@ -221,7 +221,7 @@ actionsFactory.build({
 });
 ```
 
-## From connection context
+## In connection context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
 make your own customized implementation that acts regardless the client behavior. To do this, you can supply the

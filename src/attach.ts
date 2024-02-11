@@ -69,10 +69,7 @@ export const attachSockets = async <E extends EmissionMap>({
   };
   io.on("connection", async (socket) => {
     const emit = makeEmitter({ subject: socket, ...emitCfg });
-    const broadcast = makeEmitter({
-      subject: socket.broadcast,
-      ...emitCfg,
-    });
+    const broadcast = makeEmitter({ subject: socket.broadcast, ...emitCfg });
     const client: Client<E> = {
       emit,
       broadcast,

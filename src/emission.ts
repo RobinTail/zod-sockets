@@ -46,6 +46,7 @@ export type EmitterConfig<E extends EmissionMap> = Pick<
 /**
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
+ * @todo consider overloads
  * */
 export const makeEmitter = <T>({
   subject,
@@ -60,7 +61,7 @@ export const makeEmitter = <T>({
     assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
     const payload = schema.parse(args);
-    logger.debug(`Sending ${String(event)}`, payload);
+    logger.debug(`Sending ${String(event)}`, payload); // @todo move to onAnyOutgoing
     if (!ack) {
       return subject.emit(String(event), ...payload) || true;
     }

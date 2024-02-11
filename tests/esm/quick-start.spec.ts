@@ -27,7 +27,7 @@ describe("ESM Test", async () => {
 
   describe("Quick Start from Readme", () => {
     test("should start", async () => {
-      await waitFor(() => out.indexOf("ZOD-SOCKETS") > -1);
+      await waitFor(() => out.indexOf("Listening") > -1);
     });
   });
 });

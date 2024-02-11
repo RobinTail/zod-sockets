@@ -18,6 +18,7 @@ import {
   IndependentContext,
 } from "./handler";
 import { getRemoteClients } from "./remote-client";
+import { getStartupLogo } from "./startup-logo";
 
 export const attachSockets = async <E extends EmissionMap>({
   io,
@@ -55,7 +56,6 @@ export const attachSockets = async <E extends EmissionMap>({
   onAnyEvent?: Handler<ActionContext<[string], E>, void>;
   onStartup?: Handler<IndependentContext<E>, void>;
 }): Promise<Server> => {
-  config.logger.info("ZOD-SOCKETS", target.address());
   const rootNS = io.of("/");
   const rootCtx: IndependentContext<E> = {
     logger: config.logger,
@@ -96,6 +96,10 @@ export const attachSockets = async <E extends EmissionMap>({
     }
     socket.on("disconnect", () => onDisconnect(ctx));
   });
+  if (config.startupLogo !== false) {
+    console.log(getStartupLogo());
+  }
   await onStartup(rootCtx);
+  config.logger.info("Listening", target.address());
   return io.attach(target);
 };

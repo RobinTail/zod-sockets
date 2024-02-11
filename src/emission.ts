@@ -38,6 +38,11 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
   getClients: () => Promise<RemoteClient[]>;
 };
 
+export type EmitterConfig<E extends EmissionMap> = Pick<
+  Config<E>,
+  "logger" | "emission" | "timeout"
+>;
+
 /**
  * @throws z.ZodError on validation
  * @throws Error on ack timeout
@@ -47,10 +52,9 @@ export const makeEmitter = <T>({
   logger,
   emission,
   timeout,
-}: { subject: Socket | Socket["broadcast"] | Server } & Pick<
-  Config<EmissionMap>,
-  "logger" | "emission" | "timeout"
->) =>
+}: {
+  subject: Socket | Socket["broadcast"] | Server;
+} & EmitterConfig<EmissionMap>) =>
   (async (event: string, ...args: unknown[]) => {
     const isSocket = "id" in subject;
     assert(event in emission, new Error(`Unsupported event ${event}`));
@@ -70,10 +74,7 @@ export const makeRoomService =
   <E extends EmissionMap>({
     subject,
     ...rest
-  }: { subject: Socket | Server } & Pick<
-    Config<E>,
-    "logger" | "emission" | "timeout"
-  >): RoomService<E> =>
+  }: { subject: Socket | Server } & EmitterConfig<E>): RoomService<E> =>
   (rooms) => ({
     getClients: async () =>
       getRemoteClients(await subject.in(rooms).fetchSockets()),

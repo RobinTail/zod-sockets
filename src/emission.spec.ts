@@ -57,7 +57,7 @@ describe("Emission", () => {
     ])("with $name", ({ subject, ack }) => {
       const emitter = makeEmitter<Emitter<any> | Broadcaster<any>>({
         subject: subject as unknown as Socket,
-        config,
+        ...config,
       });
 
       test("should create an emitter", () => {
@@ -88,7 +88,7 @@ describe("Emission", () => {
       async (rooms) => {
         const withRooms = makeRoomService({
           subject: socketMock as unknown as Socket,
-          config,
+          ...config,
         });
         expect(typeof withRooms).toBe("function");
         const { broadcast, getClients } = withRooms(rooms);

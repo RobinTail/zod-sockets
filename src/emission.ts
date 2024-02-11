@@ -44,11 +44,13 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
  * */
 export const makeEmitter = <T>({
   subject,
-  config: { logger, emission, timeout },
-}: {
-  config: Config<EmissionMap>;
-  subject: Socket | Socket["broadcast"] | Server;
-}) =>
+  logger,
+  emission,
+  timeout,
+}: { subject: Socket | Socket["broadcast"] | Server } & Pick<
+  Config<EmissionMap>,
+  "logger" | "emission" | "timeout"
+>) =>
   (async (event: string, ...args: unknown[]) => {
     const isSocket = "id" in subject;
     assert(event in emission, new Error(`Unsupported event ${event}`));
@@ -68,10 +70,10 @@ export const makeRoomService =
   <E extends EmissionMap>({
     subject,
     ...rest
-  }: {
-    subject: Socket | Server;
-    config: Config<E>;
-  }): RoomService<E> =>
+  }: { subject: Socket | Server } & Pick<
+    Config<E>,
+    "logger" | "emission" | "timeout"
+  >): RoomService<E> =>
   (rooms) => ({
     getClients: async () =>
       getRemoteClients(await subject.in(rooms).fetchSockets()),

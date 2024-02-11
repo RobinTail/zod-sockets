@@ -59,18 +59,18 @@ export const attachSockets = async <E extends EmissionMap>({
   const rootNS = io.of("/");
   const rootCtx: IndependentContext<E> = {
     logger: config.logger,
-    withRooms: makeRoomService({ subject: io, config }),
+    withRooms: makeRoomService({ subject: io, ...config }),
     all: {
       getClients: async () => getRemoteClients(await rootNS.fetchSockets()),
       getRooms: () => Array.from(rootNS.adapter.rooms.keys()),
-      broadcast: makeEmitter<Broadcaster<E>>({ subject: io, config }),
+      broadcast: makeEmitter<Broadcaster<E>>({ subject: io, ...config }),
     },
   };
   io.on("connection", async (socket) => {
-    const emit = makeEmitter<Emitter<E>>({ subject: socket, config });
+    const emit = makeEmitter<Emitter<E>>({ subject: socket, ...config });
     const broadcast = makeEmitter<Broadcaster<E>>({
       subject: socket.broadcast,
-      config,
+      ...config,
     });
     const client: Client<E> = {
       emit,
@@ -85,7 +85,7 @@ export const attachSockets = async <E extends EmissionMap>({
     const ctx: ClientContext<E> = {
       ...rootCtx,
       client,
-      withRooms: makeRoomService({ subject: socket, config }),
+      withRooms: makeRoomService({ subject: socket, ...config }),
     };
     await onConnection(ctx);
     socket.onAny((event) => onAnyEvent({ input: [event], ...ctx }));

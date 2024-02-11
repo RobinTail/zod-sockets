@@ -57,7 +57,6 @@ export const attachSockets = async <E extends EmissionMap>({
   onStartup?: Handler<IndependentContext<E>, void>;
 }): Promise<Server> => {
   console.log(getStartupLogo());
-  config.logger.info("Listening", target.address());
   const rootNS = io.of("/");
   const rootCtx: IndependentContext<E> = {
     logger: config.logger,
@@ -99,5 +98,6 @@ export const attachSockets = async <E extends EmissionMap>({
     socket.on("disconnect", () => onDisconnect(ctx));
   });
   await onStartup(rootCtx);
+  config.logger.info("Listening", target.address());
   return io.attach(target);
 };

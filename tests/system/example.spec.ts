@@ -14,7 +14,7 @@ describe("System test on Example", async () => {
     cwd: "./example",
   });
   example.stdout.on("data", listener);
-  await waitFor(() => out.indexOf("ZOD-SOCKETS") > -1);
+  await waitFor(() => out.indexOf("Listening") > -1);
   const client = io("ws://localhost:8090");
   await waitFor(() => client.connected);
 

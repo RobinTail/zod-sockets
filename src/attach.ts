@@ -57,7 +57,7 @@ export const attachSockets = async <E extends EmissionMap>({
   onStartup?: Handler<IndependentContext<E>, void>;
 }): Promise<Server> => {
   console.log(getStartupLogo());
-  config.logger.info("ZOD-SOCKETS", target.address());
+  config.logger.info("Listening", target.address());
   const rootNS = io.of("/");
   const rootCtx: IndependentContext<E> = {
     logger: config.logger,

@@ -56,7 +56,9 @@ export const attachSockets = async <E extends EmissionMap>({
   onAnyEvent?: Handler<ActionContext<[string], E>, void>;
   onStartup?: Handler<IndependentContext<E>, void>;
 }): Promise<Server> => {
-  console.log(getStartupLogo());
+  if (config.startupLogo !== false) {
+    console.log(getStartupLogo());
+  }
   const rootNS = io.of("/");
   const rootCtx: IndependentContext<E> = {
     logger: config.logger,

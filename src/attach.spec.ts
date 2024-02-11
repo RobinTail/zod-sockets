@@ -12,6 +12,7 @@ describe("Attach", () => {
       rooms: new Set(["room1", "room2"]),
       on: vi.fn(),
       onAny: vi.fn(),
+      onAnyOutgoing: vi.fn(),
       join: vi.fn(),
       leave: vi.fn(),
     };
@@ -85,9 +86,13 @@ describe("Attach", () => {
         id: "ID",
       });
 
-      // on any event:
+      // on any incoming:
       socketMock.onAny.mock.lastCall![0]("test");
       expect(loggerMock.debug).toHaveBeenLastCalledWith("test from ID", {});
+
+      // on any outgoing:
+      socketMock.onAnyOutgoing.mock.lastCall![0]("test");
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("Sending test", []);
 
       // on the listened event:
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");

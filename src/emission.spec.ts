@@ -2,7 +2,6 @@ import { Socket } from "socket.io";
 import { MockedFunction, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { makeEmitter, makeRoomService } from "./emission";
-import { AbstractLogger } from "./logger";
 
 describe("Emission", () => {
   const broadcastMock: Record<
@@ -40,9 +39,7 @@ describe("Emission", () => {
     to: vi.fn(() => broadcastMock),
     in: vi.fn(() => broadcastMock),
   };
-  const loggerMock = { debug: vi.fn() };
   const emitCfg = {
-    logger: loggerMock as unknown as AbstractLogger,
     timeout: 100,
     emission: {
       one: { schema: z.tuple([z.string()]) },

@@ -11,10 +11,10 @@ import {
   makeRoomService,
 } from "./emission";
 import {
-  ActionContext,
   ClientContext,
   Handler,
   IndependentContext,
+  TracingContext,
 } from "./handler";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
@@ -27,8 +27,10 @@ export const attachSockets = async <E extends EmissionMap>({
     logger.debug("Client connected", { ...getData(), id }),
   onDisconnect = ({ client: { id, getData }, logger }) =>
     logger.debug("Client disconnected", { ...getData(), id }),
-  onAnyEvent = ({ input: [event], client: { id, getData }, logger }) =>
+  onAnyIncoming = ({ event, client: { id, getData }, logger }) =>
     logger.debug(`${event} from ${id}`, getData()),
+  onAnyOutgoing = ({ event, logger, payload }) =>
+    logger.debug(`Sending ${event}`, payload),
   onStartup = ({ logger }) => logger.debug("Ready"),
   config: { logger, emission, timeout, startupLogo = true },
 }: {
@@ -52,12 +54,13 @@ export const attachSockets = async <E extends EmissionMap>({
   /** @desc A place for emitting events regardless receiving events */
   onConnection?: Handler<ClientContext<E>, void>;
   onDisconnect?: Handler<ClientContext<E>, void>;
-  onAnyEvent?: Handler<ActionContext<[string], E>, void>;
+  onAnyIncoming?: Handler<TracingContext<E>, void>;
+  onAnyOutgoing?: Handler<TracingContext<E>, void>;
   /** @desc A place for emitting events regardless clients activity */
   onStartup?: Handler<IndependentContext<E>, void>;
 }): Promise<Server> => {
   const rootNS = io.of("/");
-  const emitCfg: EmitterConfig<E> = { emission, logger, timeout };
+  const emitCfg: EmitterConfig<E> = { emission, timeout };
   const rootCtx: IndependentContext<E> = {
     logger,
     withRooms: makeRoomService({ subject: io, ...emitCfg }),
@@ -86,7 +89,12 @@ export const attachSockets = async <E extends EmissionMap>({
       withRooms: makeRoomService({ subject: socket, ...emitCfg }),
     };
     await onConnection(ctx);
-    socket.onAny((event) => onAnyEvent({ input: [event], ...ctx }));
+    socket.onAny((event, ...payload) =>
+      onAnyIncoming({ event, payload, ...ctx }),
+    );
+    socket.onAnyOutgoing((event, ...payload) =>
+      onAnyOutgoing({ event, payload, ...ctx }),
+    );
     for (const [event, action] of Object.entries(actions)) {
       socket.on(event, async (...params) =>
         action.execute({ event, params, ...ctx }),

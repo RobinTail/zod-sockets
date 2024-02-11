@@ -23,6 +23,12 @@ export interface ClientContext<E extends EmissionMap>
   client: Client<E>;
 }
 
+export interface TracingContext<E extends EmissionMap>
+  extends ClientContext<E> {
+  event: string;
+  payload: unknown[];
+}
+
 export interface ActionContext<IN, E extends EmissionMap>
   extends ClientContext<E> {
   /** @desc Validated payload */

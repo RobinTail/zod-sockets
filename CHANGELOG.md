@@ -2,6 +2,13 @@
 
 ## Version 0
 
+### v0.7.0
+
+- `onAny()` property of `attachSockets()` argument renamed to `onAnyIncoming()`, having `event` and `payload` arguments;
+- Introducing `onAnyOutgoing()`, having the same interface;
+- Startup logo added;
+- Some more refactoring.
+
 ### v0.6.2
 
 - Upgrading dependencies and improving the documentation.

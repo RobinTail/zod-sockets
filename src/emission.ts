@@ -40,7 +40,7 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
 
 export type EmitterConfig<E extends EmissionMap> = Pick<
   Config<E>,
-  "logger" | "emission" | "timeout"
+  "emission" | "timeout"
 >;
 
 export function makeEmitter<E extends EmissionMap>(
@@ -51,7 +51,6 @@ export function makeEmitter<E extends EmissionMap>(
 ): Broadcaster<EmissionMap>;
 export function makeEmitter({
   subject,
-  logger,
   emission,
   timeout,
 }: {
@@ -66,7 +65,6 @@ export function makeEmitter({
     assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
     const payload = schema.parse(args);
-    logger.debug(`Sending ${String(event)}`, payload); // @todo move to onAnyOutgoing
     if (!ack) {
       return subject.emit(String(event), ...payload) || true;
     }

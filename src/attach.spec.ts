@@ -90,6 +90,10 @@ describe("Attach", () => {
       socketMock.onAny.mock.lastCall![0]("test");
       expect(loggerMock.debug).toHaveBeenLastCalledWith("test from ID", {});
 
+      // on any outgoing:
+      socketMock.onAnyOutgoing.mock.lastCall![0]("test");
+      expect(loggerMock.debug).toHaveBeenLastCalledWith("Sending test", []);
+
       // on the listened event:
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");
       expect(call).toBeTruthy();

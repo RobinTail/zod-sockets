@@ -8,6 +8,7 @@ import {
   Broadcaster,
   EmissionMap,
   Emitter,
+  EmitterConfig,
   makeEmitter,
   makeRoomService,
 } from "./emission";
@@ -24,14 +25,14 @@ export const attachSockets = async <E extends EmissionMap>({
   io,
   actions,
   target,
-  config,
-  onConnection = ({ client: { id, getData } }) =>
-    config.logger.debug("Client connected", { ...getData(), id }),
-  onDisconnect = ({ client: { id, getData } }) =>
-    config.logger.debug("Client disconnected", { ...getData(), id }),
-  onAnyEvent = ({ input: [event], client: { id, getData } }) =>
-    config.logger.debug(`${event} from ${id}`, getData()),
-  onStartup = () => config.logger.debug("Ready"),
+  onConnection = ({ client: { id, getData }, logger }) =>
+    logger.debug("Client connected", { ...getData(), id }),
+  onDisconnect = ({ client: { id, getData }, logger }) =>
+    logger.debug("Client disconnected", { ...getData(), id }),
+  onAnyEvent = ({ input: [event], client: { id, getData }, logger }) =>
+    logger.debug(`${event} from ${id}`, getData()),
+  onStartup = ({ logger }) => logger.debug("Ready"),
+  config: { logger, emission, timeout, startupLogo = true },
 }: {
   /**
    * @desc The Socket.IO server
@@ -57,20 +58,21 @@ export const attachSockets = async <E extends EmissionMap>({
   onStartup?: Handler<IndependentContext<E>, void>;
 }): Promise<Server> => {
   const rootNS = io.of("/");
+  const emitCfg: EmitterConfig<E> = { emission, logger, timeout };
   const rootCtx: IndependentContext<E> = {
-    logger: config.logger,
-    withRooms: makeRoomService({ subject: io, config }),
+    logger,
+    withRooms: makeRoomService({ subject: io, ...emitCfg }),
     all: {
       getClients: async () => getRemoteClients(await rootNS.fetchSockets()),
       getRooms: () => Array.from(rootNS.adapter.rooms.keys()),
-      broadcast: makeEmitter<Broadcaster<E>>({ subject: io, config }),
+      broadcast: makeEmitter<Broadcaster<E>>({ subject: io, ...emitCfg }),
     },
   };
   io.on("connection", async (socket) => {
-    const emit = makeEmitter<Emitter<E>>({ subject: socket, config });
+    const emit = makeEmitter<Emitter<E>>({ subject: socket, ...emitCfg });
     const broadcast = makeEmitter<Broadcaster<E>>({
       subject: socket.broadcast,
-      config,
+      ...emitCfg,
     });
     const client: Client<E> = {
       emit,
@@ -85,7 +87,7 @@ export const attachSockets = async <E extends EmissionMap>({
     const ctx: ClientContext<E> = {
       ...rootCtx,
       client,
-      withRooms: makeRoomService({ subject: socket, config }),
+      withRooms: makeRoomService({ subject: socket, ...emitCfg }),
     };
     await onConnection(ctx);
     socket.onAny((event) => onAnyEvent({ input: [event], ...ctx }));
@@ -96,10 +98,8 @@ export const attachSockets = async <E extends EmissionMap>({
     }
     socket.on("disconnect", () => onDisconnect(ctx));
   });
-  if (config.startupLogo !== false) {
-    console.log(getStartupLogo());
-  }
+  (startupLogo ? console.log : () => {})(getStartupLogo());
   await onStartup(rootCtx);
-  config.logger.info("Listening", target.address());
+  logger.info("Listening", target.address());
   return io.attach(target);
 };

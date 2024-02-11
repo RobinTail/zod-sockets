@@ -5,9 +5,7 @@ import { Client } from "./client";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
 import {
-  Broadcaster,
   EmissionMap,
-  Emitter,
   EmitterConfig,
   makeEmitter,
   makeRoomService,
@@ -66,12 +64,12 @@ export const attachSockets = async <E extends EmissionMap>({
     all: {
       getClients: async () => getRemoteClients(await rootNS.fetchSockets()),
       getRooms: () => Array.from(rootNS.adapter.rooms.keys()),
-      broadcast: makeEmitter<Broadcaster<E>>({ subject: io, ...emitCfg }),
+      broadcast: makeEmitter({ subject: io, ...emitCfg }),
     },
   };
   io.on("connection", async (socket) => {
-    const emit = makeEmitter<Emitter<E>>({ subject: socket, ...emitCfg });
-    const broadcast = makeEmitter<Broadcaster<E>>({
+    const emit = makeEmitter({ subject: socket, ...emitCfg });
+    const broadcast = makeEmitter({
       subject: socket.broadcast,
       ...emitCfg,
     });

@@ -55,7 +55,7 @@ describe("Emission", () => {
       { name: "socket", subject: socketMock, ack: ["test"] },
       { name: "broadcast", subject: broadcastMock, ack: [["test"]] },
     ])("with $name", ({ subject, ack }) => {
-      const emitter = makeEmitter<Emitter<any> | Broadcaster<any>>({
+      const emitter = makeEmitter({
         subject: subject as unknown as Socket,
         ...emitCfg,
       });

@@ -51,10 +51,11 @@ export const attachSockets = async <E extends EmissionMap>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<E>;
-  /** @desc A place for emitting events unrelated to the incoming events */
+  /** @desc A place for emitting events regardless receiving events */
   onConnection?: Handler<ClientContext<E>, void>;
   onDisconnect?: Handler<ClientContext<E>, void>;
   onAnyEvent?: Handler<ActionContext<[string], E>, void>;
+  /** @desc A place for emitting events regardless clients activity */
   onStartup?: Handler<IndependentContext<E>, void>;
 }): Promise<Server> => {
   const rootNS = io.of("/");

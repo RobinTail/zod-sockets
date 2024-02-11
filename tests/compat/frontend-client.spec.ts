@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { waitFor } from "../helpers";
 
 describe("Express Zod API compatibility test", () => {
@@ -15,6 +15,11 @@ describe("Express Zod API compatibility test", () => {
 
   beforeAll(async () => {
     await waitFor(() => out.indexOf("Listening") > -1);
+  });
+
+  afterEach(() => {
+    console.log(out);
+    out = "";
   });
 
   afterAll(async () => {

@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { MockedFunction, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { Broadcaster, Emitter, makeEmitter, makeRoomService } from "./emission";
+import { makeEmitter, makeRoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 
 describe("Emission", () => {
@@ -55,7 +55,7 @@ describe("Emission", () => {
       { name: "socket", subject: socketMock, ack: ["test"] },
       { name: "broadcast", subject: broadcastMock, ack: [["test"]] },
     ])("with $name", ({ subject, ack }) => {
-      const emitter = makeEmitter<Emitter<any> | Broadcaster<any>>({
+      const emitter = makeEmitter({
         subject: subject as unknown as Socket,
         ...emitCfg,
       });

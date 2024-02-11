@@ -113,9 +113,7 @@ export const attachSockets = async <E extends EmissionMap>({
     }
     socket.on("disconnect", () => onDisconnect(ctx));
   });
-  if (startupLogo) {
-    console.log(getStartupLogo());
-  }
+  (startupLogo ? console.log : () => {})(getStartupLogo());
   await onStartup(rootCtx);
   logger.info("Listening", target.address());
   return io.attach(target);

@@ -55,6 +55,7 @@ describe("Attach", () => {
         target: targetMock as unknown as http.Server,
         actions: actionsMock,
         config: {
+          startupLogo: false,
           timeout: 100,
           emission: {},
           logger: loggerMock as unknown as AbstractLogger,

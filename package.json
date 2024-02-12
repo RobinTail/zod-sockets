@@ -50,6 +50,7 @@
     "build:compile": "tsup && attw --pack",
     "build:tests": "tsx tools/make-tests.ts",
     "build:logo": "tsx tools/logo.ts",
+    "precommit": "yarn test",
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
@@ -75,6 +76,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-unicorn": "^51.0.1",
+    "husky": "^9.0.10",
     "make-coverage-badge": "^1.2.0",
     "prettier": "^3.2.5",
     "socket.io": "^4.7.4",

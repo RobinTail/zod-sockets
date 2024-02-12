@@ -50,8 +50,9 @@
     "build:compile": "tsup && attw --pack",
     "build:tests": "tsx tools/make-tests.ts",
     "build:logo": "tsx tools/logo.ts",
-    "precommit": "yarn test",
-    "postversion": "git push && git push --tags"
+    "precommit": "yarn lint && yarn test",
+    "postversion": "git push && git push --tags",
+    "prepare": "husky"
   },
   "dependencies": {
     "ramda": "^0.29.1"

@@ -16,7 +16,6 @@ attachSockets({
     chat: onChat,
   },
   hooks: {
-    ttt: {},
     "/": {
       onConnection: async ({ client }) => {
         await client.broadcast("chat", `${client.id} entered the chat`, {

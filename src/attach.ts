@@ -4,7 +4,12 @@ import { ActionMap } from "./action";
 import { Client } from "./client";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
-import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
+import {
+  EmissionMap,
+  EmitterConfig,
+  makeEmitter,
+  makeRoomService,
+} from "./emission";
 import {
   ClientContext,
   Handler,
@@ -14,6 +19,20 @@ import {
 import { SomeNamespaces } from "./namespace";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
+
+interface HookSet<E extends EmissionMap> {
+  /** @desc A place for emitting events regardless receiving events */
+  onConnection?: Handler<ClientContext<E>, void>;
+  onDisconnect?: Handler<ClientContext<E>, void>;
+  onAnyIncoming?: Handler<TracingContext<E>, void>;
+  onAnyOutgoing?: Handler<TracingContext<E>, void>;
+  /** @desc A place for emitting events regardless clients activity */
+  onStartup?: Handler<IndependentContext<E>, void>;
+}
+
+type Hooks<NS extends SomeNamespaces> = {
+  [K in keyof NS]?: HookSet<NS[K]["emission"]>;
+};
 
 export const attachSockets = async <NS extends SomeNamespaces>({
   io,
@@ -39,21 +58,12 @@ export const attachSockets = async <NS extends SomeNamespaces>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS>;
-  hooks: {
-    [K in keyof NS]: {
-      /** @desc A place for emitting events regardless receiving events */
-      onConnection?: Handler<ClientContext<NS[K]["emission"]>, void>;
-      onDisconnect?: Handler<ClientContext<NS[K]["emission"]>, void>;
-      onAnyIncoming?: Handler<TracingContext<NS[K]["emission"]>, void>;
-      onAnyOutgoing?: Handler<TracingContext<NS[K]["emission"]>, void>;
-      /** @desc A place for emitting events regardless clients activity */
-      onStartup?: Handler<IndependentContext<NS[K]["emission"]>, void>;
-    };
-  };
+  hooks: Hooks<NS>;
 }): Promise<Server> => {
   for (const name in namespaces) {
     const ns = io.of(name);
     const { emission } = namespaces[name];
+    type E = NS[keyof NS]["emission"];
     const {
       onConnection = ({ client: { id, getData }, logger }) =>
         logger.debug("Client connected", { ...getData(), id }),
@@ -64,8 +74,7 @@ export const attachSockets = async <NS extends SomeNamespaces>({
       onAnyOutgoing = ({ event, logger, payload }) =>
         logger.debug(`Sending ${event}`, payload),
       onStartup = ({ logger }) => logger.debug("Ready"),
-    } = hooks[name];
-    type E = NS[keyof NS]["emission"];
+    } = (hooks[name] || {}) as HookSet<E>;
     const emitCfg: EmitterConfig<E> = { emission, timeout };
     const nsCtx: IndependentContext<E> = {
       logger: rootLogger,

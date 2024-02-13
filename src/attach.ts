@@ -5,7 +5,12 @@ import { Client } from "./client";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
-import { ClientContext, IndependentContext } from "./handler";
+import {
+  ClientContext,
+  Handler,
+  IndependentContext,
+  TracingContext,
+} from "./handler";
 import { SomeNamespaces } from "./namespace";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
@@ -15,6 +20,7 @@ export const attachSockets = async <NS extends SomeNamespaces>({
   actions,
   target,
   config: { logger: rootLogger, namespaces, timeout, startupLogo = true },
+  hooks,
 }: {
   /**
    * @desc The Socket.IO server
@@ -33,11 +39,22 @@ export const attachSockets = async <NS extends SomeNamespaces>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS>;
+  hooks: {
+    [K in keyof NS]: {
+      /** @desc A place for emitting events regardless receiving events */
+      onConnection?: Handler<ClientContext<NS[K]["emission"]>, void>;
+      onDisconnect?: Handler<ClientContext<NS[K]["emission"]>, void>;
+      onAnyIncoming?: Handler<TracingContext<NS[K]["emission"]>, void>;
+      onAnyOutgoing?: Handler<TracingContext<NS[K]["emission"]>, void>;
+      /** @desc A place for emitting events regardless clients activity */
+      onStartup?: Handler<IndependentContext<NS[K]["emission"]>, void>;
+    };
+  };
 }): Promise<Server> => {
   for (const name in namespaces) {
     const ns = io.of(name);
+    const { emission } = namespaces[name];
     const {
-      emission,
       onConnection = ({ client: { id, getData }, logger }) =>
         logger.debug("Client connected", { ...getData(), id }),
       onDisconnect = ({ client: { id, getData }, logger }) =>
@@ -47,7 +64,7 @@ export const attachSockets = async <NS extends SomeNamespaces>({
       onAnyOutgoing = ({ event, logger, payload }) =>
         logger.debug(`Sending ${event}`, payload),
       onStartup = ({ logger }) => logger.debug("Ready"),
-    } = namespaces[name];
+    } = hooks[name];
     type E = NS[keyof NS]["emission"];
     const emitCfg: EmitterConfig<E> = { emission, timeout };
     const nsCtx: IndependentContext<E> = {

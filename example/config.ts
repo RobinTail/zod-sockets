@@ -11,6 +11,7 @@ export const config = createConfig({
   timeout: 2000,
   logger: console,
   namespaces: {
+    ttt: { emission: {} },
     "/": {
       emission: {
         time: {
@@ -22,16 +23,6 @@ export const config = createConfig({
         rooms: {
           schema: z.tuple([z.string().array()]),
         },
-      },
-      onConnection: async ({ client }) => {
-        await client.broadcast("chat", `${client.id} entered the chat`, {
-          from: client.id,
-        });
-      },
-      onStartup: async ({ all }) => {
-        setInterval(() => {
-          all.broadcast("rooms", all.getRooms());
-        }, 30000);
       },
     },
   },

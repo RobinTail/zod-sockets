@@ -58,7 +58,7 @@ export const attachSockets = async <NS extends SomeNamespaces>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS>;
-  hooks: Hooks<NS>;
+  hooks?: Hooks<NS>;
 }): Promise<Server> => {
   for (const name in namespaces) {
     const ns = io.of(name);
@@ -74,7 +74,7 @@ export const attachSockets = async <NS extends SomeNamespaces>({
       onAnyOutgoing = ({ event, logger, payload }) =>
         logger.debug(`Sending ${event}`, payload),
       onStartup = ({ logger }) => logger.debug("Ready"),
-    } = (hooks[name] || {}) as HookSet<E>;
+    } = (hooks?.[name] || {}) as HookSet<E>;
     const emitCfg: EmitterConfig<E> = { emission, timeout };
     const nsCtx: IndependentContext<E> = {
       logger: rootLogger,

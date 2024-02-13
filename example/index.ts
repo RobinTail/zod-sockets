@@ -15,14 +15,4 @@ attachSockets({
     subscribe: onSubscribe,
     chat: onChat,
   },
-  onConnection: async ({ client }) => {
-    await client.broadcast("chat", `${client.id} entered the chat`, {
-      from: client.id,
-    });
-  },
-  onStartup: async ({ all }) => {
-    setInterval(() => {
-      all.broadcast("rooms", all.getRooms());
-    }, 30000);
-  },
 });

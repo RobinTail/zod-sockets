@@ -22,6 +22,7 @@ export class Action<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
 > extends AbstractAction {
+  public readonly ns: string;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
   readonly #handler: Handler<
@@ -35,6 +36,7 @@ export class Action<
       | ActionNoAckDef<IN, SomeNamespaces<EmissionMap>, string>,
   ) {
     super();
+    this.ns = action.ns || "/";
     this.#inputSchema = action.input;
     this.#outputSchema = "output" in action ? action.output : undefined;
     this.#handler = action.handler;

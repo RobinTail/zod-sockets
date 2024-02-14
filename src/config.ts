@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EmissionMap } from "./emission";
+import { EmissionMap, isEmission } from "./emission";
 import { AbstractLogger } from "./logger";
 import { SomeNamespaces } from "./namespace";
 
@@ -31,7 +31,7 @@ export function createConfig(
 ) {
   const emission: SomeNamespaces<EmissionMap> = { "/": {} };
   for (const [key, value] of Object.entries(config.emission)) {
-    if ("schema" in value && value.schema instanceof z.ZodTuple) {
+    if (isEmission(value)) {
       emission["/"][key] = value;
     } else {
       emission[key] = value;

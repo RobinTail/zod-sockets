@@ -10,18 +10,15 @@ export interface Metadata {
 export const config = createConfig({
   timeout: 2000,
   logger: console,
-  namespaces: {
-    ttt: {},
-    "/": {
-      time: {
-        schema: z.tuple([z.date().transform((date) => date.toISOString())]),
-      },
-      chat: {
-        schema: z.tuple([z.string(), z.object({ from: z.string() })]),
-      },
-      rooms: {
-        schema: z.tuple([z.string().array()]),
-      },
+  emission: {
+    time: {
+      schema: z.tuple([z.date().transform((date) => date.toISOString())]),
+    },
+    chat: {
+      schema: z.tuple([z.string(), z.object({ from: z.string() })]),
+    },
+    rooms: {
+      schema: z.tuple([z.string().array()]),
     },
   },
 });

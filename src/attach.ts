@@ -38,7 +38,12 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
   io,
   actions,
   target,
-  config: { logger: rootLogger, namespaces, timeout, startupLogo = true },
+  config: {
+    logger: rootLogger,
+    emission: namespaces,
+    timeout,
+    startupLogo = true,
+  },
   hooks,
 }: {
   /**

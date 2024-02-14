@@ -63,7 +63,7 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
   for (const name in namespaces) {
     type E = NS[typeof name];
     const ns = io.of(name);
-    const { emission } = namespaces[name];
+    const emission = namespaces[name];
     const {
       onConnection = ({ client: { id, getData }, logger }) =>
         logger.debug("Client connected", { ...getData(), id }),

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { ActionContext, ClientContext, Handler } from "./handler";
+import { SomeNamespaces } from "./namespace";
 
 export abstract class AbstractAction {
   public abstract execute(
@@ -30,8 +31,8 @@ export class Action<
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, EmissionMap>
-      | ActionNoAckDef<IN, EmissionMap>,
+      | ActionWithAckDef<IN, OUT, SomeNamespaces<EmissionMap>, string>
+      | ActionNoAckDef<IN, SomeNamespaces<EmissionMap>, string>,
   ) {
     super();
     this.#inputSchema = action.input;

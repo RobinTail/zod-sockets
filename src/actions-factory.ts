@@ -38,7 +38,7 @@ export class ActionsFactory<NS extends SomeNamespaces<EmissionMap>> {
   public build<
     IN extends z.AnyZodTuple,
     OUT extends z.AnyZodTuple,
-    K extends keyof NS = "/",
+    K extends keyof NS & string = "/",
   >(
     def: ActionNoAckDef<IN, NS, K> | ActionWithAckDef<IN, OUT, NS, K>,
   ): Action<IN, OUT> {

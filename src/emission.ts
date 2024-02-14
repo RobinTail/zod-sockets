@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import type { Server, Socket } from "socket.io";
 import { z } from "zod";
-import { Config } from "./config";
 import { RemoteClient, getRemoteClients } from "./remote-client";
 
 export interface Emission {
@@ -38,10 +37,10 @@ export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
   getClients: () => Promise<RemoteClient[]>;
 };
 
-export type EmitterConfig<E extends EmissionMap> = Pick<
-  Config<E>,
-  "emission" | "timeout"
->;
+export interface EmitterConfig<E extends EmissionMap> {
+  emission: E;
+  timeout: number;
+}
 
 export function makeEmitter<E extends EmissionMap>(
   props: { subject: Socket } & EmitterConfig<E>,

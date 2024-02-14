@@ -111,9 +111,11 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
         onAnyOutgoing({ event, payload, ...ctx }),
       );
       for (const [event, action] of Object.entries(actions)) {
-        socket.on(event, async (...params) =>
-          action.execute({ event, params, ...ctx }),
-        );
+        if (action.getNamespace() === name) {
+          socket.on(event, async (...params) =>
+            action.execute({ event, params, ...ctx }),
+          );
+        }
       }
       socket.on("disconnect", () => onDisconnect(ctx));
     });

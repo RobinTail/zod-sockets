@@ -1,7 +1,8 @@
+import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
 import { SomeNamespaces } from "./namespace";
 
-export interface Config<NS extends SomeNamespaces> {
+export interface Config<NS extends SomeNamespaces<EmissionMap>> {
   /**
    * @desc The instance of a logger
    * @example console
@@ -17,5 +18,6 @@ export interface Config<NS extends SomeNamespaces> {
   startupLogo?: boolean;
 }
 
-export const createConfig = <NS extends SomeNamespaces>(config: Config<NS>) =>
-  config;
+export const createConfig = <NS extends SomeNamespaces<EmissionMap>>(
+  config: Config<NS>,
+) => config;

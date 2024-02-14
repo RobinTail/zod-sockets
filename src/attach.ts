@@ -30,11 +30,11 @@ interface HookSet<E extends EmissionMap> {
   onStartup?: Handler<IndependentContext<E>, void>;
 }
 
-type Hooks<NS extends SomeNamespaces> = {
-  [K in keyof NS]?: HookSet<NS[K]["emission"]>;
+type Hooks<NS extends SomeNamespaces<EmissionMap>> = {
+  [K in keyof NS]?: HookSet<NS[K]>;
 };
 
-export const attachSockets = async <NS extends SomeNamespaces>({
+export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
   io,
   actions,
   target,
@@ -61,9 +61,9 @@ export const attachSockets = async <NS extends SomeNamespaces>({
   hooks?: Hooks<NS>;
 }): Promise<Server> => {
   for (const name in namespaces) {
+    type E = NS[typeof name];
     const ns = io.of(name);
     const { emission } = namespaces[name];
-    type E = NS[keyof NS]["emission"];
     const {
       onConnection = ({ client: { id, getData }, logger }) =>
         logger.debug("Client connected", { ...getData(), id }),

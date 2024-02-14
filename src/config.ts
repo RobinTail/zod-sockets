@@ -37,5 +37,5 @@ export function createConfig(
       emission[key] = value;
     }
   }
-  return { ...config, ...emission };
+  return { ...config, emission };
 }

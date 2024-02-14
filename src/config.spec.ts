@@ -4,7 +4,24 @@ import { AbstractLogger } from "./logger";
 
 describe("Config", () => {
   describe("createConfig()", () => {
-    test("should return its argument", () => {
+    test("should returns its argument", () => {
+      expect(
+        createConfig({
+          emission: {
+            "/": {},
+            test: {},
+          },
+          timeout: 2000,
+          logger: { debug: vi.fn() } as unknown as AbstractLogger,
+        }),
+      ).toEqual({
+        emission: { "/": {}, test: {} },
+        timeout: 2000,
+        logger: { debug: expect.any(Function) },
+      });
+    });
+
+    test("should ensure namespaces", () => {
       expect(
         createConfig({
           emission: {},
@@ -12,7 +29,7 @@ describe("Config", () => {
           logger: { debug: vi.fn() } as unknown as AbstractLogger,
         }),
       ).toEqual({
-        emission: {},
+        emission: { "/": {} },
         timeout: 2000,
         logger: { debug: expect.any(Function) },
       });

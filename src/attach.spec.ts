@@ -48,7 +48,7 @@ describe("Attach", () => {
       address: vi.fn(),
     };
     const loggerMock = { info: vi.fn(), debug: vi.fn() };
-    const actionsMock = { test: { execute: vi.fn() } };
+    const actionsMock = { test: { execute: vi.fn(), getNamespace: () => "/" } };
 
     test("should set the listeners", async () => {
       await attachSockets({

@@ -5,14 +5,25 @@ import { EmissionMap } from "./emission";
 import { ActionContext, Handler } from "./handler";
 import { SomeNamespaces } from "./namespace";
 
-export interface ActionNoAckDef<
+interface Commons<
   IN extends z.AnyZodTuple,
   NS extends SomeNamespaces<EmissionMap>,
   K extends keyof NS,
 > {
-  ns?: K;
-  /** @desc The incoming event payload validation schema (no acknowledgement) */
+  /** @desc The incoming event payload validation schema (without or excluding acknowledgement) */
   input: IN;
+  /**
+   * @desc Namespace
+   * @default "/"
+   * */
+  ns?: K;
+}
+
+export interface ActionNoAckDef<
+  IN extends z.AnyZodTuple,
+  NS extends SomeNamespaces<EmissionMap>,
+  K extends keyof NS,
+> extends Commons<IN, NS, K> {
   /** @desc No output schema => no returns => no acknowledgement */
   handler: Handler<ActionContext<z.output<IN>, NS[K]>, void>;
 }
@@ -22,10 +33,7 @@ export interface ActionWithAckDef<
   OUT extends z.AnyZodTuple,
   NS extends SomeNamespaces<EmissionMap>,
   K extends keyof NS,
-> {
-  ns?: K;
-  /** @desc The incoming event payload (excl. acknowledgement) validation schema */
-  input: IN;
+> extends Commons<IN, NS, K> {
   /** @desc The acknowledgement validation schema */
   output: OUT;
   /** @desc The returns become an Acknowledgement */

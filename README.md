@@ -306,31 +306,35 @@ actionsFactory.build({
 ### In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-emit events regardless the incoming ones by setting the `onConnection` property of the `attachSockets()` argument,
-which has a similar interface except `input` and fires for every connected client:
+emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the `attachSockets()`
+argument, which has a similar interface except `input` and fires for every connected client:
 
 ```typescript
 attachSockets({
-  onConnection: async ({ client, withRooms, all }) => {
-    /* your implementation here */
+  hooks: {
+    onConnection: async ({ client, withRooms, all }) => {
+      /* your implementation here */
+    },
   },
 });
 ```
 
 ### Independent context
 
-Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property of the
-`attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
+Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property within `hooks`
+of the `attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript
 attachSockets({
-  onStartup: async ({ all, withRooms }) => {
-    // sending to everyone in a room
-    withRooms("room1").broadcast("event", ...payload);
-    // sending to everyone within several rooms:
-    withRooms(["room1", "room2"]).broadcast("event", ...payload);
-    // sending to everyone everywhere
-    all.broadcast("event", ...payload);
+  hooks: {
+    onStartup: async ({ all, withRooms }) => {
+      // sending to everyone in a room
+      withRooms("room1").broadcast("event", ...payload);
+      // sending to everyone within several rooms:
+      withRooms(["room1", "room2"]).broadcast("event", ...payload);
+      // sending to everyone everywhere
+      all.broadcast("event", ...payload);
+    },
   },
 });
 ```

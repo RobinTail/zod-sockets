@@ -404,12 +404,39 @@ import { createConfig } from "zod-sockets";
 const config = createConfig({
   emission: {
     public: {
-      chat: { schema: z.tuple([]) },
+      chat: { schema },
     },
     private: {},
   },
 });
 ```
+
+When namespaces are configured, Actions must also have the `ns` property:
+
+```typescript
+import { ActionsFactory } from "zod-sockets";
+
+const actionsFactory = new ActionsFactory(config);
+const action = actionsFactory.build({ ns: "public" });
+```
+
+And the hooks must also be declared per namespace:
+
+```typescript
+import { attachSockets } from "zod-sockets";
+
+attachSockets({
+  hooks: {
+    onStartup,
+    onConnection,
+    onDisconnect,
+    onAnyIncoming,
+    onAnyOutgoing,
+  },
+});
+```
+
+Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 # Next
 

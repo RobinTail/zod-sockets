@@ -29,5 +29,5 @@ export function createConfig({
   emission,
   ...rest
 }: Config<SomeNamespaces<EmissionMap> | EmissionMap>) {
-  return { ...rest, emission: ensureNamespaces(emission) };
+  return { ...rest, emission: ensureNamespaces(emission, isEmission) };
 }

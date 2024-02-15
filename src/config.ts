@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { EmissionMap, isEmission } from "./emission";
 import { AbstractLogger } from "./logger";
 import { SomeNamespaces } from "./namespace";

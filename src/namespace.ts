@@ -20,3 +20,8 @@ export const ensureNamespaces = <T extends object>(
   }
   return copy;
 };
+
+export const normalizeNS = (name: string): string => {
+  const trimmed = name.trim();
+  return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+};

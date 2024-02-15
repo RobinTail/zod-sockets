@@ -395,7 +395,7 @@ const handler = async ({ all, logger }) => {
 
 ## Namespaces
 
-The default namespace is `/`. Namespaces can be configured within `emission`:
+The default namespace is `/`. Namespaces can be configured within `emission` (leading slash is not necessary):
 
 ```typescript
 import { z } from "zod";
@@ -403,10 +403,10 @@ import { createConfig } from "zod-sockets";
 
 const config = createConfig({
   emission: {
-    "/public": {
+    public: {
       chat: { schema: z.tuple([]) },
     },
-    "/private": {},
+    private: {},
   },
 });
 ```

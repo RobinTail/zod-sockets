@@ -16,7 +16,7 @@ import {
   IndependentContext,
   TracingContext,
 } from "./handler";
-import { SomeNamespaces, ensureNamespaces } from "./namespace";
+import { SomeNamespaces, ensureNamespaces, normalizeNS } from "./namespace";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
@@ -72,7 +72,7 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
 
   for (const name in namespaces) {
     type E = NS[typeof name];
-    const ns = io.of(name);
+    const ns = io.of(normalizeNS(name));
     const emission = namespaces[name];
     const {
       onConnection = ({ client: { id, getData }, logger }) =>

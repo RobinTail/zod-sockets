@@ -54,6 +54,8 @@ describe("Attach", () => {
     ];
 
     test("should set the listeners", async () => {
+      const hooks = {};
+      (hooks as any).stub = vi.fn(); // for ensureNamespaces without setting actual hooks
       await attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
@@ -64,6 +66,7 @@ describe("Attach", () => {
           emission: { "/": {} },
           logger: loggerMock as unknown as AbstractLogger,
         },
+        hooks,
       });
       expect(ioMock.of).toHaveBeenLastCalledWith("/");
       expect(ioMock.attach).toHaveBeenCalledWith(targetMock);

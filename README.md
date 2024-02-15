@@ -391,6 +391,26 @@ const handler = async ({ all, logger }) => {
 };
 ```
 
+# Advanced features
+
+## Namespaces
+
+The default namespace is `/`. Namespaces can be configured within `emission`:
+
+```typescript
+import { z } from "zod";
+import { createConfig } from "zod-sockets";
+
+const config = createConfig({
+  emission: {
+    "/public": {
+      chat: { schema: z.tuple([]) },
+    },
+    "/private": {},
+  },
+});
+```
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

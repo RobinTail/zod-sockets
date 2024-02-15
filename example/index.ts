@@ -10,11 +10,7 @@ attachSockets({
   io: new Server(),
   config,
   target: http.createServer().listen(8090),
-  actions: {
-    ping: onPing,
-    subscribe: onSubscribe,
-    chat: onChat,
-  },
+  actions: [onPing, onSubscribe, onChat],
   hooks: {
     "/": {
       onConnection: async ({ client }) => {

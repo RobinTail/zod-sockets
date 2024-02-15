@@ -1,6 +1,6 @@
 import http from "node:http";
 import type { Server } from "socket.io";
-import { ActionMap } from "./action";
+import { AbstractAction } from "./action";
 import { Client } from "./client";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
@@ -53,9 +53,9 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
   io: Server;
   /**
    * @desc the object declares handling rules of the incoming socket.io events
-   * @example { ping: onPing }
+   * @example [ onPing ]
    * */
-  actions: ActionMap;
+  actions: AbstractAction[];
   /**
    * @desc HTTP or HTTPS server to attach the sockets to
    * @example http.createServer().listen(8090)
@@ -115,8 +115,9 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
       socket.onAnyOutgoing((event, ...payload) =>
         onAnyOutgoing({ event, payload, ...ctx }),
       );
-      for (const [event, action] of Object.entries(actions)) {
+      for (const action of actions) {
         if (action.getNamespace() === name) {
+          const event = action.getName();
           socket.on(event, async (...params) =>
             action.execute({ event, params, ...ctx }),
           );

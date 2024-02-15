@@ -6,6 +6,7 @@ import { ActionContext, ClientContext, Handler } from "./handler";
 import { SomeNamespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
+  public abstract getName(): string;
   public abstract getNamespace(): string;
   public abstract execute(
     params: {
@@ -23,6 +24,7 @@ export class Action<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
 > extends AbstractAction {
+  readonly #name: string;
   readonly #ns: string;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
@@ -37,10 +39,15 @@ export class Action<
       | ActionNoAckDef<IN, SomeNamespaces<EmissionMap>, string>,
   ) {
     super();
+    this.#name = action.name;
     this.#ns = action.ns || rootNS;
     this.#inputSchema = action.input;
     this.#outputSchema = "output" in action ? action.output : undefined;
     this.#handler = action.handler;
+  }
+
+  public override getName(): string {
+    return this.#name;
   }
 
   public override getNamespace(): string {

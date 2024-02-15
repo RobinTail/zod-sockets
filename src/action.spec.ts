@@ -6,11 +6,13 @@ import { AbstractLogger } from "./logger";
 describe("Action", () => {
   const simpleHandler = vi.fn();
   const simpleAction = new Action({
+    name: "simple",
     input: z.tuple([z.string()]),
     handler: simpleHandler,
   });
   const ackHandler = vi.fn(async (): Promise<[number]> => [123]);
   const ackAction = new Action({
+    name: "ackOne",
     ns: "test",
     input: z.tuple([z.string()]),
     output: z.tuple([z.number()]),
@@ -21,6 +23,13 @@ describe("Action", () => {
     test("should create inheritor of AbstractAction", () => {
       expect(simpleAction).toBeInstanceOf(Action);
       expect(simpleAction).toBeInstanceOf(AbstractAction);
+    });
+  });
+
+  describe("getName()", () => {
+    test("should return the event name", () => {
+      expect(simpleAction.getName()).toBe("simple");
+      expect(ackAction.getName()).toBe("ackOne");
     });
   });
 

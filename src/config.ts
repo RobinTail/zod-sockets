@@ -28,13 +28,11 @@ export function createConfig<NS extends SomeNamespaces<EmissionMap>>(
 export function createConfig(
   config: Config<SomeNamespaces<EmissionMap> | EmissionMap>,
 ) {
-  const emission: SomeNamespaces<EmissionMap> = { "/": {} };
   for (const [key, value] of Object.entries(config.emission)) {
     if (isEmission(value)) {
-      emission["/"][key] = value;
-    } else {
-      emission[key] = value;
+      config.emission["/"] = { ...config.emission["/"], [key]: value };
+      delete config.emission[key];
     }
   }
-  return { ...config, emission };
+  return config;
 }

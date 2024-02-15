@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { z } from "zod";
 import { createConfig } from "./config";
 import { AbstractLogger } from "./logger";
 
@@ -22,14 +23,15 @@ describe("Config", () => {
     });
 
     test("should ensure namespaces", () => {
+      const schema = z.tuple([]);
       expect(
         createConfig({
-          emission: {},
+          emission: { test: { schema } },
           timeout: 2000,
           logger: { debug: vi.fn() } as unknown as AbstractLogger,
         }),
       ).toEqual({
-        emission: { "/": {} },
+        emission: { "/": { test: { schema } } },
         timeout: 2000,
         logger: { debug: expect.any(Function) },
       });

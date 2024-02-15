@@ -11,6 +11,7 @@ describe("Action", () => {
   });
   const ackHandler = vi.fn(async (): Promise<[number]> => [123]);
   const ackAction = new Action({
+    ns: "test",
     input: z.tuple([z.string()]),
     output: z.tuple([z.number()]),
     handler: ackHandler,
@@ -20,6 +21,13 @@ describe("Action", () => {
     test("should create inheritor of AbstractAction", () => {
       expect(simpleAction).toBeInstanceOf(Action);
       expect(simpleAction).toBeInstanceOf(AbstractAction);
+    });
+  });
+
+  describe("getNamespace()", () => {
+    test("should return the namespace", () => {
+      expect(simpleAction.getNamespace()).toBe("/");
+      expect(ackAction.getNamespace()).toBe("test");
     });
   });
 

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { ActionContext, ClientContext, Handler } from "./handler";
-import { SomeNamespaces } from "./namespace";
+import { SomeNamespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
   public abstract getNamespace(): string;
@@ -37,7 +37,7 @@ export class Action<
       | ActionNoAckDef<IN, SomeNamespaces<EmissionMap>, string>,
   ) {
     super();
-    this.#ns = action.ns || "/";
+    this.#ns = action.ns || rootNS;
     this.#inputSchema = action.input;
     this.#outputSchema = "output" in action ? action.output : undefined;
     this.#handler = action.handler;

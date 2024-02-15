@@ -1,6 +1,6 @@
 import { EmissionMap, isEmission } from "./emission";
 import { AbstractLogger } from "./logger";
-import { SomeNamespaces, ensureNamespaces } from "./namespace";
+import { RootNS, SomeNamespaces, ensureNamespaces } from "./namespace";
 
 export interface Config<T extends SomeNamespaces<EmissionMap> | EmissionMap> {
   /**
@@ -21,7 +21,7 @@ export interface Config<T extends SomeNamespaces<EmissionMap> | EmissionMap> {
 
 export function createConfig<E extends EmissionMap>(
   config: Config<E>,
-): Config<{ "/": E }>;
+): Config<Record<RootNS, E>>;
 export function createConfig<NS extends SomeNamespaces<EmissionMap>>(
   config: Config<NS>,
 ): Config<NS>;

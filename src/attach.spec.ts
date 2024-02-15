@@ -23,26 +23,27 @@ describe("Attach", () => {
         ["room3", ["other"]],
       ]),
     };
-    const ioMock = {
+    const nsMock = {
       on: vi.fn(),
+      adapter: adapterMock,
+      fetchSockets: vi.fn(async () => [
+        {
+          id: "ID",
+          rooms: new Set(["room1", "room2"]),
+          join: vi.fn(),
+          leave: vi.fn(),
+        },
+        {
+          id: "other",
+          rooms: new Set(["room3"]),
+          join: vi.fn(),
+          leave: vi.fn(),
+        },
+      ]),
+    };
+    const ioMock = {
       attach: vi.fn(),
-      of: vi.fn(() => ({
-        adapter: adapterMock,
-        fetchSockets: vi.fn(async () => [
-          {
-            id: "ID",
-            rooms: new Set(["room1", "room2"]),
-            join: vi.fn(),
-            leave: vi.fn(),
-          },
-          {
-            id: "other",
-            rooms: new Set(["room3"]),
-            join: vi.fn(),
-            leave: vi.fn(),
-          },
-        ]),
-      })),
+      of: vi.fn(() => nsMock),
     };
     const targetMock = {
       address: vi.fn(),
@@ -58,18 +59,19 @@ describe("Attach", () => {
         config: {
           startupLogo: false,
           timeout: 100,
-          emission: {},
+          emission: { "/": {} },
           logger: loggerMock as unknown as AbstractLogger,
         },
       });
+      expect(ioMock.of).toHaveBeenLastCalledWith("/");
       expect(ioMock.attach).toHaveBeenCalledWith(targetMock);
-      expect(ioMock.on).toHaveBeenLastCalledWith(
+      expect(nsMock.on).toHaveBeenLastCalledWith(
         "connection",
         expect.any(Function),
       );
 
       // on connection:
-      await ioMock.on.mock.lastCall![1](socketMock);
+      await nsMock.on.mock.lastCall![1](socketMock);
       expect(loggerMock.debug).toHaveBeenLastCalledWith("Client connected", {
         id: "ID",
       });

@@ -63,6 +63,7 @@ const actionsFactory = new ActionsFactory(config);
 import { z } from "zod";
 
 const onPing = actionsFactory.build({
+  name: "ping",
   input: z.tuple([]).rest(z.unknown()),
   output: z.tuple([z.literal("pong")]).rest(z.unknown()),
   handler: async ({ input }) => ["pong", ...input] as const,
@@ -80,7 +81,7 @@ attachSockets({
   /** @see https://socket.io/docs/v4/server-options/ */
   io: new Server(),
   config: config,
-  actions: { ping: onPing },
+  actions: [onPing],
   target: http.createServer().listen(8090),
 });
 ```
@@ -250,6 +251,7 @@ validated event payload:
 
 ```typescript
 const onChat = actionsFactory.build({
+  name: "chat",
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, all, withRooms, logger }) => {
     /* your implementation here */
@@ -269,25 +271,11 @@ When using `z.literal()`, Typescript may assume the type of the actually returne
 
 ```typescript
 const onPing = actionsFactory.build({
+  name: "ping",
   input: z.tuple([]).rest(z.unknown()),
   output: z.tuple([z.literal("pong")]).rest(z.unknown()),
   handler: async ({ input }) => ["pong" as const, ...input],
 });
-```
-
-### Action Map
-
-Independently declared Actions should be assigned to the incoming event names within a structure called `ActionMap`.
-That implies that in some cases you can reuse an Action for assigning it to different event names. Consider this as a
-router for the incoming events.
-
-```typescript
-import { ActionMap } from "zod-sockets";
-
-const actions: ActionMap = {
-  chat: onChat,
-  ping: onPing,
-};
 ```
 
 ## Dispatching events

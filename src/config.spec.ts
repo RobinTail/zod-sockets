@@ -24,17 +24,20 @@ describe("Config", () => {
 
     test("should ensure namespaces", () => {
       const schema = z.tuple([]);
-      expect(
-        createConfig({
-          emission: { test: { schema } },
-          timeout: 2000,
-          logger: { debug: vi.fn() } as unknown as AbstractLogger,
-        }),
-      ).toEqual({
+      const config = {
+        emission: { test: { schema } },
+        timeout: 2000,
+        logger: { debug: vi.fn() } as unknown as AbstractLogger,
+      };
+      expect(createConfig(config)).toEqual({
         emission: { "/": { test: { schema } } },
         timeout: 2000,
         logger: { debug: expect.any(Function) },
       });
+      // @todo move to the test of ensureNamespaces()
+      // immutable:
+      expect(config.emission).not.toHaveProperty("/");
+      expect(config.emission).toHaveProperty("test");
     });
   });
 });

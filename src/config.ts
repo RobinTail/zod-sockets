@@ -1,6 +1,6 @@
 import { EmissionMap, isEmission } from "./emission";
 import { AbstractLogger } from "./logger";
-import { SomeNamespaces } from "./namespace";
+import { SomeNamespaces, ensureNamespaces } from "./namespace";
 
 export interface Config<T extends SomeNamespaces<EmissionMap> | EmissionMap> {
   /**
@@ -25,14 +25,9 @@ export function createConfig<E extends EmissionMap>(
 export function createConfig<NS extends SomeNamespaces<EmissionMap>>(
   config: Config<NS>,
 ): Config<NS>;
-export function createConfig(
-  config: Config<SomeNamespaces<EmissionMap> | EmissionMap>,
-) {
-  for (const [key, value] of Object.entries(config.emission)) {
-    if (isEmission(value)) {
-      config.emission["/"] = { ...config.emission["/"], [key]: value };
-      delete config.emission[key];
-    }
-  }
-  return config;
+export function createConfig({
+  emission,
+  ...rest
+}: Config<SomeNamespaces<EmissionMap> | EmissionMap>) {
+  return { ...rest, emission: ensureNamespaces(emission) };
 }

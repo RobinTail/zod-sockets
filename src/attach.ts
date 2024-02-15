@@ -16,7 +16,7 @@ import {
   IndependentContext,
   TracingContext,
 } from "./handler";
-import { SomeNamespaces } from "./namespace";
+import { SomeNamespaces, ensureNamespaces } from "./namespace";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
@@ -44,7 +44,7 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
     timeout,
     startupLogo = true,
   },
-  hooks,
+  hooks: hooksCfg,
 }: {
   /**
    * @desc The Socket.IO server
@@ -63,8 +63,13 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS>;
-  hooks?: Hooks<NS>;
+  hooks?: Hooks<NS> | HookSet<NS["/"]>;
 }): Promise<Server> => {
+  const hooks = ensureNamespaces(
+    hooksCfg || {},
+    (value) => typeof value === "function",
+  ) as Hooks<NS>;
+
   for (const name in namespaces) {
     type E = NS[typeof name];
     const ns = io.of(name);

@@ -34,7 +34,7 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
    * */
   io: Server;
   /**
-   * @desc the object declares handling rules of the incoming socket.io events
+   * @desc The array of handling rules for the incoming Socket.IO events
    * @example [ onPing ]
    * */
   actions: AbstractAction[];

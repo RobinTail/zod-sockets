@@ -63,6 +63,7 @@ const actionsFactory = new ActionsFactory(config);
 import { z } from "zod";
 
 const onPing = actionsFactory.build({
+  event: "ping",
   input: z.tuple([]).rest(z.unknown()),
   output: z.tuple([z.literal("pong")]).rest(z.unknown()),
   handler: async ({ input }) => ["pong", ...input] as const,
@@ -80,7 +81,7 @@ attachSockets({
   /** @see https://socket.io/docs/v4/server-options/ */
   io: new Server(),
   config: config,
-  actions: { ping: onPing },
+  actions: [onPing],
   target: http.createServer().listen(8090),
 });
 ```
@@ -242,14 +243,14 @@ const actionsFactory = new ActionsFactory(config);
 
 The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
 incoming event. This should not be confused with acknowledgments that are basically direct and immediate responses to
-the one that sent the incoming event. Produce actions using the `build()` method accepting an object having `input`
-schema for the event payload (excluding acknowledgment) and a `handler`, which is a function where you place your
-implementation for handling the event. Please note that the incoming event name is not assigned yet. The argument of
-the `handler` in an object having several handy entities, the most important of them is `input` property, being the
-validated event payload:
+the one that sent the incoming event. Produce actions using the `build()` method accepting an object having the
+incoming `event` name, `input` schema for its payload (excluding acknowledgment) and a `handler`, which is a function
+where you place your implementation for handling the event. The argument of the `handler` in an object having several
+handy entities, the most important of them is `input` property, being the validated event payload:
 
 ```typescript
 const onChat = actionsFactory.build({
+  event: "chat",
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, all, withRooms, logger }) => {
     /* your implementation here */
@@ -269,25 +270,11 @@ When using `z.literal()`, Typescript may assume the type of the actually returne
 
 ```typescript
 const onPing = actionsFactory.build({
+  event: "ping",
   input: z.tuple([]).rest(z.unknown()),
   output: z.tuple([z.literal("pong")]).rest(z.unknown()),
   handler: async ({ input }) => ["pong" as const, ...input],
 });
-```
-
-### Action Map
-
-Independently declared Actions should be assigned to the incoming event names within a structure called `ActionMap`.
-That implies that in some cases you can reuse an Action for assigning it to different event names. Consider this as a
-router for the incoming events.
-
-```typescript
-import { ActionMap } from "zod-sockets";
-
-const actions: ActionMap = {
-  chat: onChat,
-  ping: onPing,
-};
 ```
 
 ## Dispatching events
@@ -318,31 +305,35 @@ actionsFactory.build({
 ### In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-emit events regardless the incoming ones by setting the `onConnection` property of the `attachSockets()` argument,
-which has a similar interface except `input` and fires for every connected client:
+emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the `attachSockets()`
+argument, which has a similar interface except `input` and fires for every connected client:
 
 ```typescript
 attachSockets({
-  onConnection: async ({ client, withRooms, all }) => {
-    /* your implementation here */
+  hooks: {
+    onConnection: async ({ client, withRooms, all }) => {
+      /* your implementation here */
+    },
   },
 });
 ```
 
 ### Independent context
 
-Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property of the
-`attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
+Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property within `hooks`
+of the `attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript
 attachSockets({
-  onStartup: async ({ all, withRooms }) => {
-    // sending to everyone in a room
-    withRooms("room1").broadcast("event", ...payload);
-    // sending to everyone within several rooms:
-    withRooms(["room1", "room2"]).broadcast("event", ...payload);
-    // sending to everyone everywhere
-    all.broadcast("event", ...payload);
+  hooks: {
+    onStartup: async ({ all, withRooms }) => {
+      // sending to everyone in a room
+      withRooms("room1").broadcast("event", ...payload);
+      // sending to everyone within several rooms:
+      withRooms(["room1", "room2"]).broadcast("event", ...payload);
+      // sending to everyone everywhere
+      all.broadcast("event", ...payload);
+    },
   },
 });
 ```
@@ -398,6 +389,63 @@ const handler = async ({ all, logger }) => {
   }
 };
 ```
+
+# Advanced features
+
+## Namespaces
+
+Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
+different essence, payload and handlers. The default namespace is `/`. The configuration of namespaces begins from
+defining them for `emission` (the leading slash is not necessary):
+
+```typescript
+import { z } from "zod";
+import { createConfig } from "zod-sockets";
+
+const config = createConfig({
+  emission: {
+    // The namespace "/public"
+    public: {
+      chat: { schema },
+    },
+    // The namespace "/private"
+    private: {},
+  },
+});
+```
+
+When namespaces are configured, Actions must also have the `ns` property assigned:
+
+```typescript
+import { ActionsFactory } from "zod-sockets";
+
+const actionsFactory = new ActionsFactory(config);
+const action = actionsFactory.build({
+  ns: "public",
+  // ...
+});
+```
+
+And the hooks must also be declared per namespace:
+
+```typescript
+import { attachSockets } from "zod-sockets";
+
+attachSockets({
+  hooks: {
+    public: {
+      onStartup,
+      onConnection,
+      onDisconnect,
+      onAnyIncoming,
+      onAnyOutgoing,
+    },
+    private: {},
+  },
+});
+```
+
+Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 # Next
 

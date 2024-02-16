@@ -2,6 +2,21 @@
 
 ## Version 0
 
+### v0.8.0
+
+- Introducing namespaces feature.
+  - See the [Namespaces documentation](https://socket.io/docs/v4/namespaces/).
+  - The default namespace is a root namespace `/`.
+  - The namespaces can be declared within `emission` property of the `createConfig()` argument.
+  - The `ActionsFactory::build()` method now accepts optional property `ns`.
+  - The `hooks` property of the `attachSockets()` method now accepts handlers for each namespace (optional).
+- Breaking changes:
+  - `ActionMap` type removed;
+  - Instead, the `ActionsFactory::build()` method now requires the `event` property of its argument;
+  - Meanwhile, `actions` supplied to `attachSockets()` method now has to be an array of the produced actions.
+  - The following properties of the `attachSockets()` argument must now be wrapped into `hooks`:
+    - `onConnection()`, `onDisconnect()`, `onAnyIncoming()`, `onAnyOutgoing()`, `onStartup()`.
+
 ### v0.7.0
 
 - `onAny()` property of `attachSockets()` argument renamed to `onAnyIncoming()`, having `event` and `payload` arguments;

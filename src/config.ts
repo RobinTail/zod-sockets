@@ -1,7 +1,8 @@
-import { EmissionMap } from "./emission";
+import { EmissionMap, isEmission } from "./emission";
 import { AbstractLogger } from "./logger";
+import { Namespaces, RootNS, ensureNamespaces } from "./namespaces";
 
-export interface Config<E extends EmissionMap> {
+export interface Config<T extends Namespaces<EmissionMap> | EmissionMap> {
   /**
    * @desc The instance of a logger
    * @example console
@@ -9,8 +10,8 @@ export interface Config<E extends EmissionMap> {
   logger: AbstractLogger;
   /** @desc The acknowledgment awaiting timeout */
   timeout: number;
-  /** @desc The events that the server can emit */
-  emission: E;
+  /** @desc The events that the server can emit (optionally within namespaces) */
+  emission: T;
   /**
    * @desc You can disable the startup logo.
    * @default true
@@ -18,5 +19,15 @@ export interface Config<E extends EmissionMap> {
   startupLogo?: boolean;
 }
 
-export const createConfig = <E extends EmissionMap>(config: Config<E>) =>
-  config;
+export function createConfig<E extends EmissionMap>(
+  config: Config<E>,
+): Config<Record<RootNS, E>>;
+export function createConfig<NS extends Namespaces<EmissionMap>>(
+  config: Config<NS>,
+): Config<NS>;
+export function createConfig({
+  emission,
+  ...rest
+}: Config<Namespaces<EmissionMap> | EmissionMap>) {
+  return { ...rest, emission: ensureNamespaces(emission, isEmission) };
+}

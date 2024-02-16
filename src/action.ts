@@ -3,8 +3,11 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { ActionContext, ClientContext, Handler } from "./handler";
+import { Namespaces, rootNS } from "./namespaces";
 
 export abstract class AbstractAction {
+  public abstract getEvent(): string;
+  public abstract getNamespace(): string;
   public abstract execute(
     params: {
       event: string;
@@ -21,6 +24,8 @@ export class Action<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
 > extends AbstractAction {
+  readonly #event: string;
+  readonly #namespace: string;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
   readonly #handler: Handler<
@@ -30,13 +35,23 @@ export class Action<
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, EmissionMap>
-      | ActionNoAckDef<IN, EmissionMap>,
+      | ActionWithAckDef<IN, OUT, Namespaces<EmissionMap>, string>
+      | ActionNoAckDef<IN, Namespaces<EmissionMap>, string>,
   ) {
     super();
+    this.#event = action.event;
+    this.#namespace = action.ns || rootNS;
     this.#inputSchema = action.input;
     this.#outputSchema = "output" in action ? action.output : undefined;
     this.#handler = action.handler;
+  }
+
+  public override getEvent(): string {
+    return this.#event;
+  }
+
+  public override getNamespace(): string {
+    return this.#namespace;
   }
 
   /** @throws z.ZodError */

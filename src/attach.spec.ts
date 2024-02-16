@@ -23,34 +23,39 @@ describe("Attach", () => {
         ["room3", ["other"]],
       ]),
     };
-    const ioMock = {
+    const nsMock = {
       on: vi.fn(),
+      adapter: adapterMock,
+      fetchSockets: vi.fn(async () => [
+        {
+          id: "ID",
+          rooms: new Set(["room1", "room2"]),
+          join: vi.fn(),
+          leave: vi.fn(),
+        },
+        {
+          id: "other",
+          rooms: new Set(["room3"]),
+          join: vi.fn(),
+          leave: vi.fn(),
+        },
+      ]),
+    };
+    const ioMock = {
       attach: vi.fn(),
-      of: vi.fn(() => ({
-        adapter: adapterMock,
-        fetchSockets: vi.fn(async () => [
-          {
-            id: "ID",
-            rooms: new Set(["room1", "room2"]),
-            join: vi.fn(),
-            leave: vi.fn(),
-          },
-          {
-            id: "other",
-            rooms: new Set(["room3"]),
-            join: vi.fn(),
-            leave: vi.fn(),
-          },
-        ]),
-      })),
+      of: vi.fn(() => nsMock),
     };
     const targetMock = {
       address: vi.fn(),
     };
     const loggerMock = { info: vi.fn(), debug: vi.fn() };
-    const actionsMock = { test: { execute: vi.fn() } };
+    const actionsMock = [
+      { execute: vi.fn(), getNamespace: () => "/", getEvent: () => "test" },
+    ];
 
     test("should set the listeners", async () => {
+      const hooks = {};
+      (hooks as any).stub = vi.fn(); // for ensureNamespaces without setting actual hooks
       await attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
@@ -58,18 +63,20 @@ describe("Attach", () => {
         config: {
           startupLogo: false,
           timeout: 100,
-          emission: {},
+          emission: { "/": {} },
           logger: loggerMock as unknown as AbstractLogger,
         },
+        hooks,
       });
+      expect(ioMock.of).toHaveBeenLastCalledWith("/");
       expect(ioMock.attach).toHaveBeenCalledWith(targetMock);
-      expect(ioMock.on).toHaveBeenLastCalledWith(
+      expect(nsMock.on).toHaveBeenLastCalledWith(
         "connection",
         expect.any(Function),
       );
 
       // on connection:
-      await ioMock.on.mock.lastCall![1](socketMock);
+      await nsMock.on.mock.lastCall![1](socketMock);
       expect(loggerMock.debug).toHaveBeenLastCalledWith("Client connected", {
         id: "ID",
       });
@@ -98,7 +105,7 @@ describe("Attach", () => {
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");
       expect(call).toBeTruthy();
       await call[1]([123, 456]);
-      expect(actionsMock.test.execute).toHaveBeenLastCalledWith({
+      expect(actionsMock[0].execute).toHaveBeenLastCalledWith({
         withRooms: expect.any(Function),
         event: "test",
         logger: loggerMock,
@@ -122,17 +129,17 @@ describe("Attach", () => {
       });
 
       // client.getRooms:
-      expect(
-        actionsMock.test.execute.mock.lastCall[0].client.getRooms(),
-      ).toEqual(["room1", "room2"]);
+      expect(actionsMock[0].execute.mock.lastCall[0].client.getRooms()).toEqual(
+        ["room1", "room2"],
+      );
 
       // client.isConnected:
       expect(
-        actionsMock.test.execute.mock.lastCall[0].client.isConnected(),
+        actionsMock[0].execute.mock.lastCall[0].client.isConnected(),
       ).toBeFalsy();
 
       // all.getRooms:
-      expect(actionsMock.test.execute.mock.lastCall[0].all.getRooms()).toEqual([
+      expect(actionsMock[0].execute.mock.lastCall[0].all.getRooms()).toEqual([
         "room1",
         "room2",
         "room3",
@@ -141,7 +148,7 @@ describe("Attach", () => {
 
       // all.getClients:
       await expect(
-        actionsMock.test.execute.mock.lastCall[0].all.getClients(),
+        actionsMock[0].execute.mock.lastCall[0].all.getClients(),
       ).resolves.toEqual([
         {
           id: "ID",
@@ -160,26 +167,24 @@ describe("Attach", () => {
       ]);
 
       // client.setData:
-      actionsMock.test.execute.mock.lastCall[0].client.setData({
+      actionsMock[0].execute.mock.lastCall[0].client.setData({
         name: "user",
       });
 
       // client.getData:
-      expect(
-        actionsMock.test.execute.mock.lastCall[0].client.getData(),
-      ).toEqual({
+      expect(actionsMock[0].execute.mock.lastCall[0].client.getData()).toEqual({
         name: "user",
       });
 
       // join/leave:
       for (const rooms of ["room1", ["room2", "room3"]]) {
-        actionsMock.test.execute.mock.lastCall[0].client.join(rooms);
+        actionsMock[0].execute.mock.lastCall[0].client.join(rooms);
         expect(socketMock.join).toHaveBeenLastCalledWith(rooms);
         if (typeof rooms === "string") {
-          actionsMock.test.execute.mock.lastCall[0].client.leave(rooms);
+          actionsMock[0].execute.mock.lastCall[0].client.leave(rooms);
           expect(socketMock.leave).toHaveBeenLastCalledWith(rooms);
         } else {
-          await actionsMock.test.execute.mock.lastCall[0].client.leave(rooms);
+          await actionsMock[0].execute.mock.lastCall[0].client.leave(rooms);
           for (const room of rooms) {
             expect(socketMock.leave).toHaveBeenCalledWith(room);
           }

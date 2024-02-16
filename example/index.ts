@@ -10,19 +10,17 @@ attachSockets({
   io: new Server(),
   config,
   target: http.createServer().listen(8090),
-  actions: {
-    ping: onPing,
-    subscribe: onSubscribe,
-    chat: onChat,
-  },
-  onConnection: async ({ client }) => {
-    await client.broadcast("chat", `${client.id} entered the chat`, {
-      from: client.id,
-    });
-  },
-  onStartup: async ({ all }) => {
-    setInterval(() => {
-      all.broadcast("rooms", all.getRooms());
-    }, 30000);
+  actions: [onPing, onSubscribe, onChat],
+  hooks: {
+    onConnection: async ({ client }) => {
+      await client.broadcast("chat", `${client.id} entered the chat`, {
+        from: client.id,
+      });
+    },
+    onStartup: async ({ all }) => {
+      setInterval(() => {
+        all.broadcast("rooms", all.getRooms());
+      }, 30000);
+    },
   },
 });

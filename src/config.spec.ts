@@ -5,7 +5,7 @@ import { AbstractLogger } from "./logger";
 
 describe("Config", () => {
   describe("createConfig()", () => {
-    test("should returns its argument", () => {
+    test("should return its argument", () => {
       expect(
         createConfig({
           emission: {

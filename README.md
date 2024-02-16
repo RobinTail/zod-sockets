@@ -394,7 +394,9 @@ const handler = async ({ all, logger }) => {
 
 ## Namespaces
 
-The default namespace is `/`. Namespaces can be configured within `emission` (leading slash is not necessary):
+Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
+different essence, payload and handlers. The default namespace is `/`. The configuration of namespaces begins from
+defining them for `emission` (the leading slash is not necessary):
 
 ```typescript
 import { z } from "zod";
@@ -402,15 +404,17 @@ import { createConfig } from "zod-sockets";
 
 const config = createConfig({
   emission: {
+    // The namespace "/public"
     public: {
       chat: { schema },
     },
+    // The namespace "/private"
     private: {},
   },
 });
 ```
 
-When namespaces are configured, Actions must also have the `ns` property:
+When namespaces are configured, Actions must also have the `ns` property assigned:
 
 ```typescript
 import { ActionsFactory } from "zod-sockets";

@@ -50,7 +50,7 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
   const hooks = ensureNamespaces(
     hooksCfg || {},
     (value) => typeof value === "function",
-  ) as Hooks<NS>;
+  );
 
   for (const name in namespaces) {
     type NSEmissions = NS[typeof name];

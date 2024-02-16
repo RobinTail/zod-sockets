@@ -12,7 +12,12 @@ import {
 } from "./emission";
 import { ClientContext, IndependentContext } from "./handler";
 import { HookSet, Hooks } from "./hooks";
-import { Namespaces, ensureNamespaces, normalizeNS } from "./namespaces";
+import {
+  Namespaces,
+  RootNS,
+  ensureNamespaces,
+  normalizeNS,
+} from "./namespaces";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
@@ -45,7 +50,7 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS>;
-  hooks?: Hooks<NS> | HookSet<NS["/"]>;
+  hooks?: Hooks<NS> | HookSet<NS[RootNS]>;
 }): Promise<Server> => {
   const hooks = ensureNamespaces(
     hooksCfg || {},

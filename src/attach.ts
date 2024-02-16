@@ -122,7 +122,7 @@ export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
       );
       for (const action of actions) {
         if (action.getNamespace() === name) {
-          const event = action.getName();
+          const event = action.getEvent();
           socket.on(event, async (...params) =>
             action.execute({ event, params, ...ctx }),
           );

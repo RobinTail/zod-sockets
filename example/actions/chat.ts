@@ -3,7 +3,7 @@ import { Metadata } from "../config";
 import { actionsFactory } from "../factories";
 
 export const onChat = actionsFactory.build({
-  name: "chat",
+  event: "chat",
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, logger }) => {
     try {

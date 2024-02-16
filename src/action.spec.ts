@@ -6,13 +6,13 @@ import { AbstractLogger } from "./logger";
 describe("Action", () => {
   const simpleHandler = vi.fn();
   const simpleAction = new Action({
-    name: "simple",
+    event: "simple",
     input: z.tuple([z.string()]),
     handler: simpleHandler,
   });
   const ackHandler = vi.fn(async (): Promise<[number]> => [123]);
   const ackAction = new Action({
-    name: "ackOne",
+    event: "ackOne",
     ns: "test",
     input: z.tuple([z.string()]),
     output: z.tuple([z.number()]),
@@ -28,8 +28,8 @@ describe("Action", () => {
 
   describe("getName()", () => {
     test("should return the event name", () => {
-      expect(simpleAction.getName()).toBe("simple");
-      expect(ackAction.getName()).toBe("ackOne");
+      expect(simpleAction.getEvent()).toBe("simple");
+      expect(ackAction.getEvent()).toBe("ackOne");
     });
   });
 

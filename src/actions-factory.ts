@@ -18,7 +18,7 @@ interface Commons<
    * */
   ns?: K;
   /** @desc The incoming event name */
-  name: string;
+  event: string;
 }
 
 export interface ActionNoAckDef<

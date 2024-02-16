@@ -50,7 +50,7 @@ describe("Attach", () => {
     };
     const loggerMock = { info: vi.fn(), debug: vi.fn() };
     const actionsMock = [
-      { execute: vi.fn(), getNamespace: () => "/", getName: () => "test" },
+      { execute: vi.fn(), getNamespace: () => "/", getEvent: () => "test" },
     ];
 
     test("should set the listeners", async () => {

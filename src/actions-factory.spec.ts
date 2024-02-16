@@ -19,7 +19,7 @@ describe("ActionsFactory", () => {
     test("should produce actions", () => {
       expect(
         factory.build({
-          name: "test",
+          event: "test",
           input: z.tuple([z.string()]),
           handler: vi.fn(),
         }),

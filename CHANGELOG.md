@@ -12,7 +12,7 @@
   - The `hooks` property of the `attachSockets()` method now accepts handlers for each namespace (optional).
 - Breaking changes:
   - `ActionMap` type removed;
-  - Instead, the `ActionsFactory::build()` method now requires the `name` property of its argument;
+  - Instead, the `ActionsFactory::build()` method now requires the `event` property of its argument;
   - Meanwhile, `actions` supplied to `attachSockets()` method now has to be an array of the produced actions.
   - The following properties of the `attachSockets()` argument must now be wrapped into `hooks`:
     - `onConnection()`, `onDisconnect()`, `onAnyIncoming()`, `onAnyOutgoing()`, `onStartup()`.

@@ -390,6 +390,46 @@ const handler = async ({ all, logger }) => {
 };
 ```
 
+## Metadata
+
+Metadata is a custom object-based structure for reading and storing additional information on a client. Initially it is
+an empty object.
+
+### Defining constraints
+
+It is recommended to specify an interface near your config describing the metadata you're aiming to interact with:
+
+```typescript
+interface Metadata {
+  /** @desc Number of messages sent to the chat */
+  msgCount: number;
+}
+```
+
+### Reading
+
+In every context you can read the client's metadata using the `getData<T>()` method with assigned type argument.
+Since the presence of the data is not guaranteed, the method returns an object of `Partial<T>`.
+
+```typescript
+const handler = async ({ client, withRooms }) => {
+  client.getData<Metadata>();
+  withRooms("room1")
+    .getClients()
+    .map((someone) => someone.getData<Metadata>());
+};
+```
+
+### Writing
+
+Within a client context you can use `setData<T>()` method with type argument to store the metadata on the client:
+
+```typescript
+const handler = async ({ client }) => {
+  client.setData<Metadata>({ msgCount: 4 });
+};
+```
+
 # Advanced features
 
 ## Namespaces

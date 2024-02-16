@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.8.1
+
+- Minor adjustments and cleanup.
+
 ### v0.8.0
 
 - Introducing namespaces feature.

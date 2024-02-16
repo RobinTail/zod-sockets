@@ -16,7 +16,7 @@ import {
   IndependentContext,
   TracingContext,
 } from "./handler";
-import { SomeNamespaces, ensureNamespaces, normalizeNS } from "./namespace";
+import { Namespaces, ensureNamespaces, normalizeNS } from "./namespace";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
@@ -30,11 +30,11 @@ interface HookSet<E extends EmissionMap> {
   onStartup?: Handler<IndependentContext<E>, void>;
 }
 
-type Hooks<NS extends SomeNamespaces<EmissionMap>> = {
+type Hooks<NS extends Namespaces<EmissionMap>> = {
   [K in keyof NS]?: HookSet<NS[K]>;
 };
 
-export const attachSockets = async <NS extends SomeNamespaces<EmissionMap>>({
+export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
   io,
   actions,
   target,

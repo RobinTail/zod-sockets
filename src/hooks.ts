@@ -5,7 +5,7 @@ import {
   IndependentContext,
   TracingContext,
 } from "./handler";
-import { SomeNamespaces } from "./namespace";
+import { Namespaces } from "./namespace";
 
 export interface HookSet<E extends EmissionMap> {
   /** @desc A place for emitting events regardless receiving events */
@@ -17,6 +17,6 @@ export interface HookSet<E extends EmissionMap> {
   onStartup?: Handler<IndependentContext<E>, void>;
 }
 
-export type Hooks<NS extends SomeNamespaces<EmissionMap>> = {
+export type Hooks<NS extends Namespaces<EmissionMap>> = {
   [K in keyof NS]?: HookSet<NS[K]>;
 };

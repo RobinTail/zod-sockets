@@ -416,7 +416,10 @@ When namespaces are configured, Actions must also have the `ns` property:
 import { ActionsFactory } from "zod-sockets";
 
 const actionsFactory = new ActionsFactory(config);
-const action = actionsFactory.build({ ns: "public" });
+const action = actionsFactory.build({
+  ns: "public",
+  // ...
+});
 ```
 
 And the hooks must also be declared per namespace:
@@ -426,11 +429,14 @@ import { attachSockets } from "zod-sockets";
 
 attachSockets({
   hooks: {
-    onStartup,
-    onConnection,
-    onDisconnect,
-    onAnyIncoming,
-    onAnyOutgoing,
+    public: {
+      onStartup,
+      onConnection,
+      onDisconnect,
+      onAnyIncoming,
+      onAnyOutgoing,
+    },
+    private: {},
   },
 });
 ```

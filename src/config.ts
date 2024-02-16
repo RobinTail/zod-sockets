@@ -1,8 +1,8 @@
 import { EmissionMap, isEmission } from "./emission";
 import { AbstractLogger } from "./logger";
-import { RootNS, SomeNamespaces, ensureNamespaces } from "./namespace";
+import { Namespaces, RootNS, ensureNamespaces } from "./namespace";
 
-export interface Config<T extends SomeNamespaces<EmissionMap> | EmissionMap> {
+export interface Config<T extends Namespaces<EmissionMap> | EmissionMap> {
   /**
    * @desc The instance of a logger
    * @example console
@@ -22,12 +22,12 @@ export interface Config<T extends SomeNamespaces<EmissionMap> | EmissionMap> {
 export function createConfig<E extends EmissionMap>(
   config: Config<E>,
 ): Config<Record<RootNS, E>>;
-export function createConfig<NS extends SomeNamespaces<EmissionMap>>(
+export function createConfig<NS extends Namespaces<EmissionMap>>(
   config: Config<NS>,
 ): Config<NS>;
 export function createConfig({
   emission,
   ...rest
-}: Config<SomeNamespaces<EmissionMap> | EmissionMap>) {
+}: Config<Namespaces<EmissionMap> | EmissionMap>) {
   return { ...rest, emission: ensureNamespaces(emission, isEmission) };
 }

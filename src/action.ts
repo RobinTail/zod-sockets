@@ -16,10 +16,6 @@ export abstract class AbstractAction {
   ): Promise<void>;
 }
 
-export interface ActionMap {
-  [event: string]: AbstractAction;
-}
-
 export class Action<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,

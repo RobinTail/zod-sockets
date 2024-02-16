@@ -53,7 +53,7 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
   ) as Hooks<NS>;
 
   for (const name in namespaces) {
-    type E = NS[typeof name];
+    type NSEmissions = NS[typeof name];
     const ns = io.of(normalizeNS(name));
     const emission = namespaces[name];
     const {
@@ -66,9 +66,9 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
       onAnyOutgoing = ({ event, logger, payload }) =>
         logger.debug(`Sending ${event}`, payload),
       onStartup = ({ logger }) => logger.debug("Ready"),
-    } = (hooks?.[name] || {}) as HookSet<E>;
-    const emitCfg: EmitterConfig<E> = { emission, timeout };
-    const nsCtx: IndependentContext<E> = {
+    } = (hooks?.[name] || {}) as HookSet<NSEmissions>;
+    const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
+    const nsCtx: IndependentContext<NSEmissions> = {
       logger: rootLogger,
       withRooms: makeRoomService({ subject: io, ...emitCfg }),
       all: {
@@ -80,7 +80,7 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
     ns.on("connection", async (socket) => {
       const emit = makeEmitter({ subject: socket, ...emitCfg });
       const broadcast = makeEmitter({ subject: socket.broadcast, ...emitCfg });
-      const client: Client<E> = {
+      const client: Client<NSEmissions> = {
         emit,
         broadcast,
         id: socket.id,
@@ -90,7 +90,7 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
         setData: (value) => (socket.data = value),
         ...makeDistribution(socket),
       };
-      const ctx: ClientContext<E> = {
+      const ctx: ClientContext<NSEmissions> = {
         ...nsCtx,
         client,
         withRooms: makeRoomService({ subject: socket, ...emitCfg }),

@@ -1,6 +1,6 @@
 import { EmissionMap, isEmission } from "./emission";
 import { AbstractLogger } from "./logger";
-import { Namespaces, RootNS, ensureNamespaces } from "./namespace";
+import { Namespaces, RootNS, ensureNamespaces } from "./namespaces";
 
 export interface Config<T extends Namespaces<EmissionMap> | EmissionMap> {
   /**

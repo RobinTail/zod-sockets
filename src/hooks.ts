@@ -5,7 +5,7 @@ import {
   IndependentContext,
   TracingContext,
 } from "./handler";
-import { Namespaces } from "./namespace";
+import { Namespaces } from "./namespaces";
 
 export interface HookSet<E extends EmissionMap> {
   /** @desc A place for emitting events regardless receiving events */

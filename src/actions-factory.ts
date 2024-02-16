@@ -3,7 +3,7 @@ import { Action } from "./action";
 import { Config } from "./config";
 import { EmissionMap } from "./emission";
 import { ActionContext, Handler } from "./handler";
-import { Namespaces, RootNS } from "./namespace";
+import { Namespaces, RootNS } from "./namespaces";
 
 interface Commons<
   IN extends z.AnyZodTuple,

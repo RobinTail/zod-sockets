@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { ActionContext, ClientContext, Handler } from "./handler";
-import { Namespaces, rootNS } from "./namespace";
+import { Namespaces, rootNS } from "./namespaces";
 
 export abstract class AbstractAction {
   public abstract getEvent(): string;

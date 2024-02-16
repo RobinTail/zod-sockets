@@ -16,7 +16,7 @@ import {
   IndependentContext,
   TracingContext,
 } from "./handler";
-import { Namespaces, ensureNamespaces, normalizeNS } from "./namespace";
+import { Namespaces, ensureNamespaces, normalizeNS } from "./namespaces";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 

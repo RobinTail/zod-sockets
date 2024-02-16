@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { ensureNamespaces } from "./namespace";
+import { ensureNamespaces } from "./namespaces";
 
-describe("Namespace", () => {
+describe("Namespaces", () => {
   describe("ensureNamespaces()", () => {
     test("Should wrap checked items into root namespace (immutable)", () => {
       const subject = { test: 123, some: {} };

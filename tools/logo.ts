@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { T, always, cond, either, gt, lt } from "ramda";
+import { T, always, cond, gt } from "ramda";
 import ts from "typescript";
 import { writeFile } from "node:fs/promises";
 import { format } from "prettier";
@@ -20,9 +20,10 @@ const logo = georgia11
   .split("\n")
   .map((line, index) => {
     const color = cond([
-      [either(gt(3), lt(7)), always(chalk.blueBright)],
-      [either(gt(4), lt(5)), always(chalk.magentaBright)],
-      [T, always(chalk.whiteBright)],
+      [gt(4), always(chalk.hex("#FCF434"))],
+      [gt(5), always(chalk.hex("#FFF"))],
+      [gt(8), always(chalk.hex("#9C59D1"))],
+      [T, always(chalk.hex("#2C2C2C"))],
     ])(index);
     return color(line);
   })

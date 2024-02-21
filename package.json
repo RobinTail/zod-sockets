@@ -63,7 +63,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.13.6",
+    "@arethetypeswrong/cli": "^0.14.1",
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^20.11.16",
     "@types/ramda": "^0.29.10",

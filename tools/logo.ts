@@ -1,9 +1,11 @@
-import chalk from "chalk";
+import { Chalk } from "chalk";
 import { T, always, cond, gt } from "ramda";
 import ts from "typescript";
 import { writeFile } from "node:fs/promises";
 import { format } from "prettier";
 const f = ts.factory;
+
+const chalk = new Chalk({ level: 2 }); // 256 colors
 
 const georgia11 = `
                            ,,

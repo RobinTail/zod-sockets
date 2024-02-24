@@ -1,15 +1,17 @@
-import { createHash } from "node:crypto";
 import ts from "typescript";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { Config } from "./config";
 import { EmissionMap } from "./emission";
+import {
+  defaultSerializer,
+  exportModifier,
+  f,
+  makeCleanId,
+} from "./integration-helpers";
 import { Namespaces } from "./namespaces";
 import { zodToTs } from "./zts";
 import { createTypeAlias, printNode } from "./zts-helpers";
-
-const f = ts.factory;
-const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
 
 interface IntegrationProps {
   config: Config<Namespaces<EmissionMap>>;
@@ -36,25 +38,6 @@ interface IntegrationProps {
     withUndefined?: boolean;
   };
 }
-
-export const ucFirst = (subject: string) =>
-  subject.charAt(0).toUpperCase() + subject.slice(1).toLowerCase();
-
-export const lcFirst = (subject: string) =>
-  subject.charAt(0).toLowerCase() + subject.slice(1);
-
-export const makeCleanId = (...args: string[]) =>
-  args
-    .flatMap((entry) => entry.split(/[^A-Z0-9]/gi)) // split by non-alphanumeric characters
-    .flatMap((entry) =>
-      // split by sequences of capitalized letters
-      entry.replaceAll(/[A-Z]+/g, (beginning) => `/${beginning}`).split("/"),
-    )
-    .map(ucFirst)
-    .join("");
-
-export const defaultSerializer = (schema: z.ZodTypeAny): string =>
-  createHash("sha1").update(JSON.stringify(schema), "utf8").digest("hex");
 
 export class Integration {
   protected program: ts.Node[] = [];

@@ -29,7 +29,6 @@ export const addJsDocComment = (node: ts.Node, text: string) => {
   );
 };
 
-// @todo seems to be a duplicate of makePublicType()
 export const createTypeAlias = (
   node: ts.TypeNode,
   identifier: string,

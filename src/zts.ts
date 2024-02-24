@@ -1,6 +1,7 @@
 import ts from "typescript";
 import { z } from "zod";
-import { lcFirst, makeCleanId } from "./integration";
+
+import { lcFirst, makeCleanId } from "./integration-helpers";
 import { HandlingRules, walkSchema } from "./schema-walker";
 import {
   LiteralType,

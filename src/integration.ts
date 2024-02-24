@@ -76,6 +76,25 @@ export class Integration {
     serializer = defaultSerializer,
     optionalPropStyle = { withQuestionMark: true, withUndefined: true },
   }: IntegrationProps) {
+    this.program.push(
+      f.createImportDeclaration(
+        undefined,
+        f.createImportClause(
+          true,
+          undefined,
+          f.createNamedImports([
+            f.createImportSpecifier(
+              false,
+              undefined,
+              f.createIdentifier("Socket"),
+            ),
+          ]),
+        ),
+        f.createStringLiteral("socket.io-client"),
+        undefined,
+      ),
+    );
+
     for (const [ns, emission] of Object.entries(namespaces)) {
       this.registry[ns] = { emission: [], actions: [] };
       for (const [event, { schema, ack }] of Object.entries(emission)) {

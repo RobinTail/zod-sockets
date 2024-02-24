@@ -1,3 +1,5 @@
+import type { Socket } from "socket.io-client";
+
 export namespace Root {
   export interface Emission {
     time: (p1: string) => void;

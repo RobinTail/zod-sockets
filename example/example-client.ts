@@ -15,7 +15,7 @@ export namespace Root {
   export interface Actions {
     chat: (message: string) => void;
     ping: (
-      cb1: (reply: "pong", ...theEchoOfTheInput: unknown[]) => void,
+      cb1: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
     ) => void;
     subscribe: () => void;
   }

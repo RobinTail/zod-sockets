@@ -6,7 +6,7 @@ export const onPing = actionsFactory.build({
   event: "ping",
   input: z.tuple([]).rest(z.unknown().describe("Anything")),
   output: z
-    .tuple([z.literal("pong").describe("reply")])
+    .tuple([z.literal("pong").describe("literally")])
     .rest(z.unknown().describe("The echo of the input")),
   handler: async ({ input }) => ["pong", ...input] as const,
 });

@@ -19,5 +19,6 @@ export namespace Root {
     ) => void;
     subscribe: () => void;
   }
+  /** @example const socket: Root.Socket = io("/") */
   export type Socket = SocketBase<Emission, Actions>;
 }

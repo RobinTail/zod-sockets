@@ -11,7 +11,7 @@ import {
 } from "./integration-helpers";
 import { Namespaces } from "./namespaces";
 import { zodToTs } from "./zts";
-import { createTypeAlias, printNode } from "./zts-helpers";
+import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
 
 interface IntegrationProps {
   config: Config<Namespaces<EmissionMap>>;
@@ -121,6 +121,7 @@ export class Integration {
     }
 
     for (const ns in this.registry) {
+      const publicName = makeCleanId(ns) || makeCleanId("root");
       const interfaces = Object.entries(this.registry[ns]).map(
         ([direction, events]) =>
           f.createInterfaceDeclaration(
@@ -142,10 +143,14 @@ export class Integration {
           f.createTypeReferenceNode(f.createIdentifier("Actions")),
         ]),
       );
+      addJsDocComment(
+        socketNode,
+        `@example const socket: ${publicName}.Socket = io("${ns}")`,
+      );
       this.program.push(
         f.createModuleDeclaration(
           exportModifier,
-          f.createIdentifier(makeCleanId(ns) || makeCleanId("root")),
+          f.createIdentifier(publicName),
           f.createModuleBlock([...interfaces, socketNode]),
           ts.NodeFlags.Namespace,
         ),

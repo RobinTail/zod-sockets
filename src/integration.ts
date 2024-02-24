@@ -57,9 +57,9 @@ export class Integration {
   protected program: ts.Node[] = [];
   protected aliases: Record<string, ts.TypeAliasDeclaration> = {};
   protected registry: Record<
-    "emission" | "actions",
-    { event: string; node: ts.TypeNode }[]
-  > = { actions: [], emission: [] };
+    string, // namespace
+    Record<"emission" | "actions", { event: string; node: ts.TypeNode }[]>
+  > = {};
 
   protected getAlias(name: string): ts.TypeReferenceNode | undefined {
     return name in this.aliases ? f.createTypeReferenceNode(name) : undefined;
@@ -77,6 +77,7 @@ export class Integration {
     optionalPropStyle = { withQuestionMark: true, withUndefined: true },
   }: IntegrationProps) {
     for (const [ns, emission] of Object.entries(namespaces)) {
+      this.registry[ns] = { emission: [], actions: [] };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const params: z.ZodTypeAny[] = schema.items;
         if (ack) {
@@ -90,7 +91,7 @@ export class Integration {
           serializer,
           optionalPropStyle,
         });
-        this.registry.emission.push({ event, node }); // @todo take namespaces into account
+        this.registry[ns].emission.push({ event, node });
       }
       for (const action of actions) {
         if (action.getNamespace() !== ns) {
@@ -110,21 +111,29 @@ export class Integration {
           serializer,
           optionalPropStyle,
         });
-        this.registry.actions.push({ event, node }); // @todo take namespaces into account
+        this.registry[ns].actions.push({ event, node });
       }
     }
 
-    for (const direction in this.registry) {
-      this.program.push(
-        f.createInterfaceDeclaration(
-          exportModifier,
-          makeCleanId(direction),
-          undefined,
-          undefined,
-          this.registry[direction as keyof typeof this.registry].map(
-            ({ event, node }) =>
+    for (const ns in this.registry) {
+      const interfaces = Object.entries(this.registry[ns]).map(
+        ([direction, events]) =>
+          f.createInterfaceDeclaration(
+            exportModifier,
+            makeCleanId(direction),
+            undefined,
+            undefined,
+            events.map(({ event, node }) =>
               f.createPropertySignature(undefined, event, undefined, node),
+            ),
           ),
+      );
+      this.program.push(
+        f.createModuleDeclaration(
+          [f.createToken(ts.SyntaxKind.ExportKeyword)],
+          f.createIdentifier(makeCleanId(ns) || makeCleanId("root")),
+          f.createModuleBlock(interfaces),
+          ts.NodeFlags.Namespace,
         ),
       );
     }

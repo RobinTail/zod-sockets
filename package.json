@@ -47,8 +47,9 @@
     "test:system": "yarn --cwd tests/system && vitest run -r tests/system",
     "mdfix": "prettier *.md --write",
     "start": "tsx example/index.ts",
-    "build": "yarn build:compile && yarn build:tests",
+    "build": "yarn build:compile && yarn build:tests && yarn build:client",
     "build:compile": "tsup && attw --pack",
+    "build:client": "tsx example/generate-client.ts",
     "build:tests": "tsx tools/make-tests.ts",
     "build:logo": "tsx tools/logo.ts",
     "precommit": "yarn lint && yarn test",
@@ -60,6 +61,7 @@
   },
   "peerDependencies": {
     "socket.io": "^4.7.4",
+    "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {

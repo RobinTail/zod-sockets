@@ -1,0 +1,14 @@
+type Time = [
+    any
+];
+
+type Chat = [
+    string,
+    {
+        from: string;
+    }
+];
+
+type Rooms = [
+    string[]
+];

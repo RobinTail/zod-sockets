@@ -228,7 +228,7 @@ const onLazy: Producer<z.ZodLazy<z.ZodTypeAny>> = ({
   );
 };
 
-const onFunction: Producer<z.ZodFunction<z.ZodTuple, z.ZodTypeAny>> = ({
+const onFunction: Producer<z.ZodFunction<z.AnyZodTuple, z.ZodTypeAny>> = ({
   schema,
   next,
 }) => {

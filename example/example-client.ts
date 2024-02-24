@@ -2,18 +2,21 @@ import type { Socket as SocketBase } from "socket.io-client";
 
 export namespace Root {
   export interface Emission {
-    time: (p1: string) => void;
+    time: (currentIsoTime: string) => void;
     chat: (
-      p1: string,
-      p2: {
+      message: string,
+      extraInfo: {
+        /** the author ID */
         from: string;
       },
     ) => void;
-    rooms: (p1: string[]) => void;
+    rooms: (roomIds: string[]) => void;
   }
   export interface Actions {
-    chat: (p1: string) => void;
-    ping: (cb1: (p1: "pong", ...rest: unknown[]) => void) => void;
+    chat: (message: string) => void;
+    ping: (
+      cb1: (reply: "pong", ...theEchoOfTheInput: unknown[]) => void,
+    ) => void;
     subscribe: () => void;
   }
   export type Socket = SocketBase<Emission, Actions>;

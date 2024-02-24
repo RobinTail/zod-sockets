@@ -12,13 +12,23 @@ export const config = createConfig({
   logger: console,
   emission: {
     time: {
-      schema: z.tuple([z.date().transform((date) => date.toISOString())]),
+      schema: z.tuple([
+        z
+          .date()
+          .transform((date) => date.toISOString())
+          .describe("current ISO time"),
+      ]),
     },
     chat: {
-      schema: z.tuple([z.string(), z.object({ from: z.string() })]),
+      schema: z.tuple([
+        z.string().describe("message"),
+        z
+          .object({ from: z.string().describe("the author ID") })
+          .describe("extra info"),
+      ]),
     },
     rooms: {
-      schema: z.tuple([z.string().array()]),
+      schema: z.tuple([z.string().array().describe("room IDs")]),
     },
   },
 });

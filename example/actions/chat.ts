@@ -4,7 +4,7 @@ import { actionsFactory } from "../factories";
 
 export const onChat = actionsFactory.build({
   event: "chat",
-  input: z.tuple([z.string()]),
+  input: z.tuple([z.string().describe("message")]),
   handler: async ({ input: [message], client, logger }) => {
     try {
       await client.broadcast("chat", message, { from: client.id });

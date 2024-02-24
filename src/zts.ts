@@ -1,5 +1,6 @@
 import ts from "typescript";
 import { z } from "zod";
+import { lcFirst, makeCleanId } from "./integration";
 import { HandlingRules, walkSchema } from "./schema-walker";
 import {
   LiteralType,
@@ -239,7 +240,9 @@ const onFunction: Producer<z.ZodFunction<z.AnyZodTuple, z.ZodTypeAny>> = ({
         undefined,
         undefined,
         f.createIdentifier(
-          `${subject instanceof z.ZodFunction ? "cb" : "p"}${index + 1}`,
+          subject.description
+            ? lcFirst(makeCleanId(subject.description))
+            : `${subject instanceof z.ZodFunction ? "cb" : "p"}${index + 1}`,
         ),
         undefined,
         next(subject),
@@ -251,7 +254,9 @@ const onFunction: Producer<z.ZodFunction<z.AnyZodTuple, z.ZodTypeAny>> = ({
       f.createParameterDeclaration(
         undefined,
         f.createToken(ts.SyntaxKind.DotDotDotToken),
-        f.createIdentifier("rest"),
+        f.createIdentifier(
+          rest.description ? lcFirst(makeCleanId(rest.description)) : "rest",
+        ),
         undefined,
         next(z.array(rest)),
       ),

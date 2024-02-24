@@ -40,6 +40,9 @@ interface IntegrationProps {
 export const ucFirst = (subject: string) =>
   subject.charAt(0).toUpperCase() + subject.slice(1).toLowerCase();
 
+export const lcFirst = (subject: string) =>
+  subject.charAt(0).toLowerCase() + subject.slice(1);
+
 export const makeCleanId = (...args: string[]) =>
   args
     .flatMap((entry) => entry.split(/[^A-Z0-9]/gi)) // split by non-alphanumeric characters

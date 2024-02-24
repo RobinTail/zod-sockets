@@ -1,6 +1,7 @@
 import http from "node:http";
 import { Server } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
+import { z } from "zod";
 import { attachSockets } from "./attach";
 import { AbstractLogger } from "./logger";
 
@@ -50,7 +51,12 @@ describe("Attach", () => {
     };
     const loggerMock = { info: vi.fn(), debug: vi.fn() };
     const actionsMock = [
-      { execute: vi.fn(), getNamespace: () => "/", getEvent: () => "test" },
+      {
+        execute: vi.fn(),
+        getNamespace: () => "/",
+        getEvent: () => "test",
+        getSchema: () => z.tuple([]),
+      },
     ];
 
     test("should set the listeners", async () => {

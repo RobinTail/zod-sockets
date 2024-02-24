@@ -251,7 +251,7 @@ const onFunction: Producer<z.ZodFunction<z.ZodTuple, z.ZodTypeAny>> = ({
         f.createToken(ts.SyntaxKind.DotDotDotToken),
         f.createIdentifier("rest"),
         undefined,
-        next(rest),
+        next(z.array(rest)),
       ),
     );
   }

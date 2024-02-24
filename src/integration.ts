@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import ts from "typescript";
 import { z } from "zod";
+import { AbstractAction } from "./action";
 import { Config } from "./config";
 import { EmissionMap } from "./emission";
 import { Namespaces } from "./namespaces";
@@ -12,6 +13,7 @@ const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
 
 interface IntegrationProps {
   config: Config<Namespaces<EmissionMap>>;
+  actions: AbstractAction[];
   /**
    * @desc Used for comparing schemas wrapped into z.lazy() to limit the recursion
    * @default JSON.stringify() + SHA1 hash as a hex digest
@@ -54,7 +56,10 @@ export const defaultSerializer = (schema: z.ZodTypeAny): string =>
 export class Integration {
   protected program: ts.Node[] = [];
   protected aliases: Record<string, ts.TypeAliasDeclaration> = {};
-  protected registry: { event: string; typeId: string }[] = [];
+  protected registry: Record<
+    "emission" | "actions",
+    { event: string; typeId: string }[]
+  > = { actions: [], emission: [] };
 
   protected getAlias(name: string): ts.TypeReferenceNode | undefined {
     return name in this.aliases ? f.createTypeReferenceNode(name) : undefined;
@@ -67,6 +72,7 @@ export class Integration {
 
   constructor({
     config: { emission: namespaces },
+    actions,
     serializer = defaultSerializer,
     optionalPropStyle = { withQuestionMark: true, withUndefined: true },
   }: IntegrationProps) {
@@ -87,25 +93,51 @@ export class Integration {
         });
         const entry = createTypeAlias(node, id);
         this.program.push(entry);
-        this.registry.push({ event, typeId: id }); // @todo take namespaces and IO direction into account
+        this.registry.emission.push({ event, typeId: id }); // @todo take namespaces into account
+      }
+      for (const action of actions) {
+        if (action.getNamespace() !== ns) {
+          continue;
+        }
+        const event = action.getEvent();
+        const id = makeCleanId(event);
+        const params: z.ZodTypeAny[] = action.getSchema("input").items;
+        const output = action.getSchema("output");
+        if (output) {
+          params.push(z.function(output, z.void()));
+        }
+        const node = zodToTs({
+          schema: z.function(z.tuple(params as z.ZodTupleItems), z.void()),
+          isResponse: false,
+          getAlias: this.getAlias.bind(this),
+          makeAlias: this.makeAlias.bind(this),
+          serializer,
+          optionalPropStyle,
+        });
+        const entry = createTypeAlias(node, id);
+        this.program.push(entry);
+        this.registry.actions.push({ event, typeId: id }); // @todo take namespaces into account
       }
     }
 
-    const emissionNode = f.createInterfaceDeclaration(
-      exportModifier,
-      "Emission",
-      undefined,
-      undefined,
-      this.registry.map(({ event, typeId }) =>
-        f.createPropertySignature(
-          undefined,
-          event,
-          undefined,
-          f.createTypeReferenceNode(typeId),
+    for (const direction in this.registry) {
+      const node = f.createInterfaceDeclaration(
+        exportModifier,
+        makeCleanId(direction),
+        undefined,
+        undefined,
+        this.registry[direction as keyof typeof this.registry].map(
+          ({ event, typeId }) =>
+            f.createPropertySignature(
+              undefined,
+              event,
+              undefined,
+              f.createTypeReferenceNode(typeId),
+            ),
         ),
-      ),
-    );
-    this.program.push(emissionNode);
+      );
+      this.program.push(node);
+    }
   }
 
   public print(printerOptions?: ts.PrinterOptions) {

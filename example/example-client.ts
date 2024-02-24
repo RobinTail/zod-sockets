@@ -1,28 +1,16 @@
-type Time = (p1: string) => void;
-
-type Chat = (
-  p1: string,
-  p2: {
-    from: string;
-  },
-) => void;
-
-type Rooms = (p1: string[]) => void;
-
-type Chat = (p1: string) => void;
-
-type Ping = (p1: (p1: "pong", ...rest: any) => void) => void;
-
-type Subscribe = () => void;
-
 export interface Actions {
-  chat: Chat;
-  ping: Ping;
-  subscribe: Subscribe;
+  chat: (p1: string) => void;
+  ping: (p1: (p1: "pong", ...rest: any) => void) => void;
+  subscribe: () => void;
 }
 
 export interface Emission {
-  time: Time;
-  chat: Chat;
-  rooms: Rooms;
+  time: (p1: string) => void;
+  chat: (
+    p1: string,
+    p2: {
+      from: string;
+    },
+  ) => void;
+  rooms: (p1: string[]) => void;
 }

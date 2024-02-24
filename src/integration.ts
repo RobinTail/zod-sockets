@@ -58,7 +58,7 @@ export class Integration {
   protected aliases: Record<string, ts.TypeAliasDeclaration> = {};
   protected registry: Record<
     "emission" | "actions",
-    { event: string; typeId: string }[]
+    { event: string; node: ts.TypeNode }[]
   > = { actions: [], emission: [] };
 
   protected getAlias(name: string): ts.TypeReferenceNode | undefined {
@@ -78,7 +78,6 @@ export class Integration {
   }: IntegrationProps) {
     for (const [ns, emission] of Object.entries(namespaces)) {
       for (const [event, { schema, ack }] of Object.entries(emission)) {
-        const id = makeCleanId(ns, event);
         const params: z.ZodTypeAny[] = schema.items;
         if (ack) {
           params.push(z.function(ack, z.void()));
@@ -91,16 +90,13 @@ export class Integration {
           serializer,
           optionalPropStyle,
         });
-        const entry = createTypeAlias(node, id);
-        this.program.push(entry);
-        this.registry.emission.push({ event, typeId: id }); // @todo take namespaces into account
+        this.registry.emission.push({ event, node }); // @todo take namespaces into account
       }
       for (const action of actions) {
         if (action.getNamespace() !== ns) {
           continue;
         }
         const event = action.getEvent();
-        const id = makeCleanId(event);
         const params: z.ZodTypeAny[] = action.getSchema("input").items;
         const output = action.getSchema("output");
         if (output) {
@@ -114,29 +110,23 @@ export class Integration {
           serializer,
           optionalPropStyle,
         });
-        const entry = createTypeAlias(node, id);
-        this.program.push(entry);
-        this.registry.actions.push({ event, typeId: id }); // @todo take namespaces into account
+        this.registry.actions.push({ event, node }); // @todo take namespaces into account
       }
     }
 
     for (const direction in this.registry) {
-      const node = f.createInterfaceDeclaration(
-        exportModifier,
-        makeCleanId(direction),
-        undefined,
-        undefined,
-        this.registry[direction as keyof typeof this.registry].map(
-          ({ event, typeId }) =>
-            f.createPropertySignature(
-              undefined,
-              event,
-              undefined,
-              f.createTypeReferenceNode(typeId),
-            ),
+      this.program.push(
+        f.createInterfaceDeclaration(
+          exportModifier,
+          makeCleanId(direction),
+          undefined,
+          undefined,
+          this.registry[direction as keyof typeof this.registry].map(
+            ({ event, node }) =>
+              f.createPropertySignature(undefined, event, undefined, node),
+          ),
         ),
       );
-      this.program.push(node);
     }
   }
 

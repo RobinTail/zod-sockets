@@ -8,6 +8,7 @@ import { zodToTs } from "./zts";
 import { createTypeAlias, printNode } from "./zts-helpers";
 
 const f = ts.factory;
+const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
 
 interface IntegrationProps {
   config: Config<Namespaces<EmissionMap>>;
@@ -53,6 +54,7 @@ export const defaultSerializer = (schema: z.ZodTypeAny): string =>
 export class Integration {
   protected program: ts.Node[] = [];
   protected aliases: Record<string, ts.TypeAliasDeclaration> = {};
+  protected registry: { event: string; typeId: string }[] = [];
 
   protected getAlias(name: string): ts.TypeReferenceNode | undefined {
     return name in this.aliases ? f.createTypeReferenceNode(name) : undefined;
@@ -85,8 +87,25 @@ export class Integration {
         });
         const entry = createTypeAlias(node, id);
         this.program.push(entry);
+        this.registry.push({ event, typeId: id }); // @todo take namespaces and IO direction into account
       }
     }
+
+    const emissionNode = f.createInterfaceDeclaration(
+      exportModifier,
+      "Emission",
+      undefined,
+      undefined,
+      this.registry.map(({ event, typeId }) =>
+        f.createPropertySignature(
+          undefined,
+          event,
+          undefined,
+          f.createTypeReferenceNode(typeId),
+        ),
+      ),
+    );
+    this.program.push(emissionNode);
   }
 
   public print(printerOptions?: ts.PrinterOptions) {

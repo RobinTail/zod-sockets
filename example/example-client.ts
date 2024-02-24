@@ -8,3 +8,9 @@ type Chat = (
 ) => void;
 
 type Rooms = (p1: string[]) => void;
+
+export interface Emission {
+  time: Time;
+  chat: Chat;
+  rooms: Rooms;
+}

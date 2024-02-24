@@ -19,6 +19,7 @@ const samples = {
   [ts.SyntaxKind.ObjectKeyword]: {},
   [ts.SyntaxKind.StringKeyword]: "",
   [ts.SyntaxKind.UndefinedKeyword]: undefined,
+  [ts.SyntaxKind.UnknownKeyword]: undefined,
 } satisfies Partial<Record<ts.KeywordTypeSyntaxKind, unknown>>;
 
 /**
@@ -264,6 +265,7 @@ const producers: HandlingRules<ts.TypeNode, ZTSContext> = {
   ZodBoolean: onPrimitive(ts.SyntaxKind.BooleanKeyword),
   ZodAny: onPrimitive(ts.SyntaxKind.AnyKeyword),
   ZodVoid: onPrimitive(ts.SyntaxKind.VoidKeyword),
+  ZodUnknown: onPrimitive(ts.SyntaxKind.UnknownKeyword),
   ZodDate: onDate,
   ZodNull: onNull,
   ZodArray: onArray,

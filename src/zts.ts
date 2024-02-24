@@ -204,6 +204,9 @@ const onPipeline: Producer<z.ZodPipeline<z.ZodTypeAny, z.ZodTypeAny>> = ({
 const onNull: Producer<z.ZodNull> = () =>
   f.createLiteralTypeNode(f.createNull());
 
+const onDate: Producer<z.ZodDate> = () =>
+  f.createTypeReferenceNode(f.createIdentifier("Date"));
+
 const onLazy: Producer<z.ZodLazy<z.ZodTypeAny>> = ({
   getAlias,
   makeAlias,
@@ -258,6 +261,7 @@ const producers: HandlingRules<ts.TypeNode, ZTSContext> = {
   ZodBoolean: onPrimitive(ts.SyntaxKind.BooleanKeyword),
   ZodAny: onPrimitive(ts.SyntaxKind.AnyKeyword),
   ZodVoid: onPrimitive(ts.SyntaxKind.VoidKeyword),
+  ZodDate: onDate,
   ZodNull: onNull,
   ZodArray: onArray,
   ZodTuple: onTuple,

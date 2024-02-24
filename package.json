@@ -49,7 +49,7 @@
     "start": "tsx example/index.ts",
     "build": "yarn build:compile && yarn build:tests && yarn build:client",
     "build:compile": "tsup && attw --pack",
-    "build:client": "tsx example/generate-client.ts",
+    "build:client": "tsx example/generate-client.ts && prettier --write example/example*.ts",
     "build:tests": "tsx tools/make-tests.ts",
     "build:logo": "tsx tools/logo.ts",
     "precommit": "yarn lint && yarn test",

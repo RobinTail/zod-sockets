@@ -71,9 +71,12 @@ export class Integration {
     for (const [ns, emission] of Object.entries(namespaces)) {
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const id = makeCleanId(ns, event);
-        // @todo those should be functions
+        const params: z.ZodTypeAny[] = schema.items;
+        if (ack) {
+          params.push(z.function(ack, z.void()));
+        }
         const node = zodToTs({
-          schema,
+          schema: z.function(z.tuple(params as z.ZodTupleItems), z.void()),
           isResponse: true,
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),

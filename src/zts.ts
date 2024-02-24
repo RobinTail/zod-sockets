@@ -221,12 +221,43 @@ const onLazy: Producer<z.ZodLazy<z.ZodTypeAny>> = ({
   );
 };
 
+const onFunction: Producer<z.ZodFunction<z.ZodTuple, z.ZodTypeAny>> = ({
+  schema,
+  next,
+}) => {
+  const params = schema
+    .parameters()
+    .items.map((subject, index) =>
+      f.createParameterDeclaration(
+        undefined,
+        undefined,
+        f.createIdentifier(`p${index + 1}`),
+        undefined,
+        next(subject),
+      ),
+    );
+  const { rest } = schema.parameters()._def;
+  if (rest) {
+    params.push(
+      f.createParameterDeclaration(
+        undefined,
+        f.createToken(ts.SyntaxKind.DotDotDotToken),
+        f.createIdentifier("rest"),
+        undefined,
+        next(rest),
+      ),
+    );
+  }
+  return f.createFunctionTypeNode(undefined, params, next(schema.returnType()));
+};
+
 const producers: HandlingRules<ts.TypeNode, ZTSContext> = {
   ZodString: onPrimitive(ts.SyntaxKind.StringKeyword),
   ZodNumber: onPrimitive(ts.SyntaxKind.NumberKeyword),
   ZodBigInt: onPrimitive(ts.SyntaxKind.BigIntKeyword),
   ZodBoolean: onPrimitive(ts.SyntaxKind.BooleanKeyword),
   ZodAny: onPrimitive(ts.SyntaxKind.AnyKeyword),
+  ZodVoid: onPrimitive(ts.SyntaxKind.VoidKeyword),
   ZodNull: onNull,
   ZodArray: onArray,
   ZodTuple: onTuple,
@@ -247,6 +278,7 @@ const producers: HandlingRules<ts.TypeNode, ZTSContext> = {
   ZodPipeline: onPipeline,
   ZodLazy: onLazy,
   ZodReadonly: onReadonly,
+  ZodFunction: onFunction,
 };
 
 export const zodToTs = ({

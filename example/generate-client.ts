@@ -3,7 +3,7 @@ import { Integration } from "../src/integration";
 import { config } from "./config";
 
 await writeFile(
-  "example/example-client.yaml",
+  "example/example-client.ts",
   new Integration({ config }).print(),
   "utf-8",
 );

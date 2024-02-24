@@ -1,0 +1,10 @@
+type Time = (p1: any) => void;
+
+type Chat = (
+  p1: string,
+  p2: {
+    from: string;
+  },
+) => void;
+
+type Rooms = (p1: string[]) => void;

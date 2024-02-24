@@ -1,6 +1,6 @@
 export interface Actions {
   chat: (p1: string) => void;
-  ping: (p1: (p1: "pong", ...rest: unknown[]) => void) => void;
+  ping: (cb1: (p1: "pong", ...rest: unknown[]) => void) => void;
   subscribe: () => void;
 }
 

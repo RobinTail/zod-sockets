@@ -238,7 +238,9 @@ const onFunction: Producer<z.ZodFunction<z.ZodTuple, z.ZodTypeAny>> = ({
       f.createParameterDeclaration(
         undefined,
         undefined,
-        f.createIdentifier(`p${index + 1}`),
+        f.createIdentifier(
+          `${subject instanceof z.ZodFunction ? "cb" : "p"}${index + 1}`,
+        ),
         undefined,
         next(subject),
       ),

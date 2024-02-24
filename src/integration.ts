@@ -85,8 +85,8 @@ export class Integration {
           f.createNamedImports([
             f.createImportSpecifier(
               false,
-              undefined,
               f.createIdentifier("Socket"),
+              f.createIdentifier("SocketBase"),
             ),
           ]),
         ),
@@ -147,11 +147,20 @@ export class Integration {
             ),
           ),
       );
+      const socketNode = f.createTypeAliasDeclaration(
+        exportModifier,
+        f.createIdentifier("Socket"),
+        undefined,
+        f.createTypeReferenceNode(f.createIdentifier("SocketBase"), [
+          f.createTypeReferenceNode(f.createIdentifier("Emission")),
+          f.createTypeReferenceNode(f.createIdentifier("Actions")),
+        ]),
+      );
       this.program.push(
         f.createModuleDeclaration(
-          [f.createToken(ts.SyntaxKind.ExportKeyword)],
+          exportModifier,
           f.createIdentifier(makeCleanId(ns) || makeCleanId("root")),
-          f.createModuleBlock(interfaces),
+          f.createModuleBlock([...interfaces, socketNode]),
           ts.NodeFlags.Namespace,
         ),
       );

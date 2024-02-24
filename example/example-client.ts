@@ -1,4 +1,4 @@
-import type { Socket } from "socket.io-client";
+import type { Socket as SocketBase } from "socket.io-client";
 
 export namespace Root {
   export interface Emission {
@@ -16,4 +16,5 @@ export namespace Root {
     ping: (cb1: (p1: "pong", ...rest: unknown[]) => void) => void;
     subscribe: () => void;
   }
+  export type Socket = SocketBase<Emission, Actions>;
 }

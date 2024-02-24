@@ -84,12 +84,11 @@ export class Integration {
     for (const [ns, emission] of Object.entries(namespaces)) {
       this.registry[ns] = { emission: [], actions: [] };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
-        const params: z.ZodTypeAny[] = schema.items;
-        if (ack) {
-          params.push(z.function(ack, z.void()));
-        }
+        const args = ack
+          ? z.tuple([...schema.items, z.function(ack, z.void())])
+          : schema;
         const node = zodToTs({
-          schema: z.function(z.tuple(params as z.ZodTupleItems), z.void()),
+          schema: z.function(args, z.void()),
           isResponse: true,
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),
@@ -103,13 +102,13 @@ export class Integration {
           continue;
         }
         const event = action.getEvent();
-        const params: z.ZodTypeAny[] = action.getSchema("input").items;
+        const input = action.getSchema("input");
         const output = action.getSchema("output");
-        if (output) {
-          params.push(z.function(output, z.void()));
-        }
+        const args = output
+          ? z.tuple([...input.items, z.function(output, z.void())])
+          : input;
         const node = zodToTs({
-          schema: z.function(z.tuple(params as z.ZodTupleItems), z.void()),
+          schema: z.function(args, z.void()),
           isResponse: false,
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),

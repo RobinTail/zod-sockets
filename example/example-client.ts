@@ -17,7 +17,7 @@ export namespace Root {
     ping: (
       cb1: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
     ) => void;
-    subscribe: () => void;
+    subscribe: (...doesNotMatter: unknown[]) => void;
   }
   /** @example const socket: Root.Socket = io("/") */
   export type Socket = SocketBase<Emission, Actions>;

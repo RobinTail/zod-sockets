@@ -100,18 +100,21 @@ const onSomeUnion: Producer<
   | z.ZodDiscriminatedUnion<string, z.ZodDiscriminatedUnionOption<string>[]>
 > = ({ schema: { options }, next }) => f.createUnionTypeNode(options.map(next));
 
-const makeSample = (produced: ts.TypeNode) =>
-  samples?.[produced.kind as keyof typeof samples];
+const makeSample = (produced: ts.TypeNode, src: z.ZodTypeAny) =>
+  src instanceof z.ZodDate
+    ? new Date()
+    : samples?.[produced.kind as keyof typeof samples];
 
 const onEffects: Producer<z.ZodEffects<z.ZodTypeAny>> = ({
   schema,
   next,
   isResponse,
 }) => {
-  const input = next(schema.innerType());
+  const src = schema.innerType();
+  const input = next(src);
   const effect = schema._def.effect;
   if (isResponse && effect.type === "transform") {
-    const outputType = tryToTransform(schema, makeSample(input));
+    const outputType = tryToTransform(schema, makeSample(input, src));
     const resolutions: Partial<
       Record<NonNullable<typeof outputType>, ts.KeywordTypeSyntaxKind>
     > = {

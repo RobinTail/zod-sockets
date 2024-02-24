@@ -1,4 +1,4 @@
-type Time = (p1: any) => void;
+type Time = (p1: string) => void;
 
 type Chat = (
   p1: string,

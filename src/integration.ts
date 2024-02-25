@@ -21,7 +21,7 @@ interface IntegrationProps {
    * @desc When event has both .rest() and an acknowledgement, the "...rest" can not be placed in a middle.
    * @desc In this case, overloads are used to reflect variations on different number of the function arguments.
    * @default 3
-   * @example (cb) => void | (rest1, cb) => void | (rest1, rest2, cb) => void | (rest1, rest2, rest3, cb) => void
+   * @example ( (cb) => void ) | ( (rest1, cb) => void ) | ( (rest1, rest2, cb) => void )
    * @todo reconsider naming
    */
   maxOverloads?: number;

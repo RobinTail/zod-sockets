@@ -38,7 +38,7 @@ export const makeEventFnSchema = (
   if (!rest || maxOverloads <= 0) {
     return z.function(z.tuple([...base.items, fn]), z.void());
   }
-  const variants = range(0, maxOverloads + 1).map((count) => {
+  const variants = range(0, maxOverloads).map((count) => {
     const items = [...base.items]
       .concat(
         range(1, count + 1).map((index) =>

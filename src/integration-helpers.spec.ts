@@ -87,15 +87,6 @@ describe("Integration helpers", () => {
               ]),
               z.void(),
             ),
-            z.function(
-              z.tuple([
-                z.string(),
-                z.unknown().describe("rest1"),
-                z.unknown().describe("rest2"),
-                z.function(ack, z.void()),
-              ]),
-              z.void(),
-            ),
           ]),
         ),
       );

@@ -1,6 +1,8 @@
 import type { Socket as SocketBase } from "socket.io-client";
 
 export namespace Root {
+  /** @desc The actual path of the Root namespace */
+  export const path = "/";
   export interface Emission {
     time: (currentIsoTime: string) => void;
     chat: (
@@ -27,6 +29,6 @@ export namespace Root {
         ) => void);
     subscribe: (...doesNotMatter: unknown[]) => void;
   }
-  /** @example const socket: Root.Socket = io("/") */
+  /** @example const socket: Root.Socket = io(Root.path) */
   export type Socket = SocketBase<Emission, Actions>;
 }

@@ -57,6 +57,7 @@ export class Integration {
     Record<string, ts.TypeAliasDeclaration>
   > = {};
   protected ids = {
+    path: f.createIdentifier("path"),
     socket: f.createIdentifier("Socket"),
     socketBase: f.createIdentifier("SocketBase"),
     ioClient: f.createStringLiteral("socket.io-client"),
@@ -148,6 +149,26 @@ export class Integration {
 
     for (const ns in this.registry) {
       const publicName = makeCleanId(ns) || makeCleanId(fallbackNs);
+
+      const nsNameNode = f.createVariableStatement(
+        exportModifier,
+        f.createVariableDeclarationList(
+          [
+            f.createVariableDeclaration(
+              this.ids.path,
+              undefined,
+              undefined,
+              f.createStringLiteral(ns),
+            ),
+          ],
+          ts.NodeFlags.Const,
+        ),
+      );
+      addJsDocComment(
+        nsNameNode,
+        `@desc The actual path of the ${publicName} namespace`,
+      );
+
       const interfaces = Object.entries(this.registry[ns]).map(
         ([scope, events]) =>
           f.createInterfaceDeclaration(
@@ -171,13 +192,14 @@ export class Integration {
       );
       addJsDocComment(
         socketNode,
-        `@example const socket: ${publicName}.${this.ids.socket.text} = io("${ns}")`,
+        `@example const socket: ${publicName}.${this.ids.socket.text} = io(${publicName}.${this.ids.path.text})`,
       );
       this.program.push(
         f.createModuleDeclaration(
           exportModifier,
           f.createIdentifier(publicName),
           f.createModuleBlock([
+            nsNameNode,
             ...Object.values(this.aliases[ns]),
             ...interfaces,
             socketNode,

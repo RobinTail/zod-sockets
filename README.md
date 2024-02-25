@@ -13,6 +13,7 @@ Version 0 is unstable — public API may be changed at any time.
 - [Typescript](https://www.typescriptlang.org/) first.
 - Sockets — [Socket.IO](https://socket.io/), using [WebSocket](https://github.com/websockets/ws) for transport.
 - Schema validation — [Zod 3.x](https://github.com/colinhacks/zod).
+- Generating client side types — inspired by [zod-to-ts](https://github.com/sachinraja/zod-to-ts).
 - Supports any logger having `info()`, `debug()`, `error()` and `warn()` methods.
 
 ## Concept
@@ -23,7 +24,7 @@ acknowledgements. Based on this configuration, an Actions Factory is created, wh
 schemas for checking the incoming data and an optionally sent acknowledgement, and a handler. This handler is aware of
 the Emission types and is equipped with the emission and broadcasting methods, while its returns become an
 acknowledgement for the Action. This configuration is used to validate the input and output data against the specified
-schemas, thus ensuring that the established contract is followed.
+schemas, it can be exported to frontend side, thus ensuring that the established contract is followed.
 
 ![Workflow Diagram](flow.svg)
 

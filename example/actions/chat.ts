@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Metadata } from "../config";
 import { actionsFactory } from "../factories";
 
 export const onChat = actionsFactory.build({
@@ -8,8 +7,8 @@ export const onChat = actionsFactory.build({
   handler: async ({ input: [message], client, logger }) => {
     try {
       await client.broadcast("chat", message, { from: client.id });
-      client.setData<Metadata>({
-        msgCount: (client.getData<Metadata>().msgCount || 0) + 1,
+      client.setData({
+        msgCount: (client.getData().msgCount || 0) + 1,
       });
     } catch (error) {
       logger.error("Failed to broadcast", error);

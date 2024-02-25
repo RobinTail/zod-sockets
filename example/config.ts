@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { createConfig } from "../src";
 
-// @todo remove
-export interface Metadata {
-  msgCount: number;
-}
-
 export const config = createConfig({
   timeout: 2000,
   logger: console,

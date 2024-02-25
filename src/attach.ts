@@ -54,7 +54,7 @@ export const attachSockets = async <
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS, D>;
-  hooks?: Hooks<NS> | HookSet<NS[RootNS]>;
+  hooks?: Hooks<NS, z.infer<D>> | HookSet<NS[RootNS], z.infer<D>>;
 }): Promise<Server> => {
   const hooks = ensureNamespaces(
     hooksCfg || {},
@@ -75,7 +75,7 @@ export const attachSockets = async <
       onAnyOutgoing = ({ event, logger, payload }) =>
         logger.debug(`Sending ${event}`, payload),
       onStartup = ({ logger }) => logger.debug("Ready"),
-    } = (hooks?.[name] || {}) as HookSet<NSEmissions>;
+    } = (hooks?.[name] || {}) as HookSet<NSEmissions, z.infer<D>>;
     const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
     const nsCtx: IndependentContext<NSEmissions> = {
       logger: rootLogger,
@@ -89,7 +89,7 @@ export const attachSockets = async <
     ns.on("connection", async (socket) => {
       const emit = makeEmitter({ subject: socket, ...emitCfg });
       const broadcast = makeEmitter({ subject: socket.broadcast, ...emitCfg });
-      const client: Client<NSEmissions> = {
+      const client: Client<NSEmissions, z.infer<D>> = {
         emit,
         broadcast,
         id: socket.id,
@@ -99,7 +99,7 @@ export const attachSockets = async <
         setData: (value) => (socket.data = value),
         ...makeDistribution(socket),
       };
-      const ctx: ClientContext<NSEmissions> = {
+      const ctx: ClientContext<NSEmissions, z.infer<D>> = {
         ...nsCtx,
         client,
         withRooms: makeRoomService({ subject: socket, ...emitCfg }),

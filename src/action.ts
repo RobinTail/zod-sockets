@@ -12,7 +12,7 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-    } & ClientContext<EmissionMap>,
+    } & ClientContext<EmissionMap, {}>,
   ): Promise<void>;
   public abstract getSchema(variant: "input"): z.AnyZodTuple;
   public abstract getSchema(variant: "output"): z.AnyZodTuple | undefined;
@@ -21,20 +21,21 @@ export abstract class AbstractAction {
 export class Action<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
+  D extends object,
 > extends AbstractAction {
   readonly #event: string;
   readonly #namespace: string;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
   readonly #handler: Handler<
-    ActionContext<z.output<IN>, EmissionMap>,
+    ActionContext<z.output<IN>, EmissionMap, D>,
     z.input<OUT> | void
   >;
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, Namespaces<EmissionMap>, string>
-      | ActionNoAckDef<IN, Namespaces<EmissionMap>, string>,
+      | ActionWithAckDef<IN, OUT, Namespaces<EmissionMap>, string, D>
+      | ActionNoAckDef<IN, Namespaces<EmissionMap>, string, D>,
   ) {
     super();
     this.#event = action.event;
@@ -88,7 +89,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & ClientContext<EmissionMap>): Promise<void> {
+  } & ClientContext<EmissionMap, D>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

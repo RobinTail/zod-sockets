@@ -42,7 +42,7 @@ export const makeEventFnSchema = (
     const items = [...base.items]
       .concat(
         range(0, count).map((index) =>
-          rest.describe(`${rest.description}${index + 1}`),
+          rest.describe(`${rest.description || "rest"}${index + 1}`),
         ),
       )
       .concat(fn);

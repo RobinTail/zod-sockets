@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
-import { hasCoercion } from "./integration-helpers";
+import { hasCoercion, makeCleanId } from "./integration-helpers";
 
 describe("Integration helpers", () => {
   describe("hasCoercion()", () => {
@@ -13,6 +13,23 @@ describe("Integration helpers", () => {
       "should check the presence and value of coerce prop %#",
       ({ schema, coercion }) => {
         expect(hasCoercion(schema)).toBe(coercion);
+      },
+    );
+  });
+
+  describe("makeCleanId()", () => {
+    test.each([
+      ["get"],
+      ["post", "/", "something"],
+      ["delete", "/user", "permanently"],
+      ["patch", "/user/affiliated/account"],
+      ["put", "/assets/into/:storageIdentifier"],
+      ["get", "/flightDetails/:from-:to/:seatID"],
+      ["get", "/companys/:companyId/users/:userId"],
+    ])(
+      "should generate valid identifier from the supplied strings %#",
+      (...args) => {
+        expect(makeCleanId(...args)).toMatchSnapshot();
       },
     );
   });

@@ -517,6 +517,10 @@ import { Root } from "./generated/backend-types.ts"; // the generated file
 const socket: Root.Socket = io(Root.path);
 ```
 
+Alternatively, you can avoid installing and importing `socket.io-client` module by making a
+[standalone build](https://socket.io/docs/v4/client-installation/#standalone-build) having
+[`serveClient` option](https://socket.io/docs/v4/server-options/#serveclient) configured on the server.
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

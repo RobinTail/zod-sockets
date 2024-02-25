@@ -1,5 +1,32 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Integration > print() > should handle circular references 1`] = `
+"import type { Socket as SocketBase } from "socket.io-client";
+
+export namespace Root {
+    type Type2048581c137c5b2130eb860e3ae37da196dfc25b = {
+        title: string;
+        features: Type2048581c137c5b2130eb860e3ae37da196dfc25b;
+    }[];
+    export interface Emission {
+        time: (currentIsoTime: string) => void;
+        chat: (message: string, extraInfo: {
+            /** the ID of author */
+            from: string;
+        }) => void;
+        rooms: (roomIds: string[]) => void;
+    }
+    export interface Actions {
+        test: (p1: {
+            title: string;
+            features: Type2048581c137c5b2130eb860e3ae37da196dfc25b;
+        }) => void;
+    }
+    /** @example const socket: Root.Socket = io("/") */
+    export type Socket = SocketBase<Emission, Actions>;
+}"
+`;
+
 exports[`Integration > print() > should print the example client side types 1`] = `
 "import type { Socket as SocketBase } from "socket.io-client";
 

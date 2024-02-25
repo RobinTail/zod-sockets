@@ -42,20 +42,31 @@ interface IntegrationProps {
 
 export class Integration {
   protected program: ts.Node[] = [];
-  // @todo these should take ns into account and be included
-  protected aliases: Record<string, ts.TypeAliasDeclaration> = {};
+  protected aliases: Record<
+    string, // namespace
+    Record<string, ts.TypeAliasDeclaration>
+  > = {};
   protected registry: Record<
     string, // namespace
     Record<"emission" | "actions", { event: string; node: ts.TypeNode }[]>
   > = {};
 
-  protected getAlias(name: string): ts.TypeReferenceNode | undefined {
-    return name in this.aliases ? f.createTypeReferenceNode(name) : undefined;
+  protected getAlias(
+    ns: string,
+    name: string,
+  ): ts.TypeReferenceNode | undefined {
+    return name in this.aliases[ns]
+      ? f.createTypeReferenceNode(name)
+      : undefined;
   }
 
-  protected makeAlias(name: string, type: ts.TypeNode): ts.TypeReferenceNode {
-    this.aliases[name] = createTypeAlias(type, name);
-    return this.getAlias(name)!;
+  protected makeAlias(
+    ns: string,
+    name: string,
+    type: ts.TypeNode,
+  ): ts.TypeReferenceNode {
+    this.aliases[ns][name] = createTypeAlias(type, name);
+    return this.getAlias(ns, name)!;
   }
 
   constructor({
@@ -84,13 +95,14 @@ export class Integration {
     );
 
     for (const [ns, emission] of Object.entries(namespaces)) {
+      this.aliases[ns] = {};
       this.registry[ns] = { emission: [], actions: [] };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs({
           schema: makeEventFnSchema(schema, ack),
           direction: "out",
-          getAlias: this.getAlias.bind(this),
-          makeAlias: this.makeAlias.bind(this),
+          getAlias: this.getAlias.bind(this, ns),
+          makeAlias: this.makeAlias.bind(this, ns),
           serializer,
           optionalPropStyle,
         });
@@ -106,8 +118,8 @@ export class Integration {
         const node = zodToTs({
           schema: makeEventFnSchema(input, output),
           direction: "in",
-          getAlias: this.getAlias.bind(this),
-          makeAlias: this.makeAlias.bind(this),
+          getAlias: this.getAlias.bind(this, ns),
+          makeAlias: this.makeAlias.bind(this, ns),
           serializer,
           optionalPropStyle,
         });
@@ -146,7 +158,11 @@ export class Integration {
         f.createModuleDeclaration(
           exportModifier,
           f.createIdentifier(publicName),
-          f.createModuleBlock([...interfaces, socketNode]),
+          f.createModuleBlock([
+            ...Object.values(this.aliases[ns]),
+            ...interfaces,
+            socketNode,
+          ]),
           ts.NodeFlags.Namespace,
         ),
       );

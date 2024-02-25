@@ -23,7 +23,7 @@ export const config = createConfig({
       schema: z.tuple([
         z.string().describe("message"),
         z
-          .object({ from: z.string().describe("the author ID") })
+          .object({ from: z.string().describe("the ID of author") })
           .describe("extra info"),
       ]),
     },

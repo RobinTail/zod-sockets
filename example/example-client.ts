@@ -6,7 +6,7 @@ export namespace Root {
     chat: (
       message: string,
       extraInfo: {
-        /** the author ID */
+        /** the ID of author */
         from: string;
       },
     ) => void;
@@ -15,23 +15,21 @@ export namespace Root {
   export interface Actions {
     chat: (message: string) => void;
     ping:
-      | ((
-          cb1: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
-        ) => void)
+      | ((cb1: (literally: "pong", ...echo: unknown[]) => void) => void)
       | ((
           anything1: unknown,
-          cb2: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
+          cb2: (literally: "pong", ...echo: unknown[]) => void,
         ) => void)
       | ((
           anything1: unknown,
           anything2: unknown,
-          cb3: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
+          cb3: (literally: "pong", ...echo: unknown[]) => void,
         ) => void)
       | ((
           anything1: unknown,
           anything2: unknown,
           anything3: unknown,
-          cb4: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
+          cb4: (literally: "pong", ...echo: unknown[]) => void,
         ) => void);
     subscribe: (...doesNotMatter: unknown[]) => void;
   }

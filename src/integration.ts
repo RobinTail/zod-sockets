@@ -86,7 +86,7 @@ export class Integration {
       this.registry[ns] = { emission: [], actions: [] };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs({
-          schema: makeEventFnSchema(schema, ack, 3),
+          schema: makeEventFnSchema(schema, ack),
           direction: "out",
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),
@@ -103,7 +103,7 @@ export class Integration {
         const input = action.getSchema("input");
         const output = action.getSchema("output");
         const node = zodToTs({
-          schema: makeEventFnSchema(input, output, 3),
+          schema: makeEventFnSchema(input, output),
           direction: "in",
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),

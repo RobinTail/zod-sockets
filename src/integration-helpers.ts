@@ -27,8 +27,8 @@ export const defaultSerializer = (schema: z.ZodTypeAny): string =>
 
 export const makeEventFnSchema = (
   base: z.AnyZodTuple,
-  ack: z.AnyZodTuple | undefined,
-  maxOverloads: number,
+  ack?: z.AnyZodTuple,
+  maxOverloads: number = 3,
 ) => {
   if (!ack) {
     return z.function(base, z.void());

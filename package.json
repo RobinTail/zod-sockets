@@ -52,7 +52,7 @@
     "build:client": "tsx example/generate-client.ts && prettier --write example/example*.ts",
     "build:tests": "tsx tools/make-tests.ts",
     "build:logo": "tsx tools/logo.ts",
-    "precommit": "yarn lint && yarn test",
+    "precommit": "yarn lint && yarn test && yarn build && git add example/example*.ts",
     "postversion": "git push && git push --tags",
     "prepare": "husky"
   },

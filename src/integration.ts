@@ -117,14 +117,17 @@ export class Integration {
     for (const [ns, emission] of Object.entries(namespaces)) {
       this.aliases[ns] = {};
       this.registry[ns] = { emission: [], actions: [] };
+      const commons = {
+        getAlias: this.getAlias.bind(this, ns),
+        makeAlias: this.makeAlias.bind(this, ns),
+        serializer,
+        optionalPropStyle,
+      };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs({
           schema: makeEventFnSchema(schema, ack, maxOverloads),
           direction: "out",
-          getAlias: this.getAlias.bind(this, ns),
-          makeAlias: this.makeAlias.bind(this, ns),
-          serializer,
-          optionalPropStyle,
+          ...commons,
         });
         this.registry[ns].emission.push({ event, node });
       }
@@ -136,10 +139,7 @@ export class Integration {
           const node = zodToTs({
             schema: makeEventFnSchema(input, output, maxOverloads),
             direction: "in",
-            getAlias: this.getAlias.bind(this, ns),
-            makeAlias: this.makeAlias.bind(this, ns),
-            serializer,
-            optionalPropStyle,
+            ...commons,
           });
           this.registry[ns].actions.push({ event, node });
         }

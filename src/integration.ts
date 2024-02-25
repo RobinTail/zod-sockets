@@ -18,6 +18,14 @@ interface IntegrationProps {
   config: Config<Namespaces<EmissionMap>>;
   actions: AbstractAction[];
   /**
+   * @desc When event has both .rest() and an acknowledgement, the "...rest" can not be placed in a middle.
+   * @desc In this case, overloads are used to reflect variations on different number of the function arguments.
+   * @default 3
+   * @example (cb) => void | (rest1, cb) => void | (rest1, rest2, cb) => void | (rest1, rest2, rest3, cb) => void
+   * @todo reconsider naming
+   */
+  maxOverloads?: number;
+  /**
    * @desc Used for comparing schemas wrapped into z.lazy() to limit the recursion
    * @default JSON.stringify() + SHA1 hash as a hex digest
    * */
@@ -74,6 +82,7 @@ export class Integration {
     actions,
     serializer = defaultSerializer,
     optionalPropStyle = { withQuestionMark: true, withUndefined: true },
+    maxOverloads = 3,
   }: IntegrationProps) {
     this.program.push(
       f.createImportDeclaration(
@@ -99,7 +108,7 @@ export class Integration {
       this.registry[ns] = { emission: [], actions: [] };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs({
-          schema: makeEventFnSchema(schema, ack),
+          schema: makeEventFnSchema(schema, ack, maxOverloads),
           direction: "out",
           getAlias: this.getAlias.bind(this, ns),
           makeAlias: this.makeAlias.bind(this, ns),
@@ -114,7 +123,7 @@ export class Integration {
           const input = action.getSchema("input");
           const output = action.getSchema("output");
           const node = zodToTs({
-            schema: makeEventFnSchema(input, output),
+            schema: makeEventFnSchema(input, output, maxOverloads),
             direction: "in",
             getAlias: this.getAlias.bind(this, ns),
             makeAlias: this.makeAlias.bind(this, ns),

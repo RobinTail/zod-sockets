@@ -47,15 +47,28 @@ interface IntegrationProps {
   };
 }
 
+const fallbackNs = "root";
+const registryScopes = ["emission", "actions"];
+
 export class Integration {
   protected program: ts.Node[] = [];
   protected aliases: Record<
     string, // namespace
     Record<string, ts.TypeAliasDeclaration>
   > = {};
+  protected ids = {
+    socket: f.createIdentifier("Socket"),
+    socketBase: f.createIdentifier("SocketBase"),
+    ioClient: f.createStringLiteral("socket.io-client"),
+    emission: f.createIdentifier(makeCleanId(registryScopes[0])),
+    actions: f.createIdentifier(makeCleanId(registryScopes[1])),
+  };
   protected registry: Record<
     string, // namespace
-    Record<"emission" | "actions", { event: string; node: ts.TypeNode }[]>
+    Record<
+      (typeof registryScopes)[number],
+      { event: string; node: ts.TypeNode }[]
+    >
   > = {};
 
   protected getAlias(
@@ -92,12 +105,12 @@ export class Integration {
           f.createNamedImports([
             f.createImportSpecifier(
               false,
-              f.createIdentifier("Socket"),
-              f.createIdentifier("SocketBase"),
+              this.ids.socket,
+              this.ids.socketBase,
             ),
           ]),
         ),
-        f.createStringLiteral("socket.io-client"),
+        this.ids.ioClient,
         undefined,
       ),
     );
@@ -135,7 +148,7 @@ export class Integration {
     }
 
     for (const ns in this.registry) {
-      const publicName = makeCleanId(ns) || makeCleanId("root");
+      const publicName = makeCleanId(ns) || makeCleanId(fallbackNs);
       const interfaces = Object.entries(this.registry[ns]).map(
         ([direction, events]) =>
           f.createInterfaceDeclaration(
@@ -150,16 +163,16 @@ export class Integration {
       );
       const socketNode = f.createTypeAliasDeclaration(
         exportModifier,
-        f.createIdentifier("Socket"),
+        this.ids.socket,
         undefined,
-        f.createTypeReferenceNode(f.createIdentifier("SocketBase"), [
-          f.createTypeReferenceNode(f.createIdentifier("Emission")),
-          f.createTypeReferenceNode(f.createIdentifier("Actions")),
+        f.createTypeReferenceNode(this.ids.socketBase, [
+          f.createTypeReferenceNode(this.ids.emission),
+          f.createTypeReferenceNode(this.ids.actions),
         ]),
       );
       addJsDocComment(
         socketNode,
-        `@example const socket: ${publicName}.Socket = io("${ns}")`,
+        `@example const socket: ${publicName}.${this.ids.socket.text} = io("${ns}")`,
       );
       this.program.push(
         f.createModuleDeclaration(

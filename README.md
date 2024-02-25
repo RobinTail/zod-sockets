@@ -487,6 +487,36 @@ attachSockets({
 
 Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
+# Integration
+
+## Exporting types for frontend
+
+In order to establish constraints for events on the client side you can generate their Typescript definitions.
+
+```typescript
+import { Integration } from "zod-sockets";
+
+const integration = new Integration({ config, actions });
+const typescriptCode = integration.print(); // write this to a file
+```
+
+Check out [the generated example](example/example-client.ts).
+
+You can adjust the naming of the produced functional arguments by applying the `.describe()` method on involved schemas.
+
+Please note, that when event has both `.rest()` on payload schema and acknowledgement, that activates a special mode
+of producing overloads, because acknowledgement has to go after `...rest` which is prohibited. You adjust the number
+of the generated overloads using the `maxOverloads` option of the `Integration` constructor. The default is `3`.
+
+Then on the frontend side you can create a strictly typed Socket.IO client.
+
+```typescript
+import { io } from "socket.io-client";
+import { Root } from "./generated/backend-types.ts"; // the generated file
+
+const socket: Root.Socket = io(Root.path);
+```
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

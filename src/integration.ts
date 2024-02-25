@@ -22,7 +22,6 @@ interface IntegrationProps {
    * @desc In this case, overloads are used to reflect variations on different number of the function arguments.
    * @default 3
    * @example ( (cb) => void ) | ( (rest1, cb) => void ) | ( (rest1, rest2, cb) => void )
-   * @todo reconsider naming
    */
   maxOverloads?: number;
   /**

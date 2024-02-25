@@ -59,13 +59,13 @@ const onLiteral: Producer<z.ZodLiteral<LiteralType>> = ({
 
 const onObject: Producer<z.ZodObject<z.ZodRawShape>> = ({
   schema: { shape },
-  isResponse,
+  direction,
   next,
   optionalPropStyle: { withQuestionMark: hasQuestionMark },
 }) => {
   const members = Object.entries(shape).map<ts.TypeElement>(([key, value]) => {
     const isOptional =
-      isResponse && hasCoercion(value)
+      direction === "out" && hasCoercion(value)
         ? value instanceof z.ZodOptional
         : value.isOptional();
     const propertySignature = f.createPropertySignature(
@@ -111,12 +111,12 @@ const makeSample = (produced: ts.TypeNode, src: z.ZodTypeAny) =>
 const onEffects: Producer<z.ZodEffects<z.ZodTypeAny>> = ({
   schema,
   next,
-  isResponse,
+  direction,
 }) => {
   const src = schema.innerType();
   const input = next(src);
   const effect = schema._def.effect;
-  if (isResponse && effect.type === "transform") {
+  if (direction === "out" && effect.type === "transform") {
     const outputType = tryToTransform(schema, makeSample(input, src));
     const resolutions: Partial<
       Record<NonNullable<typeof outputType>, ts.KeywordTypeSyntaxKind>
@@ -204,8 +204,8 @@ const onCatch: Producer<z.ZodCatch<z.ZodTypeAny>> = ({ next, schema }) =>
 const onPipeline: Producer<z.ZodPipeline<z.ZodTypeAny, z.ZodTypeAny>> = ({
   schema,
   next,
-  isResponse,
-}) => next(schema._def[isResponse ? "out" : "in"]);
+  direction,
+}) => next(schema._def[direction]);
 
 const onNull: Producer<z.ZodNull> = () =>
   f.createLiteralTypeNode(f.createNull());

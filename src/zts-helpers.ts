@@ -7,7 +7,7 @@ const { factory: f } = ts;
 export type LiteralType = string | number | boolean;
 
 export interface ZTSContext {
-  isResponse: boolean;
+  direction: "in" | "out";
   getAlias: (name: string) => ts.TypeReferenceNode | undefined;
   makeAlias: (name: string, type: ts.TypeNode) => ts.TypeReferenceNode;
   serializer: (schema: z.ZodTypeAny) => string;

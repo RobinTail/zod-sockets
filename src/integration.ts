@@ -87,7 +87,7 @@ export class Integration {
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs({
           schema: makeEventFnSchema(schema, ack, 3),
-          isResponse: true,
+          direction: "out",
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),
           serializer,
@@ -104,7 +104,7 @@ export class Integration {
         const output = action.getSchema("output");
         const node = zodToTs({
           schema: makeEventFnSchema(input, output, 3),
-          isResponse: false,
+          direction: "in",
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),
           serializer,

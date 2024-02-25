@@ -2,6 +2,21 @@
 
 ## Version 0
 
+### v0.9.0
+
+- New peer dependency required: `typescript`.
+- Featuring `Integration` class:
+  - It provides an ability to export the event definitions into a Typescript file for using on the frontend side;
+  - For better naming of the functional arguments consider using `.describe()` method of the schemas;
+  - There is also a special handling for the cases when event has both `.rest()` on the payload and an acknowledgement;
+  - See the [example of the generated code](example/example-client.ts).
+
+```typescript
+import { Integration } from "zod-sockets";
+
+new Integration({ config, actions }).print(); // typescript code
+```
+
 ### v0.8.1
 
 - Minor adjustments and cleanup.

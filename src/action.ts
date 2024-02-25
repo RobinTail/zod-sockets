@@ -14,6 +14,8 @@ export abstract class AbstractAction {
       params: unknown[];
     } & ClientContext<EmissionMap>,
   ): Promise<void>;
+  public abstract getSchema(variant: "input"): z.AnyZodTuple;
+  public abstract getSchema(variant: "output"): z.AnyZodTuple | undefined;
 }
 
 export class Action<
@@ -48,6 +50,12 @@ export class Action<
 
   public override getNamespace(): string {
     return this.#namespace;
+  }
+
+  public override getSchema(variant: "input"): IN;
+  public override getSchema(variant: "output"): OUT | undefined;
+  public override getSchema(variant: "input" | "output") {
+    return variant === "input" ? this.#inputSchema : this.#outputSchema;
   }
 
   /** @throws z.ZodError */

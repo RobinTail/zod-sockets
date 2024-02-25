@@ -149,10 +149,10 @@ export class Integration {
     for (const ns in this.registry) {
       const publicName = makeCleanId(ns) || makeCleanId(fallbackNs);
       const interfaces = Object.entries(this.registry[ns]).map(
-        ([direction, events]) =>
+        ([scope, events]) =>
           f.createInterfaceDeclaration(
             exportModifier,
-            makeCleanId(direction),
+            makeCleanId(scope),
             undefined,
             undefined,
             events.map(({ event, node }) =>

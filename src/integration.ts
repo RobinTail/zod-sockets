@@ -111,7 +111,6 @@ export class Integration {
           ]),
         ),
         this.ids.ioClient,
-        undefined,
       ),
     );
 

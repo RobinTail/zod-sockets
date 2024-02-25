@@ -504,9 +504,10 @@ Check out [the generated example](example/example-client.ts).
 
 You can adjust the naming of the produced functional arguments by applying the `.describe()` method to the schemas.
 
-Please note, that when event has both `.rest()` on payload schema and acknowledgement, that activates a special mode
-of producing overloads, because acknowledgement has to go after `...rest` which is prohibited. You can adjust the
-number of the generated overloads using the `maxOverloads` option of the `Integration` constructor. The default is `3`.
+There is also a special handling for the cases when event has both `.rest()` on the payload schema and an
+acknowledgement, resulting in producing overloads, because acknowledgement has to go after `...rest` which is
+prohibited. You can adjust the number of the those overloads by using the `maxOverloads` option of the `Integration`
+constructor. The default is `3`.
 
 Then on the frontend side you can create a strictly typed Socket.IO client.
 

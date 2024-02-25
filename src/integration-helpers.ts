@@ -41,8 +41,8 @@ export const makeEventFnSchema = (
   const variants = range(0, maxOverloads + 1).map((count) => {
     const items = [...base.items]
       .concat(
-        range(0, count).map((index) =>
-          rest.describe(`${rest.description || "rest"}${index + 1}`),
+        range(1, count + 1).map((index) =>
+          rest.describe(`${rest.description || "rest"}${index}`),
         ),
       )
       .concat(fn);

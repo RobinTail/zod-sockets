@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import { Integration } from "../src/integration";
+import { Integration } from "../src";
 import { actions } from "./actions";
 import { config } from "./config";
 

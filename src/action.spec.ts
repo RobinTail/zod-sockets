@@ -40,6 +40,19 @@ describe("Action", () => {
     });
   });
 
+  describe("getSchema()", () => {
+    test("should return input schema", () => {
+      expect(JSON.stringify(ackAction.getSchema("input"))).toBe(
+        JSON.stringify(z.tuple([z.string()])),
+      );
+    });
+    test("should return output schema", () => {
+      expect(JSON.stringify(ackAction.getSchema("output"))).toBe(
+        JSON.stringify(z.tuple([z.number()])),
+      );
+    });
+  });
+
   describe("execute()", () => {
     const loggerMock = {
       error: vi.fn(),

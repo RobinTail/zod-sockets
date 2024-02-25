@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
-import { hasCoercion, makeCleanId } from "./integration-helpers";
+import { hasCoercion, lcFirst, makeCleanId } from "./integration-helpers";
 
 describe("Integration helpers", () => {
   describe("hasCoercion()", () => {
@@ -32,5 +32,11 @@ describe("Integration helpers", () => {
         expect(makeCleanId(...args)).toMatchSnapshot();
       },
     );
+  });
+
+  describe("lcFirst()", () => {
+    test("should make the first letter lower case", () => {
+      expect(lcFirst("HereIsSomeText")).toBe("hereIsSomeText");
+    });
   });
 });

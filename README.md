@@ -502,7 +502,7 @@ const typescriptCode = integration.print(); // write this to a file
 
 Check out [the generated example](example/example-client.ts).
 
-You can adjust the naming of the produced functional arguments by applying the `.describe()` method on involved schemas.
+You can adjust the naming of the produced functional arguments by applying the `.describe()` method to the schemas.
 
 Please note, that when event has both `.rest()` on payload schema and acknowledgement, that activates a special mode
 of producing overloads, because acknowledgement has to go after `...rest` which is prohibited. You can adjust the

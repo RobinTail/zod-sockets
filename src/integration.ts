@@ -109,21 +109,20 @@ export class Integration {
         this.registry[ns].emission.push({ event, node });
       }
       for (const action of actions) {
-        if (action.getNamespace() !== ns) {
-          continue;
+        if (action.getNamespace() === ns) {
+          const event = action.getEvent();
+          const input = action.getSchema("input");
+          const output = action.getSchema("output");
+          const node = zodToTs({
+            schema: makeEventFnSchema(input, output),
+            direction: "in",
+            getAlias: this.getAlias.bind(this, ns),
+            makeAlias: this.makeAlias.bind(this, ns),
+            serializer,
+            optionalPropStyle,
+          });
+          this.registry[ns].actions.push({ event, node });
         }
-        const event = action.getEvent();
-        const input = action.getSchema("input");
-        const output = action.getSchema("output");
-        const node = zodToTs({
-          schema: makeEventFnSchema(input, output),
-          direction: "in",
-          getAlias: this.getAlias.bind(this, ns),
-          makeAlias: this.makeAlias.bind(this, ns),
-          serializer,
-          optionalPropStyle,
-        });
-        this.registry[ns].actions.push({ event, node });
       }
     }
 

@@ -34,7 +34,7 @@ schemas, thus ensuring that the established contract is followed.
 Install the package and its peer dependencies.
 
 ```shell
-yarn add zod-sockets zod socket.io
+yarn add zod-sockets zod socket.io typescript
 ```
 
 ## Set up config

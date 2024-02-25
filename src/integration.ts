@@ -42,6 +42,7 @@ interface IntegrationProps {
 
 export class Integration {
   protected program: ts.Node[] = [];
+  // @todo these should take ns into account and be included
   protected aliases: Record<string, ts.TypeAliasDeclaration> = {};
   protected registry: Record<
     string, // namespace

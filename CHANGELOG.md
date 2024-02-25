@@ -4,6 +4,7 @@
 
 ### v0.9.0
 
+- New peer dependency required: `typescript`.
 - Featuring `Integration` class:
   - It provides an ability to export the event definitions into a Typescript file for using on the frontend side;
   - For better naming of the functional arguments consider using `.describe()` method of the schemas;

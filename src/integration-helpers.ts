@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { range } from "ramda";
 import ts from "typescript";
 import { z } from "zod";
 
@@ -23,3 +24,31 @@ export const makeCleanId = (...args: string[]) =>
 
 export const defaultSerializer = (schema: z.ZodTypeAny): string =>
   createHash("sha1").update(JSON.stringify(schema), "utf8").digest("hex");
+
+export const makeEventFnSchema = (
+  base: z.AnyZodTuple,
+  ack: z.AnyZodTuple | undefined,
+  maxOverloads: number,
+) => {
+  if (!ack) {
+    return z.function(base, z.void());
+  }
+  const fn = z.function(ack, z.void());
+  const rest = base._def.rest;
+  if (!rest || maxOverloads <= 0) {
+    return z.function(z.tuple([...base.items, fn]), z.void());
+  }
+  const variants = range(0, maxOverloads + 1).map((count) => {
+    const items = [...base.items]
+      .concat(
+        range(0, count).map((index) =>
+          rest.describe(`${rest.description}${index + 1}`),
+        ),
+      )
+      .concat(fn);
+    return z.function(z.tuple(items as z.ZodTupleItems), z.void());
+  });
+  return z.union(
+    variants as unknown as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]],
+  );
+};

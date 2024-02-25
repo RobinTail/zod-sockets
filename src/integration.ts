@@ -8,6 +8,7 @@ import {
   exportModifier,
   f,
   makeCleanId,
+  makeEventFnSchema,
 } from "./integration-helpers";
 import { Namespaces } from "./namespaces";
 import { zodToTs } from "./zts";
@@ -84,11 +85,8 @@ export class Integration {
     for (const [ns, emission] of Object.entries(namespaces)) {
       this.registry[ns] = { emission: [], actions: [] };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
-        const args = ack
-          ? z.tuple([...schema.items, z.function(ack, z.void())])
-          : schema;
         const node = zodToTs({
-          schema: z.function(args, z.void()),
+          schema: makeEventFnSchema(schema, ack, 3),
           isResponse: true,
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),
@@ -104,11 +102,8 @@ export class Integration {
         const event = action.getEvent();
         const input = action.getSchema("input");
         const output = action.getSchema("output");
-        const args = output
-          ? z.tuple([...input.items, z.function(output, z.void())])
-          : input;
         const node = zodToTs({
-          schema: z.function(args, z.void()),
+          schema: makeEventFnSchema(input, output, 3),
           isResponse: false,
           getAlias: this.getAlias.bind(this),
           makeAlias: this.makeAlias.bind(this),

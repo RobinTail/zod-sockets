@@ -14,9 +14,25 @@ export namespace Root {
   }
   export interface Actions {
     chat: (message: string) => void;
-    ping: (
-      cb1: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
-    ) => void;
+    ping:
+      | ((
+          cb1: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
+        ) => void)
+      | ((
+          anything1: unknown,
+          cb2: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
+        ) => void)
+      | ((
+          anything1: unknown,
+          anything2: unknown,
+          cb3: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
+        ) => void)
+      | ((
+          anything1: unknown,
+          anything2: unknown,
+          anything3: unknown,
+          cb4: (literally: "pong", ...theEchoOfTheInput: unknown[]) => void,
+        ) => void);
     subscribe: (...doesNotMatter: unknown[]) => void;
   }
   /** @example const socket: Root.Socket = io("/") */

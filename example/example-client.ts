@@ -24,12 +24,6 @@ export namespace Root {
           anything1: unknown,
           anything2: unknown,
           cb3: (literally: "pong", ...echo: unknown[]) => void,
-        ) => void)
-      | ((
-          anything1: unknown,
-          anything2: unknown,
-          anything3: unknown,
-          cb4: (literally: "pong", ...echo: unknown[]) => void,
         ) => void);
     subscribe: (...doesNotMatter: unknown[]) => void;
   }

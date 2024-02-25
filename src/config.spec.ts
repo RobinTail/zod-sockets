@@ -4,6 +4,8 @@ import { createConfig } from "./config";
 import { AbstractLogger } from "./logger";
 
 describe("Config", () => {
+  const metadata = z.object({});
+
   describe("createConfig()", () => {
     test("should return its argument", () => {
       expect(
@@ -12,6 +14,7 @@ describe("Config", () => {
             "/": {},
             test: {},
           },
+          metadata,
           timeout: 2000,
           logger: { debug: vi.fn() } as unknown as AbstractLogger,
         }),
@@ -19,6 +22,7 @@ describe("Config", () => {
         emission: { "/": {}, test: {} },
         timeout: 2000,
         logger: { debug: expect.any(Function) },
+        metadata,
       });
     });
 
@@ -27,11 +31,13 @@ describe("Config", () => {
       expect(
         createConfig({
           emission: { test: { schema } },
+          metadata,
           timeout: 2000,
           logger: { debug: vi.fn() } as unknown as AbstractLogger,
         }),
       ).toEqual({
         emission: { "/": { test: { schema } } },
+        metadata,
         timeout: 2000,
         logger: { debug: expect.any(Function) },
       });

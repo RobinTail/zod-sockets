@@ -15,7 +15,7 @@ import { zodToTs } from "./zts";
 import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
 
 interface IntegrationProps {
-  config: Config<Namespaces<EmissionMap>>;
+  config: Config<Namespaces<EmissionMap>, z.SomeZodObject>;
   actions: AbstractAction[];
   /**
    * @desc When event has both .rest() and an acknowledgement, the "...rest" can not be placed in a middle.

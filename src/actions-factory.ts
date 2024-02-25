@@ -42,8 +42,11 @@ export interface ActionWithAckDef<
   handler: Handler<ActionContext<z.output<IN>, NS[K]>, z.input<OUT>>;
 }
 
-export class ActionsFactory<NS extends Namespaces<EmissionMap>> {
-  constructor(protected config: Config<NS>) {}
+export class ActionsFactory<
+  NS extends Namespaces<EmissionMap>,
+  D extends z.SomeZodObject,
+> {
+  constructor(protected config: Config<NS, D>) {}
 
   public build<
     IN extends z.AnyZodTuple,

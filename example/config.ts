@@ -1,15 +1,19 @@
 import { z } from "zod";
 import { createConfig } from "../src";
 
-/** @desc Client metadata */
+// @todo remove
 export interface Metadata {
-  /** @desc Number of messages sent using the chat event */
   msgCount: number;
 }
 
 export const config = createConfig({
   timeout: 2000,
   logger: console,
+  metadata: z.object({
+    msgCount: z
+      .number()
+      .describe("Number of messages sent using the chat event"),
+  }),
   emission: {
     time: {
       schema: z.tuple([

@@ -9,6 +9,7 @@ describe("ActionsFactory", () => {
     emission: {},
     timeout: 2000,
     logger: { debug: vi.fn() } as unknown as AbstractLogger,
+    metadata: z.object({}),
   });
 
   describe("constructor", () => {

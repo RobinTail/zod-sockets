@@ -1,5 +1,6 @@
 import http from "node:http";
 import type { Server } from "socket.io";
+import { z } from "zod";
 import { AbstractAction } from "./action";
 import { Client } from "./client";
 import { Config } from "./config";
@@ -21,7 +22,10 @@ import {
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
-export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
+export const attachSockets = async <
+  NS extends Namespaces<EmissionMap>,
+  D extends z.SomeZodObject,
+>({
   io,
   actions,
   target,
@@ -49,7 +53,7 @@ export const attachSockets = async <NS extends Namespaces<EmissionMap>>({
    * */
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
-  config: Config<NS>;
+  config: Config<NS, D>;
   hooks?: Hooks<NS> | HookSet<NS[RootNS]>;
 }): Promise<Server> => {
   const hooks = ensureNamespaces(

@@ -1,6 +1,7 @@
 import http from "node:http";
 import { Server } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
+import { z } from "zod";
 import { attachSockets } from "./attach";
 import { AbstractLogger } from "./logger";
 
@@ -69,6 +70,7 @@ describe("Attach", () => {
           startupLogo: false,
           timeout: 100,
           emission: { "/": {} },
+          metadata: z.object({}),
           logger: loggerMock as unknown as AbstractLogger,
         },
         hooks,

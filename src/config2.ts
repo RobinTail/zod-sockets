@@ -4,15 +4,39 @@ import { AbstractLogger } from "./logger";
 import { Namespaces, RootNS, rootNS } from "./namespaces";
 
 interface ConstructorOptions<NSE extends Namespaces<Namespace<EmissionMap>>> {
+  /**
+   * @desc The instance of a logger
+   * @default console
+   * */
   logger?: AbstractLogger;
+  /**
+   * @desc The acknowledgment awaiting timeout
+   * @default 2000
+   * */
   timeout?: number;
+  /**
+   * @desc You can disable the startup logo.
+   * @default true
+   */
   startupLogo?: boolean;
+  /**
+   * @desc Define namespaces inline or consider using addNamespace() method
+   * @default {}
+   * */
   namespaces?: NSE;
 }
 
 // @todo the place for metadata
 interface Namespace<E extends EmissionMap> {
+  /**
+   * @desc The events that the server can emit
+   * @default {}
+   * */
   emission: E;
+  /**
+   * @desc Handlers for some events in different contexts
+   * @default {}
+   * */
   hooks: HookSet<E>;
 }
 
@@ -23,7 +47,7 @@ export class Config2<T extends Namespaces<Namespace<EmissionMap>> = {}> {
   public readonly startupLogo: boolean;
   public readonly namespaces: T;
 
-  constructor({
+  public constructor({
     logger = console,
     timeout = 2000,
     startupLogo = true,

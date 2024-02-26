@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Action } from "./action";
 import { Config } from "./config";
 import { ActionContext, Handler } from "./handler";
-import { Namespaces, RootNS } from "./namespaces";
+import { Namespaces, RootNS } from "./namespace";
 
 interface Commons<
   IN extends z.AnyZodTuple,

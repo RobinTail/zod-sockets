@@ -9,7 +9,7 @@ import {
   makeCleanId,
   makeEventFnSchema,
 } from "./integration-helpers";
-import { Namespaces } from "./namespaces";
+import { Namespaces } from "./namespace";
 import { zodToTs } from "./zts";
 import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
 

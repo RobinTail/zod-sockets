@@ -1,6 +1,6 @@
 import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
-import { Namespace, Namespaces, RootNS, rootNS } from "./namespaces";
+import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
 
 interface ConstructorOptions<NS extends Namespaces> {
   /**

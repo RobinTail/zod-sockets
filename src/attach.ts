@@ -6,7 +6,7 @@ import { Config } from "./config";
 import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
 import { ClientContext, IndependentContext } from "./handler";
-import { Namespaces, normalizeNS } from "./namespaces";
+import { Namespaces, normalizeNS } from "./namespace";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 

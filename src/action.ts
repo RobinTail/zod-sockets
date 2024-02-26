@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { ActionContext, ClientContext, Handler } from "./handler";
-import { Namespaces, rootNS } from "./namespaces";
+import { Namespace, Namespaces, rootNS } from "./namespaces";
 
 export abstract class AbstractAction {
   public abstract getEvent(): string;
@@ -33,8 +33,8 @@ export class Action<
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, Namespaces<EmissionMap>, string>
-      | ActionNoAckDef<IN, Namespaces<EmissionMap>, string>,
+      | ActionWithAckDef<IN, OUT, Namespaces<Namespace<EmissionMap>>, string>
+      | ActionNoAckDef<IN, Namespaces<Namespace<EmissionMap>>, string>,
   ) {
     super();
     this.#event = action.event;

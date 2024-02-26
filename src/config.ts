@@ -1,9 +1,8 @@
 import { EmissionMap } from "./emission";
-import { HookSet } from "./hooks";
 import { AbstractLogger } from "./logger";
-import { Namespaces, RootNS, rootNS } from "./namespaces";
+import { Namespace, Namespaces, RootNS, rootNS } from "./namespaces";
 
-interface ConstructorOptions<NSE extends Namespaces<Namespace<EmissionMap>>> {
+interface ConstructorOptions<NS extends Namespaces<Namespace<EmissionMap>>> {
   /**
    * @desc The instance of a logger
    * @default console
@@ -22,22 +21,9 @@ interface ConstructorOptions<NSE extends Namespaces<Namespace<EmissionMap>>> {
   /**
    * @desc Define namespaces inline or consider using addNamespace() method
    * @default {}
+   * @see Namespace
    * */
-  namespaces?: NSE;
-}
-
-// @todo the place for metadata
-interface Namespace<E extends EmissionMap> {
-  /**
-   * @desc The events that the server can emit
-   * @default {}
-   * */
-  emission: E;
-  /**
-   * @desc Handlers for some events in different contexts
-   * @default {}
-   * */
-  hooks: HookSet<E>;
+  namespaces?: NS;
 }
 
 export class Config<T extends Namespaces<Namespace<EmissionMap>> = {}> {

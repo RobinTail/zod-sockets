@@ -32,6 +32,18 @@ export const config = createConfig({
       schema: z.tuple([z.string().array().describe("room IDs")]),
     },
   },
+  hooks: {
+    onConnection: async ({ client }) => {
+      await client.broadcast("chat", `${client.id} entered the chat`, {
+        from: client.id,
+      });
+    },
+    onStartup: async ({ all }) => {
+      setInterval(() => {
+        all.broadcast("rooms", all.getRooms());
+      }, 30000);
+    },
+  },
 });
 
 // Uncomment these lines to set the type of logger used:

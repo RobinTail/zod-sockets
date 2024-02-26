@@ -1,46 +1,66 @@
-import { Action } from "./action";
+import { AbstractAction, Action } from "./action";
+import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { HookSet } from "./hooks";
 import { AbstractLogger } from "./logger";
-import { rootNS } from "./namespaces";
+import { RootNS, rootNS } from "./namespaces";
 
-interface ConstructorOptions {
+interface ConstructorOptions<
+  NSE extends Record<string, Namespace<EmissionMap>>,
+> {
   logger: AbstractLogger;
   timeout: number;
   startupLogo: boolean;
+  namespaces: NSE;
 }
 
 interface Namespace<E extends EmissionMap> {
-  path: string;
   emission: E;
   hooks: HookSet<E>;
-  actions: Action<any, any>[]; // @todo refactor or reconsider
+  actions: AbstractAction[];
 }
 
 /** @todo rename */
-export class Config2 {
+export class Config2<NSE extends Record<string, Namespace<EmissionMap>> = {}> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
-  public readonly namespaces: Record<string, Namespace<EmissionMap>> = {};
+  public readonly namespaces: NSE;
 
   constructor({
     logger = console,
     timeout = 2000,
     startupLogo = true,
-  }: Partial<ConstructorOptions>) {
+    namespaces = {} as NSE,
+  }: Partial<ConstructorOptions<NSE>>) {
     this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;
+    this.namespaces = namespaces;
   }
 
-  public addNamespace<E extends EmissionMap>({
-    path = rootNS,
+  public addNamespace<E extends EmissionMap, K extends string = RootNS>({
+    path = rootNS as K,
     emission = {} as E,
     hooks = {},
     actions = [],
-  }: Partial<Namespace<E>>) {
-    this.namespaces[path] = { path, emission, hooks, actions };
+  }: Partial<Namespace<E>> & { path: K }): Config2<
+    NSE & Record<K, Namespace<E>>
+  > {
+    const { logger, timeout, startupLogo, namespaces } = this;
+    return new Config2({
+      logger,
+      timeout,
+      startupLogo,
+      namespaces: { ...namespaces, [path]: { emission, hooks, actions } },
+    });
+  }
+
+  public addAction(
+    // @todo types
+    def: ActionNoAckDef<any, any, any> | ActionWithAckDef<any, any, any, any>,
+  ) {
+    this.namespaces[def.ns].actions.push(new Action(def));
     return this;
   }
 }

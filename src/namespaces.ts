@@ -1,5 +1,5 @@
 import { EmissionMap } from "./emission";
-import { HookSet } from "./hooks";
+import { Hooks } from "./hooks";
 
 export const rootNS = "/";
 export type RootNS = typeof rootNS;
@@ -20,7 +20,7 @@ export interface Namespace<E extends EmissionMap> {
    * @desc Handlers for some events in different contexts
    * @default {}
    * */
-  hooks: HookSet<E>;
+  hooks: Hooks<E>;
 }
 
 export type Namespaces = Record<string, Namespace<EmissionMap>>;

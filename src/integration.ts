@@ -9,7 +9,7 @@ import {
   makeCleanId,
   makeEventFnSchema,
 } from "./integration-helpers";
-import { Namespaces } from "./namespace";
+import { Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
 import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
 
@@ -157,7 +157,7 @@ export class Integration {
               this.ids.path,
               undefined,
               undefined,
-              f.createStringLiteral(ns),
+              f.createStringLiteral(normalizeNS(ns)),
             ),
           ],
           ts.NodeFlags.Const,

@@ -6,10 +6,10 @@ import { RootNS, rootNS } from "./namespaces";
 interface ConstructorOptions<
   NSE extends Record<string, Namespace<EmissionMap>>,
 > {
-  logger: AbstractLogger;
-  timeout: number;
-  startupLogo: boolean;
-  namespaces: NSE;
+  logger?: AbstractLogger;
+  timeout?: number;
+  startupLogo?: boolean;
+  namespaces?: NSE;
 }
 
 // @todo place for metadata
@@ -30,7 +30,7 @@ export class Config2<T extends Record<string, Namespace<EmissionMap>> = {}> {
     timeout = 2000,
     startupLogo = true,
     namespaces = {} as T,
-  }: Partial<ConstructorOptions<T>>) {
+  }: ConstructorOptions<T>) {
     this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;

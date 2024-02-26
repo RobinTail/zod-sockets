@@ -50,10 +50,10 @@ export class ActionsFactory<NS extends Namespaces> {
   public build<
     IN extends z.AnyZodTuple,
     OUT extends z.AnyZodTuple,
-    K extends keyof NS & string = RootNS,
+    K extends keyof NS = RootNS,
   >(
     def: ActionNoAckDef<IN, NS, K> | ActionWithAckDef<IN, OUT, NS, K>,
-  ): Action<IN, OUT> {
+  ): Action<IN, OUT, NS> {
     return new Action(def);
   }
 }

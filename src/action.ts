@@ -7,7 +7,7 @@ import { Namespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
   public abstract getEvent(): string;
-  public abstract getNamespace(): string;
+  public abstract getNamespace(): keyof any;
   public abstract execute(
     params: {
       event: string;
@@ -21,9 +21,10 @@ export abstract class AbstractAction {
 export class Action<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
+  NS extends Namespaces,
 > extends AbstractAction {
   readonly #event: string;
-  readonly #namespace: string;
+  readonly #namespace: keyof NS;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
   readonly #handler: Handler<
@@ -33,8 +34,8 @@ export class Action<
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, Namespaces, string>
-      | ActionNoAckDef<IN, Namespaces, string>,
+      | ActionWithAckDef<IN, OUT, NS, keyof NS>
+      | ActionNoAckDef<IN, NS, keyof NS>,
   ) {
     super();
     this.#event = action.event;
@@ -48,7 +49,7 @@ export class Action<
     return this.#event;
   }
 
-  public override getNamespace(): string {
+  public override getNamespace(): keyof NS {
     return this.#namespace;
   }
 

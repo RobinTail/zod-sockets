@@ -1,6 +1,13 @@
 import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
-import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
+import {
+  FallbackNamespaces,
+  Namespace,
+  Namespaces,
+  RootNS,
+  fallbackNamespaces,
+  rootNS,
+} from "./namespace";
 
 interface ConstructorOptions<NS extends Namespaces> {
   /**
@@ -26,7 +33,7 @@ interface ConstructorOptions<NS extends Namespaces> {
   namespaces?: NS;
 }
 
-export class Config<T extends Namespaces = {}> {
+export class Config<T extends Namespaces> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
@@ -36,7 +43,7 @@ export class Config<T extends Namespaces = {}> {
     logger = console,
     timeout = 2000,
     startupLogo = true,
-    namespaces = {} as T,
+    namespaces = fallbackNamespaces as unknown as T,
   }: ConstructorOptions<T>) {
     this.logger = logger;
     this.timeout = timeout;
@@ -44,12 +51,12 @@ export class Config<T extends Namespaces = {}> {
     this.namespaces = namespaces;
   }
 
-  public addNamespace<E extends EmissionMap, K extends string = RootNS>({
+  public addNamespace<E extends EmissionMap = {}, K extends string = RootNS>({
     path = rootNS as K,
     emission = {} as E,
     hooks = {},
   }: Partial<Namespace<E>> & { path?: K }): Config<
-    T & Record<K, Namespace<E>>
+    Omit<T, K> & Record<K, Namespace<E>>
   > {
     const { logger, timeout, startupLogo, namespaces } = this;
     return new Config({
@@ -61,6 +68,6 @@ export class Config<T extends Namespaces = {}> {
   }
 }
 
-export const createConfig = <T extends Namespaces>(
+export const createConfig = <T extends Namespaces = FallbackNamespaces>(
   def: ConstructorOptions<T>,
 ) => new Config(def);

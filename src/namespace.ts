@@ -24,3 +24,8 @@ export interface Namespace<E extends EmissionMap> {
 }
 
 export type Namespaces = Record<string, Namespace<EmissionMap>>;
+
+export const fallbackNamespaces = {
+  [rootNS]: { emission: {}, hooks: {} } satisfies Namespace<{}>,
+};
+export type FallbackNamespaces = typeof fallbackNamespaces;

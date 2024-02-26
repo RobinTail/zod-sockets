@@ -28,7 +28,7 @@ describe("Config", () => {
       expect(base).toBeInstanceOf(Config);
       expect(base.logger).toEqual(console);
       expect(base.timeout).toBe(2000);
-      expect(base.namespaces).toEqual({});
+      expect(base.namespaces).toEqual({ "/": { emission: {}, hooks: {} } });
       const schema = z.tuple([]);
       const config = base.addNamespace({
         path: "/",

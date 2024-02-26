@@ -1,6 +1,6 @@
 # zod-sockets
 
-![coverage](coverage.svg)
+[![coverage](https://coveralls.io/repos/github/RobinTail/zod-sockets/badge.svg)](https://coveralls.io/github/RobinTail/zod-sockets)
 
 Socket.IO solution with I/O validation.
 

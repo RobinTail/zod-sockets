@@ -41,7 +41,7 @@ export class Config2<T extends Record<string, Namespace<EmissionMap>> = {}> {
     path = rootNS as K,
     emission = {} as E,
     hooks = {},
-  }: Partial<Namespace<E>> & { path: K }): Config2<
+  }: Partial<Namespace<E>> & { path?: K }): Config2<
     T & Record<K, Namespace<E>>
   > {
     const { logger, timeout, startupLogo, namespaces } = this;
@@ -53,3 +53,7 @@ export class Config2<T extends Record<string, Namespace<EmissionMap>> = {}> {
     });
   }
 }
+
+export const createConfig = <T extends Record<string, Namespace<EmissionMap>>>(
+  def: T,
+) => new Config2(def);

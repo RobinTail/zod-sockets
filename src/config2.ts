@@ -1,5 +1,3 @@
-import { AbstractAction, Action } from "./action";
-import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { HookSet } from "./hooks";
 import { AbstractLogger } from "./logger";
@@ -14,25 +12,25 @@ interface ConstructorOptions<
   namespaces: NSE;
 }
 
+// @todo place for metadata
 interface Namespace<E extends EmissionMap> {
   emission: E;
   hooks: HookSet<E>;
-  actions: AbstractAction[];
 }
 
 /** @todo rename */
-export class Config2<NSE extends Record<string, Namespace<EmissionMap>> = {}> {
+export class Config2<T extends Record<string, Namespace<EmissionMap>> = {}> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
-  public readonly namespaces: NSE;
+  public readonly namespaces: T;
 
   constructor({
     logger = console,
     timeout = 2000,
     startupLogo = true,
-    namespaces = {} as NSE,
-  }: Partial<ConstructorOptions<NSE>>) {
+    namespaces = {} as T,
+  }: Partial<ConstructorOptions<T>>) {
     this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;
@@ -43,24 +41,15 @@ export class Config2<NSE extends Record<string, Namespace<EmissionMap>> = {}> {
     path = rootNS as K,
     emission = {} as E,
     hooks = {},
-    actions = [],
   }: Partial<Namespace<E>> & { path: K }): Config2<
-    NSE & Record<K, Namespace<E>>
+    T & Record<K, Namespace<E>>
   > {
     const { logger, timeout, startupLogo, namespaces } = this;
     return new Config2({
       logger,
       timeout,
       startupLogo,
-      namespaces: { ...namespaces, [path]: { emission, hooks, actions } },
+      namespaces: { ...namespaces, [path]: { emission, hooks } },
     });
-  }
-
-  public addAction(
-    // @todo types
-    def: ActionNoAckDef<any, any, any> | ActionWithAckDef<any, any, any, any>,
-  ) {
-    this.namespaces[def.ns].actions.push(new Action(def));
-    return this;
   }
 }

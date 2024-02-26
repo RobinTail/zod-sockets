@@ -17,6 +17,7 @@ export interface HookSet<E extends EmissionMap> {
   onStartup?: Handler<IndependentContext<E>, void>;
 }
 
-export type Hooks<NS extends Namespaces<EmissionMap>> = {
-  [K in keyof NS]?: HookSet<NS[K]>;
+// @todo remove
+export type Hooks<NS extends Namespaces> = {
+  [K in keyof NS]?: HookSet<NS[K]["emission"]>;
 };

@@ -2,7 +2,7 @@ import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
 import { Namespace, Namespaces, RootNS, rootNS } from "./namespaces";
 
-interface ConstructorOptions<NS extends Namespaces<Namespace<EmissionMap>>> {
+interface ConstructorOptions<NS extends Namespaces> {
   /**
    * @desc The instance of a logger
    * @default console
@@ -26,7 +26,7 @@ interface ConstructorOptions<NS extends Namespaces<Namespace<EmissionMap>>> {
   namespaces?: NS;
 }
 
-export class Config<T extends Namespaces<Namespace<EmissionMap>> = {}> {
+export class Config<T extends Namespaces = {}> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
@@ -61,6 +61,6 @@ export class Config<T extends Namespaces<Namespace<EmissionMap>> = {}> {
   }
 }
 
-export const createConfig = <T extends Namespaces<Namespace<EmissionMap>>>(
+export const createConfig = <T extends Namespaces>(
   def: ConstructorOptions<T>,
 ) => new Config(def);

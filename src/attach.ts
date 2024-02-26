@@ -4,20 +4,13 @@ import { AbstractAction } from "./action";
 import { Client } from "./client";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
-import {
-  EmissionMap,
-  EmitterConfig,
-  makeEmitter,
-  makeRoomService,
-} from "./emission";
+import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
 import { ClientContext, IndependentContext } from "./handler";
-import { Namespace, Namespaces, normalizeNS } from "./namespaces";
+import { Namespaces, normalizeNS } from "./namespaces";
 import { getRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
-export const attachSockets = async <
-  NS extends Namespaces<Namespace<EmissionMap>>,
->({
+export const attachSockets = async <NS extends Namespaces>({
   io,
   actions,
   target,

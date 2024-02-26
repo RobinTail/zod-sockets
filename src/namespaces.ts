@@ -4,8 +4,6 @@ import { HookSet } from "./hooks";
 export const rootNS = "/";
 export type RootNS = typeof rootNS;
 
-export type Namespaces<T> = Record<string, T>;
-
 export const normalizeNS = (name: string): string => {
   const trimmed = name.trim();
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
@@ -24,3 +22,5 @@ export interface Namespace<E extends EmissionMap> {
    * */
   hooks: HookSet<E>;
 }
+
+export type Namespaces = Record<string, Namespace<EmissionMap>>;

@@ -1,13 +1,12 @@
 import { z } from "zod";
 import { Action } from "./action";
 import { Config } from "./config";
-import { EmissionMap } from "./emission";
 import { ActionContext, Handler } from "./handler";
-import { Namespace, Namespaces, RootNS } from "./namespaces";
+import { Namespaces, RootNS } from "./namespaces";
 
 interface Commons<
   IN extends z.AnyZodTuple,
-  NS extends Namespaces<Namespace<EmissionMap>>,
+  NS extends Namespaces,
   K extends keyof NS,
 > {
   /** @desc The incoming event payload validation schema (without or excluding acknowledgement) */
@@ -23,7 +22,7 @@ interface Commons<
 
 export interface ActionNoAckDef<
   IN extends z.AnyZodTuple,
-  NS extends Namespaces<Namespace<EmissionMap>>,
+  NS extends Namespaces,
   K extends keyof NS,
 > extends Commons<IN, NS, K> {
   /** @desc No output schema => no returns => no acknowledgement */
@@ -33,7 +32,7 @@ export interface ActionNoAckDef<
 export interface ActionWithAckDef<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
-  NS extends Namespaces<Namespace<EmissionMap>>,
+  NS extends Namespaces,
   K extends keyof NS,
 > extends Commons<IN, NS, K> {
   /** @desc The acknowledgement validation schema */
@@ -45,7 +44,7 @@ export interface ActionWithAckDef<
   >;
 }
 
-export class ActionsFactory<NS extends Namespaces<Namespace<EmissionMap>>> {
+export class ActionsFactory<NS extends Namespaces> {
   constructor(protected config: Config<NS>) {}
 
   public build<

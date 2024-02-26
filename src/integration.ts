@@ -2,7 +2,6 @@ import ts from "typescript";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { Config } from "./config";
-import { EmissionMap } from "./emission";
 import {
   defaultSerializer,
   exportModifier,
@@ -10,12 +9,12 @@ import {
   makeCleanId,
   makeEventFnSchema,
 } from "./integration-helpers";
-import { Namespace, Namespaces } from "./namespaces";
+import { Namespaces } from "./namespaces";
 import { zodToTs } from "./zts";
 import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
 
 interface IntegrationProps {
-  config: Config<Namespaces<Namespace<EmissionMap>>>;
+  config: Config<Namespaces>;
   actions: AbstractAction[];
   /**
    * @desc When event has both .rest() and an acknowledgement, the "...rest" can not be placed in a middle.

@@ -10,12 +10,12 @@ import {
   makeCleanId,
   makeEventFnSchema,
 } from "./integration-helpers";
-import { Namespaces } from "./namespaces";
+import { Namespace, Namespaces } from "./namespaces";
 import { zodToTs } from "./zts";
 import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
 
 interface IntegrationProps {
-  config: Config<Namespaces<EmissionMap>>;
+  config: Config<Namespaces<Namespace<EmissionMap>>>;
   actions: AbstractAction[];
   /**
    * @desc When event has both .rest() and an acknowledgement, the "...rest" can not be placed in a middle.
@@ -91,7 +91,7 @@ export class Integration {
   }
 
   constructor({
-    config: { emission: namespaces },
+    config: { namespaces },
     actions,
     serializer = defaultSerializer,
     optionalPropStyle = { withQuestionMark: true, withUndefined: true },
@@ -115,7 +115,7 @@ export class Integration {
       ),
     );
 
-    for (const [ns, emission] of Object.entries(namespaces)) {
+    for (const [ns, { emission }] of Object.entries(namespaces)) {
       this.aliases[ns] = {};
       this.registry[ns] = { emission: [], actions: [] };
       const commons = {

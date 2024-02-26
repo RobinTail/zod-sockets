@@ -10,6 +10,7 @@ export interface Metadata {
 export const config = createConfig({
   timeout: 2000,
   logger: console,
+}).addNamespace({
   emission: {
     time: {
       schema: z.tuple([

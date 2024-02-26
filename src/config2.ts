@@ -1,25 +1,23 @@
 import { EmissionMap } from "./emission";
 import { HookSet } from "./hooks";
 import { AbstractLogger } from "./logger";
-import { RootNS, rootNS } from "./namespaces";
+import { Namespaces, RootNS, rootNS } from "./namespaces";
 
-interface ConstructorOptions<
-  NSE extends Record<string, Namespace<EmissionMap>>,
-> {
+interface ConstructorOptions<NSE extends Namespaces<Namespace<EmissionMap>>> {
   logger?: AbstractLogger;
   timeout?: number;
   startupLogo?: boolean;
   namespaces?: NSE;
 }
 
-// @todo place for metadata
+// @todo the place for metadata
 interface Namespace<E extends EmissionMap> {
   emission: E;
   hooks: HookSet<E>;
 }
 
 /** @todo rename */
-export class Config2<T extends Record<string, Namespace<EmissionMap>> = {}> {
+export class Config2<T extends Namespaces<Namespace<EmissionMap>> = {}> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
@@ -54,6 +52,6 @@ export class Config2<T extends Record<string, Namespace<EmissionMap>> = {}> {
   }
 }
 
-export const createConfig = <T extends Record<string, Namespace<EmissionMap>>>(
+export const createConfig = <T extends Namespaces<Namespace<EmissionMap>>>(
   def: T,
 ) => new Config2(def);

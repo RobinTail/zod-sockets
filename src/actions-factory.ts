@@ -3,11 +3,11 @@ import { Action } from "./action";
 import { Config } from "./config";
 import { EmissionMap } from "./emission";
 import { ActionContext, Handler } from "./handler";
-import { Namespaces, RootNS } from "./namespaces";
+import { Namespace, Namespaces, RootNS } from "./namespaces";
 
 interface Commons<
   IN extends z.AnyZodTuple,
-  NS extends Namespaces<EmissionMap>,
+  NS extends Namespaces<Namespace<EmissionMap>>,
   K extends keyof NS,
 > {
   /** @desc The incoming event payload validation schema (without or excluding acknowledgement) */
@@ -23,26 +23,29 @@ interface Commons<
 
 export interface ActionNoAckDef<
   IN extends z.AnyZodTuple,
-  NS extends Namespaces<EmissionMap>,
+  NS extends Namespaces<Namespace<EmissionMap>>,
   K extends keyof NS,
 > extends Commons<IN, NS, K> {
   /** @desc No output schema => no returns => no acknowledgement */
-  handler: Handler<ActionContext<z.output<IN>, NS[K]>, void>;
+  handler: Handler<ActionContext<z.output<IN>, NS[K]["emission"]>, void>;
 }
 
 export interface ActionWithAckDef<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
-  NS extends Namespaces<EmissionMap>,
+  NS extends Namespaces<Namespace<EmissionMap>>,
   K extends keyof NS,
 > extends Commons<IN, NS, K> {
   /** @desc The acknowledgement validation schema */
   output: OUT;
   /** @desc The returns become an Acknowledgement */
-  handler: Handler<ActionContext<z.output<IN>, NS[K]>, z.input<OUT>>;
+  handler: Handler<
+    ActionContext<z.output<IN>, NS[K]["emission"]>,
+    z.input<OUT>
+  >;
 }
 
-export class ActionsFactory<NS extends Namespaces<EmissionMap>> {
+export class ActionsFactory<NS extends Namespaces<Namespace<EmissionMap>>> {
   constructor(protected config: Config<NS>) {}
 
   public build<

@@ -45,7 +45,6 @@ import { createConfig } from "zod-sockets";
 
 const config = createConfig({
   timeout: 2000,
-  emission: {},
   logger: console,
 });
 ```

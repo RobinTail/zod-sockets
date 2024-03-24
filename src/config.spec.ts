@@ -5,6 +5,14 @@ import { AbstractLogger } from "./logger";
 
 describe("Config", () => {
   describe("createConfig()", () => {
+    test("should create config without any argument", () => {
+      const config = createConfig();
+      expect(config).toBeInstanceOf(Config);
+      expect(config.logger).toEqual(console);
+      expect(config.timeout).toBe(2000);
+      expect(config.namespaces).toEqual({ "/": { emission: {}, hooks: {} } });
+    });
+
     test("should create the class instance from the definition", () => {
       const config = createConfig({
         namespaces: {

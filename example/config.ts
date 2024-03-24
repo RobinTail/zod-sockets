@@ -7,10 +7,7 @@ export interface Metadata {
   msgCount: number;
 }
 
-export const config = createConfig({
-  timeout: 2000,
-  logger: console,
-}).addNamespace({
+export const config = createConfig().addNamespace({
   emission: {
     time: {
       schema: z.tuple([

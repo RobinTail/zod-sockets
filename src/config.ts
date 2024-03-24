@@ -69,5 +69,5 @@ export class Config<T extends Namespaces> {
 }
 
 export const createConfig = <T extends Namespaces = FallbackNamespaces>(
-  def: ConstructorOptions<T>,
+  def: ConstructorOptions<T> = {},
 ) => new Config(def);

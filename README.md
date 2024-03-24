@@ -43,10 +43,8 @@ yarn add zod-sockets zod socket.io typescript
 ```typescript
 import { createConfig } from "zod-sockets";
 
-const config = createConfig({
-  timeout: 2000,
-  logger: console,
-});
+// defaults: root namespace only, console logger, timeout 2s
+const config = createConfig();
 ```
 
 ## Create a factory

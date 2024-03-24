@@ -2,6 +2,11 @@
 
 ## Version 0
 
+### v0.9.1
+
+- Ensuring that the namespace in the generated client is named the same as it's declared on backend;
+- Using `chalk` v5 in runtime.
+
 ### v0.9.0
 
 - New peer dependency required: `typescript`.

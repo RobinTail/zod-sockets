@@ -54,7 +54,7 @@
     "build:logo": "tsx tools/logo.ts",
     "precommit": "yarn lint && yarn test && yarn build && git add example/example*.ts",
     "postversion": "git push && git push --tags",
-    "prepare": "husky"
+    "hooks": "husky"
   },
   "dependencies": {
     "ramda": "^0.29.1"

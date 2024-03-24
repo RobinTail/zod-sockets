@@ -1,2 +1,27 @@
-export const getStartupLogo = () =>
-  `\n\u001B[38;5;227m                           ,,\u001B[39m\n\u001B[38;5;227mMMM"""AMV                \u1FEF7MM       .M"""bgd                   \u1FEF7MM                 mm\u001B[39m\n\u001B[38;5;227mM\u2019   AMV                   MM      ,MI    "Y                     MM                 MM\u001B[39m\n\u001B[38;5;231m\u1FEF   AMV    ,pW"Wq.    ,M""bMM      \u1FEFMMb.      ,pW"Wq.   ,p6"bo   MM  ,MP\u2019 .gP"Ya  mmMMmm  ,pP"Ybd\u001B[39m\n\u001B[38;5;140m   AMV    6W\u2019   \u1FEFWb ,AP    MM        \u1FEFYMMNq. 6W\u2019   \u1FEFWb 6M\u2019  OO   MM ;Y   ,M\u2019   Yb   MM    8I   \u1FEF"\u001B[39m\n\u001B[38;5;140m  AMV   , 8M     M8 8MI    MM      .     \u1FEFMM 8M     M8 8M        MM;Mm   8M""""""   MM    \u1FEFYMMMa.\u001B[39m\n\u001B[38;5;140m AMV   ,M YA.   ,A9 \u1FEFMb    MM      Mb     dM YA.   ,A9 YM.    ,  MM \u1FEFMb. YM.    ,   MM    L.   I8\u001B[39m\n\u001B[38;5;235mAMVmmmmMM  \u1FEFYbmd9\u2019   \u1FEFWbmd"MML.    P"Ybmmd"   \u1FEFYbmd9\u2019   YMbmd\u2019 .JMML. YA. \u1FEFMbmmd\u2019   \u1FEFMbmo M9mmmP\u2019\u001B[39m\n`;
+import { ChalkInstance } from "chalk";
+import { T, always, cond, gt } from "ramda";
+
+const georgia11 = `
+                           ,,
+MMM"""AMV                `7MM       .M"""bgd                   `7MM                 mm
+M’   AMV                   MM      ,MI    "Y                     MM                 MM
+`   AMV    ,pW"Wq.    ,M""bMM      `MMb.      ,pW"Wq.   ,p6"bo   MM  ,MP’ .gP"Ya  mmMMmm  ,pP"Ybd
+   AMV    6W’   `Wb ,AP    MM        `YMMNq. 6W’   `Wb 6M’  OO   MM ;Y   ,M’   Yb   MM    8I   `"
+  AMV   , 8M     M8 8MI    MM      .     `MM 8M     M8 8M        MM;Mm   8M""""""   MM    `YMMMa.
+ AMV   ,M YA.   ,A9 `Mb    MM      Mb     dM YA.   ,A9 YM.    ,  MM `Mb. YM.    ,   MM    L.   I8
+AMVmmmmMM  `Ybmd9’   `Wbmd"MML.    P"Ybmmd"   `Ybmd9’   YMbmd’ .JMML. YA. `Mbmmd’   `Mbmo M9mmmP’
+`;
+
+export const getStartupLogo = (chalk: ChalkInstance) =>
+  georgia11
+    .split("\n")
+    .map((line, index) => {
+      const color = cond([
+        [gt(4), always(chalk.hex("#FCF434"))],
+        [gt(5), always(chalk.hex("#FFF"))],
+        [gt(8), always(chalk.hex("#9C59D1"))],
+        [T, always(chalk.hex("#2C2C2C"))],
+      ])(index);
+      return color(line);
+    })
+    .join("\n");

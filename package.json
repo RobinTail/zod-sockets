@@ -51,12 +51,12 @@
     "build:compile": "tsup && attw --pack",
     "build:client": "tsx example/generate-client.ts && prettier --write example/example*.ts",
     "build:tests": "tsx tools/make-tests.ts",
-    "build:logo": "tsx tools/logo.ts",
     "precommit": "yarn lint && yarn test && yarn build && git add example/example*.ts",
     "postversion": "git push && git push --tags",
     "hooks": "husky"
   },
   "dependencies": {
+    "chalk": "^5.3.0",
     "ramda": "^0.29.1"
   },
   "peerDependencies": {
@@ -72,7 +72,6 @@
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "@vitest/coverage-istanbul": "^1.2.2",
-    "chalk": "^5.3.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^18.0.0",

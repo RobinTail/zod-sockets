@@ -303,11 +303,14 @@ actionsFactory.build({
 ### In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the `attachSockets()`
+emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the `addNamespace()`
 argument, which has a similar interface except `input` and fires for every connected client:
 
 ```typescript
-attachSockets({
+import { createConfig } from "zod-sockets";
+
+const config = createConfig().addNamespace({
+  // emission: { ... },
   hooks: {
     onConnection: async ({ client, withRooms, all }) => {
       /* your implementation here */
@@ -319,10 +322,12 @@ attachSockets({
 ### Independent context
 
 Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property within `hooks`
-of the `attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
+of the `addNamespace()` argument. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript
-attachSockets({
+import { createConfig } from "zod-sockets";
+
+const config = createConfig().addNamespace({
   hooks: {
     onStartup: async ({ all, withRooms }) => {
       // sending to everyone in a room

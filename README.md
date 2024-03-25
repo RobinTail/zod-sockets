@@ -118,7 +118,6 @@ different essence, payload and handlers. You can add `namespaces` to the argumen
 Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 ```typescript
-import { z } from "zod";
 import { createConfig } from "zod-sockets";
 
 const config = createConfig({

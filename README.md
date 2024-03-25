@@ -290,7 +290,7 @@ const onChat = actionsFactory.build({
 
 ### Acknowledgements
 
-Actions may also have an acknowledgement that are basically direct and immediate responses to the one that sent the
+Actions may also have acknowledgements that are basically direct and immediate responses to the one that sent the
 incoming event. Acknowledgement is acquired from the returns of the `handler` and being validated against additionally
 specified `output` schema. When the number of payload arguments is flexible, you can use `rest()` method of
 `z.tuple()`. When the data type is not important at all, consider describing it using `z.unknown()`. When using

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { Client } from "./client";
 import { Broadcaster, EmissionMap, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
@@ -17,20 +18,25 @@ export interface IndependentContext<E extends EmissionMap> {
   withRooms: RoomService<E>;
 }
 
-export interface ClientContext<E extends EmissionMap>
+export interface ClientContext<E extends EmissionMap, D extends z.SomeZodObject>
   extends IndependentContext<E> {
   /** @desc The sender of the incoming event */
-  client: Client<E>;
+  client: Client<E, D>;
 }
 
-export interface TracingContext<E extends EmissionMap>
-  extends ClientContext<E> {
+export interface TracingContext<
+  E extends EmissionMap,
+  D extends z.SomeZodObject,
+> extends ClientContext<E, D> {
   event: string;
   payload: unknown[];
 }
 
-export interface ActionContext<IN, E extends EmissionMap>
-  extends ClientContext<E> {
+export interface ActionContext<
+  IN,
+  E extends EmissionMap,
+  D extends z.SomeZodObject,
+> extends ClientContext<E, D> {
   /** @desc Validated payload */
   input: IN;
 }

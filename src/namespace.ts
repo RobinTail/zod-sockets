@@ -20,7 +20,7 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
    * @desc Handlers for some events in different contexts
    * @default {}
    * */
-  hooks: Hooks<E>;
+  hooks: Hooks<E, D>;
   /**
    * @desc Schema of the client metadata in this namespace
    * @default z.object({})

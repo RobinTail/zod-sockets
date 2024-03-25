@@ -8,6 +8,7 @@ export interface RemoteClient extends Distribution {
   getData: <D extends object>() => Readonly<Partial<D>>;
 }
 
+// @todo figure out on metadata type
 export const getRemoteClients = (sockets: RemoteSocket<{}, unknown>[]) =>
   sockets.map<RemoteClient>((socket) => ({
     id: socket.id,

@@ -12,7 +12,7 @@ export abstract class AbstractAction {
     params: {
       event: string;
       params: unknown[];
-    } & ClientContext<EmissionMap>,
+    } & ClientContext<EmissionMap, z.SomeZodObject>,
   ): Promise<void>;
   public abstract getSchema(variant: "input"): z.AnyZodTuple;
   public abstract getSchema(variant: "output"): z.AnyZodTuple | undefined;
@@ -28,7 +28,7 @@ export class Action<
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
   readonly #handler: Handler<
-    ActionContext<z.output<IN>, EmissionMap>,
+    ActionContext<z.output<IN>, EmissionMap, z.SomeZodObject>,
     z.input<OUT> | void
   >;
 
@@ -89,7 +89,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & ClientContext<EmissionMap>): Promise<void> {
+  } & ClientContext<EmissionMap, z.SomeZodObject>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

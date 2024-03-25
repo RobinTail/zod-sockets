@@ -26,7 +26,10 @@ export interface ActionNoAckDef<
   K extends keyof NS,
 > extends Commons<IN, NS, K> {
   /** @desc No output schema => no returns => no acknowledgement */
-  handler: Handler<ActionContext<z.output<IN>, NS[K]["emission"]>, void>;
+  handler: Handler<
+    ActionContext<z.output<IN>, NS[K]["emission"], NS[K]["metadata"]>,
+    void
+  >;
 }
 
 export interface ActionWithAckDef<
@@ -39,7 +42,7 @@ export interface ActionWithAckDef<
   output: OUT;
   /** @desc The returns become an Acknowledgement */
   handler: Handler<
-    ActionContext<z.output<IN>, NS[K]["emission"]>,
+    ActionContext<z.output<IN>, NS[K]["emission"], NS[K]["metadata"]>,
     z.input<OUT>
   >;
 }

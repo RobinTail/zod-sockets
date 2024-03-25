@@ -36,6 +36,7 @@ export const attachSockets = async <NS extends Namespaces>({
 }): Promise<Server> => {
   for (const name in namespaces) {
     type NSEmissions = NS[typeof name]["emission"];
+    type NSMeta = NS[typeof name]["metadata"];
     const ns = io.of(normalizeNS(name));
     const { emission, hooks } = namespaces[name];
     const {
@@ -62,7 +63,7 @@ export const attachSockets = async <NS extends Namespaces>({
     ns.on("connection", async (socket) => {
       const emit = makeEmitter({ subject: socket, ...emitCfg });
       const broadcast = makeEmitter({ subject: socket.broadcast, ...emitCfg });
-      const client: Client<NSEmissions> = {
+      const client: Client<NSEmissions, NSMeta> = {
         emit,
         broadcast,
         id: socket.id,
@@ -72,7 +73,7 @@ export const attachSockets = async <NS extends Namespaces>({
         setData: (value) => (socket.data = value),
         ...makeDistribution(socket),
       };
-      const ctx: ClientContext<NSEmissions> = {
+      const ctx: ClientContext<NSEmissions, NSMeta> = {
         ...nsCtx,
         client,
         withRooms: makeRoomService({ subject: socket, ...emitCfg }),

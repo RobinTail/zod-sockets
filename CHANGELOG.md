@@ -9,7 +9,8 @@
   - The `addNamespace()` method becomes a primary approach for the namespace-first configuration;
   - By default, `createConfig()` creates an empty root namespace (having `/` path);
   - Namespaces consist of optional `emission`, `hooks` and `metadata`;
-  - Therefore, the declaration of namespaces is moved from being under `emission` to the top level.
+  - Therefore, the declaration of namespaces is moved from being under `emission` to the top level;
+  - Hooks are moved from the argument of `attachSockets()` into the one of `addNamespace()`.
 - Metadata is now a schema-based property of namespace:
   - No need to declare its interface;
   - Instead, `metadata` property of namespace should be assigned with an object-based schema;

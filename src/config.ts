@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
 import {
@@ -51,19 +52,24 @@ export class Config<T extends Namespaces> {
     this.namespaces = namespaces;
   }
 
-  public addNamespace<E extends EmissionMap = {}, K extends string = RootNS>({
+  public addNamespace<
+    E extends EmissionMap = {},
+    D extends z.SomeZodObject = z.ZodObject<{}>,
+    K extends string = RootNS,
+  >({
     path = rootNS as K,
     emission = {} as E,
+    metadata = z.object({}) as D,
     hooks = {},
-  }: Partial<Namespace<E>> & { path?: K }): Config<
-    Omit<T, K> & Record<K, Namespace<E>>
+  }: Partial<Namespace<E, D>> & { path?: K }): Config<
+    Omit<T, K> & Record<K, Namespace<E, D>>
   > {
     const { logger, timeout, startupLogo, namespaces } = this;
     return new Config({
       logger,
       timeout,
       startupLogo,
-      namespaces: { ...namespaces, [path]: { emission, hooks } },
+      namespaces: { ...namespaces, [path]: { emission, hooks, metadata } },
     });
   }
 }

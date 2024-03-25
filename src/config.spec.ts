@@ -10,14 +10,16 @@ describe("Config", () => {
       expect(config).toBeInstanceOf(Config);
       expect(config.logger).toEqual(console);
       expect(config.timeout).toBe(2000);
-      expect(config.namespaces).toEqual({ "/": { emission: {}, hooks: {} } });
+      expect(config.namespaces).toEqual({
+        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
+      });
     });
 
     test("should create the class instance from the definition", () => {
       const config = createConfig({
         namespaces: {
-          "/": { emission: {}, hooks: {} },
-          test: { emission: {}, hooks: {} },
+          "/": { emission: {}, hooks: {}, metadata: z.object({}) },
+          test: { emission: {}, hooks: {}, metadata: z.object({}) },
         },
         timeout: 2000,
         logger: { debug: vi.fn() } as unknown as AbstractLogger,
@@ -26,8 +28,8 @@ describe("Config", () => {
       expect(config.logger).toEqual({ debug: expect.any(Function) });
       expect(config.timeout).toBe(2000);
       expect(config.namespaces).toEqual({
-        "/": { emission: {}, hooks: {} },
-        test: { emission: {}, hooks: {} },
+        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
+        test: { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
       });
     });
 
@@ -36,7 +38,9 @@ describe("Config", () => {
       expect(base).toBeInstanceOf(Config);
       expect(base.logger).toEqual(console);
       expect(base.timeout).toBe(2000);
-      expect(base.namespaces).toEqual({ "/": { emission: {}, hooks: {} } });
+      expect(base.namespaces).toEqual({
+        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
+      });
       const schema = z.tuple([]);
       const config = base.addNamespace({
         path: "/",
@@ -47,6 +51,7 @@ describe("Config", () => {
         "/": {
           emission: { test: { schema } },
           hooks: {},
+          metadata: expect.any(z.ZodObject),
         },
       });
     });

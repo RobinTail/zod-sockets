@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { z } from "zod";
 import { fallbackNamespaces, normalizeNS, rootNS } from "./namespace";
 
 describe("Namespace", () => {
@@ -11,8 +12,9 @@ describe("Namespace", () => {
   describe("fallbackNamespaces", () => {
     test("should consist of the empty root namespace", () => {
       expect(fallbackNamespaces).toEqual({
-        "/": { emission: {}, hooks: {} },
+        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
       });
+      expect(fallbackNamespaces[rootNS].metadata.shape).toEqual({});
     });
   });
 

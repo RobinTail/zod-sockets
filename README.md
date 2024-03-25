@@ -109,6 +109,37 @@ for sending the `ping` event to `ws://localhost:8090` with acknowledgement.
 
 # Basic features
 
+## Namespaces first
+
+Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
+different essence, payload and handlers. You can add namespaces using `addNamespace()` method after `createConfig()`.
+The default namespace is a root one having `path` equal to `/`. Namespaces may have `emission` and `hooks`.
+Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
+
+```typescript
+import { z } from "zod";
+import { createConfig } from "zod-sockets";
+
+const config = createConfig()
+  .addNamespace({
+    emission: {}, // The root namespace "/" having no emission
+  })
+  .addNamespace({
+    path: "public", // The namespace "/public"
+    emission: { chat: { schema } },
+    hooks: {
+      onStartup: () => {},
+      onConnection: () => {},
+      onDisconnect: () => {},
+      onAnyIncoming: () => {},
+      onAnyOutgoing: () => {},
+    },
+  })
+  .addNamespace({
+    path: "private", // The namespace "/private", has no emission
+  });
+```
+
 ## Emission
 
 The outgoing events should be configured using `z.tuple()` schemas. Those tuples describe the types of the arguments
@@ -239,15 +270,15 @@ import { ActionsFactory } from "zod-sockets";
 const actionsFactory = new ActionsFactory(config);
 ```
 
-The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
-incoming event. This should not be confused with acknowledgments that are basically direct and immediate responses to
-the one that sent the incoming event. Produce actions using the `build()` method accepting an object having the
-incoming `event` name, `input` schema for its payload (excluding acknowledgment) and a `handler`, which is a function
-where you place your implementation for handling the event. The argument of the `handler` in an object having several
-handy entities, the most important of them is `input` property, being the validated event payload:
+Produce actions using the `build()` method accepting an object having the assigned namespace `ns` (optional, root
+namespace `/` is default), the incoming `event` name, the `input` schema for its payload (excluding acknowledgment) and
+a `handler`, which is a function where you place your implementation for handling the event. The argument of the
+`handler` in an object having several handy entities, the most important of them is `input` property, being the
+validated event payload:
 
 ```typescript
 const onChat = actionsFactory.build({
+  ns: "/", // optional, root namespace is default
   event: "chat",
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, all, withRooms, logger }) => {
@@ -259,12 +290,13 @@ const onChat = actionsFactory.build({
 
 ### Acknowledgements
 
-Actions may also have an acknowledgement, which is acquired from the returns of the `handler` and being validated
-against additionally specified `output` schema. When the number of payload arguments is flexible, you can use `rest()`
-method of `z.tuple()`. When the data type is not important at all, consider describing it using `z.unknown()`.
-When using `z.literal()`, Typescript may assume the type of the actually returned value more loose, therefore the
-`as const` expression might be required. The following example illustrates an action acknowledging "ping" event with
-"pong" and an echo of the received payload:
+Actions may also have an acknowledgement that are basically direct and immediate responses to the one that sent the
+incoming event. Acknowledgement is acquired from the returns of the `handler` and being validated against additionally
+specified `output` schema. When the number of payload arguments is flexible, you can use `rest()` method of
+`z.tuple()`. When the data type is not important at all, consider describing it using `z.unknown()`. When using
+`z.literal()`, Typescript may assume the type of the actually returned value more loose, therefore the `as const`
+expression might be required. The following example illustrates an action acknowledging "ping" event with "pong" and
+an echo of the received payload:
 
 ```typescript
 const onPing = actionsFactory.build({
@@ -279,9 +311,10 @@ const onPing = actionsFactory.build({
 
 ### In Action context
 
-Depending on your application's needs and architecture, you can choose different ways to send events. The emission
-methods have constraints on emission types declared in the configuration. The `input` is available for processing the
-validated payload of the Action.
+The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
+incoming event. Depending on your application's needs and architecture, you can choose different ways to send events.
+The emission methods have constraints on emission types declared in the configuration. The `input` is available for
+processing the validated payload of the Action.
 
 ```typescript
 actionsFactory.build({
@@ -431,48 +464,6 @@ Within a client context you can use `setData<T>()` method with type argument to 
 const handler = async ({ client }) => {
   client.setData<Metadata>({ msgCount: 4 });
 };
-```
-
-# Advanced features
-
-## Namespaces
-
-Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
-different essence, payload and handlers. You can add namespaces using `addNamespace()` method of `createConfig()`.
-The default is namespace is a root one having `path` equal to `/`. Namespaces may have `emission` and `hooks`.
-Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
-
-```typescript
-import { z } from "zod";
-import { createConfig } from "zod-sockets";
-
-const config = createConfig()
-  .addNamespace({
-    path: "public", // The namespace "/public"
-    emission: { chat: { schema } },
-    hooks: {
-      onStartup,
-      onConnection,
-      onDisconnect,
-      onAnyIncoming,
-      onAnyOutgoing,
-    },
-  })
-  .addNamespace({
-    path: "private", // The namespace "/private", has no emission
-  });
-```
-
-When namespaces are configured, Actions must also have the `ns` property assigned:
-
-```typescript
-import { ActionsFactory } from "zod-sockets";
-
-const actionsFactory = new ActionsFactory(config);
-const action = actionsFactory.build({
-  ns: "public",
-  // handler: async () => { ... }
-});
 ```
 
 # Integration

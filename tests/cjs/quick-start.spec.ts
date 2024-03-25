@@ -1,8 +1,8 @@
 import { spawn } from "node:child_process";
 import { afterAll, afterEach, describe, test } from "vitest";
-import { waitFor } from "../helpers";
 
 describe("CJS Test", async () => {
+  const { waitFor } = await import("../helpers.js");
   let out = "";
   const listener = (chunk: Buffer) => {
     out += chunk.toString();

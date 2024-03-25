@@ -465,7 +465,8 @@ const handler = async ({ client, withRooms }) => {
 
 ### Writing
 
-Within a client context you can use `setData()` method to store the metadata on the client:
+Within a client context you can use `setData()` method to store the metadata on the client. The method provides type
+assistance of its argument and may throw `ZodError` if it does not pass the validation against the specified schema.
 
 ```typescript
 const handler = async ({ client }) => {

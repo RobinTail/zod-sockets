@@ -4,22 +4,25 @@ import { Broadcaster, EmissionMap, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 import { RemoteClient } from "./remote-client";
 
-export interface IndependentContext<E extends EmissionMap> {
+export interface IndependentContext<
+  E extends EmissionMap,
+  D extends z.SomeZodObject,
+> {
   logger: AbstractLogger;
   all: {
     /** @desc Returns the list of available rooms */
     getRooms: () => string[];
     /** @desc Returns the list of familiar clients */
-    getClients: () => Promise<RemoteClient[]>;
+    getClients: () => Promise<RemoteClient<D>[]>;
     /** @desc Emits an event to everyone */
     broadcast: Broadcaster<E>;
   };
   /** @desc Provides room(s)-scope methods */
-  withRooms: RoomService<E>;
+  withRooms: RoomService<E, D>;
 }
 
 export interface ClientContext<E extends EmissionMap, D extends z.SomeZodObject>
-  extends IndependentContext<E> {
+  extends IndependentContext<E, D> {
   /** @desc The sender of the incoming event */
   client: Client<E, D>;
 }

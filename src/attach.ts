@@ -38,7 +38,7 @@ export const attachSockets = async <NS extends Namespaces>({
     type NSEmissions = NS[typeof name]["emission"];
     type NSMeta = NS[typeof name]["metadata"];
     const ns = io.of(normalizeNS(name));
-    const { emission, hooks } = namespaces[name];
+    const { emission, hooks, metadata } = namespaces[name];
     const {
       onConnection = ({ client: { id, getData }, logger }) =>
         logger.debug("Client connected", { ...getData(), id }),
@@ -51,9 +51,9 @@ export const attachSockets = async <NS extends Namespaces>({
       onStartup = ({ logger }) => logger.debug("Ready"),
     } = hooks;
     const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
-    const nsCtx: IndependentContext<NSEmissions> = {
+    const nsCtx: IndependentContext<NSEmissions, NSMeta> = {
       logger: rootLogger,
-      withRooms: makeRoomService({ subject: io, ...emitCfg }),
+      withRooms: makeRoomService({ subject: io, metadata, ...emitCfg }),
       all: {
         getClients: async () => getRemoteClients(await ns.fetchSockets()),
         getRooms: () => Array.from(ns.adapter.rooms.keys()),
@@ -76,7 +76,7 @@ export const attachSockets = async <NS extends Namespaces>({
       const ctx: ClientContext<NSEmissions, NSMeta> = {
         ...nsCtx,
         client,
-        withRooms: makeRoomService({ subject: socket, ...emitCfg }),
+        withRooms: makeRoomService({ subject: socket, metadata, ...emitCfg }),
       };
       await onConnection(ctx);
       socket.onAny((event, ...payload) =>

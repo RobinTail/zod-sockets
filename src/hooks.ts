@@ -14,5 +14,5 @@ export interface Hooks<E extends EmissionMap, D extends z.SomeZodObject> {
   onAnyIncoming?: Handler<TracingContext<E, D>, void>;
   onAnyOutgoing?: Handler<TracingContext<E, D>, void>;
   /** @desc A place for emitting events regardless clients activity */
-  onStartup?: Handler<IndependentContext<E>, void>;
+  onStartup?: Handler<IndependentContext<E, D>, void>;
 }

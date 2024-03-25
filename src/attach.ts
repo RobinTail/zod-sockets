@@ -70,7 +70,10 @@ export const attachSockets = async <NS extends Namespaces>({
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
         getData: () => socket.data || {},
-        setData: (value) => (socket.data = value),
+        setData: (value) => {
+          metadata.parse(value); // validation only, no transformations
+          socket.data = value;
+        },
         ...makeDistribution(socket),
       };
       const ctx: ClientContext<NSEmissions, NSMeta> = {

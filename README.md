@@ -112,32 +112,32 @@ for sending the `ping` event to `ws://localhost:8090` with acknowledgement.
 ## Namespaces first
 
 Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
-different essence, payload and handlers. You can add namespaces using `addNamespace()` method after `createConfig()`.
-The default namespace is a root one having `path` equal to `/`. Namespaces may have `emission` and `hooks`.
+different essence, payload and handlers. You can add `namespaces` to the argument of `createConfig()` or use
+`addNamespace()` method after it. The default namespace is a root one having `path` equal to `/`. Namespaces may have
+`emission` and `hooks`.
 Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 ```typescript
 import { z } from "zod";
 import { createConfig } from "zod-sockets";
 
-const config = createConfig()
-  .addNamespace({
-    emission: {}, // The root namespace "/" having no emission
-  })
-  .addNamespace({
-    path: "public", // The namespace "/public"
-    emission: { chat: { schema } },
-    hooks: {
-      onStartup: () => {},
-      onConnection: () => {},
-      onDisconnect: () => {},
-      onAnyIncoming: () => {},
-      onAnyOutgoing: () => {},
+const config = createConfig({
+  namespaces: {
+    // The namespace "/public"
+    public: {
+      emission: { chat: { schema } },
+      hooks: {
+        onStartup: () => {},
+        onConnection: () => {},
+        onDisconnect: () => {},
+        onAnyIncoming: () => {},
+        onAnyOutgoing: () => {},
+      },
     },
-  })
-  .addNamespace({
-    path: "private", // The namespace "/private", has no emission
-  });
+  },
+}).addNamespace({
+  path: "private", // The namespace "/private" has no emission
+});
 ```
 
 ## Emission
@@ -153,6 +153,7 @@ import { z } from "zod";
 import { createConfig } from "zod-sockets";
 
 const config = createConfig().addNamespace({
+  // path: "/", // optional, default: root namespace
   emission: {
     // enabling Socket::emit("chat", "message", { from: "someone" })
     chat: {

@@ -36,10 +36,8 @@ export const config = createConfig().addNamespace({
     },
   },
   metadata: z.object({
-    msgCount: z
-      .number()
-      .int()
-      .describe("Number of messages sent using the chat event"),
+    // Number of messages sent using the chat event
+    msgCount: z.number().int(),
   }),
 });
 

@@ -18,6 +18,23 @@
   - The `setData()` method performs validation and can throw `ZodError`;
   - Transformations are not allowed in the schema of metadata.
 
+```ts
+import { createConfig } from "zod-sockets";
+
+const before = createConfig({
+  emission: {
+    // The namespace "/public"
+    public: {},
+    // The namespace "/private"
+    private: {},
+  },
+});
+
+const after = createConfig() // this makes root namespace "/"
+  .addNamespace({ path: "public" })
+  .addNamespace({ path: "private" });
+```
+
 ### v0.9.1
 
 - Ensuring that the namespace in the generated client is named the same as it's declared on backend;

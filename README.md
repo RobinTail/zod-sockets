@@ -429,41 +429,48 @@ const handler = async ({ all, logger }) => {
 
 ## Metadata
 
-Metadata is a custom object-based structure for reading and storing additional information on a client. Initially it is
-an empty object.
+Metadata is a custom object-based structure for reading and storing additional information about the clients.
+Initially it is an empty object.
 
 ### Defining constraints
 
-It is recommended to specify an interface near your config describing the metadata you're aiming to interact with:
+You can specify the schema of the metadata per namespace.
+Please avoid transformations in those schemas since they are not going to be applied.
 
 ```typescript
-interface Metadata {
-  /** @desc Number of messages sent to the chat */
-  msgCount: number;
-}
+import { z } from "zod";
+import { createConfig } from "zod-sockets";
+
+const config = createConfig().addNamespace({
+  metadata: z.object({
+    /** @desc Number of messages sent to the chat */
+    msgCount: z.number().int(),
+  }),
+});
 ```
 
 ### Reading
 
-In every context you can read the client's metadata using the `getData<T>()` method with assigned type argument.
-Since the presence of the data is not guaranteed, the method returns an object of `Partial<T>`.
+In every context you can read the client's metadata using the `getData()` method.
+Since the presence of the data is not guaranteed, the method returns an `Partial<>` object of the specified schema.
 
 ```typescript
 const handler = async ({ client, withRooms }) => {
-  client.getData<Metadata>();
+  client.getData();
   withRooms("room1")
     .getClients()
-    .map((someone) => someone.getData<Metadata>());
+    .map((someone) => someone.getData());
 };
 ```
 
 ### Writing
 
-Within a client context you can use `setData<T>()` method with type argument to store the metadata on the client:
+Within a client context you can use `setData()` method to store the metadata on the client. The method provides type
+assistance of its argument and may throw `ZodError` if it does not pass the validation against the specified schema.
 
 ```typescript
 const handler = async ({ client }) => {
-  client.setData<Metadata>({ msgCount: 4 });
+  client.setData({ msgCount: 4 });
 };
 ```
 

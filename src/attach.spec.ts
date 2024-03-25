@@ -1,6 +1,7 @@
 import http from "node:http";
 import { Server } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
+import { z } from "zod";
 import { attachSockets } from "./attach";
 import { createConfig } from "./config";
 import { AbstractLogger } from "./logger";
@@ -69,7 +70,13 @@ describe("Attach", () => {
         config: createConfig({
           startupLogo: false,
           timeout: 100,
-          namespaces: { "/": { emission: {}, hooks } },
+          namespaces: {
+            "/": {
+              emission: {},
+              hooks,
+              metadata: z.object({ name: z.string() }),
+            },
+          },
           logger: loggerMock as unknown as AbstractLogger,
         }),
       });
@@ -175,6 +182,11 @@ describe("Attach", () => {
       actionsMock[0].execute.mock.lastCall[0].client.setData({
         name: "user",
       });
+      expect(() =>
+        actionsMock[0].execute.mock.lastCall[0].client.setData({
+          name: 123,
+        }),
+      ).toThrow(z.ZodError);
 
       // client.getData:
       expect(actionsMock[0].execute.mock.lastCall[0].client.getData()).toEqual({

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { EmissionMap } from "./emission";
 import { Hooks } from "./hooks";
 
@@ -9,8 +10,7 @@ export const normalizeNS = (name: string): string => {
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 };
 
-// @todo the place for metadata
-export interface Namespace<E extends EmissionMap> {
+export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
   /**
    * @desc The events that the server can emit
    * @default {}
@@ -20,12 +20,24 @@ export interface Namespace<E extends EmissionMap> {
    * @desc Handlers for some events in different contexts
    * @default {}
    * */
-  hooks: Hooks<E>;
+  hooks: Hooks<E, D>;
+  /**
+   * @desc Schema of the client metadata in this namespace
+   * @default z.object({})
+   * */
+  metadata: D;
 }
 
-export type Namespaces = Record<string, Namespace<EmissionMap>>;
+export type Namespaces = Record<
+  string,
+  Namespace<EmissionMap, z.SomeZodObject>
+>;
 
 export const fallbackNamespaces = {
-  [rootNS]: { emission: {}, hooks: {} } satisfies Namespace<{}>,
+  [rootNS]: {
+    emission: {},
+    hooks: {},
+    metadata: z.object({}),
+  } satisfies Namespace<{}, z.ZodObject<{}>>,
 };
 export type FallbackNamespaces = typeof fallbackNamespaces;

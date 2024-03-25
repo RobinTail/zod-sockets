@@ -85,6 +85,7 @@ describe("Emission", () => {
       async (rooms) => {
         const withRooms = makeRoomService({
           subject: socketMock as unknown as Socket,
+          metadata: z.object({}),
           ...emitCfg,
         });
         expect(typeof withRooms).toBe("function");

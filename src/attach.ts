@@ -36,8 +36,9 @@ export const attachSockets = async <NS extends Namespaces>({
 }): Promise<Server> => {
   for (const name in namespaces) {
     type NSEmissions = NS[typeof name]["emission"];
+    type NSMeta = NS[typeof name]["metadata"];
     const ns = io.of(normalizeNS(name));
-    const { emission, hooks } = namespaces[name];
+    const { emission, hooks, metadata } = namespaces[name];
     const {
       onConnection = ({ client: { id, getData }, logger }) =>
         logger.debug("Client connected", { ...getData(), id }),
@@ -50,9 +51,9 @@ export const attachSockets = async <NS extends Namespaces>({
       onStartup = ({ logger }) => logger.debug("Ready"),
     } = hooks;
     const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
-    const nsCtx: IndependentContext<NSEmissions> = {
+    const nsCtx: IndependentContext<NSEmissions, NSMeta> = {
       logger: rootLogger,
-      withRooms: makeRoomService({ subject: io, ...emitCfg }),
+      withRooms: makeRoomService({ subject: io, metadata, ...emitCfg }),
       all: {
         getClients: async () => getRemoteClients(await ns.fetchSockets()),
         getRooms: () => Array.from(ns.adapter.rooms.keys()),
@@ -62,20 +63,23 @@ export const attachSockets = async <NS extends Namespaces>({
     ns.on("connection", async (socket) => {
       const emit = makeEmitter({ subject: socket, ...emitCfg });
       const broadcast = makeEmitter({ subject: socket.broadcast, ...emitCfg });
-      const client: Client<NSEmissions> = {
+      const client: Client<NSEmissions, NSMeta> = {
         emit,
         broadcast,
         id: socket.id,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
         getData: () => socket.data || {},
-        setData: (value) => (socket.data = value),
+        setData: (value) => {
+          metadata.parse(value); // validation only, no transformations
+          socket.data = value;
+        },
         ...makeDistribution(socket),
       };
-      const ctx: ClientContext<NSEmissions> = {
+      const ctx: ClientContext<NSEmissions, NSMeta> = {
         ...nsCtx,
         client,
-        withRooms: makeRoomService({ subject: socket, ...emitCfg }),
+        withRooms: makeRoomService({ subject: socket, metadata, ...emitCfg }),
       };
       await onConnection(ctx);
       socket.onAny((event, ...payload) =>

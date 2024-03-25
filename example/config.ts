@@ -1,12 +1,6 @@
 import { z } from "zod";
 import { createConfig } from "../src";
 
-/** @desc Client metadata */
-export interface Metadata {
-  /** @desc Number of messages sent using the chat event */
-  msgCount: number;
-}
-
 export const config = createConfig().addNamespace({
   emission: {
     time: {
@@ -41,6 +35,10 @@ export const config = createConfig().addNamespace({
       }, 30000);
     },
   },
+  metadata: z.object({
+    // Number of messages sent using the chat event
+    msgCount: z.number().int(),
+  }),
 });
 
 // Uncomment these lines to set the type of logger used:

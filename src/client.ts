@@ -1,8 +1,10 @@
 import type { Socket } from "socket.io";
+import { z } from "zod";
 import { Distribution } from "./distribution";
 import { Broadcaster, EmissionMap, Emitter } from "./emission";
 
-export interface Client<E extends EmissionMap> extends Distribution {
+export interface Client<E extends EmissionMap, D extends z.SomeZodObject>
+  extends Distribution {
   /** @alias Socket.connected */
   isConnected: () => boolean;
   /** @alias Socket.id */
@@ -22,10 +24,10 @@ export interface Client<E extends EmissionMap> extends Distribution {
    * */
   broadcast: Broadcaster<E>;
   /** @desc Returns the client metadata according to the specified type or empty object */
-  getData: <D extends object>() => Readonly<Partial<D>>;
+  getData: () => Readonly<Partial<z.infer<D>>>;
   /**
    * @desc Sets the client metadata according to the specified type
    * @throws z.ZodError on validation
    * */
-  setData: <D extends object>(value: D) => void;
+  setData: (value: z.infer<D>) => void;
 }

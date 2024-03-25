@@ -2,6 +2,40 @@
 
 ## Version 0
 
+### v0.10.0
+
+- Important changes to configuration:
+  - The `createConfig()` method now returns an instance of `Config` class providing `addNamespace()` method;
+  - The `addNamespace()` method becomes a primary approach for the namespace-first configuration;
+  - By default, `createConfig()` creates an empty root namespace (having `/` path);
+  - Namespaces consist of optional `emission`, `hooks` and `metadata`;
+  - Therefore, the declaration of namespaces is moved from being under `emission` to the top level;
+  - Hooks are moved from the argument of `attachSockets()` into the one of `addNamespace()`.
+- Metadata is now a schema-based property of namespace:
+  - No need to declare its interface;
+  - Instead, `metadata` property of namespace should be assigned with an object-based schema;
+  - The default schema for metadata is `z.object({}).strip()` — an empty object;
+  - Methods `getData()` and `setData()` of the client context no longer require a type argument;
+  - The `setData()` method performs validation and can throw `ZodError`;
+  - Transformations are not allowed in the schema of metadata.
+
+```ts
+import { createConfig } from "zod-sockets";
+
+const before = createConfig({
+  emission: {
+    // The namespace "/public"
+    public: {},
+    // The namespace "/private"
+    private: {},
+  },
+});
+
+const after = createConfig() // this makes root namespace "/"
+  .addNamespace({ path: "public" })
+  .addNamespace({ path: "private" });
+```
+
 ### v0.9.1
 
 - Ensuring that the namespace in the generated client is named the same as it's declared on backend;

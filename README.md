@@ -43,11 +43,8 @@ yarn add zod-sockets zod socket.io typescript
 ```typescript
 import { createConfig } from "zod-sockets";
 
-const config = createConfig({
-  timeout: 2000,
-  emission: {},
-  logger: console,
-});
+// defaults: root namespace only, console logger, timeout 2s
+const config = createConfig();
 ```
 
 ## Create a factory
@@ -112,6 +109,36 @@ for sending the `ping` event to `ws://localhost:8090` with acknowledgement.
 
 # Basic features
 
+## Namespaces first
+
+Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
+different essence, payload and handlers. You can add `namespaces` to the argument of `createConfig()` or use
+`addNamespace()` method after it. The default namespace is a root one having `path` equal to `/`. Namespaces may have
+`emission` and `hooks`.
+Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
+
+```typescript
+import { createConfig } from "zod-sockets";
+
+const config = createConfig({
+  namespaces: {
+    // The namespace "/public"
+    public: {
+      emission: { chat: { schema } },
+      hooks: {
+        onStartup: () => {},
+        onConnection: () => {},
+        onDisconnect: () => {},
+        onAnyIncoming: () => {},
+        onAnyOutgoing: () => {},
+      },
+    },
+  },
+}).addNamespace({
+  path: "private", // The namespace "/private" has no emission
+});
+```
+
 ## Emission
 
 The outgoing events should be configured using `z.tuple()` schemas. Those tuples describe the types of the arguments
@@ -124,7 +151,8 @@ development. Consider the following examples of two outgoing events, with and wi
 import { z } from "zod";
 import { createConfig } from "zod-sockets";
 
-const config = createConfig({
+const config = createConfig().addNamespace({
+  // path: "/", // optional, default: root namespace
   emission: {
     // enabling Socket::emit("chat", "message", { from: "someone" })
     chat: {
@@ -242,15 +270,15 @@ import { ActionsFactory } from "zod-sockets";
 const actionsFactory = new ActionsFactory(config);
 ```
 
-The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
-incoming event. This should not be confused with acknowledgments that are basically direct and immediate responses to
-the one that sent the incoming event. Produce actions using the `build()` method accepting an object having the
-incoming `event` name, `input` schema for its payload (excluding acknowledgment) and a `handler`, which is a function
-where you place your implementation for handling the event. The argument of the `handler` in an object having several
-handy entities, the most important of them is `input` property, being the validated event payload:
+Produce actions using the `build()` method accepting an object having the assigned namespace `ns` (optional, root
+namespace `/` is default), the incoming `event` name, the `input` schema for its payload (excluding acknowledgment) and
+a `handler`, which is a function where you place your implementation for handling the event. The argument of the
+`handler` in an object having several handy entities, the most important of them is `input` property, being the
+validated event payload:
 
 ```typescript
 const onChat = actionsFactory.build({
+  ns: "/", // optional, root namespace is default
   event: "chat",
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, all, withRooms, logger }) => {
@@ -262,12 +290,13 @@ const onChat = actionsFactory.build({
 
 ### Acknowledgements
 
-Actions may also have an acknowledgement, which is acquired from the returns of the `handler` and being validated
-against additionally specified `output` schema. When the number of payload arguments is flexible, you can use `rest()`
-method of `z.tuple()`. When the data type is not important at all, consider describing it using `z.unknown()`.
-When using `z.literal()`, Typescript may assume the type of the actually returned value more loose, therefore the
-`as const` expression might be required. The following example illustrates an action acknowledging "ping" event with
-"pong" and an echo of the received payload:
+Actions may also have acknowledgements that are basically direct and immediate responses to the one that sent the
+incoming event. Acknowledgement is acquired from the returns of the `handler` and being validated against additionally
+specified `output` schema. When the number of payload arguments is flexible, you can use `rest()` method of
+`z.tuple()`. When the data type is not important at all, consider describing it using `z.unknown()`. When using
+`z.literal()`, Typescript may assume the type of the actually returned value more loose, therefore the `as const`
+expression might be required. The following example illustrates an action acknowledging "ping" event with "pong" and
+an echo of the received payload:
 
 ```typescript
 const onPing = actionsFactory.build({
@@ -282,9 +311,10 @@ const onPing = actionsFactory.build({
 
 ### In Action context
 
-Depending on your application's needs and architecture, you can choose different ways to send events. The emission
-methods have constraints on emission types declared in the configuration. The `input` is available for processing the
-validated payload of the Action.
+The Emission awareness of the `ActionsFactory` enables you to emit and broadcast other events due to receiving the
+incoming event. Depending on your application's needs and architecture, you can choose different ways to send events.
+The emission methods have constraints on emission types declared in the configuration. The `input` is available for
+processing the validated payload of the Action.
 
 ```typescript
 actionsFactory.build({
@@ -306,11 +336,14 @@ actionsFactory.build({
 ### In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the `attachSockets()`
+emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the `addNamespace()`
 argument, which has a similar interface except `input` and fires for every connected client:
 
 ```typescript
-attachSockets({
+import { createConfig } from "zod-sockets";
+
+const config = createConfig().addNamespace({
+  // emission: { ... },
   hooks: {
     onConnection: async ({ client, withRooms, all }) => {
       /* your implementation here */
@@ -322,10 +355,12 @@ attachSockets({
 ### Independent context
 
 Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property within `hooks`
-of the `attachSockets()` argument. The implementation may have a `setInterval()` for recurring emission.
+of the `addNamespace()` argument. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript
-attachSockets({
+import { createConfig } from "zod-sockets";
+
+const config = createConfig().addNamespace({
   hooks: {
     onStartup: async ({ all, withRooms }) => {
       // sending to everyone in a room
@@ -393,100 +428,50 @@ const handler = async ({ all, logger }) => {
 
 ## Metadata
 
-Metadata is a custom object-based structure for reading and storing additional information on a client. Initially it is
-an empty object.
+Metadata is a custom object-based structure for reading and storing additional information about the clients.
+Initially it is an empty object.
 
 ### Defining constraints
 
-It is recommended to specify an interface near your config describing the metadata you're aiming to interact with:
-
-```typescript
-interface Metadata {
-  /** @desc Number of messages sent to the chat */
-  msgCount: number;
-}
-```
-
-### Reading
-
-In every context you can read the client's metadata using the `getData<T>()` method with assigned type argument.
-Since the presence of the data is not guaranteed, the method returns an object of `Partial<T>`.
-
-```typescript
-const handler = async ({ client, withRooms }) => {
-  client.getData<Metadata>();
-  withRooms("room1")
-    .getClients()
-    .map((someone) => someone.getData<Metadata>());
-};
-```
-
-### Writing
-
-Within a client context you can use `setData<T>()` method with type argument to store the metadata on the client:
-
-```typescript
-const handler = async ({ client }) => {
-  client.setData<Metadata>({ msgCount: 4 });
-};
-```
-
-# Advanced features
-
-## Namespaces
-
-Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
-different essence, payload and handlers. The default namespace is `/`. The configuration of namespaces begins from
-defining them for `emission` (the leading slash is not necessary):
+You can specify the schema of the metadata per namespace.
+Please avoid transformations in those schemas since they are not going to be applied.
 
 ```typescript
 import { z } from "zod";
 import { createConfig } from "zod-sockets";
 
-const config = createConfig({
-  emission: {
-    // The namespace "/public"
-    public: {
-      chat: { schema },
-    },
-    // The namespace "/private"
-    private: {},
-  },
+const config = createConfig().addNamespace({
+  metadata: z.object({
+    /** @desc Number of messages sent to the chat */
+    msgCount: z.number().int(),
+  }),
 });
 ```
 
-When namespaces are configured, Actions must also have the `ns` property assigned:
+### Reading
+
+In every context you can read the client's metadata using the `getData()` method.
+Since the presence of the data is not guaranteed, the method returns an `Partial<>` object of the specified schema.
 
 ```typescript
-import { ActionsFactory } from "zod-sockets";
-
-const actionsFactory = new ActionsFactory(config);
-const action = actionsFactory.build({
-  ns: "public",
-  // ...
-});
+const handler = async ({ client, withRooms }) => {
+  client.getData();
+  withRooms("room1")
+    .getClients()
+    .map((someone) => someone.getData());
+};
 ```
 
-And the hooks must also be declared per namespace:
+### Writing
+
+Within a client context you can use `setData()` method to store the metadata on the client. The method provides type
+assistance of its argument and may throw `ZodError` if it does not pass the validation against the specified schema.
 
 ```typescript
-import { attachSockets } from "zod-sockets";
-
-attachSockets({
-  hooks: {
-    public: {
-      onStartup,
-      onConnection,
-      onDisconnect,
-      onAnyIncoming,
-      onAnyOutgoing,
-    },
-    private: {},
-  },
-});
+const handler = async ({ client }) => {
+  client.setData({ msgCount: 4 });
+};
 ```
-
-Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 # Integration
 

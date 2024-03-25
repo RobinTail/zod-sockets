@@ -3,16 +3,16 @@ import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { ActionContext, ClientContext, Handler } from "./handler";
-import { Namespaces, rootNS } from "./namespaces";
+import { Namespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
   public abstract getEvent(): string;
-  public abstract getNamespace(): string;
+  public abstract getNamespace(): keyof any;
   public abstract execute(
     params: {
       event: string;
       params: unknown[];
-    } & ClientContext<EmissionMap>,
+    } & ClientContext<EmissionMap, z.SomeZodObject>,
   ): Promise<void>;
   public abstract getSchema(variant: "input"): z.AnyZodTuple;
   public abstract getSchema(variant: "output"): z.AnyZodTuple | undefined;
@@ -21,20 +21,21 @@ export abstract class AbstractAction {
 export class Action<
   IN extends z.AnyZodTuple,
   OUT extends z.AnyZodTuple,
+  NS extends Namespaces,
 > extends AbstractAction {
   readonly #event: string;
-  readonly #namespace: string;
+  readonly #namespace: keyof NS;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
   readonly #handler: Handler<
-    ActionContext<z.output<IN>, EmissionMap>,
+    ActionContext<z.output<IN>, EmissionMap, z.SomeZodObject>,
     z.input<OUT> | void
   >;
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, Namespaces<EmissionMap>, string>
-      | ActionNoAckDef<IN, Namespaces<EmissionMap>, string>,
+      | ActionWithAckDef<IN, OUT, NS, keyof NS>
+      | ActionNoAckDef<IN, NS, keyof NS>,
   ) {
     super();
     this.#event = action.event;
@@ -48,7 +49,7 @@ export class Action<
     return this.#event;
   }
 
-  public override getNamespace(): string {
+  public override getNamespace(): keyof NS {
     return this.#namespace;
   }
 
@@ -88,7 +89,7 @@ export class Action<
   }: {
     event: string;
     params: unknown[];
-  } & ClientContext<EmissionMap>): Promise<void> {
+  } & ClientContext<EmissionMap, z.SomeZodObject>): Promise<void> {
     try {
       const input = this.#parseInput(params);
       logger.debug(

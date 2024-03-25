@@ -8,12 +8,6 @@ export interface Emission {
   ack?: z.AnyZodTuple;
 }
 
-export const isEmission = (subject: unknown): subject is Emission =>
-  typeof subject === "object" &&
-  subject !== null &&
-  "schema" in subject &&
-  subject.schema instanceof z.ZodTuple;
-
 export interface EmissionMap {
   [event: string]: Emission;
 }
@@ -33,14 +27,16 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
-export type RoomService<E extends EmissionMap> = (rooms: string | string[]) => {
+export type RoomService<E extends EmissionMap, D extends z.SomeZodObject> = (
+  rooms: string | string[],
+) => {
   /**
    * @desc Emits an event to all/others (depending on context) in the specified room(s)
    * @throws z.ZodError on validation
    * @throws Error on ack timeout
    * */
   broadcast: Broadcaster<E>;
-  getClients: () => Promise<RemoteClient[]>;
+  getClients: () => Promise<RemoteClient<D>[]>;
 };
 
 export interface EmitterConfig<E extends EmissionMap> {
@@ -81,10 +77,13 @@ export function makeEmitter({
 }
 
 export const makeRoomService =
-  <E extends EmissionMap>({
+  <E extends EmissionMap, D extends z.SomeZodObject>({
     subject,
     ...rest
-  }: { subject: Socket | Server } & EmitterConfig<E>): RoomService<E> =>
+  }: {
+    subject: Socket | Server;
+    metadata: D;
+  } & EmitterConfig<E>): RoomService<E, D> =>
   (rooms) => ({
     getClients: async () =>
       getRemoteClients(await subject.in(rooms).fetchSockets()),

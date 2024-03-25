@@ -1,36 +1,45 @@
+import { z } from "zod";
 import { Client } from "./client";
 import { Broadcaster, EmissionMap, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";
 import { RemoteClient } from "./remote-client";
 
-export interface IndependentContext<E extends EmissionMap> {
+export interface IndependentContext<
+  E extends EmissionMap,
+  D extends z.SomeZodObject,
+> {
   logger: AbstractLogger;
   all: {
     /** @desc Returns the list of available rooms */
     getRooms: () => string[];
     /** @desc Returns the list of familiar clients */
-    getClients: () => Promise<RemoteClient[]>;
+    getClients: () => Promise<RemoteClient<D>[]>;
     /** @desc Emits an event to everyone */
     broadcast: Broadcaster<E>;
   };
   /** @desc Provides room(s)-scope methods */
-  withRooms: RoomService<E>;
+  withRooms: RoomService<E, D>;
 }
 
-export interface ClientContext<E extends EmissionMap>
-  extends IndependentContext<E> {
+export interface ClientContext<E extends EmissionMap, D extends z.SomeZodObject>
+  extends IndependentContext<E, D> {
   /** @desc The sender of the incoming event */
-  client: Client<E>;
+  client: Client<E, D>;
 }
 
-export interface TracingContext<E extends EmissionMap>
-  extends ClientContext<E> {
+export interface TracingContext<
+  E extends EmissionMap,
+  D extends z.SomeZodObject,
+> extends ClientContext<E, D> {
   event: string;
   payload: unknown[];
 }
 
-export interface ActionContext<IN, E extends EmissionMap>
-  extends ClientContext<E> {
+export interface ActionContext<
+  IN,
+  E extends EmissionMap,
+  D extends z.SomeZodObject,
+> extends ClientContext<E, D> {
   /** @desc Validated payload */
   input: IN;
 }

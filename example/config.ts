@@ -1,15 +1,7 @@
 import { z } from "zod";
 import { createConfig } from "../src";
 
-/** @desc Client metadata */
-export interface Metadata {
-  /** @desc Number of messages sent using the chat event */
-  msgCount: number;
-}
-
-export const config = createConfig({
-  timeout: 2000,
-  logger: console,
+export const config = createConfig().addNamespace({
   emission: {
     time: {
       schema: z.tuple([
@@ -31,6 +23,22 @@ export const config = createConfig({
       schema: z.tuple([z.string().array().describe("room IDs")]),
     },
   },
+  hooks: {
+    onConnection: async ({ client }) => {
+      await client.broadcast("chat", `${client.id} entered the chat`, {
+        from: client.id,
+      });
+    },
+    onStartup: async ({ all }) => {
+      setInterval(() => {
+        all.broadcast("rooms", all.getRooms());
+      }, 30000);
+    },
+  },
+  metadata: z.object({
+    // Number of messages sent using the chat event
+    msgCount: z.number().int(),
+  }),
 });
 
 // Uncomment these lines to set the type of logger used:

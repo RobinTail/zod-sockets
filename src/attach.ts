@@ -123,7 +123,9 @@ export const attachSockets = async <
     });
     await onStartup(nsCtx);
   }
-  (startupLogo ? console.log : () => {})(getStartupLogo());
+  (startupLogo ? console.log : () => {})(
+    getStartupLogo((await import("chalk")).default), // chalk v5 is ESM only
+  );
   rootLogger.info("Listening", target.address());
   return io.attach(target);
 };

@@ -34,11 +34,24 @@ jobs:
         path: ${{ steps.yarnCache.outputs.dir }}
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
     - name: Install dependencies
-      run: yarn install
+      # todo use regular "yarn install" when min Node version increased to 18.18
+      # @typescript/eslint group compatibility issue fixed by ignoring engines for dev dependencies only:
+      run: |
+        npm pkg delete devDependencies
+        yarn install
+        git checkout -- .
+        yarn install --ignore-engines
     - name: Lint
       run: yarn lint
     - name: Unit test
       run: yarn test
+    - name: Coveralls
+      uses: coverallsapp/github-action@v2
+      continue-on-error: true
+      with:
+        github-token: ${{ secrets.github_token }}
+        flag-name: run-${{ matrix.node-version }}
+        parallel: true
     - name: System test
       run: yarn test:system
     - name: Build
@@ -51,3 +64,13 @@ jobs:
       run: yarn test:compat
     - name: Issue 952 # see https://github.com/RobinTail/express-zod-api/issues/952
       run: yarn test:952
+  finish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        continue-on-error: true
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true

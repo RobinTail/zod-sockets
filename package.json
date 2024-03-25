@@ -1,6 +1,6 @@
 {
   "name": "zod-sockets",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Socket.IO solution with I/O validation",
   "type": "module",
   "main": "dist/index.cjs",
@@ -51,12 +51,12 @@
     "build:compile": "tsup && attw --pack",
     "build:client": "tsx example/generate-client.ts && prettier --write example/example*.ts",
     "build:tests": "tsx tools/make-tests.ts",
-    "build:logo": "tsx tools/logo.ts",
     "precommit": "yarn lint && yarn test && yarn build && git add example/example*.ts",
     "postversion": "git push && git push --tags",
-    "prepare": "husky"
+    "hooks": "husky"
   },
   "dependencies": {
+    "chalk": "^5.3.0",
     "ramda": "^0.29.1"
   },
   "peerDependencies": {
@@ -65,17 +65,16 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.14.1",
+    "@arethetypeswrong/cli": "^0.15.0",
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^20.11.16",
     "@types/ramda": "^0.29.10",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
     "@vitest/coverage-istanbul": "^1.2.2",
-    "chalk": "^5.3.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.3",

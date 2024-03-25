@@ -121,7 +121,7 @@ development. Consider the following examples of two outgoing events, with and wi
 import { z } from "zod";
 import { createConfig } from "zod-sockets";
 
-const config = createConfig({
+const config = createConfig().addNamespace({
   emission: {
     // enabling Socket::emit("chat", "message", { from: "someone" })
     chat: {

@@ -8,3 +8,4 @@ export { Integration } from "./integration";
 export type { EmissionMap } from "./emission";
 export type { LoggerOverrides } from "./logger";
 export type { ClientContext } from "./handler";
+export type { Namespace } from "./namespace";

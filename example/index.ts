@@ -9,16 +9,4 @@ attachSockets({
   target: http.createServer().listen(8090),
   config,
   actions,
-  hooks: {
-    onConnection: async ({ client }) => {
-      await client.broadcast("chat", `${client.id} entered the chat`, {
-        from: client.id,
-      });
-    },
-    onStartup: async ({ all }) => {
-      setInterval(() => {
-        all.broadcast("rooms", all.getRooms());
-      }, 30000);
-    },
-  },
 });

@@ -7,9 +7,7 @@ export interface Metadata {
   msgCount: number;
 }
 
-export const config = createConfig({
-  timeout: 2000,
-  logger: console,
+export const config = createConfig().addNamespace({
   emission: {
     time: {
       schema: z.tuple([
@@ -29,6 +27,18 @@ export const config = createConfig({
     },
     rooms: {
       schema: z.tuple([z.string().array().describe("room IDs")]),
+    },
+  },
+  hooks: {
+    onConnection: async ({ client }) => {
+      await client.broadcast("chat", `${client.id} entered the chat`, {
+        from: client.id,
+      });
+    },
+    onStartup: async ({ all }) => {
+      setInterval(() => {
+        all.broadcast("rooms", all.getRooms());
+      }, 30000);
     },
   },
 });

@@ -2,6 +2,7 @@ import http from "node:http";
 import { Server } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { attachSockets } from "./attach";
+import { createConfig } from "./config";
 import { AbstractLogger } from "./logger";
 
 describe("Attach", () => {
@@ -65,13 +66,12 @@ describe("Attach", () => {
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
         actions: actionsMock,
-        config: {
+        config: createConfig({
           startupLogo: false,
           timeout: 100,
-          emission: { "/": {} },
+          namespaces: { "/": { emission: {}, hooks } },
           logger: loggerMock as unknown as AbstractLogger,
-        },
-        hooks,
+        }),
       });
       expect(ioMock.of).toHaveBeenLastCalledWith("/");
       expect(ioMock.attach).toHaveBeenCalledWith(targetMock);

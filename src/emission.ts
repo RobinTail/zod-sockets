@@ -8,12 +8,6 @@ export interface Emission {
   ack?: z.AnyZodTuple;
 }
 
-export const isEmission = (subject: unknown): subject is Emission =>
-  typeof subject === "object" &&
-  subject !== null &&
-  "schema" in subject &&
-  subject.schema instanceof z.ZodTuple;
-
 export interface EmissionMap {
   [event: string]: Emission;
 }

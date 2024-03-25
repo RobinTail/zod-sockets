@@ -438,23 +438,29 @@ const handler = async ({ client }) => {
 ## Namespaces
 
 Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
-different essence, payload and handlers. The default namespace is `/`. The configuration of namespaces begins from
-defining them for `emission` (the leading slash is not necessary):
+different essence, payload and handlers. You can add namespaces using `addNamespace()` method of `createConfig()`.
+The default is namespace is a root one having `path` equal to `/`. Namespaces may have `emission` and `hooks`.
+Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 ```typescript
 import { z } from "zod";
 import { createConfig } from "zod-sockets";
 
-const config = createConfig({
-  emission: {
-    // The namespace "/public"
-    public: {
-      chat: { schema },
+const config = createConfig()
+  .addNamespace({
+    path: "public", // The namespace "/public"
+    emission: { chat: { schema } },
+    hooks: {
+      onStartup,
+      onConnection,
+      onDisconnect,
+      onAnyIncoming,
+      onAnyOutgoing,
     },
-    // The namespace "/private"
-    private: {},
-  },
-});
+  })
+  .addNamespace({
+    path: "private", // The namespace "/private", has no emission
+  });
 ```
 
 When namespaces are configured, Actions must also have the `ns` property assigned:
@@ -465,30 +471,9 @@ import { ActionsFactory } from "zod-sockets";
 const actionsFactory = new ActionsFactory(config);
 const action = actionsFactory.build({
   ns: "public",
-  // ...
+  // handler: async () => { ... }
 });
 ```
-
-And the hooks must also be declared per namespace:
-
-```typescript
-import { attachSockets } from "zod-sockets";
-
-attachSockets({
-  hooks: {
-    public: {
-      onStartup,
-      onConnection,
-      onDisconnect,
-      onAnyIncoming,
-      onAnyOutgoing,
-    },
-    private: {},
-  },
-});
-```
-
-Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 # Integration
 

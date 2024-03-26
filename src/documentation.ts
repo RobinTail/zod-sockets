@@ -36,9 +36,9 @@ export class Documentation extends AsyncApiDocumentBuilder {
     this.document.id = documentId;
     this.document.defaultContentType = "text/plain"; // or application/octet-stream for binary data
     for (const server in servers) {
-      const isSecure = ["https", "wss"].includes(
-        new URL(servers[server].url).protocol.toLowerCase().replaceAll(":", ""),
-      );
+      const isSecure = new URL(servers[server].url).protocol
+        .toLowerCase()
+        .match(/(https|wss)/);
       this.addServer(server, {
         ...servers[server],
         protocol: isSecure ? "wss" : "ws",

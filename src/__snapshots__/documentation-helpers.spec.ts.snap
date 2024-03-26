@@ -732,6 +732,11 @@ exports[`Documentation helpers > depictTuple() > should depict as an object with
       "type": "string",
     },
   },
+  "required": [
+    "0",
+    "1",
+    "2",
+  ],
   "type": "object",
 }
 `;

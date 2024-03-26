@@ -24,6 +24,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
     servers = {},
   }: DocumentationParams) {
     super({ title, version });
+    this.document.defaultContentType = "text/plain"; // or application/octet-stream for binary data
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       for (const server in servers) {
         // @todo wss: move target to Config in order to detect this

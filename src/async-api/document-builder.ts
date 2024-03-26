@@ -14,7 +14,7 @@ import {
 import yaml from "yaml";
 
 export class AsyncApiDocumentBuilder {
-  private readonly document: AsyncApiDocument;
+  protected readonly document: AsyncApiDocument;
 
   constructor(info: InfoObject) {
     this.document = {

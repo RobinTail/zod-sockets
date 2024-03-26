@@ -113,3 +113,4 @@ channels:
               format: tuple
               properties: {}
 components: {}
+defaultContentType: text/plain

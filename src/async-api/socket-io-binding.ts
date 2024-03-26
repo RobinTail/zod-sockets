@@ -1,7 +1,7 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
 
 // @todo use 1.0.0 when production ready
-const version = "0.11.0";
+export const version = "0.11.0";
 
 /**
  * @desc Protocol-specific definitions for a server.

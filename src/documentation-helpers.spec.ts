@@ -368,7 +368,7 @@ describe("Documentation helpers", () => {
   });
 
   describe("depictTuple()", () => {
-    test("should utilize prefixItems", () => {
+    test("should depict as an object with numeric keys", () => {
       expect(
         depictTuple({
           schema: z.tuple([z.boolean(), z.string(), z.literal("test")]),

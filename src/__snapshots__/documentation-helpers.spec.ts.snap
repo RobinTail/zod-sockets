@@ -714,7 +714,7 @@ exports[`Documentation helpers > depictString() > should set type:string 1`] = `
 }
 `;
 
-exports[`Documentation helpers > depictTuple() > should utilize prefixItems 1`] = `
+exports[`Documentation helpers > depictTuple() > should depict as an object with numeric keys 1`] = `
 {
   "additionalProperties": false,
   "format": "tuple",

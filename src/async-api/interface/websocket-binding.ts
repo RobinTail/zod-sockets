@@ -38,6 +38,5 @@ export interface WSOperationBinding {}
 /**
  * @desc Protocol-specific definitions for a message.
  * @desc This object MUST NOT contain any properties. Its name is reserved for future use.
- * @todo Add acknowledgements schema for Sockets.IO bindings
  * */
 export interface WSMessageBinding {}

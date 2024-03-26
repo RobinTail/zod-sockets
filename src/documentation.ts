@@ -81,11 +81,10 @@ export class Documentation extends AsyncApiDocumentBuilder {
           operationId: `out${normalizeNS(ns)}`,
           description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
           message: {
-            oneOf: Object.entries(emission).map(([event, { schema }]) => ({
+            oneOf: Object.entries(emission).map(([event, { schema, ack }]) => ({
               name: event,
               title: event,
               messageId: `out${normalizeNS(ns)}/${event}`,
-              // @todo use ack
               payload: walkSchema({
                 direction: "out",
                 schema,
@@ -93,6 +92,19 @@ export class Documentation extends AsyncApiDocumentBuilder {
                 onMissing,
                 rules: depicters,
               }),
+              bindings: ack
+                ? {
+                    "socket.io": {
+                      ack: walkSchema({
+                        direction: "in",
+                        schema: ack,
+                        onEach,
+                        onMissing,
+                        rules: depicters,
+                      }),
+                    },
+                  }
+                : undefined,
             })),
           },
         },
@@ -104,11 +116,11 @@ export class Documentation extends AsyncApiDocumentBuilder {
               .filter((action) => action.getNamespace() === ns)
               .map((action) => {
                 const event = action.getEvent();
+                const output = action.getSchema("output");
                 return {
                   name: event,
                   title: event,
                   messageId: `in${normalizeNS(ns)}/${event}`,
-                  // @todo use ack
                   payload: walkSchema({
                     direction: "in",
                     schema: action.getSchema("input"),
@@ -116,6 +128,19 @@ export class Documentation extends AsyncApiDocumentBuilder {
                     onMissing,
                     rules: depicters,
                   }),
+                  bindings: output
+                    ? {
+                        "socket.io": {
+                          ack: walkSchema({
+                            direction: "out",
+                            schema: output,
+                            onEach,
+                            onMissing,
+                            rules: depicters,
+                          }),
+                        },
+                      }
+                    : undefined,
                 };
               }),
           },

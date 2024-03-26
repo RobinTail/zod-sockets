@@ -119,6 +119,20 @@ channels:
                 format: any
                 description: Anything
               properties: {}
+            bindings:
+              socket.io:
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties:
+                    format: any
+                    description: echo
+                  properties:
+                    "0":
+                      type: string
+                      enum:
+                        - pong
+                      description: literally
           - name: subscribe
             title: subscribe
             messageId: in//subscribe

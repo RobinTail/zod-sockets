@@ -5,11 +5,11 @@ import type {
   ServerVariableObject,
 } from "openapi3-ts/oas31";
 import {
-  WSChannelBinding,
-  WSMessageBinding,
-  WSOperationBinding,
-  WSServerBinding,
-} from "./binding";
+  SocketIOChannelBinding,
+  SocketIOMessageBinding,
+  SocketIOOperationBinding,
+  SocketIOServerBinding,
+} from "./socket-io-binding";
 import { AsyncServerObject } from "./server";
 
 export type Protocol = "http" | "https" | "ws" | "wss" | "socket.io";
@@ -37,7 +37,7 @@ export interface AsyncChannelObject {
   /** @desc Describes a map of parameters included in a channel name. */
   parameters?: Record<string, ParameterObject>;
   /** @desc Map describing protocol-specific definitions for a channel. */
-  bindings?: Partial<Record<Protocol, WSChannelBinding>>;
+  bindings?: Partial<Record<Protocol, SocketIOChannelBinding>>;
 }
 
 export interface AsyncServerVariableObject extends ServerVariableObject {
@@ -54,10 +54,10 @@ export interface AsyncComponentsObject {
   correlationIds?: Record<string, AsyncCorrelationObject>;
   operationTraits?: Record<string, AsyncOperationTraitObject>;
   messageTraits?: Record<string, AsyncMessageTraitObject>;
-  serverBindings?: Record<string, WSServerBinding>;
-  channelBindings?: Record<string, WSChannelBinding>;
-  operationBindings?: Record<string, WSOperationBinding>;
-  messageBindings?: Record<string, WSMessageBinding>;
+  serverBindings?: Partial<Record<Protocol, SocketIOServerBinding>>;
+  channelBindings?: Partial<Record<Protocol, SocketIOChannelBinding>>;
+  operationBindings?: Partial<Record<Protocol, SocketIOOperationBinding>>;
+  messageBindings?: Partial<Record<Protocol, SocketIOMessageBinding>>;
 }
 
 export interface AsyncMessageObject extends AsyncMessageTraitObject {
@@ -78,7 +78,7 @@ export interface AsyncOperationObject {
   description?: string;
   tags?: AsyncTagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Record<string, WSOperationBinding>;
+  bindings?: Partial<Record<Protocol, SocketIOOperationBinding>>;
   traits?: Record<string, AsyncOperationTraitObject>;
   message?: AsyncOperationMessage;
 }
@@ -90,7 +90,7 @@ export interface AsyncOperationTraitObject {
   description?: string;
   tags?: AsyncTagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Record<string, WSOperationBinding>;
+  bindings?: Partial<Record<Protocol, SocketIOOperationBinding>>;
 }
 
 export interface AsyncMessageTraitObject {
@@ -106,7 +106,7 @@ export interface AsyncMessageTraitObject {
   description?: string;
   tags?: AsyncTagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Record<string, WSMessageBinding>;
+  bindings?: Partial<Record<Protocol, SocketIOMessageBinding>>;
 }
 
 export interface AsyncCorrelationObject {

@@ -509,6 +509,24 @@ Alternatively, you can avoid installing and importing `socket.io-client` module 
 [standalone build](https://socket.io/docs/v4/client-installation/#standalone-build) having
 [`serveClient` option](https://socket.io/docs/v4/server-options/#serveclient) configured on the server.
 
+## Generating documentation
+
+You can generate the AsyncAPI specification of your API and write it into a file, that can be used as the documentation:
+
+```typescript
+import { Documentation } from "express-zod-api";
+
+const yamlString = new Documentation({
+  config,
+  actions,
+  version: "1.2.3",
+  title: "Example APP",
+  servers: { example: { url: "https://example.com" } },
+}).getSpecAsYaml();
+```
+
+_See the example of the generated documentation [here](example/example-documentation.yaml)_
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

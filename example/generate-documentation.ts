@@ -8,7 +8,7 @@ await writeFile(
   "example/example-documentation.yaml",
   new Documentation({
     version: manifest.version,
-    title: "Example API",
+    title: "Example APP",
     description: "AsyncAPI documentation example",
     contact: manifest.author,
     license: { name: manifest.license },

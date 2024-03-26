@@ -11,7 +11,6 @@ import {
   map,
   mergeDeepRight,
   mergeDeepWith,
-  omit,
   union,
   xprod,
 } from "ramda";
@@ -21,14 +20,14 @@ import { HandlingRules, HandlingVariant, SchemaHandler } from "./schema-walker";
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-export interface OpenAPIContext {
+export interface AsyncAPIContext {
   direction: "in" | "out";
 }
 
 type Depicter<
   T extends z.ZodTypeAny,
   Variant extends HandlingVariant = "regular",
-> = SchemaHandler<T, SchemaObject | ReferenceObject, OpenAPIContext, Variant>;
+> = SchemaHandler<T, SchemaObject | ReferenceObject, AsyncAPIContext, Variant>;
 
 const samples = {
   integer: 0,
@@ -444,7 +443,7 @@ export const depictDate: Depicter<z.ZodDate> = () => ({
 
 export const depicters: HandlingRules<
   SchemaObject | ReferenceObject,
-  OpenAPIContext
+  AsyncAPIContext
 > = {
   ZodString: depictString,
   ZodNumber: depictNumber,
@@ -504,33 +503,3 @@ export const onEach: Depicter<z.ZodTypeAny, "each"> = ({
 
 export const onMissing: Depicter<z.ZodTypeAny, "last"> = ({ schema }) =>
   assert.fail(`Zod type ${schema.constructor.name} is unsupported.`);
-
-export const excludeParamsFromDepiction = (
-  depicted: SchemaObject | ReferenceObject,
-  pathParams: string[],
-): SchemaObject | ReferenceObject => {
-  if (isReferenceObject(depicted)) {
-    return depicted;
-  }
-  const copy = { ...depicted };
-  if (copy.properties) {
-    copy.properties = omit(pathParams, copy.properties);
-  }
-  if (copy.examples) {
-    copy.examples = copy.examples.map((entry) => omit(pathParams, entry));
-  }
-  if (copy.required) {
-    copy.required = copy.required.filter((name) => !pathParams.includes(name));
-  }
-  if (copy.allOf) {
-    copy.allOf = copy.allOf.map((entry) =>
-      excludeParamsFromDepiction(entry, pathParams),
-    );
-  }
-  if (copy.oneOf) {
-    copy.oneOf = copy.oneOf.map((entry) =>
-      excludeParamsFromDepiction(entry, pathParams),
-    );
-  }
-  return copy;
-};

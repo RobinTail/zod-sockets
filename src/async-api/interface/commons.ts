@@ -12,6 +12,8 @@ import {
 } from "./binding";
 import { AsyncServerObject } from "./server";
 
+export type Protocol = "http" | "https" | "ws" | "wss" | "socket.io";
+
 export interface AsyncApiDocument {
   asyncapi: string;
   id?: string;
@@ -31,9 +33,10 @@ export interface AsyncChannelObject {
   subscribe?: AsyncOperationObject;
   /** @desc the messages consumed by the application from the channel. */
   publish?: AsyncOperationObject;
+  /** @desc Describes a map of parameters included in a channel name. */
   parameters?: Record<string, ParameterObject>;
   /** @desc Map describing protocol-specific definitions for a channel. */
-  bindings?: Record<string, WSChannelBinding>;
+  bindings?: Partial<Record<Protocol, WSChannelBinding>>;
 }
 
 export interface AsyncServerVariableObject extends ServerVariableObject {

@@ -61,6 +61,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           message: {
             oneOf: Object.entries(emission).map(([event, { schema }]) => ({
               name: event,
+              messageId: `out${normalizeNS(ns)}/${event}`,
               // @todo use ack
               payload: walkSchema({
                 direction: "out",
@@ -76,17 +77,21 @@ export class Documentation extends AsyncApiDocumentBuilder {
           message: {
             oneOf: actions
               .filter((action) => action.getNamespace() === ns)
-              .map((action) => ({
-                name: action.getEvent(),
-                // @todo use ack
-                payload: walkSchema({
-                  direction: "in",
-                  schema: action.getSchema("input"),
-                  onEach,
-                  onMissing,
-                  rules: depicters,
-                }),
-              })),
+              .map((action) => {
+                const event = action.getEvent();
+                return {
+                  name: event,
+                  messageId: `in${normalizeNS(ns)}/${event}`,
+                  // @todo use ack
+                  payload: walkSchema({
+                    direction: "in",
+                    schema: action.getSchema("input"),
+                    onEach,
+                    onMissing,
+                    rules: depicters,
+                  }),
+                };
+              }),
           },
         },
       };

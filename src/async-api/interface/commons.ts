@@ -91,6 +91,8 @@ export interface AsyncOperationTraitObject {
 }
 
 export interface AsyncMessageTraitObject {
+  /** Unique string used to identify the message. The id MUST be unique among all messages described in the API.*/
+  messageId?: string;
   headers?: SchemaObject;
   correlationId?: AsyncCorrelationObject;
   schemaFormat?: string;

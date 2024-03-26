@@ -5,17 +5,9 @@ import {
   SchemaObjectType,
   isReferenceObject,
 } from "openapi3-ts/oas31";
-import {
-  concat,
-  fromPairs,
-  map,
-  mergeDeepRight,
-  mergeDeepWith,
-  union,
-  xprod,
-} from "ramda";
+import { concat, fromPairs, map, mergeDeepWith, union, xprod } from "ramda";
 import { z } from "zod";
-import { combinations, hasCoercion, tryToTransform } from "./common-helpers";
+import { hasCoercion, tryToTransform } from "./common-helpers";
 import { HandlingRules, HandlingVariant, SchemaHandler } from "./schema-walker";
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
@@ -100,6 +92,8 @@ const tryFlattenIntersection = (
   if (left.required || right.required) {
     flat.required = union(left.required || [], right.required || []);
   }
+  // @todo consider supporting examples
+  /*
   if (left.examples || right.examples) {
     flat.examples = combinations(
       left.examples || [],
@@ -107,6 +101,7 @@ const tryFlattenIntersection = (
       ([a, b]) => mergeDeepRight(a, b),
     );
   }
+  */
   return flat;
 };
 

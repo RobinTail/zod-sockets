@@ -226,6 +226,37 @@ exports[`Documentation helpers > depictIntersection() > should fall back to allO
 }
 `;
 
+exports[`Documentation helpers > depictIntersection() > should flatten three object schemas 1`] = `
+{
+  "properties": {
+    "one": {
+      "format": "double",
+      "maximum": 1.7976931348623157e+308,
+      "minimum": -1.7976931348623157e+308,
+      "type": "number",
+    },
+    "three": {
+      "format": "double",
+      "maximum": 1.7976931348623157e+308,
+      "minimum": -1.7976931348623157e+308,
+      "type": "number",
+    },
+    "two": {
+      "format": "double",
+      "maximum": 1.7976931348623157e+308,
+      "minimum": -1.7976931348623157e+308,
+      "type": "number",
+    },
+  },
+  "required": [
+    "one",
+    "two",
+    "three",
+  ],
+  "type": "object",
+}
+`;
+
 exports[`Documentation helpers > depictIntersection() > should flatten two object schemas 1`] = `
 {
   "properties": {
@@ -261,6 +292,38 @@ exports[`Documentation helpers > depictIntersection() > should maintain uniquene
       "maximum": 1.7976931348623157e+308,
       "minimum": -1.7976931348623157e+308,
       "type": "number",
+    },
+  },
+  "required": [
+    "test",
+  ],
+  "type": "object",
+}
+`;
+
+exports[`Documentation helpers > depictIntersection() > should merge deeply 1`] = `
+{
+  "properties": {
+    "test": {
+      "properties": {
+        "a": {
+          "format": "double",
+          "maximum": 1.7976931348623157e+308,
+          "minimum": -1.7976931348623157e+308,
+          "type": "number",
+        },
+        "b": {
+          "format": "double",
+          "maximum": 1.7976931348623157e+308,
+          "minimum": -1.7976931348623157e+308,
+          "type": "number",
+        },
+      },
+      "required": [
+        "a",
+        "b",
+      ],
+      "type": "object",
     },
   },
   "required": [

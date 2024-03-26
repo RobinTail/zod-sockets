@@ -1,4 +1,3 @@
-import { xprod } from "ramda";
 import { z } from "zod";
 
 export const tryToTransform = <T>(
@@ -20,9 +19,3 @@ export const hasCoercion = (schema: z.ZodTypeAny): boolean =>
   "coerce" in schema._def && typeof schema._def.coerce === "boolean"
     ? schema._def.coerce
     : false;
-
-export const combinations = <T>(
-  a: T[],
-  b: T[],
-  merge: (pair: [T, T]) => T,
-): T[] => (a.length && b.length ? xprod(a, b).map(merge) : a.concat(b));

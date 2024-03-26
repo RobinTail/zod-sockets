@@ -129,6 +129,31 @@ describe("Documentation helpers", () => {
       ).toMatchSnapshot();
     });
 
+    test("should merge deeply", () => {
+      expect(
+        depictIntersection({
+          schema: z
+            .object({ test: z.object({ a: z.number() }) })
+            .and(z.object({ test: z.object({ b: z.number() }) })),
+          ...requestCtx,
+          next: makeNext(requestCtx),
+        }),
+      ).toMatchSnapshot();
+    });
+
+    test("should flatten three object schemas", () => {
+      expect(
+        depictIntersection({
+          schema: z
+            .object({ one: z.number() })
+            .and(z.object({ two: z.number() }))
+            .and(z.object({ three: z.number() })),
+          ...requestCtx,
+          next: makeNext(requestCtx),
+        }),
+      ).toMatchSnapshot();
+    });
+
     test("should maintain uniqueness in the array of required props", () => {
       expect(
         depictIntersection({

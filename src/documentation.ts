@@ -63,6 +63,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           message: {
             oneOf: Object.entries(emission).map(([event, { schema }]) => ({
               name: event,
+              title: event,
               messageId: `out${normalizeNS(ns)}/${event}`,
               // @todo use ack
               payload: walkSchema({
@@ -85,6 +86,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
                 const event = action.getEvent();
                 return {
                   name: event,
+                  title: event,
                   messageId: `in${normalizeNS(ns)}/${event}`,
                   // @todo use ack
                   payload: walkSchema({

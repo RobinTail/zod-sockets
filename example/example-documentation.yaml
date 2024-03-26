@@ -43,6 +43,7 @@ channels:
       message:
         oneOf:
           - name: time
+            title: time
             messageId: out//time
             payload:
               type: object
@@ -52,6 +53,7 @@ channels:
                   type: string
                   description: current ISO time
           - name: chat
+            title: chat
             messageId: out//chat
             payload:
               type: object
@@ -70,6 +72,7 @@ channels:
                     - from
                   description: extra info
           - name: rooms
+            title: rooms
             messageId: out//rooms
             payload:
               type: object
@@ -86,6 +89,7 @@ channels:
       message:
         oneOf:
           - name: chat
+            title: chat
             messageId: in//chat
             payload:
               type: object
@@ -95,12 +99,14 @@ channels:
                   type: string
                   description: message
           - name: ping
+            title: ping
             messageId: in//ping
             payload:
               type: object
               format: tuple
               properties: {}
           - name: subscribe
+            title: subscribe
             messageId: in//subscribe
             payload:
               type: object

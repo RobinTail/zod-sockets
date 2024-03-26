@@ -2,7 +2,7 @@
 
 exports[`AsyncApiDocumentBuilder > getSpec() > should return the document 1`] = `
 {
-  "asyncapi": "2.5.0",
+  "asyncapi": "2.6.0",
   "channels": {},
   "components": {},
   "info": {
@@ -14,10 +14,10 @@ exports[`AsyncApiDocumentBuilder > getSpec() > should return the document 1`] = 
 }
 `;
 
-exports[`AsyncApiDocumentBuilder > getSpecAsJson() > should return the document 1`] = `"{"asyncapi":"2.5.0","info":{"title":"test","version":"1.0.0"},"tags":[],"servers":{},"channels":{},"components":{}}"`;
+exports[`AsyncApiDocumentBuilder > getSpecAsJson() > should return the document 1`] = `"{"asyncapi":"2.6.0","info":{"title":"test","version":"1.0.0"},"tags":[],"servers":{},"channels":{},"components":{}}"`;
 
 exports[`AsyncApiDocumentBuilder > getSpecAsYaml() > should return the document 1`] = `
-"asyncapi: 2.5.0
+"asyncapi: 2.6.0
 info:
   title: test
   version: 1.0.0

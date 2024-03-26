@@ -1,6 +1,5 @@
 import type {
   ExternalDocumentationObject,
-  InfoObject,
   SecuritySchemeObject,
   TagObject,
 } from "openapi3-ts/oas31";
@@ -16,10 +15,12 @@ import yaml from "yaml";
 export class AsyncApiDocumentBuilder {
   protected readonly document: AsyncApiDocument;
 
-  constructor(info: InfoObject) {
+  constructor(
+    initial: Pick<AsyncApiDocument, "info" | "id" | "defaultContentType">,
+  ) {
     this.document = {
       asyncapi: "2.5.0",
-      info,
+      ...initial,
       tags: [],
       servers: {},
       channels: {},

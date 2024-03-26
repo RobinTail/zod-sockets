@@ -32,14 +32,16 @@ export class Documentation extends AsyncApiDocumentBuilder {
     license,
     servers = {},
   }: DocumentationParams) {
-    super({ title, version, contact, license, description });
-    this.document.id = documentId;
-    this.document.defaultContentType = "text/plain"; // or application/octet-stream for binary data
+    super({
+      info: { title, version, contact, license, description },
+      id: documentId,
+      defaultContentType: "text/plain",
+    });
     for (const server in servers) {
       this.addServer(server, { ...servers[server], protocol: "socket.io" });
       if (!this.document.id) {
         const uri = new URL(servers[server].url.toLowerCase());
-        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.split("/")).join(":")}`;
+        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
       }
     }
     for (const [ns, { emission }] of Object.entries(namespaces)) {

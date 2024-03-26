@@ -9,6 +9,8 @@ info:
   license:
     name: MIT
   description: AsyncAPI documentation example
+id: urn:example:com:socket.io
+defaultContentType: text/plain
 tags: []
 servers:
   example:
@@ -159,5 +161,3 @@ channels:
                 description: Does not matter
               properties: {}
 components: {}
-id: urn:example:com::socket.io
-defaultContentType: text/plain

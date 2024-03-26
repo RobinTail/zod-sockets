@@ -96,7 +96,7 @@ describe("Documentation", () => {
                   }),
                 ),
             ]),
-            handler: async () => ({ five: 5, six: "six" }),
+            handler: async () => [{ five: 5, six: "six" }],
           }),
         ],
         version: "3.4.5",

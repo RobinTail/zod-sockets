@@ -44,7 +44,7 @@ channels:
             payload:
               type: array
               prefixItems:
-                - format: any
+                - type: string
                   description: current ISO time
           - name: chat
             payload:

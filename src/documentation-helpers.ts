@@ -372,7 +372,7 @@ const makeSample = (depicted: SchemaObject) => {
   const type = (
     Array.isArray(depicted.type) ? depicted.type[0] : depicted.type
   ) as keyof typeof samples;
-  return samples?.[type];
+  return depicted.format === "date" ? new Date() : samples?.[type];
 };
 
 const makeNullableType = (prev: SchemaObject): SchemaObjectType[] => {

@@ -1,4 +1,4 @@
-import { ServerObject } from "openapi3-ts/oas31";
+import type { ServerObject } from "openapi3-ts/oas31";
 import { WSServerBinding } from "./binding";
 import { AsyncServerVariableObject, SecurityObject } from "./commons";
 

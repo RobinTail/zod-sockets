@@ -1,4 +1,4 @@
-import { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
+import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
 
 /**
  * @see https://github.com/asyncapi/bindings/tree/master/websockets

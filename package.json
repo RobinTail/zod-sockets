@@ -102,6 +102,11 @@
     "websocket",
     "websockets",
     "socket-io",
-    "zod"
+    "zod",
+    "typescript-library",
+    "asyncapi",
+    "async-api",
+    "asyncapi-specification",
+    "asyncapi-tools"
   ]
 }

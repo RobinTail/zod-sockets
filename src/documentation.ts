@@ -48,7 +48,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
             query: walkSchema({
               direction: "in",
               schema: z.object({
-                EIO: z.number().optional(),
+                EIO: z.number().int().positive().optional(),
                 transport: z.literal("websocket").optional(),
               }),
               onEach,

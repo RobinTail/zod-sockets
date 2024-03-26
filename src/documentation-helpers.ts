@@ -255,11 +255,21 @@ export const depictArray: Depicter<z.ZodArray<z.ZodTypeAny>> = ({
   return result;
 };
 
-/** @since OAS 3.1 using prefixItems for depicting tuples */
+/**
+ * @desc AsyncAPI does not support prefixItems, so tuples are depicted as objects with numeric properties
+ * @todo use prefixItems when supported
+ * */
 export const depictTuple: Depicter<z.AnyZodTuple> = ({
   schema: { items },
   next,
-}) => ({ type: "array", prefixItems: items.map(next) });
+}) => ({
+  type: "object",
+  format: "tuple",
+  properties: items.reduce(
+    (agg, item, index) => ({ ...agg, [index]: next(item) }),
+    {},
+  ),
+});
 
 export const depictString: Depicter<z.ZodString> = ({
   schema: {

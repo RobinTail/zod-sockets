@@ -42,17 +42,22 @@ channels:
         oneOf:
           - name: time
             payload:
-              type: array
-              prefixItems:
-                - type: string
+              type: object
+              format: tuple
+              properties:
+                "0":
+                  type: string
                   description: current ISO time
           - name: chat
             payload:
-              type: array
-              prefixItems:
-                - type: string
+              type: object
+              format: tuple
+              properties:
+                "0":
+                  type: string
                   description: message
-                - type: object
+                "1":
+                  type: object
                   properties:
                     from:
                       type: string
@@ -62,9 +67,11 @@ channels:
                   description: extra info
           - name: rooms
             payload:
-              type: array
-              prefixItems:
-                - type: array
+              type: object
+              format: tuple
+              properties:
+                "0":
+                  type: array
                   items:
                     type: string
                   description: room IDs
@@ -73,16 +80,20 @@ channels:
         oneOf:
           - name: chat
             payload:
-              type: array
-              prefixItems:
-                - type: string
+              type: object
+              format: tuple
+              properties:
+                "0":
+                  type: string
                   description: message
           - name: ping
             payload:
-              type: array
-              prefixItems: []
+              type: object
+              format: tuple
+              properties: {}
           - name: subscribe
             payload:
-              type: array
-              prefixItems: []
+              type: object
+              format: tuple
+              properties: {}
 components: {}

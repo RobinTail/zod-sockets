@@ -16,6 +16,7 @@ export type Protocol = "http" | "https" | "ws" | "wss" | "socket.io";
 
 export interface AsyncApiDocument {
   asyncapi: string;
+  /** @desc URI or URN format */
   id?: string;
   info: InfoObject;
   servers?: Record<string, AsyncServerObject>;

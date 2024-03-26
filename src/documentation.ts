@@ -25,11 +25,15 @@ export class Documentation extends AsyncApiDocumentBuilder {
   }: DocumentationParams) {
     super({ title, version });
     this.document.defaultContentType = "text/plain"; // or application/octet-stream for binary data
-    for (const [ns, { emission }] of Object.entries(namespaces)) {
-      for (const server in servers) {
-        // @todo wss: move target to Config in order to detect this
-        this.addServer(server, { ...servers[server], protocol: "ws" });
+    for (const server in servers) {
+      // @todo wss: move target to Config in order to detect this
+      this.addServer(server, { ...servers[server], protocol: "ws" });
+      if (!this.document.id) {
+        const uri = new URL(servers[server].url.toLowerCase());
+        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.split("/")).join(":")}`;
       }
+    }
+    for (const [ns, { emission }] of Object.entries(namespaces)) {
       const channel: AsyncChannelObject = {
         description: `${normalizeNS(ns)} namespace`,
         bindings: {

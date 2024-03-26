@@ -114,3 +114,4 @@ channels:
               properties: {}
 components: {}
 defaultContentType: text/plain
+id: "urn:example:com::"

@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.11.1
+
+- Fix: marked tuple items as required.
+
 ### v0.11.0
 
 - Featuring `Documentation` class:

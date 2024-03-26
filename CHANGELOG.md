@@ -13,7 +13,10 @@
     - `z.lazy()` and handling of circular references,
     - References and component-based composition of the document,
     - Informative errors.
-  - See the example of the generated documentation [here](example/example-documentation.yaml)
+  - Since AsyncAPI does not yet support `prefixItems` feature for describing tuples, those are depicted as objects
+    having numeric properties. I found it acceptable at the moment because
+    [Arrays are Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array);
+  - See the example of the generated documentation [here](example/example-documentation.yaml).
 
 ```typescript
 import { Documentation } from "zod-sockets";

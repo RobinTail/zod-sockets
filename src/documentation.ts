@@ -1,3 +1,4 @@
+import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
@@ -10,6 +11,10 @@ import { walkSchema } from "./schema-walker";
 interface DocumentationParams {
   title: string;
   version: string;
+  documentId?: string;
+  description?: string;
+  contact?: ContactObject;
+  license?: LicenseObject;
   servers?: Record<string, { url: string }>;
   actions: AbstractAction[];
   config: Config<Namespaces>;
@@ -21,9 +26,14 @@ export class Documentation extends AsyncApiDocumentBuilder {
     config: { namespaces },
     title,
     version,
+    documentId,
+    description,
+    contact,
+    license,
     servers = {},
   }: DocumentationParams) {
-    super({ title, version });
+    super({ title, version, contact, license, description });
+    this.document.id = documentId;
     this.document.defaultContentType = "text/plain"; // or application/octet-stream for binary data
     for (const server in servers) {
       // @todo wss: move target to Config in order to detect this

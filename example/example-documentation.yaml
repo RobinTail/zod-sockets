@@ -2,6 +2,13 @@ asyncapi: 2.5.0
 info:
   title: Example API
   version: 0.10.0
+  contact:
+    name: Anna Bocharova
+    url: https://robintail.cz
+    email: me@robintail.cz
+  license:
+    name: MIT
+  description: AsyncAPI documentation example
 tags: []
 servers:
   example:
@@ -113,5 +120,5 @@ channels:
               format: tuple
               properties: {}
 components: {}
-defaultContentType: text/plain
 id: "urn:example:com::"
+defaultContentType: text/plain

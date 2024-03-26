@@ -12,8 +12,8 @@ info:
 tags: []
 servers:
   example:
-    url: ws://example.com
-    protocol: ws
+    url: https://example.com
+    protocol: wss
 channels:
   /:
     description: / namespace

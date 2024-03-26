@@ -27,11 +27,11 @@ export interface WSChannelBinding {
   bindingVersion: "0.1.0";
 }
 
+/** @desc This object MUST NOT contain any properties. Its name is reserved for future use. */
+export interface WSOperationBinding {}
+
 /**
  * @desc This object MUST NOT contain any properties. Its name is reserved for future use.
  * @todo Add acknowledgements schema for Sockets.IO bindings
  * */
-export interface WSOperationBinding {}
-
-/** @desc This object MUST NOT contain any properties. Its name is reserved for future use. */
 export interface WSMessageBinding {}

@@ -27,7 +27,9 @@ export interface AsyncApiDocument {
 export type AsyncChannelsObject = Record<string, AsyncChannelObject>;
 export interface AsyncChannelObject {
   description?: string;
+  /** @desc the messages produced by the application and sent to the channel. */
   subscribe?: AsyncOperationObject;
+  /** @desc the messages consumed by the application from the channel. */
   publish?: AsyncOperationObject;
   parameters?: Record<string, ParameterObject>;
   bindings?: Record<string, WSChannelBinding>;
@@ -147,9 +149,7 @@ export interface OAuthFlowObject {
 
 export type ScopesObject = Record<string, unknown>;
 
-export type ParameterObject = BaseParameterObject;
-
-export interface BaseParameterObject {
+export interface ParameterObject {
   description?: string;
   schema?: SchemaObject | ReferenceObject;
   location?: string;

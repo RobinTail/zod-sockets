@@ -5,7 +5,15 @@ import {
   SchemaObjectType,
   isReferenceObject,
 } from "openapi3-ts/oas31";
-import { concat, fromPairs, map, mergeDeepWith, union, xprod } from "ramda";
+import {
+  concat,
+  fromPairs,
+  map,
+  mergeDeepWith,
+  range,
+  union,
+  xprod,
+} from "ramda";
 import { z } from "zod";
 import { hasCoercion, tryToTransform } from "./common-helpers";
 import { HandlingRules, HandlingVariant, SchemaHandler } from "./schema-walker";
@@ -262,11 +270,12 @@ export const depictTuple: Depicter<z.AnyZodTuple> = ({
 }) => ({
   type: "object",
   format: "tuple",
-  additionalProperties: rest === null ? false : next(rest),
   properties: items.reduce(
     (agg, item, index) => ({ ...agg, [index]: next(item) }),
     {},
   ),
+  required: range(0, items.length).map(String),
+  additionalProperties: rest === null ? false : next(rest),
 });
 
 export const depictString: Depicter<z.ZodString> = ({

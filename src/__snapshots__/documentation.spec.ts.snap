@@ -68,7 +68,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: array
@@ -85,13 +84,17 @@ channels:
                     type: boolean
                 "2":
                   type: string
+              required:
+                - "0"
+                - "1"
+                - "2"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type: string
@@ -102,6 +105,10 @@ channels:
                       format: double
                       minimum: -1.7976931348623157e+308
                       maximum: 1.7976931348623157e+308
+                  required:
+                    - "0"
+                    - "1"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -175,7 +182,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   discriminator:
@@ -203,13 +209,15 @@ channels:
                       required:
                         - type
                         - b
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       discriminator:
@@ -241,6 +249,9 @@ channels:
                           required:
                             - status
                             - error
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -314,7 +325,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: object
@@ -326,13 +336,15 @@ channels:
                   required:
                     - one
                     - two
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type: object
@@ -347,6 +359,9 @@ channels:
                       required:
                         - five
                         - six
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -420,7 +435,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -439,18 +453,26 @@ channels:
                   exclusiveMinimum: 0
                   maximum: 9007199254740991
                   default: 123
+              required:
+                - "0"
+                - "1"
+                - "2"
+                - "3"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type:
                         - string
                         - "null"
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -524,7 +546,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   oneOf:
@@ -552,13 +573,15 @@ channels:
                       required:
                         - two
                         - three
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       oneOf:
@@ -567,6 +590,9 @@ channels:
                           format: int64
                           exclusiveMinimum: 0
                           maximum: 9007199254740991
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -639,18 +665,19 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
                   description: current ISO time
+              required:
+                - "0"
+              additionalProperties: false
           - name: chat
             title: chat
             messageId: out//chat
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -664,19 +691,25 @@ channels:
                   required:
                     - from
                   description: extra info
+              required:
+                - "0"
+                - "1"
+              additionalProperties: false
           - name: rooms
             title: rooms
             messageId: out//rooms
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: array
                   items:
                     type: string
                   description: room IDs
+              required:
+                - "0"
+              additionalProperties: false
     publish:
       operationId: in/
       description: The messages consumed by the application within the / namespace
@@ -688,36 +721,41 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
                   description: message
+              required:
+                - "0"
+              additionalProperties: false
           - name: ping
             title: ping
             messageId: in//ping
             payload:
               type: object
               format: tuple
+              properties: {}
+              required: []
               additionalProperties:
                 format: any
                 description: Anything
-              properties: {}
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties:
-                    format: any
-                    description: echo
                   properties:
                     "0":
                       type: string
                       enum:
                         - pong
                       description: literally
+                  required:
+                    - "0"
+                  additionalProperties:
+                    format: any
+                    description: echo
                   description: Acknowledgement
           - name: subscribe
             title: subscribe
@@ -725,10 +763,11 @@ channels:
             payload:
               type: object
               format: tuple
+              properties: {}
+              required: []
               additionalProperties:
                 format: any
                 description: Does not matter
-              properties: {}
 components: {}
 "
 `;
@@ -801,7 +840,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: object
@@ -817,19 +855,25 @@ channels:
                     - bigint
                     - boolean
                     - date
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type:
                         - "null"
                     "1":
                       format: date
+                  required:
+                    - "0"
+                    - "1"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -903,7 +947,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: number
@@ -950,17 +993,30 @@ channels:
                   format: int64
                   minimum: 0
                   maximum: 0
+              required:
+                - "0"
+                - "1"
+                - "2"
+                - "3"
+                - "4"
+                - "5"
+                - "6"
+                - "7"
+                - "8"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type: integer
                       format: bigint
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1034,7 +1090,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -1081,17 +1136,35 @@ channels:
                   minLength: 1
                   maxLength: 90
                   pattern: .*@example\\.com
+              required:
+                - "0"
+                - "1"
+                - "2"
+                - "3"
+                - "4"
+                - "5"
+                - "6"
+                - "7"
+                - "8"
+                - "9"
+                - "10"
+                - "11"
+                - "12"
+                - "13"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type: string
                       minLength: 1
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1165,26 +1238,30 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
                   enum:
                     - ABC
                     - DEF
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type: number
                       enum:
                         - 1
                         - 2
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1258,15 +1335,15 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties: {}
+              required: []
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type: object
@@ -1310,6 +1387,14 @@ channels:
                       required:
                         - option1
                         - option2
+                  required:
+                    - "0"
+                    - "1"
+                    - "2"
+                    - "3"
+                    - "4"
+                    - "5"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1383,7 +1468,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: object
@@ -1398,16 +1482,21 @@ channels:
                   required:
                     - one
                     - two
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type: number
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1481,18 +1570,21 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: boolean
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties: {}
+                  required: []
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1566,7 +1658,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -1574,14 +1665,19 @@ channels:
                   type:
                     - string
                     - "null"
+              required:
+                - "0"
+                - "1"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties: {}
+                  required: []
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1655,7 +1751,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: boolean
@@ -1666,14 +1761,20 @@ channels:
                   format: int64
                   exclusiveMinimum: 0
                   maximum: 9007199254740991
+              required:
+                - "0"
+                - "1"
+                - "2"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties: {}
+                  required: []
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1747,16 +1848,18 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties: {}
+              required: []
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties: {}
+                  required: []
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1830,20 +1933,24 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   format: any
+              required:
+                - "0"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       format: any
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "
@@ -1917,7 +2024,6 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   format: string (preprocessed)
@@ -1925,18 +2031,24 @@ channels:
                   format: int64 (preprocessed)
                   minimum: 0
                   maximum: 9007199254740991
+              required:
+                - "0"
+                - "1"
+              additionalProperties: false
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties: false
                   properties:
                     "0":
                       type:
                         - boolean
                         - "null"
+                  required:
+                    - "0"
+                  additionalProperties: false
                   description: Acknowledgement
 components: {}
 "

@@ -71,18 +71,19 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
                   description: current ISO time
+              required:
+                - "0"
+              additionalProperties: false
           - name: chat
             title: chat
             messageId: out//chat
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -96,19 +97,25 @@ channels:
                   required:
                     - from
                   description: extra info
+              required:
+                - "0"
+                - "1"
+              additionalProperties: false
           - name: rooms
             title: rooms
             messageId: out//rooms
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: array
                   items:
                     type: string
                   description: room IDs
+              required:
+                - "0"
+              additionalProperties: false
     publish:
       operationId: in/
       description: The messages consumed by the application within the / namespace
@@ -120,36 +127,41 @@ channels:
             payload:
               type: object
               format: tuple
-              additionalProperties: false
               properties:
                 "0":
                   type: string
                   description: message
+              required:
+                - "0"
+              additionalProperties: false
           - name: ping
             title: ping
             messageId: in//ping
             payload:
               type: object
               format: tuple
+              properties: {}
+              required: []
               additionalProperties:
                 format: any
                 description: Anything
-              properties: {}
             bindings:
               socket.io:
                 bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple
-                  additionalProperties:
-                    format: any
-                    description: echo
                   properties:
                     "0":
                       type: string
                       enum:
                         - pong
                       description: literally
+                  required:
+                    - "0"
+                  additionalProperties:
+                    format: any
+                    description: echo
                   description: Acknowledgement
           - name: subscribe
             title: subscribe
@@ -157,8 +169,9 @@ channels:
             payload:
               type: object
               format: tuple
+              properties: {}
+              required: []
               additionalProperties:
                 format: any
                 description: Does not matter
-              properties: {}
 components: {}

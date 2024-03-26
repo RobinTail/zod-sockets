@@ -36,13 +36,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
     this.document.id = documentId;
     this.document.defaultContentType = "text/plain"; // or application/octet-stream for binary data
     for (const server in servers) {
-      const isSecure = new URL(servers[server].url).protocol
-        .toLowerCase()
-        .match(/(https|wss)/);
-      this.addServer(server, {
-        ...servers[server],
-        protocol: isSecure ? "wss" : "ws",
-      });
+      this.addServer(server, { ...servers[server], protocol: "socket.io" });
       if (!this.document.id) {
         const uri = new URL(servers[server].url.toLowerCase());
         this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.split("/")).join(":")}`;
@@ -52,9 +46,9 @@ export class Documentation extends AsyncApiDocumentBuilder {
       const channel: AsyncChannelObject = {
         description: `${normalizeNS(ns)} namespace`,
         bindings: {
-          ws: {
+          "socket.io": {
+            bindingVersion: "0.11.0",
             method: "GET",
-            bindingVersion: "0.1.0",
             headers: walkSchema({
               direction: "in",
               schema: z.object({
@@ -95,6 +89,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
               bindings: ack
                 ? {
                     "socket.io": {
+                      bindingVersion: "0.11.0",
                       ack: walkSchema({
                         direction: "in",
                         schema: ack,

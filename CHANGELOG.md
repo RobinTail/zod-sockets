@@ -2,6 +2,31 @@
 
 ## Version 0
 
+### v0.11.0
+
+- Featuring `Documentation` class:
+  - Ability to generate the documentation of your Socket.IO-based application according to AsyncAPI standard;
+  - Using a custom protocol `socket.io` that extends WebSockets bindings for describing acknowledgements and handshake;
+  - Compliance with AsyncAPI version 2.5.0 so far (will be increased later);
+  - Following features are not supported yet:
+    - Examples,
+    - `z.lazy()` and handling of circular references,
+    - References and component-based composition of the document,
+    - Informative errors.
+  - See the example of the generated documentation [here](example/example-documentation.yaml)
+
+```typescript
+import { Documentation } from "zod-sockets";
+
+const yamlString = new Documentation({
+  config,
+  actions,
+  version: "1.2.3",
+  title: "Example APP",
+  servers: { example: { url: "https://example.com" } },
+}).getSpecAsYaml();
+```
+
 ### v0.10.0
 
 - Important changes to configuration:

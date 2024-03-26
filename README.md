@@ -514,7 +514,7 @@ Alternatively, you can avoid installing and importing `socket.io-client` module 
 You can generate the AsyncAPI specification of your API and write it into a file, that can be used as the documentation:
 
 ```typescript
-import { Documentation } from "express-zod-api";
+import { Documentation } from "zod-sockets";
 
 const yamlString = new Documentation({
   config,

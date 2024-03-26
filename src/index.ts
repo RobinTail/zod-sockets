@@ -3,6 +3,7 @@ export { createConfig, type Config } from "./config";
 export { ActionsFactory } from "./actions-factory";
 export { AbstractAction } from "./action";
 export { Integration } from "./integration";
+export { Documentation } from "./documentation";
 
 // issue 952
 export type { EmissionMap } from "./emission";

@@ -1,0 +1,1943 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Documentation > Basic cases > should generate the correct schema for complex types 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing Complex Types
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                  minItems: 1
+                  maxItems: 3
+                "1":
+                  type: array
+                  items:
+                    type: boolean
+                "2":
+                  type: string
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: string
+                      enum:
+                        - something
+                    "1":
+                      type: number
+                      format: double
+                      minimum: -1.7976931348623157e+308
+                      maximum: 1.7976931348623157e+308
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should generate the correct schema for discriminated union type 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing Discriminated Union Type
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  discriminator:
+                    propertyName: type
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - a
+                        a:
+                          type: string
+                      required:
+                        - type
+                        - a
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - b
+                        b:
+                          type: string
+                      required:
+                        - type
+                        - b
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      discriminator:
+                        propertyName: status
+                      oneOf:
+                        - type: object
+                          properties:
+                            status:
+                              type: string
+                              enum:
+                                - success
+                            data:
+                              format: any
+                          required:
+                            - status
+                        - type: object
+                          properties:
+                            status:
+                              type: string
+                              enum:
+                                - error
+                            error:
+                              type: object
+                              properties:
+                                message:
+                                  type: string
+                              required:
+                                - message
+                          required:
+                            - status
+                            - error
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should generate the correct schema for intersection type 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing Intersection and And types
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: object
+                  properties:
+                    one:
+                      type: string
+                    two:
+                      type: string
+                  required:
+                    - one
+                    - two
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: object
+                      properties:
+                        five:
+                          type: integer
+                          format: int64
+                          minimum: 0
+                          maximum: 9007199254740991
+                        six:
+                          type: string
+                      required:
+                        - five
+                        - six
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should generate the correct schema for nullable and optional types 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing Nullable and Optional Types
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                "1":
+                  type: string
+                  default: test
+                "2":
+                  type:
+                    - boolean
+                    - "null"
+                "3":
+                  type:
+                    - integer
+                    - "null"
+                  format: int64
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+                  default: 123
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type:
+                        - string
+                        - "null"
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should generate the correct schema for union type 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing Union and Or Types
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: name
+            title: name
+            messageId: in//name
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  oneOf:
+                    - type: object
+                      properties:
+                        one:
+                          type: string
+                        two:
+                          type: integer
+                          format: int64
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                      required:
+                        - one
+                        - two
+                    - type: object
+                      properties:
+                        two:
+                          type: integer
+                          format: int64
+                          minimum: -9007199254740991
+                          exclusiveMaximum: 0
+                        three:
+                          type: string
+                      required:
+                        - two
+                        - three
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      oneOf:
+                        - type: string
+                        - type: integer
+                          format: int64
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should generate the correct schema of the example 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Example API
+  version: 1.2.3
+id: urn:example:com:socket.io
+defaultContentType: text/plain
+tags: []
+servers:
+  example:
+    url: https://example.com/socket.io
+    protocol: socket.io
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf:
+          - name: time
+            title: time
+            messageId: out//time
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                  description: current ISO time
+          - name: chat
+            title: chat
+            messageId: out//chat
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                  description: message
+                "1":
+                  type: object
+                  properties:
+                    from:
+                      type: string
+                      description: the ID of author
+                  required:
+                    - from
+                  description: extra info
+          - name: rooms
+            title: rooms
+            messageId: out//rooms
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: array
+                  items:
+                    type: string
+                  description: room IDs
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: chat
+            title: chat
+            messageId: in//chat
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                  description: message
+          - name: ping
+            title: ping
+            messageId: in//ping
+            payload:
+              type: object
+              format: tuple
+              additionalProperties:
+                format: any
+                description: Anything
+              properties: {}
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties:
+                    format: any
+                    description: echo
+                  properties:
+                    "0":
+                      type: string
+                      enum:
+                        - pong
+                      description: literally
+                  description: Acknowledgement
+          - name: subscribe
+            title: subscribe
+            messageId: in//subscribe
+            payload:
+              type: object
+              format: tuple
+              additionalProperties:
+                format: any
+                description: Does not matter
+              properties: {}
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle bigint, boolean, date, null and readonly 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing additional types
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: object
+                  properties:
+                    bigint:
+                      type: integer
+                      format: bigint
+                    boolean:
+                      type: boolean
+                    date:
+                      format: date
+                  required:
+                    - bigint
+                    - boolean
+                    - date
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type:
+                        - "null"
+                    "1":
+                      format: date
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle different number types 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing numbers
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: number
+                  format: double
+                  minimum: -1.7976931348623157e+308
+                  maximum: 1.7976931348623157e+308
+                "1":
+                  type: number
+                  format: double
+                  exclusiveMinimum: 0
+                  maximum: 1.7976931348623157e+308
+                "2":
+                  type: number
+                  format: double
+                  minimum: -1.7976931348623157e+308
+                  exclusiveMaximum: 0
+                "3":
+                  type: number
+                  format: double
+                  minimum: -0.5
+                  maximum: 0.5
+                "4":
+                  type: integer
+                  format: int64
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                "5":
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+                "6":
+                  type: integer
+                  format: int64
+                  minimum: -9007199254740991
+                  exclusiveMaximum: 0
+                "7":
+                  type: integer
+                  format: int64
+                  minimum: -100
+                  maximum: 100
+                "8":
+                  type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 0
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: integer
+                      format: bigint
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle different string types 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing strings
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                "1":
+                  type: string
+                  minLength: 1
+                "2":
+                  type: string
+                  maxLength: 15
+                "3":
+                  type: string
+                  minLength: 2
+                  maxLength: 3
+                "4":
+                  type: string
+                  format: email
+                "5":
+                  type: string
+                  format: uuid
+                "6":
+                  type: string
+                  format: cuid
+                "7":
+                  type: string
+                  format: cuid2
+                "8":
+                  type: string
+                  format: ulid
+                "9":
+                  type: string
+                  format: ip
+                "10":
+                  type: string
+                  format: emoji
+                "11":
+                  type: string
+                  format: url
+                "12":
+                  type: string
+                  pattern: \\d+
+                "13":
+                  type: string
+                  format: email
+                  minLength: 1
+                  maxLength: 90
+                  pattern: .*@example\\.com
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: string
+                      minLength: 1
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle enum types 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing enums
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                  enum:
+                    - ABC
+                    - DEF
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: number
+                      enum:
+                        - 1
+                        - 2
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle record 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing record
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties: {}
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: object
+                      additionalProperties:
+                        type: integer
+                        format: int64
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                    "1":
+                      type: object
+                      additionalProperties:
+                        type: boolean
+                    "2":
+                      type: object
+                      additionalProperties:
+                        type: boolean
+                    "3":
+                      type: object
+                      properties:
+                        only:
+                          type: boolean
+                      required:
+                        - only
+                    "4":
+                      type: object
+                      properties:
+                        option1:
+                          type: boolean
+                        option2:
+                          type: boolean
+                      required:
+                        - option1
+                        - option2
+                    "5":
+                      type: object
+                      properties:
+                        option1:
+                          type: boolean
+                        option2:
+                          type: boolean
+                      required:
+                        - option1
+                        - option2
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle transformation schema in output 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing Transformation in response schema
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: object
+                  properties:
+                    one:
+                      type: string
+                    two:
+                      type: integer
+                      format: int64
+                      exclusiveMinimum: 0
+                      maximum: 9007199254740991
+                  required:
+                    - one
+                    - two
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: number
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle tuples 0 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing tuples
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: boolean
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties: {}
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle tuples 1 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing tuples
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                "1":
+                  type:
+                    - string
+                    - "null"
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties: {}
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle tuples 2 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing tuples
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: boolean
+                "1":
+                  type: string
+                "2":
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties: {}
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle tuples 3 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing tuples
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties: {}
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties: {}
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle type any 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing type any
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  format: any
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      format: any
+                  description: Acknowledgement
+components: {}
+"
+`;
+
+exports[`Documentation > Basic cases > should handle z.preprocess() 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing z.preprocess()
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  format: string (preprocessed)
+                "1":
+                  format: int64 (preprocessed)
+                  minimum: 0
+                  maximum: 9007199254740991
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type:
+                        - boolean
+                        - "null"
+                  description: Acknowledgement
+components: {}
+"
+`;

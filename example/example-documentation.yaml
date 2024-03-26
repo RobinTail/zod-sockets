@@ -1,0 +1,164 @@
+asyncapi: 2.5.0
+info:
+  title: Example APP
+  version: 0.10.0
+  contact:
+    name: Anna Bocharova
+    url: https://robintail.cz
+    email: me@robintail.cz
+  license:
+    name: MIT
+  description: AsyncAPI documentation example
+id: urn:example:com:socket.io
+defaultContentType: text/plain
+tags: []
+servers:
+  example:
+    url: https://example.com/socket.io
+    protocol: socket.io
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf:
+          - name: time
+            title: time
+            messageId: out//time
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                  description: current ISO time
+          - name: chat
+            title: chat
+            messageId: out//chat
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                  description: message
+                "1":
+                  type: object
+                  properties:
+                    from:
+                      type: string
+                      description: the ID of author
+                  required:
+                    - from
+                  description: extra info
+          - name: rooms
+            title: rooms
+            messageId: out//rooms
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: array
+                  items:
+                    type: string
+                  description: room IDs
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: chat
+            title: chat
+            messageId: in//chat
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: string
+                  description: message
+          - name: ping
+            title: ping
+            messageId: in//ping
+            payload:
+              type: object
+              format: tuple
+              additionalProperties:
+                format: any
+                description: Anything
+              properties: {}
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties:
+                    format: any
+                    description: echo
+                  properties:
+                    "0":
+                      type: string
+                      enum:
+                        - pong
+                      description: literally
+                  description: Acknowledgement
+          - name: subscribe
+            title: subscribe
+            messageId: in//subscribe
+            payload:
+              type: object
+              format: tuple
+              additionalProperties:
+                format: any
+                description: Does not matter
+              properties: {}
+components: {}

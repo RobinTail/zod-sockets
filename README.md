@@ -13,6 +13,7 @@ Version 0 is unstable — public API may be changed at any time.
 - [Typescript](https://www.typescriptlang.org/) first.
 - Sockets — [Socket.IO](https://socket.io/), using [WebSocket](https://github.com/websockets/ws) for transport.
 - Schema validation — [Zod 3.x](https://github.com/colinhacks/zod).
+- Generating documentation according to [AsyncAPI](https://www.asyncapi.com) specification.
 - Generating client side types — inspired by [zod-to-ts](https://github.com/sachinraja/zod-to-ts).
 - Supports any logger having `info()`, `debug()`, `error()` and `warn()` methods.
 
@@ -507,6 +508,24 @@ const socket: Root.Socket = io(Root.path);
 Alternatively, you can avoid installing and importing `socket.io-client` module by making a
 [standalone build](https://socket.io/docs/v4/client-installation/#standalone-build) having
 [`serveClient` option](https://socket.io/docs/v4/server-options/#serveclient) configured on the server.
+
+## Generating documentation
+
+You can generate the AsyncAPI specification of your API and write it into a file, that can be used as the documentation:
+
+```typescript
+import { Documentation } from "zod-sockets";
+
+const yamlString = new Documentation({
+  config,
+  actions,
+  version: "1.2.3",
+  title: "Example APP",
+  servers: { example: { url: "https://example.com/socket.io" } },
+}).getSpecAsYaml();
+```
+
+_See the example of the generated documentation [here](example/example-documentation.yaml)_
 
 # Next
 

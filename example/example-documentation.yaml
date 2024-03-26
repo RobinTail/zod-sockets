@@ -38,6 +38,8 @@ channels:
               enum:
                 - websocket
     subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
       message:
         oneOf:
           - name: time
@@ -79,6 +81,8 @@ channels:
                     type: string
                   description: room IDs
     publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: chat

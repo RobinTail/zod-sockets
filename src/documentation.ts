@@ -58,6 +58,8 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
         subscribe: {
+          operationId: `out${normalizeNS(ns)}`,
+          description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: Object.entries(emission).map(([event, { schema }]) => ({
               name: event,
@@ -74,6 +76,8 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
         publish: {
+          operationId: `in${normalizeNS(ns)}`,
+          description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: actions
               .filter((action) => action.getNamespace() === ns)

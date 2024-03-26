@@ -71,6 +71,7 @@ export interface OneOfMessageType {
 export type AsyncOperationMessage = OneOfMessageType | MessageType;
 
 export interface AsyncOperationObject {
+  /** @desc Unique string used to identify the operation. */
   operationId?: string;
   summary?: string;
   description?: string;
@@ -82,6 +83,7 @@ export interface AsyncOperationObject {
 }
 
 export interface AsyncOperationTraitObject {
+  /** @desc Unique string used to identify the operation. */
   operationId?: string;
   summary?: string;
   description?: string;
@@ -91,7 +93,7 @@ export interface AsyncOperationTraitObject {
 }
 
 export interface AsyncMessageTraitObject {
-  /** Unique string used to identify the message. The id MUST be unique among all messages described in the API.*/
+  /** @desc Unique string used to identify the message. The id MUST be unique among all messages described in the API.*/
   messageId?: string;
   headers?: SchemaObject;
   correlationId?: AsyncCorrelationObject;

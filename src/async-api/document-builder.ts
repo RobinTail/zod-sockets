@@ -11,10 +11,7 @@ import {
 } from "./interface";
 
 export class AsyncApiDocumentBuilder {
-  private readonly buildDocumentBase = (): Omit<
-    AsyncApiDocument,
-    "channels"
-  > => ({
+  private readonly document: AsyncApiDocument = {
     asyncapi: "2.5.0",
     info: {
       title: "",
@@ -24,11 +21,9 @@ export class AsyncApiDocumentBuilder {
     },
     tags: [],
     servers: {},
+    channels: {},
     components: {},
-  });
-
-  private readonly document: Omit<AsyncApiDocument, "channels"> =
-    this.buildDocumentBase();
+  };
 
   public setTitle(title: string): this {
     this.document.info.title = title;
@@ -184,7 +179,7 @@ export class AsyncApiDocumentBuilder {
     return this;
   }
 
-  public build(): Omit<AsyncApiDocument, "components" | "channels"> {
+  public build(): AsyncApiDocument {
     return this.document;
   }
 }

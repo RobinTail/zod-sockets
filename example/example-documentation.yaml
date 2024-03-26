@@ -12,7 +12,7 @@ info:
 tags: []
 servers:
   example:
-    url: https://example.com
+    url: https://example.com/socket.io
     protocol: socket.io
 channels:
   /:
@@ -159,5 +159,5 @@ channels:
                 description: Does not matter
               properties: {}
 components: {}
-id: "urn:example:com::"
+id: urn:example:com::socket.io
 defaultContentType: text/plain

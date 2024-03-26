@@ -12,7 +12,7 @@ await writeFile(
     description: "AsyncAPI documentation example",
     contact: manifest.author,
     license: { name: manifest.license },
-    servers: { example: { url: "https://example.com" } },
+    servers: { example: { url: "https://example.com/socket.io" } },
     config,
     actions,
   }).getSpecAsYaml(),

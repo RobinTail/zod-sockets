@@ -59,16 +59,27 @@ export class Documentation extends AsyncApiDocumentBuilder {
               onMissing,
               rules: depicters,
             }),
-            query: walkSchema({
-              direction: "in",
-              schema: z.object({
-                EIO: z.number().int().positive().optional(),
-                transport: z.literal("websocket").optional(),
+            query: {
+              ...walkSchema({
+                direction: "in",
+                schema: z.object({
+                  EIO: z
+                    .literal("4")
+                    .describe("Mandatory, the version of the protocol"),
+                  transport: z
+                    .union([z.literal("polling"), z.literal("websocket")])
+                    .describe("Mandatory, the name of the transport."),
+                  sid: z.string().optional().describe("The session identifier"),
+                }),
+                onEach,
+                onMissing,
+                rules: depicters,
               }),
-              onEach,
-              onMissing,
-              rules: depicters,
-            }),
+              externalDocs: {
+                description: "Engine.IO Protocol",
+                url: "https://socket.io/docs/v4/engine-io-protocol/",
+              },
+            },
           },
         },
         subscribe: {

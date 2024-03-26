@@ -36,14 +36,28 @@ channels:
           type: object
           properties:
             EIO:
-              type: integer
-              format: int64
-              exclusiveMinimum: 0
-              maximum: 9007199254740991
-            transport:
               type: string
               enum:
-                - websocket
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
       operationId: out/
       description: The messages produced by the application within the / namespace

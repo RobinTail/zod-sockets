@@ -10,7 +10,6 @@ import {
   WSOperationBinding,
   WSServerBinding,
 } from "./binding";
-import { AsyncOperationPayload } from "./payload";
 import { AsyncServerObject } from "./server";
 
 export interface AsyncApiDocument {
@@ -55,10 +54,7 @@ export interface AsyncComponentsObject {
 }
 
 export interface AsyncMessageObject extends AsyncMessageTraitObject {
-  payload?: {
-    type?: AsyncOperationPayload;
-    $ref?: AsyncOperationPayload;
-  };
+  payload?: SchemaObject | ReferenceObject;
 }
 
 export type MessageType = AsyncMessageObject | ReferenceObject;

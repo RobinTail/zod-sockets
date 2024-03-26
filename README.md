@@ -521,7 +521,7 @@ const yamlString = new Documentation({
   actions,
   version: "1.2.3",
   title: "Example APP",
-  servers: { example: { url: "https://example.com" } },
+  servers: { example: { url: "https://example.com/socket.io" } },
 }).getSpecAsYaml();
 ```
 

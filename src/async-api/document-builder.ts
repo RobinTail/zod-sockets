@@ -12,7 +12,7 @@ export class AsyncApiDocumentBuilder {
     initial: Pick<AsyncApiDocument, "info" | "id" | "defaultContentType">,
   ) {
     this.document = {
-      asyncapi: "2.5.0",
+      asyncapi: "2.6.0",
       ...initial,
       tags: [],
       servers: {},

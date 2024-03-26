@@ -45,6 +45,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
         this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
       }
     }
+    const commons = { onEach, onMissing, rules: depicters };
     const channelBinding: SocketIOChannelBinding = {
       bindingVersion: "0.11.0",
       method: "GET",
@@ -54,9 +55,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           connection: z.literal("Upgrade").optional(),
           upgrade: z.literal("websocket").optional(),
         }),
-        onEach,
-        onMissing,
-        rules: depicters,
+        ...commons,
       }),
       query: {
         ...walkSchema({
@@ -70,9 +69,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
               .describe("Mandatory, the name of the transport."),
             sid: z.string().optional().describe("The session identifier"),
           }),
-          onEach,
-          onMissing,
-          rules: depicters,
+          ...commons,
         }),
         externalDocs: {
           description: "Engine.IO Protocol",
@@ -80,6 +77,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
         },
       },
     };
+
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       const channel: AsyncChannelObject = {
         description: `${normalizeNS(ns)} namespace`,
@@ -95,9 +93,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
               payload: walkSchema({
                 direction: "out",
                 schema,
-                onEach,
-                onMissing,
-                rules: depicters,
+                ...commons,
               }),
               bindings: ack
                 ? {
@@ -108,9 +104,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
                         schema: ack.describe(
                           ack.description || "Acknowledgement",
                         ),
-                        onEach,
-                        onMissing,
-                        rules: depicters,
+                        ...commons,
                       }),
                     },
                   }
@@ -134,9 +128,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
                   payload: walkSchema({
                     direction: "in",
                     schema: action.getSchema("input"),
-                    onEach,
-                    onMissing,
-                    rules: depicters,
+                    ...commons,
                   }),
                   bindings: output
                     ? {
@@ -147,9 +139,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
                             schema: output.describe(
                               output.description || "Acknowledgement",
                             ),
-                            onEach,
-                            onMissing,
-                            rules: depicters,
+                            ...commons,
                           }),
                         },
                       }

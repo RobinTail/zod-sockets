@@ -9,7 +9,7 @@ await writeFile(
   new Documentation({
     version: manifest.version,
     title: "Example API",
-    servers: { example: { url: "https://example.com" } },
+    servers: { example: { url: "ws://example.com" } },
     config,
     actions,
   }).getSpecAsYaml(),

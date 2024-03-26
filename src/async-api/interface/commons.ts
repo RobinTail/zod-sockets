@@ -32,6 +32,7 @@ export interface AsyncChannelObject {
   /** @desc the messages consumed by the application from the channel. */
   publish?: AsyncOperationObject;
   parameters?: Record<string, ParameterObject>;
+  /** @desc Map describing protocol-specific definitions for a channel. */
   bindings?: Record<string, WSChannelBinding>;
 }
 

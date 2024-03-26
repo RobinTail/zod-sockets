@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
 import { AsyncChannelObject } from "./async-api/interface";
@@ -30,6 +31,32 @@ export class Documentation extends AsyncApiDocumentBuilder {
       }
       const channel: AsyncChannelObject = {
         description: `${normalizeNS(ns)} namespace`,
+        bindings: {
+          ws: {
+            method: "GET",
+            bindingVersion: "0.1.0",
+            headers: walkSchema({
+              direction: "in",
+              schema: z.object({
+                connection: z.literal("Upgrade").optional(),
+                upgrade: z.literal("websocket").optional(),
+              }),
+              onEach,
+              onMissing,
+              rules: depicters,
+            }),
+            query: walkSchema({
+              direction: "in",
+              schema: z.object({
+                EIO: z.number().optional(),
+                transport: z.literal("websocket").optional(),
+              }),
+              onEach,
+              onMissing,
+              rules: depicters,
+            }),
+          },
+        },
         subscribe: {
           message: {
             oneOf: Object.entries(emission).map(([event, { schema }]) => ({

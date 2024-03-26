@@ -5,11 +5,38 @@ info:
 tags: []
 servers:
   example:
-    url: https://example.com
+    url: ws://example.com
     protocol: ws
 channels:
   /:
     description: / namespace
+    bindings:
+      ws:
+        method: GET
+        bindingVersion: 0.1.0
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: number
+              format: double
+              minimum: -1.7976931348623157e+308
+              maximum: 1.7976931348623157e+308
+            transport:
+              type: string
+              enum:
+                - websocket
     subscribe:
       message:
         oneOf:

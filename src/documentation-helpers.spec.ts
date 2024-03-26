@@ -544,4 +544,15 @@ describe("Documentation helpers", () => {
       ).toMatchSnapshot();
     });
   });
+
+  describe("onEach()", () => {
+    test.each([requestCtx, responseCtx])(
+      "should skip reference objects",
+      (ctx) => {
+        expect(
+          onEach({ prev: { $ref: "some ref" }, ...ctx, schema: z.tuple([]) }),
+        ).toEqual({});
+      },
+    );
+  });
 });

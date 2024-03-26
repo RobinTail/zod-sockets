@@ -2,10 +2,12 @@ import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
 
 /**
  * @see https://github.com/asyncapi/bindings/tree/master/websockets
+ * @desc Protocol-specific definitions for a server.
  * @desc This object MUST NOT contain any properties. Its name is reserved for future use.
  */
 export interface WSServerBinding {}
 
+/** @desc Protocol-specific definitions for a channel. */
 export interface WSChannelBinding {
   /**
    * @desc The HTTP method to use when establishing the connection. Its value MUST be either GET or POST.
@@ -27,10 +29,14 @@ export interface WSChannelBinding {
   bindingVersion: "0.1.0";
 }
 
-/** @desc This object MUST NOT contain any properties. Its name is reserved for future use. */
+/**
+ * @desc Protocol-specific definitions for an operation.
+ * @desc This object MUST NOT contain any properties. Its name is reserved for future use.
+ * */
 export interface WSOperationBinding {}
 
 /**
+ * @desc Protocol-specific definitions for a message.
  * @desc This object MUST NOT contain any properties. Its name is reserved for future use.
  * @todo Add acknowledgements schema for Sockets.IO bindings
  * */

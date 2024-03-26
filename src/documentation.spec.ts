@@ -68,7 +68,6 @@ describe("Documentation", () => {
       expect(spec).toMatchSnapshot();
     });
 
-    /*
     test("should generate the correct schema for intersection type", () => {
       const spec = new Documentation({
         config: sampleConfig,
@@ -103,6 +102,6 @@ describe("Documentation", () => {
         title: "Testing Intersection and And types",
       }).getSpecAsYaml();
       expect(spec).toMatchSnapshot();
-    });*/
+    });
   });
 });

@@ -106,6 +106,111 @@ components: {}
 "
 `;
 
+exports[`Documentation > Basic cases > should generate the correct schema for intersection type 1`] = `
+"asyncapi: 2.5.0
+info:
+  title: Testing Intersection and And types
+  version: 3.4.5
+defaultContentType: text/plain
+tags: []
+servers: {}
+channels:
+  /:
+    description: / namespace
+    bindings:
+      socket.io:
+        bindingVersion: 0.11.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    subscribe:
+      operationId: out/
+      description: The messages produced by the application within the / namespace
+      message:
+        oneOf: []
+    publish:
+      operationId: in/
+      description: The messages consumed by the application within the / namespace
+      message:
+        oneOf:
+          - name: test
+            title: test
+            messageId: in//test
+            payload:
+              type: object
+              format: tuple
+              additionalProperties: false
+              properties:
+                "0":
+                  type: object
+                  properties:
+                    one:
+                      type: string
+                    two:
+                      type: string
+                  required:
+                    - one
+                    - two
+            bindings:
+              socket.io:
+                bindingVersion: 0.11.0
+                ack:
+                  type: object
+                  format: tuple
+                  additionalProperties: false
+                  properties:
+                    "0":
+                      type: object
+                      properties:
+                        five:
+                          type: integer
+                          format: int64
+                          minimum: 0
+                          maximum: 9007199254740991
+                        six:
+                          type: string
+                      required:
+                        - five
+                        - six
+components: {}
+"
+`;
+
 exports[`Documentation > Basic cases > should generate the correct schema for nullable and optional types 1`] = `
 "asyncapi: 2.5.0
 info:

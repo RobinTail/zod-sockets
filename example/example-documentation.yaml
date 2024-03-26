@@ -55,6 +55,7 @@ channels:
             payload:
               type: object
               format: tuple
+              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -65,6 +66,7 @@ channels:
             payload:
               type: object
               format: tuple
+              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -84,6 +86,7 @@ channels:
             payload:
               type: object
               format: tuple
+              additionalProperties: false
               properties:
                 "0":
                   type: array
@@ -101,6 +104,7 @@ channels:
             payload:
               type: object
               format: tuple
+              additionalProperties: false
               properties:
                 "0":
                   type: string
@@ -111,6 +115,9 @@ channels:
             payload:
               type: object
               format: tuple
+              additionalProperties:
+                format: any
+                description: Anything
               properties: {}
           - name: subscribe
             title: subscribe
@@ -118,6 +125,9 @@ channels:
             payload:
               type: object
               format: tuple
+              additionalProperties:
+                format: any
+                description: Does not matter
               properties: {}
 components: {}
 id: "urn:example:com::"

@@ -260,11 +260,15 @@ export const depictArray: Depicter<z.ZodArray<z.ZodTypeAny>> = ({
  * @todo use prefixItems when supported
  * */
 export const depictTuple: Depicter<z.AnyZodTuple> = ({
-  schema: { items },
+  schema: {
+    items,
+    _def: { rest },
+  },
   next,
 }) => ({
   type: "object",
   format: "tuple",
+  additionalProperties: rest === null ? false : next(rest),
   properties: items.reduce(
     (agg, item, index) => ({ ...agg, [index]: next(item) }),
     {},
@@ -467,6 +471,7 @@ export const depicters: HandlingRules<
   ZodPipeline: depictPipeline,
   ZodReadonly: depictReadonly,
   ZodDate: depictDate,
+  ZodUnknown: depictAny,
 };
 
 export const onEach: Depicter<z.ZodTypeAny, "each"> = ({

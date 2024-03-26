@@ -1,11 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
-import {
-  hasCoercion,
-  lcFirst,
-  makeCleanId,
-  makeEventFnSchema,
-} from "./integration-helpers";
+import { hasCoercion } from "./common-helpers";
+import { lcFirst, makeCleanId, makeEventFnSchema } from "./integration-helpers";
 
 describe("Integration helpers", () => {
   describe("hasCoercion()", () => {

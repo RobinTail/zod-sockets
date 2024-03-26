@@ -1,12 +1,8 @@
 import ts from "typescript";
 import { z } from "zod";
+import { hasCoercion, tryToTransform } from "./common-helpers";
 
-import {
-  hasCoercion,
-  lcFirst,
-  makeCleanId,
-  tryToTransform,
-} from "./integration-helpers";
+import { lcFirst, makeCleanId } from "./integration-helpers";
 import { HandlingRules, walkSchema } from "./schema-walker";
 import {
   LiteralType,

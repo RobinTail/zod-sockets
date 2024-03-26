@@ -4,7 +4,7 @@ import { AsyncServerVariableObject, SecurityObject } from "./commons";
 
 export interface AsyncServerObject extends Omit<ServerObject, "variables"> {
   variables?: Record<string, AsyncServerVariableObject>;
-  protocol: string;
+  protocol: "ws" | "wss" | string;
   protocolVersion?: string;
   security?: SecurityObject[];
   bindings?: Record<string, WSServerBinding>;

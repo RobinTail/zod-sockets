@@ -256,7 +256,7 @@ export const depictArray: Depicter<z.ZodArray<z.ZodTypeAny>> = ({
 };
 
 /** @since OAS 3.1 using prefixItems for depicting tuples */
-export const depictTuple: Depicter<z.ZodTuple> = ({
+export const depictTuple: Depicter<z.AnyZodTuple> = ({
   schema: { items },
   next,
 }) => ({ type: "array", prefixItems: items.map(next) });
@@ -424,6 +424,10 @@ export const depictBranded: Depicter<
   z.ZodBranded<z.ZodTypeAny, string | number | symbol>
 > = ({ schema, next }) => next(schema.unwrap());
 
+export const depictDate: Depicter<z.ZodDate> = () => ({
+  format: "date",
+});
+
 export const depicters: HandlingRules<
   SchemaObject | ReferenceObject,
   OpenAPIContext
@@ -452,6 +456,7 @@ export const depicters: HandlingRules<
   ZodCatch: depictCatch,
   ZodPipeline: depictPipeline,
   ZodReadonly: depictReadonly,
+  ZodDate: depictDate,
 };
 
 export const onEach: Depicter<z.ZodTypeAny, "each"> = ({

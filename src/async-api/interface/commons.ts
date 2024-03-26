@@ -67,7 +67,6 @@ export interface OneOfMessageType {
 export type AsyncOperationMessage = OneOfMessageType | MessageType;
 
 export interface AsyncOperationObject {
-  channel: string;
   operationId?: string;
   summary?: string;
   description?: string;

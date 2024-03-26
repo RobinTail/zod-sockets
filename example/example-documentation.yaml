@@ -1,0 +1,61 @@
+asyncapi: 2.5.0
+info:
+  title: Example API
+  version: 0.10.0
+tags: []
+servers:
+  example:
+    url: https://example.com
+    protocol: ws
+channels:
+  /:
+    description: / namespace
+    subscribe:
+      message:
+        oneOf:
+          - name: time
+            payload:
+              type: array
+              prefixItems:
+                - format: any
+                  description: current ISO time
+          - name: chat
+            payload:
+              type: array
+              prefixItems:
+                - type: string
+                  description: message
+                - type: object
+                  properties:
+                    from:
+                      type: string
+                      description: the ID of author
+                  required:
+                    - from
+                  description: extra info
+          - name: rooms
+            payload:
+              type: array
+              prefixItems:
+                - type: array
+                  items:
+                    type: string
+                  description: room IDs
+    publish:
+      message:
+        oneOf:
+          - name: chat
+            payload:
+              type: array
+              prefixItems:
+                - type: string
+                  description: message
+          - name: ping
+            payload:
+              type: array
+              prefixItems: []
+          - name: subscribe
+            payload:
+              type: array
+              prefixItems: []
+components: {}

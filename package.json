@@ -50,15 +50,17 @@
     "build": "yarn build:compile && yarn build:tests && yarn build:client",
     "build:compile": "tsup && attw --pack",
     "build:client": "tsx example/generate-client.ts && prettier --write example/example*.ts",
+    "build:docs": "tsx example/generate-documentation.ts",
     "build:tests": "tsx tools/make-tests.ts",
-    "precommit": "yarn lint && yarn test && yarn build && git add example/example*.ts",
+    "precommit": "yarn lint && yarn test && yarn build && git add example/example*.ts coverage.svg",
     "postversion": "git push && git push --tags",
     "hooks": "husky"
   },
   "dependencies": {
     "chalk": "^5.3.0",
     "openapi3-ts": "^4.2.2",
-    "ramda": "^0.29.1"
+    "ramda": "^0.29.1",
+    "yaml": "^2.4.1"
   },
   "peerDependencies": {
     "socket.io": "^4.7.4",

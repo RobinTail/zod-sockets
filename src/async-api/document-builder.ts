@@ -1,58 +1,30 @@
 import type {
   ExternalDocumentationObject,
+  InfoObject,
   SecuritySchemeObject,
   TagObject,
 } from "openapi3-ts/oas31";
 import { complement, isNil, pickBy } from "ramda";
 import {
   AsyncApiDocument,
+  AsyncChannelObject,
   AsyncSecuritySchemeObject,
   AsyncServerObject,
 } from "./interface";
+import yaml from "yaml";
 
 export class AsyncApiDocumentBuilder {
-  private readonly document: AsyncApiDocument = {
-    asyncapi: "2.5.0",
-    info: {
-      title: "",
-      description: "",
-      version: "1.0.0",
-      contact: {},
-    },
-    tags: [],
-    servers: {},
-    channels: {},
-    components: {},
-  };
+  private readonly document: AsyncApiDocument;
 
-  public setTitle(title: string): this {
-    this.document.info.title = title;
-    return this;
-  }
-
-  public setDescription(description: string): this {
-    this.document.info.description = description;
-    return this;
-  }
-
-  public setVersion(version: string): this {
-    this.document.info.version = version;
-    return this;
-  }
-
-  public setTermsOfService(termsOfService: string): this {
-    this.document.info.termsOfService = termsOfService;
-    return this;
-  }
-
-  public setContact(name: string, url: string, email: string): this {
-    this.document.info.contact = { name, url, email };
-    return this;
-  }
-
-  public setLicense(name: string, url: string): this {
-    this.document.info.license = { name, url };
-    return this;
+  constructor(info: InfoObject) {
+    this.document = {
+      asyncapi: "2.5.0",
+      info,
+      tags: [],
+      servers: {},
+      channels: {},
+      components: {},
+    };
   }
 
   public addServer(name: string, server: AsyncServerObject): this {
@@ -179,7 +151,22 @@ export class AsyncApiDocumentBuilder {
     return this;
   }
 
-  public build(): AsyncApiDocument {
+  public addChannel(name: string, channel: AsyncChannelObject): this {
+    this.document.channels = { ...this.document.channels, [name]: channel };
+    return this;
+  }
+
+  getSpec(): AsyncApiDocument {
     return this.document;
+  }
+
+  getSpecAsJson(
+    replacer?: (key: string, value: unknown) => unknown,
+    space?: string | number,
+  ): string {
+    return JSON.stringify(this.document, replacer, space);
+  }
+  getSpecAsYaml(): string {
+    return yaml.stringify(this.document);
   }
 }

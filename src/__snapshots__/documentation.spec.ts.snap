@@ -102,6 +102,7 @@ channels:
                       format: double
                       minimum: -1.7976931348623157e+308
                       maximum: 1.7976931348623157e+308
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -240,6 +241,7 @@ channels:
                           required:
                             - status
                             - error
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -345,6 +347,7 @@ channels:
                       required:
                         - five
                         - six
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -448,6 +451,7 @@ channels:
                       type:
                         - string
                         - "null"
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -563,6 +567,7 @@ channels:
                           format: int64
                           exclusiveMinimum: 0
                           maximum: 9007199254740991
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -713,6 +718,7 @@ channels:
                       enum:
                         - pong
                       description: literally
+                  description: Acknowledgement
           - name: subscribe
             title: subscribe
             messageId: in//subscribe
@@ -824,6 +830,7 @@ channels:
                         - "null"
                     "1":
                       format: date
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -954,6 +961,7 @@ channels:
                     "0":
                       type: integer
                       format: bigint
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1084,6 +1092,7 @@ channels:
                     "0":
                       type: string
                       minLength: 1
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1176,6 +1185,7 @@ channels:
                       enum:
                         - 1
                         - 2
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1300,6 +1310,7 @@ channels:
                       required:
                         - option1
                         - option2
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1397,6 +1408,7 @@ channels:
                   properties:
                     "0":
                       type: number
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1481,6 +1493,7 @@ channels:
                   format: tuple
                   additionalProperties: false
                   properties: {}
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1569,6 +1582,7 @@ channels:
                   format: tuple
                   additionalProperties: false
                   properties: {}
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1660,6 +1674,7 @@ channels:
                   format: tuple
                   additionalProperties: false
                   properties: {}
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1742,6 +1757,7 @@ channels:
                   format: tuple
                   additionalProperties: false
                   properties: {}
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1828,6 +1844,7 @@ channels:
                   properties:
                     "0":
                       format: any
+                  description: Acknowledgement
 components: {}
 "
 `;
@@ -1920,6 +1937,7 @@ channels:
                       type:
                         - boolean
                         - "null"
+                  description: Acknowledgement
 components: {}
 "
 `;

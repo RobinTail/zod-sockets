@@ -150,6 +150,7 @@ channels:
                       enum:
                         - pong
                       description: literally
+                  description: Acknowledgement
           - name: subscribe
             title: subscribe
             messageId: in//subscribe

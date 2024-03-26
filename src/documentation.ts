@@ -105,7 +105,9 @@ export class Documentation extends AsyncApiDocumentBuilder {
                       bindingVersion: "0.11.0",
                       ack: walkSchema({
                         direction: "in",
-                        schema: ack,
+                        schema: ack.describe(
+                          ack.description || "Acknowledgement",
+                        ),
                         onEach,
                         onMissing,
                         rules: depicters,
@@ -142,7 +144,9 @@ export class Documentation extends AsyncApiDocumentBuilder {
                           bindingVersion: "0.11.0",
                           ack: walkSchema({
                             direction: "out",
-                            schema: output,
+                            schema: output.describe(
+                              output.description || "Acknowledgement",
+                            ),
                             onEach,
                             onMissing,
                             rules: depicters,

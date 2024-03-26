@@ -2,6 +2,7 @@ import type {
   InfoObject,
   ReferenceObject,
   SchemaObject,
+  ServerObject,
   ServerVariableObject,
 } from "openapi3-ts/oas31";
 import {
@@ -10,9 +11,16 @@ import {
   SocketIOOperationBinding,
   SocketIOServerBinding,
 } from "./socket-io-binding";
-import { AsyncServerObject } from "./server";
 
 export type Protocol = "http" | "https" | "ws" | "wss" | "socket.io";
+
+export interface AsyncServerObject extends Omit<ServerObject, "variables"> {
+  variables?: Record<string, AsyncServerVariableObject>;
+  protocol: Protocol;
+  protocolVersion?: string;
+  security?: SecurityObject[];
+  bindings?: Partial<Record<Protocol, SocketIOServerBinding>>;
+}
 
 export interface AsyncApiDocument {
   asyncapi: string;

@@ -10,7 +10,7 @@ import {
   AsyncChannelObject,
   AsyncSecuritySchemeObject,
   AsyncServerObject,
-} from "./interface";
+} from "./interface/commons";
 import yaml from "yaml";
 
 export class AsyncApiDocumentBuilder {

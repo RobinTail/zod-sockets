@@ -2,7 +2,7 @@ import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
-import { AsyncChannelObject } from "./async-api/interface";
+import { AsyncChannelObject } from "./async-api/interface/commons";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
 import { Namespaces, normalizeNS } from "./namespace";

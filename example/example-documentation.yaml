@@ -121,6 +121,7 @@ channels:
               properties: {}
             bindings:
               socket.io:
+                bindingVersion: 0.11.0
                 ack:
                   type: object
                   format: tuple

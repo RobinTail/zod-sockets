@@ -1,6 +1,6 @@
 {
   "name": "zod-sockets",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Socket.IO solution with I/O validation",
   "type": "module",
   "main": "dist/index.cjs",

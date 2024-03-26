@@ -12,4 +12,5 @@ export interface SocketIOOperationBinding extends WSOperationBinding {}
 export interface SocketIOMessageBinding extends WSMessageBinding {
   /** @desc Acknowledgement schema */
   ack?: SchemaObject | ReferenceObject;
+  bindingVersion?: "0.11.0";
 }

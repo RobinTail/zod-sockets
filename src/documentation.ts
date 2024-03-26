@@ -131,6 +131,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
                   bindings: output
                     ? {
                         "socket.io": {
+                          bindingVersion: "0.11.0",
                           ack: walkSchema({
                             direction: "out",
                             schema: output,

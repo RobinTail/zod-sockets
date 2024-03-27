@@ -217,9 +217,9 @@ export interface OAuthFlowObject {
   scopes: Record<string, string>;
 }
 
-export interface ParameterObject {
-  description?: string;
-  schema?: SchemaObject | ReferenceObject;
+/** @since 3.0.0 partially extends SchemaObject; schema prop removed */
+export interface ParameterObject
+  extends Pick<SchemaObject, "enum" | "default" | "description" | "examples"> {
   /** @desc A runtime expression that specifies the location of the parameter value. */
   location?: string;
 }

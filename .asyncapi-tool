@@ -1,6 +1,6 @@
 ---
 title: Zod Sockets
-description: Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers
+description: Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers.
 links:
   websiteUrl: https://www.npmjs.com/package/zod-sockets
   repoUrl: https://github.com/RobinTail/zod-sockets

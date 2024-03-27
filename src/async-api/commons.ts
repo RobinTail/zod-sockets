@@ -60,6 +60,10 @@ export interface ServerVariableObject extends OASServerVariableObject {
   examples?: string[];
 }
 
+/**
+ * @desc Each name MUST correspond to a security scheme which is declared in the Security Schemes under the Components.
+ * @desc If the security scheme is of type "oauth2" or "openIdConnect", then the value is a list of scope names.
+ * */
 export type SecurityRequirementObject = Record<string, string[]>;
 
 export interface ComponentsObject {

@@ -77,14 +77,7 @@ export interface MessageObject extends MessageTraitObject {
   traits?: MessageTraitObject | ReferenceObject;
 }
 
-export interface OperationObject {
-  /** @desc Unique string used to identify the operation. */
-  operationId?: string;
-  summary?: string;
-  description?: string;
-  tags?: TagObject[];
-  externalDocs?: ExternalDocumentationObject;
-  bindings?: Record<Protocol, SocketIOOperationBinding>;
+export interface OperationObject extends OperationTraitObject {
   traits?: Record<string, OperationTraitObject>;
   message?:
     | {

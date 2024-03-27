@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: asyncapi-github-action
-      uses: WaleedAshraf/asyncapi-github-action@v0.0.10
-      with:
-        filepath: 'example/example-documentation.yaml'
+    - name: Installing unreasonably large package
+      run: npm i -g @asyncapi/cli
+    - name: Validate
+      run: asyncapi validate ./example/example-documentation.yaml

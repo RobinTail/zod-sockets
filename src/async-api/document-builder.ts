@@ -39,17 +39,6 @@ export class AsyncApiBuilder {
     return this;
   }
 
-  public linkMessage(
-    operationId: string,
-    channelId: string,
-    messageId: string,
-  ): this {
-    this.document.operations?.[operationId].messages?.push({
-      $ref: `#/channels/${channelId}/messages/${messageId}`,
-    });
-    return this;
-  }
-
   getSpec(): AsyncApiObject {
     return this.document;
   }

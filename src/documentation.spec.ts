@@ -1,3 +1,4 @@
+import { SchemaObject } from "openapi3-ts/oas31";
 import { config as exampleConfig } from "../example/config";
 import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";
@@ -5,6 +6,7 @@ import { createConfig } from "./config";
 import { Documentation } from "./documentation";
 import { z } from "zod";
 import { describe, expect, test, vi } from "vitest";
+import { protocol } from "engine.io";
 
 describe("Documentation", () => {
   const sampleConfig = createConfig();
@@ -22,6 +24,24 @@ describe("Documentation", () => {
         },
       }).getSpecAsYaml();
       expect(spec).toMatchSnapshot();
+    });
+
+    test("EIO handshake should match the Engine.IO protocol version", () => {
+      const doc = new Documentation({
+        actions: [],
+        config: sampleConfig,
+        version: "1.2.3",
+        title: "Example API",
+        servers: {
+          example: { url: "https://example.com/socket.io" },
+        },
+      }).getSpec();
+      expect(
+        (
+          (doc.channels.Root.bindings!["socket.io"].query as SchemaObject)
+            .properties!.EIO as SchemaObject
+        ).enum,
+      ).toEqual([protocol.toString()]);
     });
 
     test("should generate the correct schema for complex types", () => {

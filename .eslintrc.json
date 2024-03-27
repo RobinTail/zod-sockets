@@ -33,7 +33,8 @@
         "./tools/*.ts",
         "./tests/**/*.ts",
         "./*.config.ts",
-        "./example/*.ts"
+        "./example/*.ts",
+        "./src/*.spec.ts"
       ],
       "rules": {
         "import/no-extraneous-dependencies": "off"

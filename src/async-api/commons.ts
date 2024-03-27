@@ -173,6 +173,7 @@ export interface OAuthFlowObject {
 export interface ParameterObject {
   description?: string;
   schema?: SchemaObject | ReferenceObject;
+  /** @desc A runtime expression that specifies the location of the parameter value. */
   location?: string;
 }
 

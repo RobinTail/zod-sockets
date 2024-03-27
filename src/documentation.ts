@@ -117,6 +117,10 @@ export class Documentation extends AsyncApiBuilder {
           description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
           reply: ack
             ? {
+                address: {
+                  location: "$message.payload#",
+                  description: "Last argument: acknowledgement handler",
+                },
                 channel: { $ref: `#/channels/${channelId}` },
                 messages: [
                   { $ref: `#/channels/${channelId}/messages/${ackId}` },
@@ -168,6 +172,10 @@ export class Documentation extends AsyncApiBuilder {
           description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
           reply: output
             ? {
+                address: {
+                  location: "$message.payload#",
+                  description: "Last argument: acknowledgement handler",
+                },
                 channel: { $ref: `#/channels/${channelId}` },
                 messages: [
                   { $ref: `#/channels/${channelId}/messages/${ackId}` },

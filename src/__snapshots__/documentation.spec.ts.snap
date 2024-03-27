@@ -111,6 +111,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -258,6 +261,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -372,6 +378,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -487,6 +496,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -611,6 +623,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -826,6 +841,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -946,6 +964,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1093,6 +1114,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1245,6 +1269,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1346,6 +1373,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1483,6 +1513,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1589,6 +1622,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1681,6 +1717,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1778,6 +1817,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1879,6 +1921,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -1968,6 +2013,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -2063,6 +2111,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:
@@ -2165,6 +2216,9 @@ operations:
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
     reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
       channel:
         $ref: "#/channels/Root"
       messages:

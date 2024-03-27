@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
 import { hasCoercion, lcFirst, makeCleanId } from "./common-helpers";
-import { rootNS } from "./namespace";
 
 describe("Common helpers", () => {
   describe("hasCoercion()", () => {

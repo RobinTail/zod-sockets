@@ -30,7 +30,7 @@ export interface AsyncApiObject {
   servers?: Record<string, ServerObject>;
   channels: ChannelsObject;
   components?: ComponentsObject;
-  tags?: AsyncTagObject[];
+  tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   defaultContentType?: string;
 }
@@ -82,7 +82,7 @@ export interface OperationObject {
   operationId?: string;
   summary?: string;
   description?: string;
-  tags?: AsyncTagObject[];
+  tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Record<Protocol, SocketIOOperationBinding>;
   traits?: Record<string, OperationTraitObject>;
@@ -99,7 +99,7 @@ export interface OperationTraitObject {
   operationId?: string;
   summary?: string;
   description?: string;
-  tags?: AsyncTagObject[];
+  tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Record<Protocol, SocketIOOperationBinding>;
 }
@@ -115,7 +115,7 @@ export interface MessageTraitObject {
   title?: string;
   summary?: string;
   description?: string;
-  tags?: AsyncTagObject[];
+  tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Record<Protocol, SocketIOMessageBinding>;
 }
@@ -125,7 +125,7 @@ export interface CorrelationIDObject {
   location: string;
 }
 
-export interface AsyncTagObject {
+export interface TagObject {
   name: string;
   description?: string;
   externalDocs?: ExternalDocumentationObject;

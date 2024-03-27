@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import { Documentation } from "../src/documentation";
+import { Documentation } from "../src";
 import { actions } from "./actions";
 import { config } from "./config";
 import manifest from "../package.json";

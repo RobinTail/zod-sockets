@@ -29,7 +29,7 @@ export interface AsyncApiObject {
   info: InfoObject;
   servers?: Record<string, ServerObject>;
   channels: ChannelsObject;
-  components?: AsyncComponentsObject;
+  components?: ComponentsObject;
   tags?: AsyncTagObject[];
   externalDocs?: ExternalDocumentationObject;
   defaultContentType?: string;
@@ -55,7 +55,7 @@ export interface ServerVariableObject extends OASServerVariableObject {
 
 export type SecurityRequirementObject = Record<string, string[]>;
 
-export interface AsyncComponentsObject {
+export interface ComponentsObject {
   schemas?: Record<string, SchemaObject>;
   messages?: Record<string, AsyncMessageObject>;
   securitySchemes?: Record<string, AsyncSecuritySchemeObject>;

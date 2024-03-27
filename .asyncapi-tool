@@ -1,0 +1,16 @@
+---
+title: Zod Sockets
+description: Tool for creating Socket.IO server with I/O validation, AsyncAPI documentation and contract-aware client
+links:
+  websiteUrl: https://www.npmjs.com/package/zod-sockets
+  repoUrl: https://github.com/RobinTail/zod-sockets
+filters:
+  language: TypeScript
+  technology:
+  - Node.js
+  - TypeScript
+  categories:
+  - code-first
+  - dsl
+  - framework
+  hasCommercial: false

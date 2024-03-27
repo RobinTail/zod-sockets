@@ -74,6 +74,7 @@ export interface ComponentsObject {
 
 export interface MessageObject extends MessageTraitObject {
   payload?: SchemaObject | ReferenceObject;
+  traits?: MessageTraitObject | ReferenceObject;
 }
 
 export type MessageType = MessageObject | ReferenceObject;

@@ -18,7 +18,7 @@ export interface ServerObject extends Omit<OASServerObject, "variables"> {
   variables?: Record<string, ServerVariableObject>;
   protocol: Protocol;
   protocolVersion?: string;
-  security?: SecurityObject[];
+  security?: SecurityRequirementObject[];
   bindings?: Record<Protocol, SocketIOServerBinding>;
 }
 
@@ -53,7 +53,7 @@ export interface ServerVariableObject extends OASServerVariableObject {
   examples?: string[];
 }
 
-export type SecurityObject = Record<string, string[]>;
+export type SecurityRequirementObject = Record<string, string[]>;
 
 export interface AsyncComponentsObject {
   schemas?: Record<string, SchemaObject>;

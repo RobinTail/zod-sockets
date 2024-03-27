@@ -40,9 +40,9 @@ export type ChannelsObject = Record<string, ChannelItemObject>;
 export interface ChannelItemObject {
   description?: string;
   /** @desc the messages produced by the application and sent to the channel. */
-  subscribe?: AsyncOperationObject;
+  subscribe?: OperationObject;
   /** @desc the messages consumed by the application from the channel. */
-  publish?: AsyncOperationObject;
+  publish?: OperationObject;
   /** @desc Describes a map of parameters included in a channel name. */
   parameters?: Record<string, ParameterObject>;
   /** @desc Map describing protocol-specific definitions for a channel. */
@@ -81,7 +81,7 @@ export interface OneOfMessageType {
 
 export type AsyncOperationMessage = OneOfMessageType | MessageType;
 
-export interface AsyncOperationObject {
+export interface OperationObject {
   /** @desc Unique string used to identify the operation. */
   operationId?: string;
   summary?: string;

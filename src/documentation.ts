@@ -87,49 +87,43 @@ export class Documentation extends AsyncApiBuilder {
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       const channelId = makeCleanId(normalizeNS(ns)) || "Root";
       const messages: MessagesObject = {};
-      const sendOperationId = makeCleanId(`outgoing events ${channelId}`);
-      const recvOperationId = makeCleanId(`incoming events ${channelId}`);
-      this.addOperation(sendOperationId, {
-        action: "send",
-        channel: { $ref: `#/channels/${channelId}` },
-        messages: [],
-        title: "Emission",
-        summary: "Outgoing events",
-        description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
-      }).addOperation(recvOperationId, {
-        action: "receive",
-        channel: { $ref: `#/channels/${channelId}` },
-        messages: [],
-        title: "Actions",
-        summary: "Incoming events",
-        description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
-      });
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const messageId = lcFirst(
           makeCleanId(`${channelId} outgoing ${event}`),
         );
+        const ackId = lcFirst(
+          makeCleanId(`${channelId} ack for outgoing ${event}`),
+        );
         messages[messageId] = {
           name: event,
           title: event,
-          payload: walkSchema({
-            direction: "out",
-            schema,
-            ...commons,
-          }),
-          bindings: ack
+          payload: walkSchema({ direction: "out", schema, ...commons }),
+        };
+        if (ack) {
+          messages[ackId] = {
+            title: `Acknowledgement for ${event}`,
+            payload: walkSchema({ direction: "in", schema: ack, ...commons }),
+          };
+        }
+        const sendOperationId = makeCleanId(
+          `${channelId} send operation ${event}`,
+        );
+        this.addOperation(sendOperationId, {
+          action: "send",
+          channel: { $ref: `#/channels/${channelId}` },
+          messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
+          title: "Emission",
+          summary: "Outgoing events",
+          description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
+          reply: ack
             ? {
-                ws: {
-                  bindingVersion: "0.11.0",
-                  ack: walkSchema({
-                    direction: "in",
-                    schema: ack.describe(ack.description || "Acknowledgement"),
-                    ...commons,
-                  }),
-                },
+                channel: { $ref: `#/channels/${channelId}` },
+                messages: [
+                  { $ref: `#/channels/${channelId}/messages/${ackId}` },
+                ],
               }
             : undefined,
-        };
-        this.linkMessage(sendOperationId, channelId, messageId);
+        });
       }
       for (const action of actions) {
         if (action.getNamespace() !== ns) {
@@ -138,6 +132,9 @@ export class Documentation extends AsyncApiBuilder {
         const event = action.getEvent();
         const messageId = lcFirst(
           makeCleanId(`${channelId} incoming ${event}`),
+        );
+        const ackId = lcFirst(
+          makeCleanId(`${channelId} ack for incoming ${event}`),
         );
         const output = action.getSchema("output");
         messages[messageId] = {
@@ -148,22 +145,36 @@ export class Documentation extends AsyncApiBuilder {
             schema: action.getSchema("input"),
             ...commons,
           }),
-          bindings: output
+        };
+        if (output) {
+          messages[ackId] = {
+            title: `Acknowledgement for ${event}`,
+            payload: walkSchema({
+              direction: "out",
+              schema: output,
+              ...commons,
+            }),
+          };
+        }
+        const recvOperationId = makeCleanId(
+          `${channelId} recv operation ${event}`,
+        );
+        this.addOperation(recvOperationId, {
+          action: "receive",
+          channel: { $ref: `#/channels/${channelId}` },
+          messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
+          title: "Actions",
+          summary: "Incoming events",
+          description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
+          reply: output
             ? {
-                ws: {
-                  bindingVersion: "0.11.0",
-                  ack: walkSchema({
-                    direction: "out",
-                    schema: output.describe(
-                      output.description || "Acknowledgement",
-                    ),
-                    ...commons,
-                  }),
-                },
+                channel: { $ref: `#/channels/${channelId}` },
+                messages: [
+                  { $ref: `#/channels/${channelId}/messages/${ackId}` },
+                ],
               }
             : undefined,
-        };
-        this.linkMessage(recvOperationId, channelId, messageId);
+        });
       }
       const channel: ChannelObject = {
         address: normalizeNS(ns),

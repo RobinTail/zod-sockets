@@ -80,38 +80,28 @@ channels:
             - "1"
             - "2"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  enum:
-                    - something
-                "1":
-                  type: number
-                  format: double
-                  minimum: -1.7976931348623157e+308
-                  maximum: 1.7976931348623157e+308
-              required:
-                - "0"
-                - "1"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              enum:
+                - something
+            "1":
+              type: number
+              format: double
+              minimum: -1.7976931348623157e+308
+              maximum: 1.7976931348623157e+308
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -120,6 +110,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -212,58 +207,48 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  discriminator:
-                    propertyName: status
-                  oneOf:
-                    - type: object
-                      properties:
-                        status:
-                          type: string
-                          enum:
-                            - success
-                        data:
-                          format: any
-                      required:
-                        - status
-                    - type: object
-                      properties:
-                        status:
-                          type: string
-                          enum:
-                            - error
-                        error:
-                          type: object
-                          properties:
-                            message:
-                              type: string
-                          required:
-                            - message
-                      required:
-                        - status
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              discriminator:
+                propertyName: status
+              oneOf:
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - success
+                    data:
+                      format: any
+                  required:
+                    - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
                         - error
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+                    error:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                      required:
+                        - message
+                  required:
+                    - status
+                    - error
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -272,6 +257,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -348,41 +338,31 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
               type: object
-              format: tuple
               properties:
-                "0":
-                  type: object
-                  properties:
-                    five:
-                      type: integer
-                      format: int64
-                      minimum: 0
-                      maximum: 9007199254740991
-                    six:
-                      type: string
-                  required:
-                    - five
-                    - six
+                five:
+                  type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 9007199254740991
+                six:
+                  type: string
               required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+                - five
+                - six
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -391,6 +371,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -477,32 +462,22 @@ channels:
             - "2"
             - "3"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type:
-                    - string
-                    - "null"
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type:
+                - string
+                - "null"
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -511,6 +486,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -603,35 +583,25 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  oneOf:
-                    - type: string
-                    - type: integer
-                      format: int64
-                      exclusiveMinimum: 0
-                      maximum: 9007199254740991
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingName:
+        title: Acknowledgement for name
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              oneOf:
+                - type: string
+                - type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationName:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -640,6 +610,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingName"
 "
 `;
 
@@ -776,24 +751,22 @@ channels:
           additionalProperties:
             format: any
             description: Anything
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  enum:
-                    - pong
-                  description: literally
-              required:
-                - "0"
-              additionalProperties:
-                format: any
-                description: echo
-              description: Acknowledgement
+      rootAckForIncomingPing:
+        title: Acknowledgement for ping
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              enum:
+                - pong
+              description: literally
+          required:
+            - "0"
+          additionalProperties:
+            format: any
+            description: echo
       rootIncomingSubscribe:
         name: subscribe
         title: subscribe
@@ -807,24 +780,61 @@ channels:
             description: Does not matter
 components: {}
 operations:
-  OutgoingEventsRoot:
+  RootSendOperationTime:
     action: send
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootOutgoingTime"
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  RootSendOperationChat:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootOutgoingChat"
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  RootSendOperationRooms:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootOutgoingRooms"
     title: Emission
     summary: Outgoing events
     description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationChat:
     action: receive
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootIncomingChat"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
+  RootRecvOperationPing:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootIncomingPing"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingPing"
+  RootRecvOperationSubscribe:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootIncomingSubscribe"
     title: Actions
     summary: Incoming events
@@ -909,34 +919,24 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type:
-                    - "null"
-                "1":
-                  format: date
-              required:
-                - "0"
-                - "1"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type:
+                - "null"
+            "1":
+              format: date
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -945,6 +945,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1064,31 +1069,21 @@ channels:
             - "7"
             - "8"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: integer
-                  format: bigint
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: integer
+              format: bigint
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1097,6 +1092,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1221,31 +1221,21 @@ channels:
             - "12"
             - "13"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  minLength: 1
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              minLength: 1
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1254,6 +1244,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1325,33 +1320,23 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: number
-                  enum:
-                    - 1
-                    - 2
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: number
+              enum:
+                - 1
+                - 2
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1360,6 +1345,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1425,75 +1415,65 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
               type: object
-              format: tuple
+              additionalProperties:
+                type: integer
+                format: int64
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+            "1":
+              type: object
+              additionalProperties:
+                type: boolean
+            "2":
+              type: object
+              additionalProperties:
+                type: boolean
+            "3":
+              type: object
               properties:
-                "0":
-                  type: object
-                  additionalProperties:
-                    type: integer
-                    format: int64
-                    minimum: -9007199254740991
-                    maximum: 9007199254740991
-                "1":
-                  type: object
-                  additionalProperties:
-                    type: boolean
-                "2":
-                  type: object
-                  additionalProperties:
-                    type: boolean
-                "3":
-                  type: object
-                  properties:
-                    only:
-                      type: boolean
-                  required:
-                    - only
-                "4":
-                  type: object
-                  properties:
-                    option1:
-                      type: boolean
-                    option2:
-                      type: boolean
-                  required:
-                    - option1
-                    - option2
-                "5":
-                  type: object
-                  properties:
-                    option1:
-                      type: boolean
-                    option2:
-                      type: boolean
-                  required:
-                    - option1
-                    - option2
+                only:
+                  type: boolean
               required:
-                - "0"
-                - "1"
-                - "2"
-                - "3"
-                - "4"
-                - "5"
-              additionalProperties: false
-              description: Acknowledgement
+                - only
+            "4":
+              type: object
+              properties:
+                option1:
+                  type: boolean
+                option2:
+                  type: boolean
+              required:
+                - option1
+                - option2
+            "5":
+              type: object
+              properties:
+                option1:
+                  type: boolean
+                option2:
+                  type: boolean
+              required:
+                - option1
+                - option2
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1502,6 +1482,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1581,30 +1566,20 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: number
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: number
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1613,6 +1588,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1681,27 +1661,17 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1710,6 +1680,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1783,27 +1758,17 @@ channels:
             - "0"
             - "1"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1812,6 +1777,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1889,27 +1859,17 @@ channels:
             - "1"
             - "2"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -1918,6 +1878,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -1983,27 +1948,17 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -2012,6 +1967,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -2080,30 +2040,20 @@ channels:
           required:
             - "0"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  format: any
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: any
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -2112,6 +2062,11 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
@@ -2185,32 +2140,22 @@ channels:
             - "0"
             - "1"
           additionalProperties: false
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type:
-                    - boolean
-                    - "null"
-              required:
-                - "0"
-              additionalProperties: false
-              description: Acknowledgement
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type:
+                - boolean
+                - "null"
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
 operations:
-  OutgoingEventsRoot:
-    action: send
-    channel:
-      $ref: "#/channels/Root"
-    messages: []
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationTest:
     action: receive
     channel:
       $ref: "#/channels/Root"
@@ -2219,5 +2164,10 @@ operations:
     title: Actions
     summary: Incoming events
     description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;

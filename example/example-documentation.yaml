@@ -137,24 +137,22 @@ channels:
           additionalProperties:
             format: any
             description: Anything
-        bindings:
-          ws:
-            bindingVersion: 0.11.0
-            ack:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  enum:
-                    - pong
-                  description: literally
-              required:
-                - "0"
-              additionalProperties:
-                format: any
-                description: echo
-              description: Acknowledgement
+      rootAckForIncomingPing:
+        title: Acknowledgement for ping
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              enum:
+                - pong
+              description: literally
+          required:
+            - "0"
+          additionalProperties:
+            format: any
+            description: echo
       rootIncomingSubscribe:
         name: subscribe
         title: subscribe
@@ -168,24 +166,61 @@ channels:
             description: Does not matter
 components: {}
 operations:
-  OutgoingEventsRoot:
+  RootSendOperationTime:
     action: send
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootOutgoingTime"
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  RootSendOperationChat:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootOutgoingChat"
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  RootSendOperationRooms:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootOutgoingRooms"
     title: Emission
     summary: Outgoing events
     description: The messages produced by the application within the / namespace
-  IncomingEventsRoot:
+  RootRecvOperationChat:
     action: receive
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootIncomingChat"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
+  RootRecvOperationPing:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootIncomingPing"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
+    reply:
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingPing"
+  RootRecvOperationSubscribe:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
       - $ref: "#/channels/Root/messages/rootIncomingSubscribe"
     title: Actions
     summary: Incoming events

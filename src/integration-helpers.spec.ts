@@ -1,31 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
-import { lcFirst, makeCleanId, makeEventFnSchema } from "./integration-helpers";
+import { makeEventFnSchema } from "./integration-helpers";
 
 describe("Integration helpers", () => {
-  describe("makeCleanId()", () => {
-    test.each([
-      ["get"],
-      ["post", "/", "something"],
-      ["delete", "/user", "permanently"],
-      ["patch", "/user/affiliated/account"],
-      ["put", "/assets/into/:storageIdentifier"],
-      ["get", "/flightDetails/:from-:to/:seatID"],
-      ["get", "/companys/:companyId/users/:userId"],
-    ])(
-      "should generate valid identifier from the supplied strings %#",
-      (...args) => {
-        expect(makeCleanId(...args)).toMatchSnapshot();
-      },
-    );
-  });
-
-  describe("lcFirst()", () => {
-    test("should make the first letter lower case", () => {
-      expect(lcFirst("HereIsSomeText")).toBe("hereIsSomeText");
-    });
-  });
-
   describe("makeEventFnSchema()", () => {
     test("should simply use base when no ack", () => {
       const base = z.tuple([z.string()]);

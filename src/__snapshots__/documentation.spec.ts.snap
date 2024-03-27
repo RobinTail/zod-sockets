@@ -9,8 +9,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -53,18 +53,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -123,8 +123,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -167,18 +167,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -266,8 +266,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -310,18 +310,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -376,8 +376,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -420,18 +420,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -487,8 +487,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -531,18 +531,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: name
             title: name
-            messageId: in//name
+            messageId: rootIncomingName
             payload:
               type: object
               format: tuple
@@ -611,8 +611,8 @@ servers:
     url: https://example.com/socket.io
     protocol: socket.io
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -655,13 +655,13 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf:
           - name: time
             title: time
-            messageId: out//time
+            messageId: rootOutgoingTime
             payload:
               type: object
               format: tuple
@@ -674,7 +674,7 @@ channels:
               additionalProperties: false
           - name: chat
             title: chat
-            messageId: out//chat
+            messageId: rootOutgoingChat
             payload:
               type: object
               format: tuple
@@ -697,7 +697,7 @@ channels:
               additionalProperties: false
           - name: rooms
             title: rooms
-            messageId: out//rooms
+            messageId: rootOutgoingRooms
             payload:
               type: object
               format: tuple
@@ -711,13 +711,13 @@ channels:
                 - "0"
               additionalProperties: false
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: chat
             title: chat
-            messageId: in//chat
+            messageId: rootIncomingChat
             payload:
               type: object
               format: tuple
@@ -730,7 +730,7 @@ channels:
               additionalProperties: false
           - name: ping
             title: ping
-            messageId: in//ping
+            messageId: rootIncomingPing
             payload:
               type: object
               format: tuple
@@ -759,7 +759,7 @@ channels:
                   description: Acknowledgement
           - name: subscribe
             title: subscribe
-            messageId: in//subscribe
+            messageId: rootIncomingSubscribe
             payload:
               type: object
               format: tuple
@@ -781,8 +781,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -825,18 +825,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -888,8 +888,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -932,18 +932,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1031,8 +1031,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1075,18 +1075,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1179,8 +1179,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1223,18 +1223,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1276,8 +1276,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1320,18 +1320,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1409,8 +1409,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1453,18 +1453,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1511,8 +1511,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1555,18 +1555,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1599,8 +1599,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1643,18 +1643,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1692,8 +1692,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1736,18 +1736,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1789,8 +1789,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1833,18 +1833,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1874,8 +1874,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1918,18 +1918,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple
@@ -1965,8 +1965,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -2009,18 +2009,18 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf: []
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: test
             title: test
-            messageId: in//test
+            messageId: rootIncomingTest
             payload:
               type: object
               format: tuple

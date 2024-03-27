@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 0 1`] = `"Get"`;
+
+exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 1 1`] = `"PostSomething"`;
+
+exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 2 1`] = `"DeleteUserPermanently"`;
+
+exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 3 1`] = `"PatchUserAffiliatedAccount"`;
+
+exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 4 1`] = `"PutAssetsIntoStorageIdentifier"`;
+
+exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 5 1`] = `"GetFlightDetailsFromToSeatId"`;
+
+exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 6 1`] = `"GetCompanysCompanyIdUsersUserId"`;

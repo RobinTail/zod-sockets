@@ -36,6 +36,7 @@ export interface AsyncApiDocument {
 }
 
 export type AsyncChannelsObject = Record<string, AsyncChannelObject>;
+
 export interface AsyncChannelObject {
   description?: string;
   /** @desc the messages produced by the application and sent to the channel. */
@@ -73,6 +74,7 @@ export interface AsyncMessageObject extends AsyncMessageTraitObject {
 }
 
 export type MessageType = AsyncMessageObject | ReferenceObject;
+
 export interface OneOfMessageType {
   oneOf: MessageType[];
 }

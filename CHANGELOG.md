@@ -2,6 +2,11 @@
 
 ## Version 0
 
+### v0.11.2
+
+- Increasing AsyncAPI version to 2.6.0 in the generated documentation;
+- Human-readable identifiers for channels, operations and messages in the generated documentation.
+
 ### v0.11.1
 
 - Fix: marked tuple items as required.

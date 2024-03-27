@@ -177,6 +177,7 @@ export interface ParameterObject {
   location?: string;
 }
 
+/** @desc Property pattern ^[A-Za-z0-9_\-]+$ */
 export type ParametersObject = Record<string, ParameterObject>;
 
 export interface ExternalDocumentationObject {

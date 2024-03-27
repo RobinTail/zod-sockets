@@ -1,7 +1,7 @@
 import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
-import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
+import { AsyncApiBuilder } from "./async-api/document-builder";
 import { AsyncChannelObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
@@ -22,7 +22,7 @@ interface DocumentationParams {
   config: Config<Namespaces>;
 }
 
-export class Documentation extends AsyncApiDocumentBuilder {
+export class Documentation extends AsyncApiBuilder {
   public constructor({
     actions,
     config: { namespaces },

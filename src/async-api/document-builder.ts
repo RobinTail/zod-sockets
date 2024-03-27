@@ -1,11 +1,11 @@
-import { AsyncApiDocument, AsyncChannelObject, ServerObject } from "./commons";
+import { AsyncApiObject, AsyncChannelObject, ServerObject } from "./commons";
 import yaml from "yaml";
 
-export class AsyncApiDocumentBuilder {
-  protected readonly document: AsyncApiDocument;
+export class AsyncApiBuilder {
+  protected readonly document: AsyncApiObject;
 
   constructor(
-    initial: Pick<AsyncApiDocument, "info" | "id" | "defaultContentType">,
+    initial: Pick<AsyncApiObject, "info" | "id" | "defaultContentType">,
   ) {
     this.document = {
       asyncapi: "2.6.0",
@@ -27,7 +27,7 @@ export class AsyncApiDocumentBuilder {
     return this;
   }
 
-  getSpec(): AsyncApiDocument {
+  getSpec(): AsyncApiObject {
     return this.document;
   }
 

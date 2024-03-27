@@ -22,7 +22,7 @@ export interface ServerObject extends Omit<OASServerObject, "variables"> {
   bindings?: Record<Protocol, SocketIOServerBinding>;
 }
 
-export interface AsyncApiDocument {
+export interface AsyncApiObject {
   asyncapi: string;
   /** @desc URI or URN format */
   id?: string;

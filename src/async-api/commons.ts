@@ -175,8 +175,18 @@ export interface MessageTraitObject {
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<WSMessageBinding>;
-  // @todo
-  examples?: unknown[];
+  examples?: MessageExampleObject[];
+}
+
+/**
+ * @desc Represents an example of a Message Object and MUST contain either headers and/or payload fields.
+ * @since 3.0.0 new
+ * */
+interface MessageExampleObject {
+  name?: string;
+  summary?: string;
+  headers?: Record<string, any>;
+  payload?: Record<string, any>;
 }
 
 /** @since 3.0.0 new */

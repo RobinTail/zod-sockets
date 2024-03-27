@@ -602,7 +602,9 @@ id: urn:example:com:socket.io
 defaultContentType: text/plain
 servers:
   example:
-    url: example.com/socket.io
+    url: https://example.com/socket.io
+    host: example.com
+    pathname: /socket.io
     protocol: https
 channels:
   /:

@@ -1,6 +1,5 @@
 import type {
   InfoObject as OASInfoObject,
-  ServerObject as OASServerObject,
   ServerVariableObject as OASServerVariableObject,
   ReferenceObject,
   SchemaObject,
@@ -21,11 +20,18 @@ interface Bindings<T> {
   "socket.io"?: T;
 }
 
-export interface ServerObject extends Omit<OASServerObject, "variables"> {
-  variables?: Record<string, ServerVariableObject>;
+/** @since 3.0.0 detached from OAS; added host, pathname, title, description, tags, externalDocs; changed security */
+export interface ServerObject {
+  host: string;
   protocol: string; // not the same as the Protocol for binding
   protocolVersion?: string;
-  security?: SecurityRequirementObject[];
+  pathname?: string;
+  title?: string;
+  description?: string;
+  variables?: Record<string, ServerVariableObject>;
+  security?: SecuritySchemeObject[];
+  tags?: TagObject[];
+  externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<SocketIOServerBinding>;
 }
 
@@ -67,12 +73,6 @@ export interface ChannelItemObject {
 export interface ServerVariableObject extends OASServerVariableObject {
   examples?: string[];
 }
-
-/**
- * @desc Each name MUST correspond to a security scheme which is declared in the Security Schemes under the Components.
- * @desc If the security scheme is of type "oauth2" or "openIdConnect", then the value is a list of scope names.
- * */
-export type SecurityRequirementObject = Record<string, string[]>;
 
 export interface ComponentsObject {
   schemas?: Record<string, SchemaObject>;

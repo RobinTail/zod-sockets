@@ -43,7 +43,8 @@ export class Documentation extends AsyncApiBuilder {
       const uri = new URL(servers[server].url);
       this.addServer(server, {
         ...servers[server],
-        url: `${uri.host}${uri.port}${uri.pathname}${uri.search}${uri.hash}`,
+        host: uri.host,
+        pathname: uri.pathname,
         protocol: uri.protocol.slice(0, -1),
       });
       if (!this.document.id) {

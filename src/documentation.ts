@@ -17,7 +17,7 @@ interface DocumentationParams {
   description?: string;
   contact?: ContactObject;
   license?: LicenseObject;
-  servers?: Record<string, { url: string }>;
+  servers?: Record<string, { url: string; description?: string }>;
   actions: AbstractAction[];
   config: Config<Namespaces>;
 }
@@ -42,14 +42,13 @@ export class Documentation extends AsyncApiBuilder {
     for (const server in servers) {
       const uri = new URL(servers[server].url);
       this.addServer(server, {
-        ...servers[server],
+        description: servers[server].description,
         host: uri.host,
         pathname: uri.pathname,
         protocol: uri.protocol.slice(0, -1),
       });
       if (!this.document.id) {
-        const urn = new URL(servers[server].url.toLowerCase());
-        this.document.id = `urn:${urn.host.split(".").concat(urn.pathname.slice(1).split("/")).join(":")}`;
+        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
       }
     }
     const commons = { onEach, onMissing, rules: depicters };

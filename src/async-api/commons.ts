@@ -129,25 +129,29 @@ export interface TagObject {
 }
 
 export interface SecuritySchemeObject {
-  type: SecuritySchemeType;
+  type:
+    | "userPassword"
+    | "apiKey"
+    | "X509"
+    | "symmetricEncryption"
+    | "asymmetricEncryption"
+    | "http"
+    | "oauth2"
+    | "openIdConnect";
   description?: string;
+  /** @desc for httpApiKey */
   name?: string;
-  in?: string;
+  /** @desc Valid values are "user" and "password" for apiKey and "query", "header" or "cookie" for httpApiKey. */
+  in?: "user" | "password" | "query" | "header" | "cookie";
+  /** @desc for http */
   scheme?: string;
+  /** @desc for http */
   bearerFormat?: string;
+  /** @desc for oauth2 */
   flows?: OAuthFlowsObject;
+  /** @desc for openIdConnect */
   openIdConnectUrl?: string;
 }
-
-export declare type SecuritySchemeType =
-  | "userPassword"
-  | "apiKey"
-  | "X509"
-  | "symmetricEncryption"
-  | "asymmetricEncryption"
-  | "http"
-  | "oauth2"
-  | "openIdConnect";
 
 export interface OAuthFlowsObject {
   implicit?: OAuthFlowObject;

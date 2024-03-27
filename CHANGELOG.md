@@ -9,7 +9,7 @@
   - Server URL is deconstructed into `protocol`, `host` and `pathname`;
   - The featured `operations` are detached from `channels`;
   - Custom protocols are no longer supported, therefore changing `socket.io` to `ws`, channel bindings remain;
-  - For the Socket.IO acknowledgements using the features `reply` schema instead of the message bindings;
+  - For the Socket.IO acknowledgements using the featured `reply` schema instead of the message bindings;
   - In this regard, new composition implies a dedicated operation per message;
   - Several other adjustments according to [Release notes](https://www.asyncapi.com/blog/release-notes-3.0.0).
 

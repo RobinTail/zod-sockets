@@ -10,7 +10,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -52,64 +52,55 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: array
+              items:
+                type: integer
+                format: int64
+                exclusiveMinimum: 0
+                maximum: 9007199254740991
+              minItems: 1
+              maxItems: 3
+            "1":
+              type: array
+              items:
+                type: boolean
+            "2":
+              type: string
+          required:
+            - "0"
+            - "1"
+            - "2"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
-                  type: array
-                  items:
-                    type: integer
-                    format: int64
-                    exclusiveMinimum: 0
-                    maximum: 9007199254740991
-                  minItems: 1
-                  maxItems: 3
-                "1":
-                  type: array
-                  items:
-                    type: boolean
-                "2":
                   type: string
+                  enum:
+                    - something
+                "1":
+                  type: number
+                  format: double
+                  minimum: -1.7976931348623157e+308
+                  maximum: 1.7976931348623157e+308
               required:
                 - "0"
                 - "1"
-                - "2"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: string
-                      enum:
-                        - something
-                    "1":
-                      type: number
-                      format: double
-                      minimum: -1.7976931348623157e+308
-                      maximum: 1.7976931348623157e+308
-                  required:
-                    - "0"
-                    - "1"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -124,7 +115,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -166,93 +157,84 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              discriminator:
+                propertyName: type
+              oneOf:
+                - type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - a
+                    a:
+                      type: string
+                  required:
+                    - type
+                    - a
+                - type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - b
+                    b:
+                      type: string
+                  required:
+                    - type
+                    - b
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
                   discriminator:
-                    propertyName: type
+                    propertyName: status
                   oneOf:
                     - type: object
                       properties:
-                        type:
+                        status:
                           type: string
                           enum:
-                            - a
-                        a:
-                          type: string
+                            - success
+                        data:
+                          format: any
                       required:
-                        - type
-                        - a
+                        - status
                     - type: object
                       properties:
-                        type:
+                        status:
                           type: string
                           enum:
-                            - b
-                        b:
-                          type: string
+                            - error
+                        error:
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                          required:
+                            - message
                       required:
-                        - type
-                        - b
+                        - status
+                        - error
               required:
                 - "0"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      discriminator:
-                        propertyName: status
-                      oneOf:
-                        - type: object
-                          properties:
-                            status:
-                              type: string
-                              enum:
-                                - success
-                            data:
-                              format: any
-                          required:
-                            - status
-                        - type: object
-                          properties:
-                            status:
-                              type: string
-                              enum:
-                                - error
-                            error:
-                              type: object
-                              properties:
-                                message:
-                                  type: string
-                              required:
-                                - message
-                          required:
-                            - status
-                            - error
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -267,7 +249,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -309,60 +291,51 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: object
+              properties:
+                one:
+                  type: string
+                two:
+                  type: string
+              required:
+                - one
+                - two
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
                   type: object
                   properties:
-                    one:
-                      type: string
-                    two:
+                    five:
+                      type: integer
+                      format: int64
+                      minimum: 0
+                      maximum: 9007199254740991
+                    six:
                       type: string
                   required:
-                    - one
-                    - two
+                    - five
+                    - six
               required:
                 - "0"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: object
-                      properties:
-                        five:
-                          type: integer
-                          format: int64
-                          minimum: 0
-                          maximum: 9007199254740991
-                        six:
-                          type: string
-                      required:
-                        - five
-                        - six
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -377,7 +350,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -419,61 +392,52 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+            "1":
+              type: string
+              default: test
+            "2":
+              type:
+                - boolean
+                - "null"
+            "3":
+              type:
+                - integer
+                - "null"
+              format: int64
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+              default: 123
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
-                  type: string
-                "1":
-                  type: string
-                  default: test
-                "2":
                   type:
-                    - boolean
+                    - string
                     - "null"
-                "3":
-                  type:
-                    - integer
-                    - "null"
-                  format: int64
-                  exclusiveMinimum: 0
-                  maximum: 9007199254740991
-                  default: 123
               required:
                 - "0"
-                - "1"
-                - "2"
-                - "3"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type:
-                        - string
-                        - "null"
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -488,7 +452,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -530,70 +494,61 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: name
-            title: name
-            messageId: rootIncomingName
-            payload:
+    messages:
+      rootIncomingName:
+        name: name
+        title: name
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              oneOf:
+                - type: object
+                  properties:
+                    one:
+                      type: string
+                    two:
+                      type: integer
+                      format: int64
+                      exclusiveMinimum: 0
+                      maximum: 9007199254740991
+                  required:
+                    - one
+                    - two
+                - type: object
+                  properties:
+                    two:
+                      type: integer
+                      format: int64
+                      minimum: -9007199254740991
+                      exclusiveMaximum: 0
+                    three:
+                      type: string
+                  required:
+                    - two
+                    - three
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
                   oneOf:
-                    - type: object
-                      properties:
-                        one:
-                          type: string
-                        two:
-                          type: integer
-                          format: int64
-                          exclusiveMinimum: 0
-                          maximum: 9007199254740991
-                      required:
-                        - one
-                        - two
-                    - type: object
-                      properties:
-                        two:
-                          type: integer
-                          format: int64
-                          minimum: -9007199254740991
-                          exclusiveMaximum: 0
-                        three:
-                          type: string
-                      required:
-                        - two
-                        - three
+                    - type: string
+                    - type: integer
+                      format: int64
+                      exclusiveMinimum: 0
+                      maximum: 9007199254740991
               required:
                 - "0"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      oneOf:
-                        - type: string
-                        - type: integer
-                          format: int64
-                          exclusiveMinimum: 0
-                          maximum: 9007199254740991
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -614,7 +569,7 @@ servers:
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -656,120 +611,111 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf:
-          - name: time
-            title: time
-            messageId: rootOutgoingTime
-            payload:
+    messages:
+      rootOutgoingTime:
+        name: time
+        title: time
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: current ISO time
+          required:
+            - "0"
+          additionalProperties: false
+      rootOutgoingChat:
+        name: chat
+        title: chat
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: message
+            "1":
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: the ID of author
+              required:
+                - from
+              description: extra info
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+      rootOutgoingRooms:
+        name: rooms
+        title: rooms
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: array
+              items:
+                type: string
+              description: room IDs
+          required:
+            - "0"
+          additionalProperties: false
+      rootIncomingChat:
+        name: chat
+        title: chat
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: message
+          required:
+            - "0"
+          additionalProperties: false
+      rootIncomingPing:
+        name: ping
+        title: ping
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties:
+            format: any
+            description: Anything
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
                   type: string
-                  description: current ISO time
+                  enum:
+                    - pong
+                  description: literally
               required:
                 - "0"
-              additionalProperties: false
-          - name: chat
-            title: chat
-            messageId: rootOutgoingChat
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  description: message
-                "1":
-                  type: object
-                  properties:
-                    from:
-                      type: string
-                      description: the ID of author
-                  required:
-                    - from
-                  description: extra info
-              required:
-                - "0"
-                - "1"
-              additionalProperties: false
-          - name: rooms
-            title: rooms
-            messageId: rootOutgoingRooms
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: array
-                  items:
-                    type: string
-                  description: room IDs
-              required:
-                - "0"
-              additionalProperties: false
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: chat
-            title: chat
-            messageId: rootIncomingChat
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  description: message
-              required:
-                - "0"
-              additionalProperties: false
-          - name: ping
-            title: ping
-            messageId: rootIncomingPing
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
               additionalProperties:
                 format: any
-                description: Anything
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: string
-                      enum:
-                        - pong
-                      description: literally
-                  required:
-                    - "0"
-                  additionalProperties:
-                    format: any
-                    description: echo
-                  description: Acknowledgement
-          - name: subscribe
-            title: subscribe
-            messageId: rootIncomingSubscribe
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties:
-                format: any
-                description: Does not matter
+                description: echo
+              description: Acknowledgement
+      rootIncomingSubscribe:
+        name: subscribe
+        title: subscribe
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties:
+            format: any
+            description: Does not matter
 components: {}
 "
 `;
@@ -784,7 +730,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -826,57 +772,48 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: object
+              properties:
+                bigint:
+                  type: integer
+                  format: bigint
+                boolean:
+                  type: boolean
+                date:
+                  format: date
+              required:
+                - bigint
+                - boolean
+                - date
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
-                  type: object
-                  properties:
-                    bigint:
-                      type: integer
-                      format: bigint
-                    boolean:
-                      type: boolean
-                    date:
-                      format: date
-                  required:
-                    - bigint
-                    - boolean
-                    - date
+                  type:
+                    - "null"
+                "1":
+                  format: date
               required:
                 - "0"
+                - "1"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type:
-                        - "null"
-                    "1":
-                      format: date
-                  required:
-                    - "0"
-                    - "1"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -891,7 +828,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -933,93 +870,84 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: number
+              format: double
+              minimum: -1.7976931348623157e+308
+              maximum: 1.7976931348623157e+308
+            "1":
+              type: number
+              format: double
+              exclusiveMinimum: 0
+              maximum: 1.7976931348623157e+308
+            "2":
+              type: number
+              format: double
+              minimum: -1.7976931348623157e+308
+              exclusiveMaximum: 0
+            "3":
+              type: number
+              format: double
+              minimum: -0.5
+              maximum: 0.5
+            "4":
+              type: integer
+              format: int64
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            "5":
+              type: integer
+              format: int64
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+            "6":
+              type: integer
+              format: int64
+              minimum: -9007199254740991
+              exclusiveMaximum: 0
+            "7":
+              type: integer
+              format: int64
+              minimum: -100
+              maximum: 100
+            "8":
+              type: integer
+              format: int64
+              minimum: 0
+              maximum: 0
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+            - "6"
+            - "7"
+            - "8"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
-                  type: number
-                  format: double
-                  minimum: -1.7976931348623157e+308
-                  maximum: 1.7976931348623157e+308
-                "1":
-                  type: number
-                  format: double
-                  exclusiveMinimum: 0
-                  maximum: 1.7976931348623157e+308
-                "2":
-                  type: number
-                  format: double
-                  minimum: -1.7976931348623157e+308
-                  exclusiveMaximum: 0
-                "3":
-                  type: number
-                  format: double
-                  minimum: -0.5
-                  maximum: 0.5
-                "4":
                   type: integer
-                  format: int64
-                  minimum: -9007199254740991
-                  maximum: 9007199254740991
-                "5":
-                  type: integer
-                  format: int64
-                  exclusiveMinimum: 0
-                  maximum: 9007199254740991
-                "6":
-                  type: integer
-                  format: int64
-                  minimum: -9007199254740991
-                  exclusiveMaximum: 0
-                "7":
-                  type: integer
-                  format: int64
-                  minimum: -100
-                  maximum: 100
-                "8":
-                  type: integer
-                  format: int64
-                  minimum: 0
-                  maximum: 0
+                  format: bigint
               required:
                 - "0"
-                - "1"
-                - "2"
-                - "3"
-                - "4"
-                - "5"
-                - "6"
-                - "7"
-                - "8"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: integer
-                      format: bigint
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1034,7 +962,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1076,98 +1004,89 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+            "1":
+              type: string
+              minLength: 1
+            "2":
+              type: string
+              maxLength: 15
+            "3":
+              type: string
+              minLength: 2
+              maxLength: 3
+            "4":
+              type: string
+              format: email
+            "5":
+              type: string
+              format: uuid
+            "6":
+              type: string
+              format: cuid
+            "7":
+              type: string
+              format: cuid2
+            "8":
+              type: string
+              format: ulid
+            "9":
+              type: string
+              format: ip
+            "10":
+              type: string
+              format: emoji
+            "11":
+              type: string
+              format: url
+            "12":
+              type: string
+              pattern: \\d+
+            "13":
+              type: string
+              format: email
+              minLength: 1
+              maxLength: 90
+              pattern: .*@example\\.com
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+            - "6"
+            - "7"
+            - "8"
+            - "9"
+            - "10"
+            - "11"
+            - "12"
+            - "13"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
                   type: string
-                "1":
-                  type: string
                   minLength: 1
-                "2":
-                  type: string
-                  maxLength: 15
-                "3":
-                  type: string
-                  minLength: 2
-                  maxLength: 3
-                "4":
-                  type: string
-                  format: email
-                "5":
-                  type: string
-                  format: uuid
-                "6":
-                  type: string
-                  format: cuid
-                "7":
-                  type: string
-                  format: cuid2
-                "8":
-                  type: string
-                  format: ulid
-                "9":
-                  type: string
-                  format: ip
-                "10":
-                  type: string
-                  format: emoji
-                "11":
-                  type: string
-                  format: url
-                "12":
-                  type: string
-                  pattern: \\d+
-                "13":
-                  type: string
-                  format: email
-                  minLength: 1
-                  maxLength: 90
-                  pattern: .*@example\\.com
               required:
                 - "0"
-                - "1"
-                - "2"
-                - "3"
-                - "4"
-                - "5"
-                - "6"
-                - "7"
-                - "8"
-                - "9"
-                - "10"
-                - "11"
-                - "12"
-                - "13"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: string
-                      minLength: 1
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1182,7 +1101,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1224,47 +1143,38 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              enum:
+                - ABC
+                - DEF
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
-                  type: string
+                  type: number
                   enum:
-                    - ABC
-                    - DEF
+                    - 1
+                    - 2
               required:
                 - "0"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: number
-                      enum:
-                        - 1
-                        - 2
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1279,7 +1189,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1321,83 +1231,74 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
-              properties: {}
-              required: []
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
+              properties:
+                "0":
                   type: object
-                  format: tuple
+                  additionalProperties:
+                    type: integer
+                    format: int64
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                "1":
+                  type: object
+                  additionalProperties:
+                    type: boolean
+                "2":
+                  type: object
+                  additionalProperties:
+                    type: boolean
+                "3":
+                  type: object
                   properties:
-                    "0":
-                      type: object
-                      additionalProperties:
-                        type: integer
-                        format: int64
-                        minimum: -9007199254740991
-                        maximum: 9007199254740991
-                    "1":
-                      type: object
-                      additionalProperties:
-                        type: boolean
-                    "2":
-                      type: object
-                      additionalProperties:
-                        type: boolean
-                    "3":
-                      type: object
-                      properties:
-                        only:
-                          type: boolean
-                      required:
-                        - only
-                    "4":
-                      type: object
-                      properties:
-                        option1:
-                          type: boolean
-                        option2:
-                          type: boolean
-                      required:
-                        - option1
-                        - option2
-                    "5":
-                      type: object
-                      properties:
-                        option1:
-                          type: boolean
-                        option2:
-                          type: boolean
-                      required:
-                        - option1
-                        - option2
+                    only:
+                      type: boolean
                   required:
-                    - "0"
-                    - "1"
-                    - "2"
-                    - "3"
-                    - "4"
-                    - "5"
-                  additionalProperties: false
-                  description: Acknowledgement
+                    - only
+                "4":
+                  type: object
+                  properties:
+                    option1:
+                      type: boolean
+                    option2:
+                      type: boolean
+                  required:
+                    - option1
+                    - option2
+                "5":
+                  type: object
+                  properties:
+                    option1:
+                      type: boolean
+                    option2:
+                      type: boolean
+                  required:
+                    - option1
+                    - option2
+              required:
+                - "0"
+                - "1"
+                - "2"
+                - "3"
+                - "4"
+                - "5"
+              additionalProperties: false
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1412,7 +1313,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1454,52 +1355,43 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: object
+              properties:
+                one:
+                  type: string
+                two:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+              required:
+                - one
+                - two
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
-                  type: object
-                  properties:
-                    one:
-                      type: string
-                    two:
-                      type: integer
-                      format: int64
-                      exclusiveMinimum: 0
-                      maximum: 9007199254740991
-                  required:
-                    - one
-                    - two
+                  type: number
               required:
                 - "0"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: number
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1514,7 +1406,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1556,38 +1448,29 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: boolean
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
-              properties:
-                "0":
-                  type: boolean
-              required:
-                - "0"
+              properties: {}
+              required: []
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1602,7 +1485,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1644,43 +1527,34 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+            "1":
+              type:
+                - string
+                - "null"
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
-              properties:
-                "0":
-                  type: string
-                "1":
-                  type:
-                    - string
-                    - "null"
-              required:
-                - "0"
-                - "1"
+              properties: {}
+              required: []
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1695,7 +1569,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1737,47 +1611,38 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: boolean
+            "1":
+              type: string
+            "2":
+              type: integer
+              format: int64
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+          required:
+            - "0"
+            - "1"
+            - "2"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
-              properties:
-                "0":
-                  type: boolean
-                "1":
-                  type: string
-                "2":
-                  type: integer
-                  format: int64
-                  exclusiveMinimum: 0
-                  maximum: 9007199254740991
-              required:
-                - "0"
-                - "1"
-                - "2"
+              properties: {}
+              required: []
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1792,7 +1657,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1834,35 +1699,26 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties: {}
               required: []
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1877,7 +1733,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1919,20 +1775,23 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: any
+          required:
+            - "0"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
@@ -1941,19 +1800,7 @@ channels:
               required:
                 - "0"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      format: any
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;
@@ -1968,7 +1815,7 @@ servers: {}
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -2010,48 +1857,39 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: string (preprocessed)
+            "1":
+              format: int64 (preprocessed)
+              minimum: 0
+              maximum: 9007199254740991
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
-                  format: string (preprocessed)
-                "1":
-                  format: int64 (preprocessed)
-                  minimum: 0
-                  maximum: 9007199254740991
+                  type:
+                    - boolean
+                    - "null"
               required:
                 - "0"
-                - "1"
               additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type:
-                        - boolean
-                        - "null"
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+              description: Acknowledgement
 components: {}
 "
 `;

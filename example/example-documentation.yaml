@@ -20,7 +20,7 @@ servers:
 channels:
   Root:
     address: /
-    description: Namespace /
+    title: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -62,118 +62,109 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf:
-          - name: time
-            title: time
-            messageId: rootOutgoingTime
-            payload:
+    messages:
+      rootOutgoingTime:
+        name: time
+        title: time
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: current ISO time
+          required:
+            - "0"
+          additionalProperties: false
+      rootOutgoingChat:
+        name: chat
+        title: chat
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: message
+            "1":
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: the ID of author
+              required:
+                - from
+              description: extra info
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+      rootOutgoingRooms:
+        name: rooms
+        title: rooms
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: array
+              items:
+                type: string
+              description: room IDs
+          required:
+            - "0"
+          additionalProperties: false
+      rootIncomingChat:
+        name: chat
+        title: chat
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: message
+          required:
+            - "0"
+          additionalProperties: false
+      rootIncomingPing:
+        name: ping
+        title: ping
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties:
+            format: any
+            description: Anything
+        bindings:
+          socket.io:
+            bindingVersion: 0.11.0
+            ack:
               type: object
               format: tuple
               properties:
                 "0":
                   type: string
-                  description: current ISO time
+                  enum:
+                    - pong
+                  description: literally
               required:
                 - "0"
-              additionalProperties: false
-          - name: chat
-            title: chat
-            messageId: rootOutgoingChat
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  description: message
-                "1":
-                  type: object
-                  properties:
-                    from:
-                      type: string
-                      description: the ID of author
-                  required:
-                    - from
-                  description: extra info
-              required:
-                - "0"
-                - "1"
-              additionalProperties: false
-          - name: rooms
-            title: rooms
-            messageId: rootOutgoingRooms
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: array
-                  items:
-                    type: string
-                  description: room IDs
-              required:
-                - "0"
-              additionalProperties: false
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: chat
-            title: chat
-            messageId: rootIncomingChat
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  description: message
-              required:
-                - "0"
-              additionalProperties: false
-          - name: ping
-            title: ping
-            messageId: rootIncomingPing
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
               additionalProperties:
                 format: any
-                description: Anything
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: string
-                      enum:
-                        - pong
-                      description: literally
-                  required:
-                    - "0"
-                  additionalProperties:
-                    format: any
-                    description: echo
-                  description: Acknowledgement
-          - name: subscribe
-            title: subscribe
-            messageId: rootIncomingSubscribe
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties:
-                format: any
-                description: Does not matter
+                description: echo
+              description: Acknowledgement
+      rootIncomingSubscribe:
+        name: subscribe
+        title: subscribe
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties:
+            format: any
+            description: Does not matter
 components: {}

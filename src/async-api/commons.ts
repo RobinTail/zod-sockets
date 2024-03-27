@@ -57,17 +57,19 @@ export interface AsyncApiObject {
  * */
 export type ChannelsObject = Record<string, ChannelObject>;
 
-/** @since 3.0.0 renamed from ChannelItemObject; added address */
+/** @since 3.0.0 renamed; added address, title, summary, messages, servers, tags, externalDocs; removed pubs/subs */
 export interface ChannelObject {
   /** @desc Typically the "topic name", "routing key", "event type", or "path". */
   address?: string | null;
+  title?: string;
+  summary?: string;
   description?: string;
-  /** @desc the messages produced by the application and sent to the channel. */
-  subscribe?: OperationObject;
-  /** @desc the messages consumed by the application from the channel. */
-  publish?: OperationObject;
+  messages?: MessagesObject;
+  servers?: ReferenceObject[];
   /** @desc Describes a map of parameters included in a channel name. */
   parameters?: ParametersObject;
+  tags?: TagObject[];
+  externalDocs?: ExternalDocumentationObject;
   /** @desc Map describing protocol-specific definitions for a channel. */
   bindings?: Bindings<SocketIOChannelBinding>;
 }
@@ -98,14 +100,12 @@ export interface MessageObject extends MessageTraitObject {
   traits?: MessageTraitObject | ReferenceObject;
 }
 
+/** @desc The key represents the message identifier. The messageId value is case-sensitive. */
+export type MessagesObject = Record<string, MessageObject | ReferenceObject>;
+
+// @todo refactor next
 export interface OperationObject extends OperationTraitObject {
   traits?: Record<string, OperationTraitObject>;
-  message?:
-    | {
-        oneOf: Array<MessageObject | ReferenceObject>;
-      }
-    | MessageObject
-    | ReferenceObject;
 }
 
 export interface OperationTraitObject {
@@ -118,9 +118,8 @@ export interface OperationTraitObject {
   bindings?: Bindings<SocketIOOperationBinding>;
 }
 
+/** @since 3.0.0 messageId moved to MessagesObject */
 export interface MessageTraitObject {
-  /** @desc Unique string used to identify the message. The id MUST be unique among all messages described in the API.*/
-  messageId?: string;
   headers?: SchemaObject;
   correlationId?: CorrelationIDObject;
   schemaFormat?: string;

@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.0",
-    "@tsconfig/node18": "^18.2.2",
+    "@tsconfig/node18": "^18.2.4",
     "@types/node": "^20.11.16",
     "@types/ramda": "^0.29.10",
     "@typescript-eslint/eslint-plugin": "^7.0.2",

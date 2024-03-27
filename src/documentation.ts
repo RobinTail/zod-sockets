@@ -1,8 +1,8 @@
 import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
-import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
-import { AsyncChannelObject } from "./async-api/commons";
+import { AsyncApiBuilder } from "./async-api/document-builder";
+import { ChannelItemObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
@@ -22,7 +22,7 @@ interface DocumentationParams {
   config: Config<Namespaces>;
 }
 
-export class Documentation extends AsyncApiDocumentBuilder {
+export class Documentation extends AsyncApiBuilder {
   public constructor({
     actions,
     config: { namespaces },
@@ -40,10 +40,15 @@ export class Documentation extends AsyncApiDocumentBuilder {
       defaultContentType: "text/plain",
     });
     for (const server in servers) {
-      this.addServer(server, { ...servers[server], protocol: "socket.io" });
+      const uri = new URL(servers[server].url);
+      this.addServer(server, {
+        ...servers[server],
+        url: `${uri.host}${uri.port}${uri.pathname}${uri.search}${uri.hash}`,
+        protocol: uri.protocol.slice(0, -1),
+      });
       if (!this.document.id) {
-        const uri = new URL(servers[server].url.toLowerCase());
-        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
+        const urn = new URL(servers[server].url.toLowerCase());
+        this.document.id = `urn:${urn.host.split(".").concat(urn.pathname.slice(1).split("/")).join(":")}`;
       }
     }
     const commons = { onEach, onMissing, rules: depicters };
@@ -80,18 +85,18 @@ export class Documentation extends AsyncApiDocumentBuilder {
     };
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      const channelId = makeCleanId(normalizeNS(ns)) || "Root";
-      const channel: AsyncChannelObject = {
+      const alias = makeCleanId(normalizeNS(ns)) || "Root";
+      const channel: ChannelItemObject = {
         description: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },
         subscribe: {
-          operationId: makeCleanId(`outgoing events ${channelId}`),
+          operationId: makeCleanId(`outgoing events ${alias}`),
           description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: Object.entries(emission).map(([event, { schema, ack }]) => ({
               name: event,
               title: event,
-              messageId: lcFirst(makeCleanId(`${channelId} outgoing ${event}`)),
+              messageId: lcFirst(makeCleanId(`${alias} outgoing ${event}`)),
               payload: walkSchema({
                 direction: "out",
                 schema,
@@ -115,7 +120,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
         publish: {
-          operationId: makeCleanId(`incoming events ${channelId}`),
+          operationId: makeCleanId(`incoming events ${alias}`),
           description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: actions
@@ -126,9 +131,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
                 return {
                   name: event,
                   title: event,
-                  messageId: lcFirst(
-                    makeCleanId(`${channelId} incoming ${event}`),
-                  ),
+                  messageId: lcFirst(makeCleanId(`${alias} incoming ${event}`)),
                   payload: walkSchema({
                     direction: "in",
                     schema: action.getSchema("input"),
@@ -153,7 +156,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
       };
-      this.addChannel(channelId, channel);
+      this.addChannel(normalizeNS(ns), channel);
     }
   }
 }

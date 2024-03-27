@@ -2,6 +2,12 @@
 
 ## Version 0
 
+### v0.11.3
+
+- Fixed the server `protocol` in the generated documentation (taking from the supplied server URL);
+- Meanwhile, the server `url` in the generated documentation has no protocol prefix now;
+- Reverted channel identifiers to actual namespaces in the generated documentation (according to AsyncAPI spec).
+
 ### v0.11.2
 
 - Increasing AsyncAPI version to 2.6.0 in the generated documentation;

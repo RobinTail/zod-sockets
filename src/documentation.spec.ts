@@ -38,8 +38,8 @@ describe("Documentation", () => {
       }).getSpec();
       expect(
         (
-          (doc.channels.Root.bindings!["socket.io"].query as SchemaObject)
-            .properties!.EIO as SchemaObject
+          (doc.channels["/"].bindings?.["socket.io"]?.query as SchemaObject)
+            .properties?.EIO as SchemaObject
         ).enum,
       ).toEqual([protocol.toString()]);
     });

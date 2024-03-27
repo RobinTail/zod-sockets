@@ -1,4 +1,9 @@
-import { AsyncApiObject, ChannelObject, ServerObject } from "./commons";
+import {
+  AsyncApiObject,
+  ChannelObject,
+  OperationObject,
+  ServerObject,
+} from "./commons";
 import yaml from "yaml";
 
 export class AsyncApiBuilder {
@@ -23,6 +28,25 @@ export class AsyncApiBuilder {
 
   public addChannel(name: string, channel: ChannelObject): this {
     this.document.channels = { ...this.document.channels, [name]: channel };
+    return this;
+  }
+
+  public addOperation(name: string, operation: OperationObject): this {
+    this.document.operations = {
+      ...this.document.operations,
+      [name]: operation,
+    };
+    return this;
+  }
+
+  public linkMessage(
+    operationId: string,
+    channelId: string,
+    messageId: string,
+  ): this {
+    this.document.operations?.[operationId].messages?.push({
+      $ref: `#/channels/${channelId}/messages/${messageId}`,
+    });
     return this;
   }
 

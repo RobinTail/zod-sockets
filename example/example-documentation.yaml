@@ -172,45 +172,45 @@ operations:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootOutgoingTime"
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
+    title: time
+    summary: Outgoing event time
+    description: The message produced by the application within the / namespace
   RootSendOperationChat:
     action: send
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootOutgoingChat"
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
+    title: chat
+    summary: Outgoing event chat
+    description: The message produced by the application within the / namespace
   RootSendOperationRooms:
     action: send
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootOutgoingRooms"
-    title: Emission
-    summary: Outgoing events
-    description: The messages produced by the application within the / namespace
+    title: rooms
+    summary: Outgoing event rooms
+    description: The message produced by the application within the / namespace
   RootRecvOperationChat:
     action: receive
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootIncomingChat"
-    title: Actions
-    summary: Incoming events
-    description: The messages consumed by the application within the / namespace
+    title: chat
+    summary: Incoming event chat
+    description: The message consumed by the application within the / namespace
   RootRecvOperationPing:
     action: receive
     channel:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootIncomingPing"
-    title: Actions
-    summary: Incoming events
-    description: The messages consumed by the application within the / namespace
+    title: ping
+    summary: Incoming event ping
+    description: The message consumed by the application within the / namespace
     reply:
       address:
         location: $message.payload#
@@ -225,6 +225,6 @@ operations:
       $ref: "#/channels/Root"
     messages:
       - $ref: "#/channels/Root/messages/rootIncomingSubscribe"
-    title: Actions
-    summary: Incoming events
-    description: The messages consumed by the application within the / namespace
+    title: subscribe
+    summary: Incoming event subscribe
+    description: The message consumed by the application within the / namespace

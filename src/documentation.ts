@@ -112,9 +112,9 @@ export class Documentation extends AsyncApiBuilder {
           action: "send",
           channel: { $ref: `#/channels/${channelId}` },
           messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
-          title: "Emission",
-          summary: "Outgoing events",
-          description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
+          title: event,
+          summary: `Outgoing event ${event}`,
+          description: `The message produced by the application within the ${normalizeNS(ns)} namespace`,
           reply: ack
             ? {
                 address: {
@@ -167,9 +167,9 @@ export class Documentation extends AsyncApiBuilder {
           action: "receive",
           channel: { $ref: `#/channels/${channelId}` },
           messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
-          title: "Actions",
-          summary: "Incoming events",
-          description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
+          title: event,
+          summary: `Incoming event ${event}`,
+          description: `The message consumed by the application within the ${normalizeNS(ns)} namespace`,
           reply: output
             ? {
                 address: {

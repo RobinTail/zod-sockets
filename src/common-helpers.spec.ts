@@ -1,6 +1,12 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
-import { hasCoercion, lcFirst, makeCleanId } from "./common-helpers";
+import {
+  hasCoercion,
+  lcFirst,
+  makeCleanId,
+  makeCleanIdWithFallback,
+} from "./common-helpers";
+import { rootNS } from "./namespace";
 
 describe("Common helpers", () => {
   describe("hasCoercion()", () => {
@@ -32,6 +38,18 @@ describe("Common helpers", () => {
         expect(makeCleanId(...args)).toMatchSnapshot();
       },
     );
+  });
+
+  describe("makeCleanIdWithFallback", () => {
+    test.each([rootNS, "/", " / ", "."])(
+      "should use fallback if it's too clean",
+      (subject) => {
+        expect(makeCleanIdWithFallback(subject, "Root")).toBe("Root");
+      },
+    );
+    test("should make a clean id out of it", () => {
+      expect(makeCleanIdWithFallback("/public/chat", "no")).toBe("PublicChat");
+    });
   });
 
   describe("lcFirst()", () => {

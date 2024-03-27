@@ -4,9 +4,10 @@ import { AbstractAction } from "./action";
 import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
 import { AsyncChannelObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
+import { makeCleanIdWithFallback } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
-import { Namespaces, humanizeNS, normalizeNS } from "./namespace";
+import { Namespaces, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
 
 interface DocumentationParams {
@@ -149,7 +150,10 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
       };
-      this.addChannel(humanizeNS(ns), channel);
+      this.addChannel(
+        makeCleanIdWithFallback(normalizeNS(ns), "Root"),
+        channel,
+      );
     }
   }
 }

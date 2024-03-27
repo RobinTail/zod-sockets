@@ -8,7 +8,7 @@ export class AsyncApiBuilder {
     initial: Pick<AsyncApiObject, "info" | "id" | "defaultContentType">,
   ) {
     this.document = {
-      asyncapi: "2.6.0",
+      asyncapi: "3.0.0",
       ...initial,
       tags: [],
       servers: {},

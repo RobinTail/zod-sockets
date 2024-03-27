@@ -14,7 +14,7 @@ import {
 
 /**
  * @fileoverview AsyncAPI specification
- * @version 2.6.0
+ * @version 3.0.0 draft
  */
 
 interface Bindings<T> {

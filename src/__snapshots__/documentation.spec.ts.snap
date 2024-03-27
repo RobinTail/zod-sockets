@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Documentation > Basic cases > should generate the correct schema for complex types 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Complex Types
   version: 3.4.5
@@ -115,7 +115,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for discriminated union type 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Discriminated Union Type
   version: 3.4.5
@@ -258,7 +258,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for intersection type 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Intersection and And types
   version: 3.4.5
@@ -368,7 +368,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for nullable and optional types 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Nullable and Optional Types
   version: 3.4.5
@@ -479,7 +479,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for union type 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Union and Or Types
   version: 3.4.5
@@ -599,7 +599,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema of the example 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Example API
   version: 1.2.3
@@ -773,7 +773,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle bigint, boolean, date, null and readonly 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing additional types
   version: 3.4.5
@@ -880,7 +880,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle different number types 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing numbers
   version: 3.4.5
@@ -1023,7 +1023,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle different string types 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing strings
   version: 3.4.5
@@ -1171,7 +1171,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle enum types 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing enums
   version: 3.4.5
@@ -1268,7 +1268,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle record 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing record
   version: 3.4.5
@@ -1401,7 +1401,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle transformation schema in output 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Transformation in response schema
   version: 3.4.5
@@ -1503,7 +1503,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle tuples 0 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing tuples
   version: 3.4.5
@@ -1591,7 +1591,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle tuples 1 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing tuples
   version: 3.4.5
@@ -1684,7 +1684,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle tuples 2 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing tuples
   version: 3.4.5
@@ -1781,7 +1781,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle tuples 3 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing tuples
   version: 3.4.5
@@ -1866,7 +1866,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle type any 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing type any
   version: 3.4.5
@@ -1957,7 +1957,7 @@ components: {}
 `;
 
 exports[`Documentation > Basic cases > should handle z.preprocess() 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing z.preprocess()
   version: 3.4.5

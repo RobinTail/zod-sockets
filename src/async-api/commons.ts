@@ -1,8 +1,8 @@
 import type {
   InfoObject,
+  ServerObject as OASServerObject,
   ReferenceObject,
   SchemaObject,
-  ServerObject,
   ServerVariableObject,
 } from "openapi3-ts/oas31";
 import {
@@ -14,7 +14,7 @@ import {
 
 export type Protocol = "socket.io";
 
-export interface AsyncServerObject extends Omit<ServerObject, "variables"> {
+export interface ServerObject extends Omit<OASServerObject, "variables"> {
   variables?: Record<string, AsyncServerVariableObject>;
   protocol: Protocol;
   protocolVersion?: string;
@@ -27,7 +27,7 @@ export interface AsyncApiDocument {
   /** @desc URI or URN format */
   id?: string;
   info: InfoObject;
-  servers?: Record<string, AsyncServerObject>;
+  servers?: Record<string, ServerObject>;
   channels: AsyncChannelsObject;
   components?: AsyncComponentsObject;
   tags?: AsyncTagObject[];

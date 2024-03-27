@@ -1,8 +1,4 @@
-import {
-  AsyncApiDocument,
-  AsyncChannelObject,
-  AsyncServerObject,
-} from "./commons";
+import { AsyncApiDocument, AsyncChannelObject, ServerObject } from "./commons";
 import yaml from "yaml";
 
 export class AsyncApiDocumentBuilder {
@@ -21,7 +17,7 @@ export class AsyncApiDocumentBuilder {
     };
   }
 
-  public addServer(name: string, server: AsyncServerObject): this {
+  public addServer(name: string, server: ServerObject): this {
     this.document.servers = { ...this.document.servers, [name]: server };
     return this;
   }

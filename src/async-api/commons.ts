@@ -161,13 +161,14 @@ export interface OAuthFlowsObject {
 }
 
 export interface OAuthFlowObject {
+  /** @desc for implicit and authorizationCode */
   authorizationUrl?: string;
+  /** @desc for password, clientCredentials and authorizationCode */
   tokenUrl?: string;
   refreshUrl?: string;
-  scopes: ScopesObject;
+  /** @desc A map between the scope name and a short description for it. */
+  scopes: Record<string, string>;
 }
-
-export type ScopesObject = Record<string, unknown>;
 
 export interface ParameterObject {
   description?: string;

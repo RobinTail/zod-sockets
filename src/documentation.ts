@@ -4,7 +4,7 @@ import { AbstractAction } from "./action";
 import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
 import { AsyncChannelObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
-import { makeCleanIdWithFallback } from "./common-helpers";
+import { makeCleanId, makeCleanIdWithFallback } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
@@ -80,17 +80,18 @@ export class Documentation extends AsyncApiDocumentBuilder {
     };
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
+      const channelId = makeCleanIdWithFallback(normalizeNS(ns), "Root");
       const channel: AsyncChannelObject = {
         description: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },
         subscribe: {
-          operationId: `out${normalizeNS(ns)}`,
+          operationId: makeCleanId(`outgoing events ${channelId}`),
           description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: Object.entries(emission).map(([event, { schema, ack }]) => ({
               name: event,
               title: event,
-              messageId: `out${normalizeNS(ns)}/${event}`,
+              messageId: makeCleanId(`${channelId} outgoing ${event}`),
               payload: walkSchema({
                 direction: "out",
                 schema,
@@ -114,7 +115,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
         publish: {
-          operationId: `in${normalizeNS(ns)}`,
+          operationId: makeCleanId(`incoming events ${channelId}`),
           description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: actions
@@ -125,7 +126,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
                 return {
                   name: event,
                   title: event,
-                  messageId: `in${normalizeNS(ns)}/${event}`,
+                  messageId: makeCleanId(`${channelId} incoming ${event}`),
                   payload: walkSchema({
                     direction: "in",
                     schema: action.getSchema("input"),
@@ -150,10 +151,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
       };
-      this.addChannel(
-        makeCleanIdWithFallback(normalizeNS(ns), "Root"),
-        channel,
-      );
+      this.addChannel(channelId, channel);
     }
   }
 }

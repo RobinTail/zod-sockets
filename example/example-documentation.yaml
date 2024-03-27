@@ -61,13 +61,13 @@ channels:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
     subscribe:
-      operationId: out/
+      operationId: OutgoingEventsRoot
       description: The messages produced by the application within the / namespace
       message:
         oneOf:
           - name: time
             title: time
-            messageId: out//time
+            messageId: RootOutgoingTime
             payload:
               type: object
               format: tuple
@@ -80,7 +80,7 @@ channels:
               additionalProperties: false
           - name: chat
             title: chat
-            messageId: out//chat
+            messageId: RootOutgoingChat
             payload:
               type: object
               format: tuple
@@ -103,7 +103,7 @@ channels:
               additionalProperties: false
           - name: rooms
             title: rooms
-            messageId: out//rooms
+            messageId: RootOutgoingRooms
             payload:
               type: object
               format: tuple
@@ -117,13 +117,13 @@ channels:
                 - "0"
               additionalProperties: false
     publish:
-      operationId: in/
+      operationId: IncomingEventsRoot
       description: The messages consumed by the application within the / namespace
       message:
         oneOf:
           - name: chat
             title: chat
-            messageId: in//chat
+            messageId: RootIncomingChat
             payload:
               type: object
               format: tuple
@@ -136,7 +136,7 @@ channels:
               additionalProperties: false
           - name: ping
             title: ping
-            messageId: in//ping
+            messageId: RootIncomingPing
             payload:
               type: object
               format: tuple
@@ -165,7 +165,7 @@ channels:
                   description: Acknowledgement
           - name: subscribe
             title: subscribe
-            messageId: in//subscribe
+            messageId: RootIncomingSubscribe
             payload:
               type: object
               format: tuple

@@ -44,7 +44,7 @@ export interface ChannelItemObject {
   /** @desc the messages consumed by the application from the channel. */
   publish?: OperationObject;
   /** @desc Describes a map of parameters included in a channel name. */
-  parameters?: Record<string, ParameterObject>;
+  parameters?: ParametersObject;
   /** @desc Map describing protocol-specific definitions for a channel. */
   bindings?: Record<Protocol, SocketIOChannelBinding>;
 }
@@ -59,7 +59,7 @@ export interface AsyncComponentsObject {
   schemas?: Record<string, SchemaObject>;
   messages?: Record<string, AsyncMessageObject>;
   securitySchemes?: Record<string, AsyncSecuritySchemeObject>;
-  parameters?: Record<string, ParameterObject>;
+  parameters?: ParametersObject;
   correlationIds?: Record<string, AsyncCorrelationObject>;
   operationTraits?: Record<string, AsyncOperationTraitObject>;
   messageTraits?: Record<string, AsyncMessageTraitObject>;
@@ -172,6 +172,8 @@ export interface ParameterObject {
   schema?: SchemaObject | ReferenceObject;
   location?: string;
 }
+
+export type ParametersObject = Record<string, ParameterObject>;
 
 export interface ExternalDocumentationObject {
   description?: string;

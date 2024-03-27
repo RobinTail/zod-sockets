@@ -102,6 +102,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -236,6 +254,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -337,6 +373,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -439,6 +493,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -550,6 +622,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingName"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -716,6 +806,29 @@ channels:
             format: any
             description: Does not matter
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootOutgoingTime"
+      - $ref: "#/channels/Root/messages/rootOutgoingChat"
+      - $ref: "#/channels/Root/messages/rootOutgoingRooms"
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingChat"
+      - $ref: "#/channels/Root/messages/rootIncomingPing"
+      - $ref: "#/channels/Root/messages/rootIncomingSubscribe"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -814,6 +927,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -948,6 +1079,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1087,6 +1236,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1175,6 +1342,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1299,6 +1484,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1392,6 +1595,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1471,6 +1692,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1555,6 +1794,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1643,6 +1900,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1719,6 +1994,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1801,6 +2094,24 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;
 
@@ -1890,5 +2201,23 @@ channels:
               additionalProperties: false
               description: Acknowledgement
 components: {}
+operations:
+  OutgoingEventsRoot:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages: []
+    title: Emission
+    summary: Outgoing events
+    description: The messages produced by the application within the / namespace
+  IncomingEventsRoot:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: Actions
+    summary: Incoming events
+    description: The messages consumed by the application within the / namespace
 "
 `;

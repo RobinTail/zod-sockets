@@ -2,7 +2,11 @@ import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiBuilder } from "./async-api/document-builder";
-import { ChannelObject, MessagesObject } from "./async-api/commons";
+import {
+  ChannelObject,
+  MessagesObject,
+  OperationsObject,
+} from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
@@ -84,9 +88,29 @@ export class Documentation extends AsyncApiBuilder {
       },
     };
 
+    const operations: OperationsObject = {};
+
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       const channelId = makeCleanId(normalizeNS(ns)) || "Root";
       const messages: MessagesObject = {};
+      const sendOperationId = makeCleanId(`outgoing events ${channelId}`);
+      const recvOperationId = makeCleanId(`incoming events ${channelId}`);
+      operations[sendOperationId] = {
+        action: "send",
+        channel: { $ref: `#/channels/${channelId}` },
+        messages: [],
+        title: "Emission",
+        summary: "Outgoing events",
+        description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
+      };
+      operations[recvOperationId] = {
+        action: "receive",
+        channel: { $ref: `#/channels/${channelId}` },
+        messages: [],
+        title: "Actions",
+        summary: "Incoming events",
+        description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
+      };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const messageId = lcFirst(
           makeCleanId(`${channelId} outgoing ${event}`),
@@ -112,6 +136,9 @@ export class Documentation extends AsyncApiBuilder {
               }
             : undefined,
         };
+        operations[sendOperationId].messages?.push({
+          $ref: `#/channels/${channelId}/messages/${messageId}`,
+        });
       }
       for (const action of actions) {
         if (action.getNamespace() !== ns) {
@@ -145,23 +172,19 @@ export class Documentation extends AsyncApiBuilder {
               }
             : undefined,
         };
+        operations[recvOperationId].messages?.push({
+          $ref: `#/channels/${channelId}/messages/${messageId}`,
+        });
       }
       const channel: ChannelObject = {
         address: normalizeNS(ns),
         title: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },
         messages,
-        /*
-        subscribe: {
-          operationId: makeCleanId(`outgoing events ${channelId}`),
-          description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
-        },
-        publish: {
-          operationId: makeCleanId(`incoming events ${channelId}`),
-          description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
-        },*/
       };
       this.addChannel(channelId, channel);
     }
+    // @todo make methods in builder
+    this.document.operations = operations;
   }
 }

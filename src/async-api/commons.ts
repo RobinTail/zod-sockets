@@ -47,7 +47,8 @@ export interface AsyncApiObject {
   id?: string;
   info: InfoObject;
   servers?: Record<string, ServerObject>;
-  channels: ChannelsObject;
+  channels?: ChannelsObject;
+  operations?: OperationsObject;
   components?: ComponentsObject;
   defaultContentType?: string;
 }
@@ -103,16 +104,30 @@ export interface MessageObject extends MessageTraitObject {
 /** @desc The key represents the message identifier. The messageId value is case-sensitive. */
 export type MessagesObject = Record<string, MessageObject | ReferenceObject>;
 
-// @todo refactor next
+/** @since 3.0.0 added action, channel, messages, reply */
 export interface OperationObject extends OperationTraitObject {
+  action: "send" | "receive";
+  /** @desc A $ref pointer to the definition of the channel in which this operation is performed. */
+  channel: ReferenceObject;
+  /** @desc A list of $ref pointers pointing to the supported Message Objects that can be processed by this operation */
+  messages?: ReferenceObject[];
+  // @todo
+  reply?: unknown;
   traits?: Record<string, OperationTraitObject>;
 }
 
+/**
+ * @desc The operation this application MUST implement. The field name (operationId) MUST be a string used to
+ * @desc identify the operation in the document where it is defined, and its value is case-sensitive.
+ * */
+export type OperationsObject = Record<string, OperationObject>;
+
+/** @since 3.0.0 operationId moved to OperationsObject; added title, security */
 export interface OperationTraitObject {
-  /** @desc Unique string used to identify the operation. */
-  operationId?: string;
+  title?: string;
   summary?: string;
   description?: string;
+  security?: SecuritySchemeObject[];
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<SocketIOOperationBinding>;

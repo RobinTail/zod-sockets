@@ -35,11 +35,3 @@ export const makeCleanId = (...args: string[]) =>
     )
     .map(ucFirst)
     .join("");
-
-export const makeCleanIdWithFallback = (
-  name: string,
-  fallback: string,
-): string => {
-  const clean = makeCleanId(name);
-  return clean || fallback;
-};

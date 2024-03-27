@@ -4,11 +4,7 @@ import { AbstractAction } from "./action";
 import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
 import { AsyncChannelObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
-import {
-  lcFirst,
-  makeCleanId,
-  makeCleanIdWithFallback,
-} from "./common-helpers";
+import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
@@ -84,7 +80,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
     };
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      const channelId = makeCleanIdWithFallback(normalizeNS(ns), "Root");
+      const channelId = makeCleanId(normalizeNS(ns)) || "Root";
       const channel: AsyncChannelObject = {
         description: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },

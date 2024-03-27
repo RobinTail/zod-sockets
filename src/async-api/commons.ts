@@ -97,7 +97,7 @@ export interface ComponentsObject {
 }
 
 export interface MessageObject extends MessageTraitObject {
-  payload?: SchemaObject | ReferenceObject;
+  payload?: SchemaObject | MultiFormatSchemaObject | ReferenceObject;
   traits?: MessageTraitObject | ReferenceObject;
 }
 
@@ -133,11 +133,10 @@ export interface OperationTraitObject {
   bindings?: Bindings<SocketIOOperationBinding>;
 }
 
-/** @since 3.0.0 messageId moved to MessagesObject */
+/** @since 3.0.0 messageId moved to MessagesObject, schemaFormat moved to MultiFormatSchemaObject */
 export interface MessageTraitObject {
-  headers?: SchemaObject;
+  headers?: SchemaObject | MultiFormatSchemaObject;
   correlationId?: CorrelationIDObject;
-  schemaFormat?: string;
   contentType?: string;
   name?: string;
   title?: string;
@@ -146,6 +145,19 @@ export interface MessageTraitObject {
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<SocketIOMessageBinding>;
+  // @todo
+  examples?: unknown[];
+}
+
+/** @since 3.0.0 new */
+interface MultiFormatSchemaObject {
+  /**
+   * @desc A string containing the name of the schema format that is used to define the information.
+   * @example application/vnd.aai.asyncapi+yaml;version=3.0.0
+   * @example application/schema+yaml;version=draft-07
+   * */
+  schemaFormat: string;
+  schema: SchemaObject;
 }
 
 export interface CorrelationIDObject {

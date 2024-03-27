@@ -40,10 +40,15 @@ export class Documentation extends AsyncApiBuilder {
       defaultContentType: "text/plain",
     });
     for (const server in servers) {
-      this.addServer(server, { ...servers[server], protocol: "socket.io" });
+      const uri = new URL(servers[server].url);
+      this.addServer(server, {
+        ...servers[server],
+        url: `${uri.host}${uri.port}${uri.pathname}${uri.search}${uri.hash}`,
+        protocol: uri.protocol.slice(0, -1),
+      });
       if (!this.document.id) {
-        const uri = new URL(servers[server].url.toLowerCase());
-        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
+        const urn = new URL(servers[server].url.toLowerCase());
+        this.document.id = `urn:${urn.host.split(".").concat(urn.pathname.slice(1).split("/")).join(":")}`;
       }
     }
     const commons = { onEach, onMissing, rules: depicters };

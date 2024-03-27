@@ -16,7 +16,7 @@ export type Protocol = "socket.io";
 
 export interface ServerObject extends Omit<OASServerObject, "variables"> {
   variables?: Record<string, ServerVariableObject>;
-  protocol: Protocol;
+  protocol: string; // not the same as the Protocol for binding
   protocolVersion?: string;
   security?: SecurityRequirementObject[];
   bindings?: Record<Protocol, SocketIOServerBinding>;

@@ -14,8 +14,8 @@ defaultContentType: text/plain
 tags: []
 servers:
   example:
-    url: https://example.com/socket.io
-    protocol: socket.io
+    url: example.com/socket.io
+    protocol: https
 channels:
   Root:
     description: Namespace /

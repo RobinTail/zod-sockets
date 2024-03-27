@@ -2,6 +2,17 @@
 
 ## Version 0
 
+### v0.12.0
+
+- Switching to AsyncAPI version 3.0.0 for generating documentation:
+  - Channel identifiers are human-readable again thanks to the dedicated `address` property;
+  - Server URL is deconstructed into `protocol`, `host` and `pathname`;
+  - The featured `operations` are detached from `channels`;
+  - Custom protocols are no longer supported, therefore changing `socket.io` to `ws`, channel bindings remain;
+  - For the Socket.IO acknowledgements using the features `reply` schema instead of the message bindings;
+  - In this regard, new composition implies a dedicated operation per message;
+  - Several other adjustments according to [Release notes](https://www.asyncapi.com/blog/release-notes-3.0.0).
+
 ### v0.11.3
 
 - Fixed the server `protocol` in the generated documentation (taking from the supplied server URL);

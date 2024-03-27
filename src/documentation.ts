@@ -2,8 +2,8 @@ import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiBuilder } from "./async-api/document-builder";
-import { ChannelItemObject } from "./async-api/commons";
-import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
+import { ChannelObject, MessagesObject } from "./async-api/commons";
+import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
@@ -17,7 +17,7 @@ interface DocumentationParams {
   description?: string;
   contact?: ContactObject;
   license?: LicenseObject;
-  servers?: Record<string, { url: string }>;
+  servers?: Record<string, { url: string; description?: string }>;
   actions: AbstractAction[];
   config: Config<Namespaces>;
 }
@@ -42,18 +42,18 @@ export class Documentation extends AsyncApiBuilder {
     for (const server in servers) {
       const uri = new URL(servers[server].url);
       this.addServer(server, {
-        ...servers[server],
-        url: `${uri.host}${uri.port}${uri.pathname}${uri.search}${uri.hash}`,
+        description: servers[server].description,
+        host: uri.host,
+        pathname: uri.pathname,
         protocol: uri.protocol.slice(0, -1),
       });
       if (!this.document.id) {
-        const urn = new URL(servers[server].url.toLowerCase());
-        this.document.id = `urn:${urn.host.split(".").concat(urn.pathname.slice(1).split("/")).join(":")}`;
+        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
       }
     }
     const commons = { onEach, onMissing, rules: depicters };
-    const channelBinding: SocketIOChannelBinding = {
-      bindingVersion: "0.11.0",
+    const channelBinding: WSChannelBinding = {
+      bindingVersion: "0.1.0",
       method: "GET",
       headers: walkSchema({
         direction: "in",
@@ -85,78 +85,113 @@ export class Documentation extends AsyncApiBuilder {
     };
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      const alias = makeCleanId(normalizeNS(ns)) || "Root";
-      const channel: ChannelItemObject = {
-        description: `Namespace ${normalizeNS(ns)}`,
-        bindings: { "socket.io": channelBinding },
-        subscribe: {
-          operationId: makeCleanId(`outgoing events ${alias}`),
-          description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
-          message: {
-            oneOf: Object.entries(emission).map(([event, { schema, ack }]) => ({
-              name: event,
-              title: event,
-              messageId: lcFirst(makeCleanId(`${alias} outgoing ${event}`)),
+      const channelId = makeCleanId(normalizeNS(ns)) || "Root";
+      const messages: MessagesObject = {};
+      for (const [event, { schema, ack }] of Object.entries(emission)) {
+        const messageId = lcFirst(
+          makeCleanId(`${channelId} outgoing ${event}`),
+        );
+        const ackId = lcFirst(
+          makeCleanId(`${channelId} ack for outgoing ${event}`),
+        );
+        messages[messageId] = {
+          name: event,
+          title: event,
+          payload: walkSchema({ direction: "out", schema, ...commons }),
+        };
+        if (ack) {
+          messages[ackId] = {
+            title: `Acknowledgement for ${event}`,
+            payload: walkSchema({ direction: "in", schema: ack, ...commons }),
+          };
+        }
+        const sendOperationId = makeCleanId(
+          `${channelId} send operation ${event}`,
+        );
+        this.addOperation(sendOperationId, {
+          action: "send",
+          channel: { $ref: `#/channels/${channelId}` },
+          messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
+          title: event,
+          summary: `Outgoing event ${event}`,
+          description: `The message produced by the application within the ${normalizeNS(ns)} namespace`,
+          reply: ack
+            ? {
+                address: {
+                  location: "$message.payload#",
+                  description: "Last argument: acknowledgement handler",
+                },
+                channel: { $ref: `#/channels/${channelId}` },
+                messages: [
+                  { $ref: `#/channels/${channelId}/messages/${ackId}` },
+                ],
+              }
+            : undefined,
+        });
+      }
+      for (const action of actions) {
+        if (action.getNamespace() === ns) {
+          const event = action.getEvent();
+          const messageId = lcFirst(
+            makeCleanId(`${channelId} incoming ${event}`),
+          );
+          const ackId = lcFirst(
+            makeCleanId(`${channelId} ack for incoming ${event}`),
+          );
+          const output = action.getSchema("output");
+          messages[messageId] = {
+            name: event,
+            title: event,
+            payload: walkSchema({
+              direction: "in",
+              schema: action.getSchema("input"),
+              ...commons,
+            }),
+          };
+          if (output) {
+            messages[ackId] = {
+              title: `Acknowledgement for ${event}`,
               payload: walkSchema({
                 direction: "out",
-                schema,
+                schema: output,
                 ...commons,
               }),
-              bindings: ack
-                ? {
-                    "socket.io": {
-                      bindingVersion: "0.11.0",
-                      ack: walkSchema({
-                        direction: "in",
-                        schema: ack.describe(
-                          ack.description || "Acknowledgement",
-                        ),
-                        ...commons,
-                      }),
-                    },
-                  }
-                : undefined,
-            })),
-          },
-        },
-        publish: {
-          operationId: makeCleanId(`incoming events ${alias}`),
-          description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
-          message: {
-            oneOf: actions
-              .filter((action) => action.getNamespace() === ns)
-              .map((action) => {
-                const event = action.getEvent();
-                const output = action.getSchema("output");
-                return {
-                  name: event,
-                  title: event,
-                  messageId: lcFirst(makeCleanId(`${alias} incoming ${event}`)),
-                  payload: walkSchema({
-                    direction: "in",
-                    schema: action.getSchema("input"),
-                    ...commons,
-                  }),
-                  bindings: output
-                    ? {
-                        "socket.io": {
-                          bindingVersion: "0.11.0",
-                          ack: walkSchema({
-                            direction: "out",
-                            schema: output.describe(
-                              output.description || "Acknowledgement",
-                            ),
-                            ...commons,
-                          }),
-                        },
-                      }
-                    : undefined,
-                };
-              }),
-          },
-        },
+            };
+          }
+          const recvOperationId = makeCleanId(
+            `${channelId} recv operation ${event}`,
+          );
+          this.addOperation(recvOperationId, {
+            action: "receive",
+            channel: { $ref: `#/channels/${channelId}` },
+            messages: [
+              { $ref: `#/channels/${channelId}/messages/${messageId}` },
+            ],
+            title: event,
+            summary: `Incoming event ${event}`,
+            description: `The message consumed by the application within the ${normalizeNS(ns)} namespace`,
+            reply: output
+              ? {
+                  address: {
+                    location: "$message.payload#",
+                    description: "Last argument: acknowledgement handler",
+                  },
+                  channel: { $ref: `#/channels/${channelId}` },
+                  messages: [
+                    { $ref: `#/channels/${channelId}/messages/${ackId}` },
+                  ],
+                }
+              : undefined,
+          });
+        }
+      }
+      const channel: ChannelObject = {
+        address: normalizeNS(ns),
+        title: `Namespace ${normalizeNS(ns)}`,
+        bindings: { ws: channelBinding },
+        messages,
       };
-      this.addChannel(normalizeNS(ns), channel);
+      this.addChannel(channelId, channel);
     }
   }
 }

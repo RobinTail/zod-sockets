@@ -38,8 +38,8 @@ describe("Documentation", () => {
       }).getSpec();
       expect(
         (
-          (doc.channels["/"].bindings?.["socket.io"]?.query as SchemaObject)
-            .properties?.EIO as SchemaObject
+          (doc.channels!.Root.bindings?.ws?.query as SchemaObject).properties
+            ?.EIO as SchemaObject
         ).enum,
       ).toEqual([protocol.toString()]);
     });
@@ -261,7 +261,15 @@ describe("Documentation", () => {
 
     test("should handle type any", () => {
       const spec = new Documentation({
-        config: sampleConfig,
+        config: sampleConfig.addNamespace({
+          path: "test",
+          emission: {
+            withAck: {
+              schema: z.tuple([]),
+              ack: z.tuple([z.any()]).rest(z.any()),
+            },
+          },
+        }),
         actions: [
           factory.build({
             event: "test",

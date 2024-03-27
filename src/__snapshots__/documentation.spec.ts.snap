@@ -1,19 +1,19 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Documentation > Basic cases > should generate the correct schema for complex types 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Complex Types
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -52,82 +52,89 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: array
-                  items:
-                    type: integer
-                    format: int64
-                    exclusiveMinimum: 0
-                    maximum: 9007199254740991
-                  minItems: 1
-                  maxItems: 3
-                "1":
-                  type: array
-                  items:
-                    type: boolean
-                "2":
-                  type: string
-              required:
-                - "0"
-                - "1"
-                - "2"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: string
-                      enum:
-                        - something
-                    "1":
-                      type: number
-                      format: double
-                      minimum: -1.7976931348623157e+308
-                      maximum: 1.7976931348623157e+308
-                  required:
-                    - "0"
-                    - "1"
-                  additionalProperties: false
-                  description: Acknowledgement
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: array
+              items:
+                type: integer
+                format: int64
+                exclusiveMinimum: 0
+                maximum: 9007199254740991
+              minItems: 1
+              maxItems: 3
+            "1":
+              type: array
+              items:
+                type: boolean
+            "2":
+              type: string
+          required:
+            - "0"
+            - "1"
+            - "2"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              enum:
+                - something
+            "1":
+              type: number
+              format: double
+              minimum: -1.7976931348623157e+308
+              maximum: 1.7976931348623157e+308
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for discriminated union type 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Discriminated Union Type
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -166,111 +173,118 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  discriminator:
-                    propertyName: type
-                  oneOf:
-                    - type: object
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                            - a
-                        a:
-                          type: string
-                      required:
-                        - type
-                        - a
-                    - type: object
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                            - b
-                        b:
-                          type: string
-                      required:
-                        - type
-                        - b
-              required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              discriminator:
+                propertyName: type
+              oneOf:
+                - type: object
                   properties:
-                    "0":
-                      discriminator:
-                        propertyName: status
-                      oneOf:
-                        - type: object
-                          properties:
-                            status:
-                              type: string
-                              enum:
-                                - success
-                            data:
-                              format: any
-                          required:
-                            - status
-                        - type: object
-                          properties:
-                            status:
-                              type: string
-                              enum:
-                                - error
-                            error:
-                              type: object
-                              properties:
-                                message:
-                                  type: string
-                              required:
-                                - message
-                          required:
-                            - status
-                            - error
+                    type:
+                      type: string
+                      enum:
+                        - a
+                    a:
+                      type: string
                   required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+                    - type
+                    - a
+                - type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - b
+                    b:
+                      type: string
+                  required:
+                    - type
+                    - b
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              discriminator:
+                propertyName: status
+              oneOf:
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - success
+                    data:
+                      format: any
+                  required:
+                    - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - error
+                    error:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                      required:
+                        - message
+                  required:
+                    - status
+                    - error
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for intersection type 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Intersection and And types
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -309,78 +323,85 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
               type: object
-              format: tuple
               properties:
-                "0":
-                  type: object
-                  properties:
-                    one:
-                      type: string
-                    two:
-                      type: string
-                  required:
-                    - one
-                    - two
+                one:
+                  type: string
+                two:
+                  type: string
               required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: object
-                      properties:
-                        five:
-                          type: integer
-                          format: int64
-                          minimum: 0
-                          maximum: 9007199254740991
-                        six:
-                          type: string
-                      required:
-                        - five
-                        - six
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+                - one
+                - two
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: object
+              properties:
+                five:
+                  type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 9007199254740991
+                six:
+                  type: string
+              required:
+                - five
+                - six
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for nullable and optional types 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Nullable and Optional Types
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -419,79 +440,86 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                "1":
-                  type: string
-                  default: test
-                "2":
-                  type:
-                    - boolean
-                    - "null"
-                "3":
-                  type:
-                    - integer
-                    - "null"
-                  format: int64
-                  exclusiveMinimum: 0
-                  maximum: 9007199254740991
-                  default: 123
-              required:
-                - "0"
-                - "1"
-                - "2"
-                - "3"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type:
-                        - string
-                        - "null"
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+            "1":
+              type: string
+              default: test
+            "2":
+              type:
+                - boolean
+                - "null"
+            "3":
+              type:
+                - integer
+                - "null"
+              format: int64
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+              default: 123
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type:
+                - string
+                - "null"
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
 exports[`Documentation > Basic cases > should generate the correct schema for union type 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing Union and Or Types
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -530,947 +558,17 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: name
-            title: name
-            messageId: rootIncomingName
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  oneOf:
-                    - type: object
-                      properties:
-                        one:
-                          type: string
-                        two:
-                          type: integer
-                          format: int64
-                          exclusiveMinimum: 0
-                          maximum: 9007199254740991
-                      required:
-                        - one
-                        - two
-                    - type: object
-                      properties:
-                        two:
-                          type: integer
-                          format: int64
-                          minimum: -9007199254740991
-                          exclusiveMaximum: 0
-                        three:
-                          type: string
-                      required:
-                        - two
-                        - three
-              required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      oneOf:
-                        - type: string
-                        - type: integer
-                          format: int64
-                          exclusiveMinimum: 0
-                          maximum: 9007199254740991
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should generate the correct schema of the example 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Example API
-  version: 1.2.3
-id: urn:example:com:socket.io
-defaultContentType: text/plain
-tags: []
-servers:
-  example:
-    url: example.com/socket.io
-    protocol: https
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
+    messages:
+      rootIncomingName:
+        name: name
+        title: name
+        payload:
           type: object
+          format: tuple
           properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
+            "0":
               oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf:
-          - name: time
-            title: time
-            messageId: rootOutgoingTime
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  description: current ISO time
-              required:
-                - "0"
-              additionalProperties: false
-          - name: chat
-            title: chat
-            messageId: rootOutgoingChat
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  description: message
-                "1":
-                  type: object
-                  properties:
-                    from:
-                      type: string
-                      description: the ID of author
-                  required:
-                    - from
-                  description: extra info
-              required:
-                - "0"
-                - "1"
-              additionalProperties: false
-          - name: rooms
-            title: rooms
-            messageId: rootOutgoingRooms
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: array
-                  items:
-                    type: string
-                  description: room IDs
-              required:
-                - "0"
-              additionalProperties: false
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: chat
-            title: chat
-            messageId: rootIncomingChat
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  description: message
-              required:
-                - "0"
-              additionalProperties: false
-          - name: ping
-            title: ping
-            messageId: rootIncomingPing
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties:
-                format: any
-                description: Anything
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: string
-                      enum:
-                        - pong
-                      description: literally
-                  required:
-                    - "0"
-                  additionalProperties:
-                    format: any
-                    description: echo
-                  description: Acknowledgement
-          - name: subscribe
-            title: subscribe
-            messageId: rootIncomingSubscribe
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties:
-                format: any
-                description: Does not matter
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle bigint, boolean, date, null and readonly 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing additional types
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: object
-                  properties:
-                    bigint:
-                      type: integer
-                      format: bigint
-                    boolean:
-                      type: boolean
-                    date:
-                      format: date
-                  required:
-                    - bigint
-                    - boolean
-                    - date
-              required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type:
-                        - "null"
-                    "1":
-                      format: date
-                  required:
-                    - "0"
-                    - "1"
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle different number types 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing numbers
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: number
-                  format: double
-                  minimum: -1.7976931348623157e+308
-                  maximum: 1.7976931348623157e+308
-                "1":
-                  type: number
-                  format: double
-                  exclusiveMinimum: 0
-                  maximum: 1.7976931348623157e+308
-                "2":
-                  type: number
-                  format: double
-                  minimum: -1.7976931348623157e+308
-                  exclusiveMaximum: 0
-                "3":
-                  type: number
-                  format: double
-                  minimum: -0.5
-                  maximum: 0.5
-                "4":
-                  type: integer
-                  format: int64
-                  minimum: -9007199254740991
-                  maximum: 9007199254740991
-                "5":
-                  type: integer
-                  format: int64
-                  exclusiveMinimum: 0
-                  maximum: 9007199254740991
-                "6":
-                  type: integer
-                  format: int64
-                  minimum: -9007199254740991
-                  exclusiveMaximum: 0
-                "7":
-                  type: integer
-                  format: int64
-                  minimum: -100
-                  maximum: 100
-                "8":
-                  type: integer
-                  format: int64
-                  minimum: 0
-                  maximum: 0
-              required:
-                - "0"
-                - "1"
-                - "2"
-                - "3"
-                - "4"
-                - "5"
-                - "6"
-                - "7"
-                - "8"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: integer
-                      format: bigint
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle different string types 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing strings
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                "1":
-                  type: string
-                  minLength: 1
-                "2":
-                  type: string
-                  maxLength: 15
-                "3":
-                  type: string
-                  minLength: 2
-                  maxLength: 3
-                "4":
-                  type: string
-                  format: email
-                "5":
-                  type: string
-                  format: uuid
-                "6":
-                  type: string
-                  format: cuid
-                "7":
-                  type: string
-                  format: cuid2
-                "8":
-                  type: string
-                  format: ulid
-                "9":
-                  type: string
-                  format: ip
-                "10":
-                  type: string
-                  format: emoji
-                "11":
-                  type: string
-                  format: url
-                "12":
-                  type: string
-                  pattern: \\d+
-                "13":
-                  type: string
-                  format: email
-                  minLength: 1
-                  maxLength: 90
-                  pattern: .*@example\\.com
-              required:
-                - "0"
-                - "1"
-                - "2"
-                - "3"
-                - "4"
-                - "5"
-                - "6"
-                - "7"
-                - "8"
-                - "9"
-                - "10"
-                - "11"
-                - "12"
-                - "13"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: string
-                      minLength: 1
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle enum types 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing enums
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: string
-                  enum:
-                    - ABC
-                    - DEF
-              required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: number
-                      enum:
-                        - 1
-                        - 2
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle record 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing record
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type: object
-                      additionalProperties:
-                        type: integer
-                        format: int64
-                        minimum: -9007199254740991
-                        maximum: 9007199254740991
-                    "1":
-                      type: object
-                      additionalProperties:
-                        type: boolean
-                    "2":
-                      type: object
-                      additionalProperties:
-                        type: boolean
-                    "3":
-                      type: object
-                      properties:
-                        only:
-                          type: boolean
-                      required:
-                        - only
-                    "4":
-                      type: object
-                      properties:
-                        option1:
-                          type: boolean
-                        option2:
-                          type: boolean
-                      required:
-                        - option1
-                        - option2
-                    "5":
-                      type: object
-                      properties:
-                        option1:
-                          type: boolean
-                        option2:
-                          type: boolean
-                      required:
-                        - option1
-                        - option2
-                  required:
-                    - "0"
-                    - "1"
-                    - "2"
-                    - "3"
-                    - "4"
-                    - "5"
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle transformation schema in output 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing Transformation in response schema
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  type: object
+                - type: object
                   properties:
                     one:
                       type: string
@@ -1482,40 +580,78 @@ channels:
                   required:
                     - one
                     - two
-              required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
+                - type: object
                   properties:
-                    "0":
-                      type: number
+                    two:
+                      type: integer
+                      format: int64
+                      minimum: -9007199254740991
+                      exclusiveMaximum: 0
+                    three:
+                      type: string
                   required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+                    - two
+                    - three
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingName:
+        title: Acknowledgement for name
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              oneOf:
+                - type: string
+                - type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationName:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingName"
+    title: name
+    summary: Incoming event name
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingName"
 "
 `;
 
-exports[`Documentation > Basic cases > should handle tuples 0 1`] = `
-"asyncapi: 2.6.0
+exports[`Documentation > Basic cases > should generate the correct schema of the example 1`] = `
+"asyncapi: 3.0.0
 info:
-  title: Testing tuples
-  version: 3.4.5
+  title: Example API
+  version: 1.2.3
+id: urn:example:com:socket.io
 defaultContentType: text/plain
-tags: []
-servers: {}
+servers:
+  example:
+    host: example.com
+    pathname: /socket.io
+    protocol: https
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1554,246 +690,962 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+    messages:
+      rootOutgoingTime:
+        name: time
+        title: time
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: current ISO time
+          required:
+            - "0"
+          additionalProperties: false
+      rootOutgoingChat:
+        name: chat
+        title: chat
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: message
+            "1":
               type: object
-              format: tuple
               properties:
-                "0":
+                from:
+                  type: string
+                  description: the ID of author
+              required:
+                - from
+              description: extra info
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+      rootOutgoingRooms:
+        name: rooms
+        title: rooms
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: array
+              items:
+                type: string
+              description: room IDs
+          required:
+            - "0"
+          additionalProperties: false
+      rootIncomingChat:
+        name: chat
+        title: chat
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              description: message
+          required:
+            - "0"
+          additionalProperties: false
+      rootIncomingPing:
+        name: ping
+        title: ping
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties:
+            format: any
+            description: Anything
+      rootAckForIncomingPing:
+        title: Acknowledgement for ping
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              enum:
+                - pong
+              description: literally
+          required:
+            - "0"
+          additionalProperties:
+            format: any
+            description: echo
+      rootIncomingSubscribe:
+        name: subscribe
+        title: subscribe
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties:
+            format: any
+            description: Does not matter
+components: {}
+operations:
+  RootSendOperationTime:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootOutgoingTime"
+    title: time
+    summary: Outgoing event time
+    description: The message produced by the application within the / namespace
+  RootSendOperationChat:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootOutgoingChat"
+    title: chat
+    summary: Outgoing event chat
+    description: The message produced by the application within the / namespace
+  RootSendOperationRooms:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootOutgoingRooms"
+    title: rooms
+    summary: Outgoing event rooms
+    description: The message produced by the application within the / namespace
+  RootRecvOperationChat:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingChat"
+    title: chat
+    summary: Incoming event chat
+    description: The message consumed by the application within the / namespace
+  RootRecvOperationPing:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingPing"
+    title: ping
+    summary: Incoming event ping
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingPing"
+  RootRecvOperationSubscribe:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingSubscribe"
+    title: subscribe
+    summary: Incoming event subscribe
+    description: The message consumed by the application within the / namespace
+"
+`;
+
+exports[`Documentation > Basic cases > should handle bigint, boolean, date, null and readonly 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing additional types
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: object
+              properties:
+                bigint:
+                  type: integer
+                  format: bigint
+                boolean:
+                  type: boolean
+                date:
+                  format: date
+              required:
+                - bigint
+                - boolean
+                - date
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type:
+                - "null"
+            "1":
+              format: date
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle different number types 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing numbers
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: number
+              format: double
+              minimum: -1.7976931348623157e+308
+              maximum: 1.7976931348623157e+308
+            "1":
+              type: number
+              format: double
+              exclusiveMinimum: 0
+              maximum: 1.7976931348623157e+308
+            "2":
+              type: number
+              format: double
+              minimum: -1.7976931348623157e+308
+              exclusiveMaximum: 0
+            "3":
+              type: number
+              format: double
+              minimum: -0.5
+              maximum: 0.5
+            "4":
+              type: integer
+              format: int64
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            "5":
+              type: integer
+              format: int64
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+            "6":
+              type: integer
+              format: int64
+              minimum: -9007199254740991
+              exclusiveMaximum: 0
+            "7":
+              type: integer
+              format: int64
+              minimum: -100
+              maximum: 100
+            "8":
+              type: integer
+              format: int64
+              minimum: 0
+              maximum: 0
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+            - "6"
+            - "7"
+            - "8"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: integer
+              format: bigint
+          required:
+            - "0"
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle different string types 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing strings
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+            "1":
+              type: string
+              minLength: 1
+            "2":
+              type: string
+              maxLength: 15
+            "3":
+              type: string
+              minLength: 2
+              maxLength: 3
+            "4":
+              type: string
+              format: email
+            "5":
+              type: string
+              format: uuid
+            "6":
+              type: string
+              format: cuid
+            "7":
+              type: string
+              format: cuid2
+            "8":
+              type: string
+              format: ulid
+            "9":
+              type: string
+              format: ip
+            "10":
+              type: string
+              format: emoji
+            "11":
+              type: string
+              format: url
+            "12":
+              type: string
+              pattern: \\d+
+            "13":
+              type: string
+              format: email
+              minLength: 1
+              maxLength: 90
+              pattern: .*@example\\.com
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+            - "6"
+            - "7"
+            - "8"
+            - "9"
+            - "10"
+            - "11"
+            - "12"
+            - "13"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              minLength: 1
+          required:
+            - "0"
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle enum types 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing enums
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+              enum:
+                - ABC
+                - DEF
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: number
+              enum:
+                - 1
+                - 2
+          required:
+            - "0"
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle record 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing record
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: object
+              additionalProperties:
+                type: integer
+                format: int64
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+            "1":
+              type: object
+              additionalProperties:
+                type: boolean
+            "2":
+              type: object
+              additionalProperties:
+                type: boolean
+            "3":
+              type: object
+              properties:
+                only:
                   type: boolean
               required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle tuples 1 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing tuples
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
+                - only
+            "4":
               type: object
-              format: tuple
               properties:
-                "0":
-                  type: string
-                "1":
-                  type:
-                    - string
-                    - "null"
-              required:
-                - "0"
-                - "1"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
-components: {}
-"
-`;
-
-exports[`Documentation > Basic cases > should handle tuples 2 1`] = `
-"asyncapi: 2.6.0
-info:
-  title: Testing tuples
-  version: 3.4.5
-defaultContentType: text/plain
-tags: []
-servers: {}
-channels:
-  /:
-    description: Namespace /
-    bindings:
-      socket.io:
-        bindingVersion: 0.11.0
-        method: GET
-        headers:
-          type: object
-          properties:
-            connection:
-              type: string
-              enum:
-                - Upgrade
-            upgrade:
-              type: string
-              enum:
-                - websocket
-        query:
-          type: object
-          properties:
-            EIO:
-              type: string
-              enum:
-                - "4"
-              description: Mandatory, the version of the protocol
-            transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
-            sid:
-              type: string
-              description: The session identifier
-          required:
-            - EIO
-            - transport
-          externalDocs:
-            description: Engine.IO Protocol
-            url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
+                option1:
                   type: boolean
-                "1":
+                option2:
+                  type: boolean
+              required:
+                - option1
+                - option2
+            "5":
+              type: object
+              properties:
+                option1:
+                  type: boolean
+                option2:
+                  type: boolean
+              required:
+                - option1
+                - option2
+          required:
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle transformation schema in output 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing Transformation in response schema
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: object
+              properties:
+                one:
                   type: string
-                "2":
+                two:
                   type: integer
                   format: int64
                   exclusiveMinimum: 0
                   maximum: 9007199254740991
               required:
-                - "0"
-                - "1"
-                - "2"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
+                - one
+                - two
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: number
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
-exports[`Documentation > Basic cases > should handle tuples 3 1`] = `
-"asyncapi: 2.6.0
+exports[`Documentation > Basic cases > should handle tuples 0 1`] = `
+"asyncapi: 3.0.0
 info:
   title: Testing tuples
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1832,53 +1684,359 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties: {}
-              required: []
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties: {}
-                  required: []
-                  additionalProperties: false
-                  description: Acknowledgement
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: boolean
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle tuples 1 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing tuples
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: string
+            "1":
+              type:
+                - string
+                - "null"
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle tuples 2 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing tuples
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type: boolean
+            "1":
+              type: string
+            "2":
+              type: integer
+              format: int64
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+          required:
+            - "0"
+            - "1"
+            - "2"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
+exports[`Documentation > Basic cases > should handle tuples 3 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing tuples
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              enum:
+                - Upgrade
+            upgrade:
+              type: string
+              enum:
+                - websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              enum:
+                - "4"
+              description: Mandatory, the version of the protocol
+            transport:
+              oneOf:
+                - type: string
+                  enum:
+                    - polling
+                - type: string
+                  enum:
+                    - websocket
+              description: Mandatory, the name of the transport.
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
 
 exports[`Documentation > Basic cases > should handle type any 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing type any
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws: &a1
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1917,59 +2075,110 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  format: any
-              required:
-                - "0"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      format: any
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: any
+          required:
+            - "0"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: any
+          required:
+            - "0"
+          additionalProperties: false
+  Test:
+    address: /test
+    title: Namespace /test
+    bindings:
+      ws: *a1
+    messages:
+      testOutgoingWithAck:
+        name: withAck
+        title: withAck
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+      testAckForOutgoingWithAck:
+        title: Acknowledgement for withAck
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: any
+          required:
+            - "0"
+          additionalProperties:
+            format: any
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+  TestSendOperationWithAck:
+    action: send
+    channel:
+      $ref: "#/channels/Test"
+    messages:
+      - $ref: "#/channels/Test/messages/testOutgoingWithAck"
+    title: withAck
+    summary: Outgoing event withAck
+    description: The message produced by the application within the /test namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Test"
+      messages:
+        - $ref: "#/channels/Test/messages/testAckForOutgoingWithAck"
 "
 `;
 
 exports[`Documentation > Basic cases > should handle z.preprocess() 1`] = `
-"asyncapi: 2.6.0
+"asyncapi: 3.0.0
 info:
   title: Testing z.preprocess()
   version: 3.4.5
 defaultContentType: text/plain
-tags: []
 servers: {}
 channels:
-  /:
-    description: Namespace /
+  Root:
+    address: /
+    title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -2008,48 +2217,55 @@ channels:
           externalDocs:
             description: Engine.IO Protocol
             url: https://socket.io/docs/v4/engine-io-protocol/
-    subscribe:
-      operationId: OutgoingEventsRoot
-      description: The messages produced by the application within the / namespace
-      message:
-        oneOf: []
-    publish:
-      operationId: IncomingEventsRoot
-      description: The messages consumed by the application within the / namespace
-      message:
-        oneOf:
-          - name: test
-            title: test
-            messageId: rootIncomingTest
-            payload:
-              type: object
-              format: tuple
-              properties:
-                "0":
-                  format: string (preprocessed)
-                "1":
-                  format: int64 (preprocessed)
-                  minimum: 0
-                  maximum: 9007199254740991
-              required:
-                - "0"
-                - "1"
-              additionalProperties: false
-            bindings:
-              socket.io:
-                bindingVersion: 0.11.0
-                ack:
-                  type: object
-                  format: tuple
-                  properties:
-                    "0":
-                      type:
-                        - boolean
-                        - "null"
-                  required:
-                    - "0"
-                  additionalProperties: false
-                  description: Acknowledgement
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: string (preprocessed)
+            "1":
+              format: int64 (preprocessed)
+              minimum: 0
+              maximum: 9007199254740991
+          required:
+            - "0"
+            - "1"
+          additionalProperties: false
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              type:
+                - boolean
+                - "null"
+          required:
+            - "0"
+          additionalProperties: false
 components: {}
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;

@@ -1,4 +1,9 @@
-import { AsyncApiObject, ChannelItemObject, ServerObject } from "./commons";
+import {
+  AsyncApiObject,
+  ChannelObject,
+  OperationObject,
+  ServerObject,
+} from "./commons";
 import yaml from "yaml";
 
 export class AsyncApiBuilder {
@@ -8,9 +13,8 @@ export class AsyncApiBuilder {
     initial: Pick<AsyncApiObject, "info" | "id" | "defaultContentType">,
   ) {
     this.document = {
-      asyncapi: "2.6.0",
+      asyncapi: "3.0.0",
       ...initial,
-      tags: [],
       servers: {},
       channels: {},
       components: {},
@@ -22,8 +26,16 @@ export class AsyncApiBuilder {
     return this;
   }
 
-  public addChannel(name: string, channel: ChannelItemObject): this {
+  public addChannel(name: string, channel: ChannelObject): this {
     this.document.channels = { ...this.document.channels, [name]: channel };
+    return this;
+  }
+
+  public addOperation(name: string, operation: OperationObject): this {
+    this.document.operations = {
+      ...this.document.operations,
+      [name]: operation,
+    };
     return this;
   }
 

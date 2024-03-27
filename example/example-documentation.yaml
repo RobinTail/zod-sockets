@@ -18,7 +18,8 @@ servers:
     pathname: /socket.io
     protocol: https
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:

@@ -8,7 +8,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -121,7 +122,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -263,7 +265,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -372,7 +375,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -482,7 +486,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -607,7 +612,8 @@ servers:
     pathname: /socket.io
     protocol: https
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -776,7 +782,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -882,7 +889,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1024,7 +1032,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1171,7 +1180,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1267,7 +1277,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1399,7 +1410,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1500,7 +1512,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1587,7 +1600,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1679,7 +1693,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1775,7 +1790,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1859,7 +1875,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:
@@ -1949,7 +1966,8 @@ info:
 defaultContentType: text/plain
 servers: {}
 channels:
-  /:
+  Root:
+    address: /
     description: Namespace /
     bindings:
       socket.io:

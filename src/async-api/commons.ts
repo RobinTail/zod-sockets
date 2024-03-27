@@ -53,12 +53,14 @@ export interface AsyncApiObject {
 }
 
 /**
- * @desc A relative path to an individual channel. The field name MUST be in the form of a RFC 6570 URI template.
- * @desc Query parameters and fragments SHALL NOT be used, instead use bindings to define them.
+ * @since 3.0.0 An identifier for the described channel. The channelId value is case-sensitive.
  * */
-export type ChannelsObject = Record<string, ChannelItemObject>;
+export type ChannelsObject = Record<string, ChannelObject>;
 
-export interface ChannelItemObject {
+/** @since 3.0.0 renamed from ChannelItemObject; added address */
+export interface ChannelObject {
+  /** @desc Typically the "topic name", "routing key", "event type", or "path". */
+  address?: string | null;
   description?: string;
   /** @desc the messages produced by the application and sent to the channel. */
   subscribe?: OperationObject;
@@ -78,7 +80,7 @@ export interface ComponentsObject {
   schemas?: Record<string, SchemaObject>;
   servers?: Record<string, ServerObject>;
   serverVariables?: Record<string, ServerVariableObject>;
-  channels?: Record<string, ChannelItemObject>;
+  channels?: Record<string, ChannelObject>;
   messages?: Record<string, MessageObject>;
   securitySchemes?: Record<string, SecuritySchemeObject>;
   parameters?: Record<string, ParameterObject>;

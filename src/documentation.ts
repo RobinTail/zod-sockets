@@ -2,7 +2,7 @@ import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiBuilder } from "./async-api/document-builder";
-import { ChannelItemObject } from "./async-api/commons";
+import { ChannelObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
@@ -86,18 +86,19 @@ export class Documentation extends AsyncApiBuilder {
     };
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      const alias = makeCleanId(normalizeNS(ns)) || "Root";
-      const channel: ChannelItemObject = {
+      const channelId = makeCleanId(normalizeNS(ns)) || "Root";
+      const channel: ChannelObject = {
+        address: normalizeNS(ns),
         description: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },
         subscribe: {
-          operationId: makeCleanId(`outgoing events ${alias}`),
+          operationId: makeCleanId(`outgoing events ${channelId}`),
           description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: Object.entries(emission).map(([event, { schema, ack }]) => ({
               name: event,
               title: event,
-              messageId: lcFirst(makeCleanId(`${alias} outgoing ${event}`)),
+              messageId: lcFirst(makeCleanId(`${channelId} outgoing ${event}`)),
               payload: walkSchema({
                 direction: "out",
                 schema,
@@ -121,7 +122,7 @@ export class Documentation extends AsyncApiBuilder {
           },
         },
         publish: {
-          operationId: makeCleanId(`incoming events ${alias}`),
+          operationId: makeCleanId(`incoming events ${channelId}`),
           description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: actions
@@ -132,7 +133,9 @@ export class Documentation extends AsyncApiBuilder {
                 return {
                   name: event,
                   title: event,
-                  messageId: lcFirst(makeCleanId(`${alias} incoming ${event}`)),
+                  messageId: lcFirst(
+                    makeCleanId(`${channelId} incoming ${event}`),
+                  ),
                   payload: walkSchema({
                     direction: "in",
                     schema: action.getSchema("input"),
@@ -157,7 +160,7 @@ export class Documentation extends AsyncApiBuilder {
           },
         },
       };
-      this.addChannel(normalizeNS(ns), channel);
+      this.addChannel(channelId, channel);
     }
   }
 }

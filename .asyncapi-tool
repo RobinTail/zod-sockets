@@ -1,6 +1,6 @@
 ---
 title: Zod Sockets
-description: Tool for creating Socket.IO server with I/O validation, AsyncAPI documentation and contract-aware client
+description: Tool for creating Socket.IO server with I/O validation, AsyncAPI specification and contract-aware client
 links:
   websiteUrl: https://www.npmjs.com/package/zod-sockets
   repoUrl: https://github.com/RobinTail/zod-sockets

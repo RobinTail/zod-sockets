@@ -5,11 +5,11 @@ import type {
   SchemaObject,
 } from "openapi3-ts/oas31";
 import {
-  SocketIOChannelBinding,
-  SocketIOMessageBinding,
-  SocketIOOperationBinding,
-  SocketIOServerBinding,
-} from "./socket-io-binding";
+  WSChannelBinding,
+  WSMessageBinding,
+  WSOperationBinding,
+  WSServerBinding,
+} from "./ws-binding";
 
 /**
  * @fileoverview AsyncAPI specification
@@ -17,7 +17,7 @@ import {
  */
 
 interface Bindings<T> {
-  "socket.io"?: T;
+  ws?: T;
 }
 
 /** @since 3.0.0 detached from OAS; added host, pathname, title, description, tags, externalDocs; changed security */
@@ -32,7 +32,7 @@ export interface ServerObject {
   security?: SecuritySchemeObject[];
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Bindings<SocketIOServerBinding>;
+  bindings?: Bindings<WSServerBinding>;
 }
 
 /** @since 3.0.0 contains tags and externalDocs */
@@ -72,7 +72,7 @@ export interface ChannelObject {
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   /** @desc Map describing protocol-specific definitions for a channel. */
-  bindings?: Bindings<SocketIOChannelBinding>;
+  bindings?: Bindings<WSChannelBinding>;
 }
 
 export interface ServerVariableObject extends OASServerVariableObject {
@@ -90,10 +90,10 @@ export interface ComponentsObject {
   correlationIds?: Record<string, CorrelationIDObject>;
   operationTraits?: Record<string, OperationTraitObject>;
   messageTraits?: Record<string, MessageTraitObject>;
-  serverBindings?: Bindings<SocketIOServerBinding>;
-  channelBindings?: Bindings<SocketIOChannelBinding>;
-  operationBindings?: Bindings<SocketIOOperationBinding>;
-  messageBindings?: Bindings<SocketIOMessageBinding>;
+  serverBindings?: Bindings<WSServerBinding>;
+  channelBindings?: Bindings<WSChannelBinding>;
+  operationBindings?: Bindings<WSOperationBinding>;
+  messageBindings?: Bindings<WSMessageBinding>;
 }
 
 export interface MessageObject extends MessageTraitObject {
@@ -130,7 +130,7 @@ export interface OperationTraitObject {
   security?: SecuritySchemeObject[];
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Bindings<SocketIOOperationBinding>;
+  bindings?: Bindings<WSOperationBinding>;
 }
 
 /** @since 3.0.0 messageId moved to MessagesObject, schemaFormat moved to MultiFormatSchemaObject */
@@ -144,7 +144,7 @@ export interface MessageTraitObject {
   description?: string;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Bindings<SocketIOMessageBinding>;
+  bindings?: Bindings<WSMessageBinding>;
   // @todo
   examples?: unknown[];
 }

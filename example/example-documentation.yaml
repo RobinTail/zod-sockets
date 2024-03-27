@@ -21,8 +21,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -138,7 +138,7 @@ channels:
             format: any
             description: Anything
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object

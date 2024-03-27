@@ -12,8 +12,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -81,7 +81,7 @@ channels:
             - "2"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -135,8 +135,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -213,7 +213,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -287,8 +287,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -349,7 +349,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -406,8 +406,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -478,7 +478,7 @@ channels:
             - "3"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -526,8 +526,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -604,7 +604,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -660,8 +660,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -777,7 +777,7 @@ channels:
             format: any
             description: Anything
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -844,8 +844,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -910,7 +910,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -960,8 +960,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1065,7 +1065,7 @@ channels:
             - "8"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1112,8 +1112,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1222,7 +1222,7 @@ channels:
             - "13"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1269,8 +1269,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1326,7 +1326,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1375,8 +1375,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1426,7 +1426,7 @@ channels:
           required: []
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1517,8 +1517,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1582,7 +1582,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1628,8 +1628,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1682,7 +1682,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1725,8 +1725,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1784,7 +1784,7 @@ channels:
             - "1"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1827,8 +1827,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1890,7 +1890,7 @@ channels:
             - "2"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -1933,8 +1933,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -1984,7 +1984,7 @@ channels:
           required: []
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -2027,8 +2027,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -2081,7 +2081,7 @@ channels:
             - "0"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object
@@ -2127,8 +2127,8 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      socket.io:
-        bindingVersion: 0.11.0
+      ws:
+        bindingVersion: 0.1.0
         method: GET
         headers:
           type: object
@@ -2186,7 +2186,7 @@ channels:
             - "1"
           additionalProperties: false
         bindings:
-          socket.io:
+          ws:
             bindingVersion: 0.11.0
             ack:
               type: object

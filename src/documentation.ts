@@ -3,7 +3,7 @@ import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiBuilder } from "./async-api/document-builder";
 import { ChannelObject, MessagesObject } from "./async-api/commons";
-import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
+import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
@@ -52,8 +52,8 @@ export class Documentation extends AsyncApiBuilder {
       }
     }
     const commons = { onEach, onMissing, rules: depicters };
-    const channelBinding: SocketIOChannelBinding = {
-      bindingVersion: "0.11.0",
+    const channelBinding: WSChannelBinding = {
+      bindingVersion: "0.1.0",
       method: "GET",
       headers: walkSchema({
         direction: "in",
@@ -118,7 +118,7 @@ export class Documentation extends AsyncApiBuilder {
           }),
           bindings: ack
             ? {
-                "socket.io": {
+                ws: {
                   bindingVersion: "0.11.0",
                   ack: walkSchema({
                     direction: "in",
@@ -150,7 +150,7 @@ export class Documentation extends AsyncApiBuilder {
           }),
           bindings: output
             ? {
-                "socket.io": {
+                ws: {
                   bindingVersion: "0.11.0",
                   ack: walkSchema({
                     direction: "out",
@@ -168,7 +168,7 @@ export class Documentation extends AsyncApiBuilder {
       const channel: ChannelObject = {
         address: normalizeNS(ns),
         title: `Namespace ${normalizeNS(ns)}`,
-        bindings: { "socket.io": channelBinding },
+        bindings: { ws: channelBinding },
         messages,
       };
       this.addChannel(channelId, channel);

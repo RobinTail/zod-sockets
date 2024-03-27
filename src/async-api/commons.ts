@@ -1,5 +1,5 @@
 import type {
-  InfoObject,
+  InfoObject as OASInfoObject,
   ServerObject as OASServerObject,
   ServerVariableObject as OASServerVariableObject,
   ReferenceObject,
@@ -26,7 +26,7 @@ export interface AsyncApiObject {
   asyncapi: string;
   /** @desc URI or URN format */
   id?: string;
-  info: InfoObject;
+  info: OASInfoObject;
   servers?: Record<string, ServerObject>;
   channels: ChannelsObject;
   components?: ComponentsObject;
@@ -57,23 +57,26 @@ export type SecurityRequirementObject = Record<string, string[]>;
 
 export interface ComponentsObject {
   schemas?: Record<string, SchemaObject>;
-  messages?: Record<string, AsyncMessageObject>;
-  securitySchemes?: Record<string, AsyncSecuritySchemeObject>;
-  parameters?: ParametersObject;
-  correlationIds?: Record<string, AsyncCorrelationObject>;
-  operationTraits?: Record<string, AsyncOperationTraitObject>;
-  messageTraits?: Record<string, AsyncMessageTraitObject>;
+  servers?: Record<string, ServerObject>;
+  serverVariables?: Record<string, ServerVariableObject>;
+  channels?: Record<string, ChannelItemObject>;
+  messages?: Record<string, MessageObject>;
+  securitySchemes?: Record<string, SecuritySchemeObject>;
+  parameters?: Record<string, ParameterObject>;
+  correlationIds?: Record<string, CorrelationIDObject>;
+  operationTraits?: Record<string, OperationTraitObject>;
+  messageTraits?: Record<string, MessageTraitObject>;
   serverBindings?: Record<Protocol, SocketIOServerBinding>;
   channelBindings?: Record<Protocol, SocketIOChannelBinding>;
   operationBindings?: Record<Protocol, SocketIOOperationBinding>;
   messageBindings?: Record<Protocol, SocketIOMessageBinding>;
 }
 
-export interface AsyncMessageObject extends AsyncMessageTraitObject {
+export interface MessageObject extends MessageTraitObject {
   payload?: SchemaObject | ReferenceObject;
 }
 
-export type MessageType = AsyncMessageObject | ReferenceObject;
+export type MessageType = MessageObject | ReferenceObject;
 
 export interface OneOfMessageType {
   oneOf: MessageType[];
@@ -89,11 +92,11 @@ export interface OperationObject {
   tags?: AsyncTagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Record<Protocol, SocketIOOperationBinding>;
-  traits?: Record<string, AsyncOperationTraitObject>;
+  traits?: Record<string, OperationTraitObject>;
   message?: AsyncOperationMessage;
 }
 
-export interface AsyncOperationTraitObject {
+export interface OperationTraitObject {
   /** @desc Unique string used to identify the operation. */
   operationId?: string;
   summary?: string;
@@ -103,11 +106,11 @@ export interface AsyncOperationTraitObject {
   bindings?: Record<Protocol, SocketIOOperationBinding>;
 }
 
-export interface AsyncMessageTraitObject {
+export interface MessageTraitObject {
   /** @desc Unique string used to identify the message. The id MUST be unique among all messages described in the API.*/
   messageId?: string;
   headers?: SchemaObject;
-  correlationId?: AsyncCorrelationObject;
+  correlationId?: CorrelationIDObject;
   schemaFormat?: string;
   contentType?: string;
   name?: string;
@@ -119,7 +122,7 @@ export interface AsyncMessageTraitObject {
   bindings?: Record<Protocol, SocketIOMessageBinding>;
 }
 
-export interface AsyncCorrelationObject {
+export interface CorrelationIDObject {
   description?: string;
   location: string;
 }
@@ -130,7 +133,7 @@ export interface AsyncTagObject {
   externalDocs?: ExternalDocumentationObject;
 }
 
-export interface AsyncSecuritySchemeObject {
+export interface SecuritySchemeObject {
   type: SecuritySchemeType;
   description?: string;
   name?: string;

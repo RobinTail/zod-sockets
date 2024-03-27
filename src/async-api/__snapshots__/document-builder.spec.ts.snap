@@ -10,18 +10,16 @@ exports[`AsyncApiDocumentBuilder > getSpec() > should return the document 1`] = 
     "version": "1.0.0",
   },
   "servers": {},
-  "tags": [],
 }
 `;
 
-exports[`AsyncApiDocumentBuilder > getSpecAsJson() > should return the document 1`] = `"{"asyncapi":"3.0.0","info":{"title":"test","version":"1.0.0"},"tags":[],"servers":{},"channels":{},"components":{}}"`;
+exports[`AsyncApiDocumentBuilder > getSpecAsJson() > should return the document 1`] = `"{"asyncapi":"3.0.0","info":{"title":"test","version":"1.0.0"},"servers":{},"channels":{},"components":{}}"`;
 
 exports[`AsyncApiDocumentBuilder > getSpecAsYaml() > should return the document 1`] = `
 "asyncapi: 3.0.0
 info:
   title: test
   version: 1.0.0
-tags: []
 servers: {}
 channels: {}
 components: {}

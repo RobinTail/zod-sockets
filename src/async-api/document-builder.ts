@@ -10,7 +10,6 @@ export class AsyncApiBuilder {
     this.document = {
       asyncapi: "3.0.0",
       ...initial,
-      tags: [],
       servers: {},
       channels: {},
       components: {},

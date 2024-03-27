@@ -29,16 +29,20 @@ export interface ServerObject extends Omit<OASServerObject, "variables"> {
   bindings?: Bindings<SocketIOServerBinding>;
 }
 
+/** @since 3.0.0 contains tags and externalDocs */
+export interface InfoObject extends OASInfoObject {
+  tags?: TagObject[];
+  externalDocs?: ExternalDocumentationObject;
+}
+
 export interface AsyncApiObject {
   asyncapi: string;
   /** @desc URI or URN format */
   id?: string;
-  info: OASInfoObject;
+  info: InfoObject;
   servers?: Record<string, ServerObject>;
   channels: ChannelsObject;
   components?: ComponentsObject;
-  tags?: TagObject[];
-  externalDocs?: ExternalDocumentationObject;
   defaultContentType?: string;
 }
 

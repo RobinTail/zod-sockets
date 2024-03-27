@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { makeCleanId } from "./common-helpers";
 import { EmissionMap } from "./emission";
 import { Hooks } from "./hooks";
 
@@ -8,6 +9,11 @@ export type RootNS = typeof rootNS;
 export const normalizeNS = (name: string): string => {
   const trimmed = name.trim();
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+};
+
+export const humanizeNS = (name: string): string => {
+  const clean = makeCleanId(normalizeNS(name));
+  return clean || "Root";
 };
 
 export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {

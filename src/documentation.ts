@@ -6,7 +6,7 @@ import { AsyncChannelObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
-import { Namespaces, normalizeNS } from "./namespace";
+import { Namespaces, humanizeNS, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
 
 interface DocumentationParams {
@@ -80,7 +80,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       const channel: AsyncChannelObject = {
-        description: `${normalizeNS(ns)} namespace`,
+        description: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },
         subscribe: {
           operationId: `out${normalizeNS(ns)}`,
@@ -149,7 +149,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
           },
         },
       };
-      this.addChannel(ns, channel);
+      this.addChannel(humanizeNS(ns), channel);
     }
   }
 }

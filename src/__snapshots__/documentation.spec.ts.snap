@@ -9,8 +9,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -123,8 +123,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -266,8 +266,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -376,8 +376,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -487,8 +487,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -611,8 +611,8 @@ servers:
     url: https://example.com/socket.io
     protocol: socket.io
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -781,8 +781,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -888,8 +888,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1031,8 +1031,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1179,8 +1179,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1276,8 +1276,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1409,8 +1409,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1511,8 +1511,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1599,8 +1599,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1692,8 +1692,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1789,8 +1789,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1874,8 +1874,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0
@@ -1965,8 +1965,8 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  /:
-    description: / namespace
+  Root:
+    description: Namespace /
     bindings:
       socket.io:
         bindingVersion: 0.11.0

@@ -261,7 +261,15 @@ describe("Documentation", () => {
 
     test("should handle type any", () => {
       const spec = new Documentation({
-        config: sampleConfig,
+        config: sampleConfig.addNamespace({
+          path: "test",
+          emission: {
+            withAck: {
+              schema: z.tuple([]),
+              ack: z.tuple([z.any()]).rest(z.any()),
+            },
+          },
+        }),
         actions: [
           factory.build({
             event: "test",

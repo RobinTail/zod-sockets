@@ -2035,7 +2035,7 @@ channels:
     address: /
     title: Namespace /
     bindings:
-      ws:
+      ws: &a1
         bindingVersion: 0.1.0
         method: GET
         headers:
@@ -2099,6 +2099,33 @@ channels:
           required:
             - "0"
           additionalProperties: false
+  Test:
+    address: /test
+    title: Namespace /test
+    bindings:
+      ws: *a1
+    messages:
+      testOutgoingWithAck:
+        name: withAck
+        title: withAck
+        payload:
+          type: object
+          format: tuple
+          properties: {}
+          required: []
+          additionalProperties: false
+      testAckForOutgoingWithAck:
+        title: Acknowledgement for withAck
+        payload:
+          type: object
+          format: tuple
+          properties:
+            "0":
+              format: any
+          required:
+            - "0"
+          additionalProperties:
+            format: any
 components: {}
 operations:
   RootRecvOperationTest:
@@ -2118,6 +2145,23 @@ operations:
         $ref: "#/channels/Root"
       messages:
         - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+  TestSendOperationWithAck:
+    action: send
+    channel:
+      $ref: "#/channels/Test"
+    messages:
+      - $ref: "#/channels/Test/messages/testOutgoingWithAck"
+    title: withAck
+    summary: Outgoing event withAck
+    description: The message produced by the application within the /test namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Test"
+      messages:
+        - $ref: "#/channels/Test/messages/testAckForOutgoingWithAck"
 "
 `;
 

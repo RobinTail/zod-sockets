@@ -41,6 +41,7 @@ export interface InfoObject extends OASInfoObject {
   externalDocs?: ExternalDocumentationObject;
 }
 
+/** @since 3.0.0 channels are optional, added operations */
 export interface AsyncApiObject {
   asyncapi: string;
   /** @desc URI or URN format */
@@ -98,6 +99,7 @@ export interface ComponentsObject {
   messageBindings?: Bindings<WSMessageBinding>;
 }
 
+/** @since 3.0.0 supports MultiFormatSchemaObject in payload */
 export interface MessageObject extends MessageTraitObject {
   payload?: SchemaObject | MultiFormatSchemaObject | ReferenceObject;
   traits?: MessageTraitObject | ReferenceObject;

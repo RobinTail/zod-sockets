@@ -1,12 +1,12 @@
 import ts from "typescript";
 import { z } from "zod";
 import { AbstractAction } from "./action";
+import { makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import {
   defaultSerializer,
   exportModifier,
   f,
-  makeCleanId,
   makeEventFnSchema,
 } from "./integration-helpers";
 import { Namespaces, normalizeNS } from "./namespace";

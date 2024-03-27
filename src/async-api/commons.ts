@@ -195,6 +195,7 @@ interface MultiFormatSchemaObject {
    * @desc A string containing the name of the schema format that is used to define the information.
    * @example application/vnd.aai.asyncapi+yaml;version=3.0.0
    * @example application/schema+yaml;version=draft-07
+   * @example application/vnd.oai.openapi+yaml;version=3.0.0
    * */
   schemaFormat: string;
   schema: SchemaObject;

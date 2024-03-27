@@ -3,7 +3,7 @@
 [![coverage](https://coveralls.io/repos/github/RobinTail/zod-sockets/badge.svg)](https://coveralls.io/github/RobinTail/zod-sockets)
 [![AsyncAPI Validation](https://github.com/RobinTail/zod-sockets/actions/workflows/async-api-validation.yml/badge.svg)](https://github.com/RobinTail/zod-sockets/actions/workflows/async-api-validation.yml)
 
-Socket.IO solution with I/O validation.
+**Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers.**
 
 Version 0 is unstable — public API may be changed at any time.
 

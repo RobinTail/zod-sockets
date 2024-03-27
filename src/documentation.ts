@@ -130,59 +130,60 @@ export class Documentation extends AsyncApiBuilder {
         });
       }
       for (const action of actions) {
-        if (action.getNamespace() !== ns) {
-          continue;
-        }
-        const event = action.getEvent();
-        const messageId = lcFirst(
-          makeCleanId(`${channelId} incoming ${event}`),
-        );
-        const ackId = lcFirst(
-          makeCleanId(`${channelId} ack for incoming ${event}`),
-        );
-        const output = action.getSchema("output");
-        messages[messageId] = {
-          name: event,
-          title: event,
-          payload: walkSchema({
-            direction: "in",
-            schema: action.getSchema("input"),
-            ...commons,
-          }),
-        };
-        if (output) {
-          messages[ackId] = {
-            title: `Acknowledgement for ${event}`,
+        if (action.getNamespace() === ns) {
+          const event = action.getEvent();
+          const messageId = lcFirst(
+            makeCleanId(`${channelId} incoming ${event}`),
+          );
+          const ackId = lcFirst(
+            makeCleanId(`${channelId} ack for incoming ${event}`),
+          );
+          const output = action.getSchema("output");
+          messages[messageId] = {
+            name: event,
+            title: event,
             payload: walkSchema({
-              direction: "out",
-              schema: output,
+              direction: "in",
+              schema: action.getSchema("input"),
               ...commons,
             }),
           };
+          if (output) {
+            messages[ackId] = {
+              title: `Acknowledgement for ${event}`,
+              payload: walkSchema({
+                direction: "out",
+                schema: output,
+                ...commons,
+              }),
+            };
+          }
+          const recvOperationId = makeCleanId(
+            `${channelId} recv operation ${event}`,
+          );
+          this.addOperation(recvOperationId, {
+            action: "receive",
+            channel: { $ref: `#/channels/${channelId}` },
+            messages: [
+              { $ref: `#/channels/${channelId}/messages/${messageId}` },
+            ],
+            title: event,
+            summary: `Incoming event ${event}`,
+            description: `The message consumed by the application within the ${normalizeNS(ns)} namespace`,
+            reply: output
+              ? {
+                  address: {
+                    location: "$message.payload#",
+                    description: "Last argument: acknowledgement handler",
+                  },
+                  channel: { $ref: `#/channels/${channelId}` },
+                  messages: [
+                    { $ref: `#/channels/${channelId}/messages/${ackId}` },
+                  ],
+                }
+              : undefined,
+          });
         }
-        const recvOperationId = makeCleanId(
-          `${channelId} recv operation ${event}`,
-        );
-        this.addOperation(recvOperationId, {
-          action: "receive",
-          channel: { $ref: `#/channels/${channelId}` },
-          messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
-          title: event,
-          summary: `Incoming event ${event}`,
-          description: `The message consumed by the application within the ${normalizeNS(ns)} namespace`,
-          reply: output
-            ? {
-                address: {
-                  location: "$message.payload#",
-                  description: "Last argument: acknowledgement handler",
-                },
-                channel: { $ref: `#/channels/${channelId}` },
-                messages: [
-                  { $ref: `#/channels/${channelId}/messages/${ackId}` },
-                ],
-              }
-            : undefined,
-        });
       }
       const channel: ChannelObject = {
         address: normalizeNS(ns),

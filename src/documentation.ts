@@ -4,7 +4,11 @@ import { AbstractAction } from "./action";
 import { AsyncApiDocumentBuilder } from "./async-api/document-builder";
 import { AsyncChannelObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
-import { makeCleanId, makeCleanIdWithFallback } from "./common-helpers";
+import {
+  lcFirst,
+  makeCleanId,
+  makeCleanIdWithFallback,
+} from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
@@ -91,7 +95,7 @@ export class Documentation extends AsyncApiDocumentBuilder {
             oneOf: Object.entries(emission).map(([event, { schema, ack }]) => ({
               name: event,
               title: event,
-              messageId: makeCleanId(`${channelId} outgoing ${event}`),
+              messageId: lcFirst(makeCleanId(`${channelId} outgoing ${event}`)),
               payload: walkSchema({
                 direction: "out",
                 schema,
@@ -126,7 +130,9 @@ export class Documentation extends AsyncApiDocumentBuilder {
                 return {
                   name: event,
                   title: event,
-                  messageId: makeCleanId(`${channelId} incoming ${event}`),
+                  messageId: lcFirst(
+                    makeCleanId(`${channelId} incoming ${event}`),
+                  ),
                   payload: walkSchema({
                     direction: "in",
                     schema: action.getSchema("input"),

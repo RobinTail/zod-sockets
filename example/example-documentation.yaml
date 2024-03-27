@@ -67,7 +67,7 @@ channels:
         oneOf:
           - name: time
             title: time
-            messageId: RootOutgoingTime
+            messageId: rootOutgoingTime
             payload:
               type: object
               format: tuple
@@ -80,7 +80,7 @@ channels:
               additionalProperties: false
           - name: chat
             title: chat
-            messageId: RootOutgoingChat
+            messageId: rootOutgoingChat
             payload:
               type: object
               format: tuple
@@ -103,7 +103,7 @@ channels:
               additionalProperties: false
           - name: rooms
             title: rooms
-            messageId: RootOutgoingRooms
+            messageId: rootOutgoingRooms
             payload:
               type: object
               format: tuple
@@ -123,7 +123,7 @@ channels:
         oneOf:
           - name: chat
             title: chat
-            messageId: RootIncomingChat
+            messageId: rootIncomingChat
             payload:
               type: object
               format: tuple
@@ -136,7 +136,7 @@ channels:
               additionalProperties: false
           - name: ping
             title: ping
-            messageId: RootIncomingPing
+            messageId: rootIncomingPing
             payload:
               type: object
               format: tuple
@@ -165,7 +165,7 @@ channels:
                   description: Acknowledgement
           - name: subscribe
             title: subscribe
-            messageId: RootIncomingSubscribe
+            messageId: rootIncomingSubscribe
             payload:
               type: object
               format: tuple

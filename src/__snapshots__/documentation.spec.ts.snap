@@ -9,7 +9,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -123,7 +123,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -266,7 +266,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -376,7 +376,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -487,7 +487,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -611,7 +611,7 @@ servers:
     url: example.com/socket.io
     protocol: https
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -781,7 +781,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -888,7 +888,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1031,7 +1031,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1179,7 +1179,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1276,7 +1276,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1409,7 +1409,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1511,7 +1511,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1599,7 +1599,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1692,7 +1692,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1789,7 +1789,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1874,7 +1874,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:
@@ -1965,7 +1965,7 @@ defaultContentType: text/plain
 tags: []
 servers: {}
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:

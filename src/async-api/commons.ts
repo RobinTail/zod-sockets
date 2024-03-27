@@ -42,6 +42,10 @@ export interface AsyncApiObject {
   defaultContentType?: string;
 }
 
+/**
+ * @desc A relative path to an individual channel. The field name MUST be in the form of a RFC 6570 URI template.
+ * @desc Query parameters and fragments SHALL NOT be used, instead use bindings to define them.
+ * */
 export type ChannelsObject = Record<string, ChannelItemObject>;
 
 export interface ChannelItemObject {

@@ -17,7 +17,7 @@ servers:
     url: example.com/socket.io
     protocol: https
 channels:
-  Root:
+  /:
     description: Namespace /
     bindings:
       socket.io:

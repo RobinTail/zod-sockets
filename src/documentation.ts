@@ -85,18 +85,18 @@ export class Documentation extends AsyncApiBuilder {
     };
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      const channelId = makeCleanId(normalizeNS(ns)) || "Root";
+      const alias = makeCleanId(normalizeNS(ns)) || "Root";
       const channel: ChannelItemObject = {
         description: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },
         subscribe: {
-          operationId: makeCleanId(`outgoing events ${channelId}`),
+          operationId: makeCleanId(`outgoing events ${alias}`),
           description: `The messages produced by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: Object.entries(emission).map(([event, { schema, ack }]) => ({
               name: event,
               title: event,
-              messageId: lcFirst(makeCleanId(`${channelId} outgoing ${event}`)),
+              messageId: lcFirst(makeCleanId(`${alias} outgoing ${event}`)),
               payload: walkSchema({
                 direction: "out",
                 schema,
@@ -120,7 +120,7 @@ export class Documentation extends AsyncApiBuilder {
           },
         },
         publish: {
-          operationId: makeCleanId(`incoming events ${channelId}`),
+          operationId: makeCleanId(`incoming events ${alias}`),
           description: `The messages consumed by the application within the ${normalizeNS(ns)} namespace`,
           message: {
             oneOf: actions
@@ -131,9 +131,7 @@ export class Documentation extends AsyncApiBuilder {
                 return {
                   name: event,
                   title: event,
-                  messageId: lcFirst(
-                    makeCleanId(`${channelId} incoming ${event}`),
-                  ),
+                  messageId: lcFirst(makeCleanId(`${alias} incoming ${event}`)),
                   payload: walkSchema({
                     direction: "in",
                     schema: action.getSchema("input"),
@@ -158,7 +156,7 @@ export class Documentation extends AsyncApiBuilder {
           },
         },
       };
-      this.addChannel(channelId, channel);
+      this.addChannel(normalizeNS(ns), channel);
     }
   }
 }

@@ -1,0 +1,29 @@
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Publish to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release channel'
+        required: true
+        default: 'latest'
+        type: choice
+        options:
+          - latest
+          - beta
+          - prev
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+      - run: yarn install
+      - run: npm publish --tag ${{ inputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}

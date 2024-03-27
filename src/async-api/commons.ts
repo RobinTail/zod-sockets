@@ -77,14 +77,6 @@ export interface MessageObject extends MessageTraitObject {
   traits?: MessageTraitObject | ReferenceObject;
 }
 
-export type MessageType = MessageObject | ReferenceObject;
-
-export interface OneOfMessageType {
-  oneOf: MessageType[];
-}
-
-export type AsyncOperationMessage = OneOfMessageType | MessageType;
-
 export interface OperationObject {
   /** @desc Unique string used to identify the operation. */
   operationId?: string;
@@ -94,7 +86,12 @@ export interface OperationObject {
   externalDocs?: ExternalDocumentationObject;
   bindings?: Record<Protocol, SocketIOOperationBinding>;
   traits?: Record<string, OperationTraitObject>;
-  message?: AsyncOperationMessage;
+  message?:
+    | {
+        oneOf: Array<MessageObject | ReferenceObject>;
+      }
+    | MessageObject
+    | ReferenceObject;
 }
 
 export interface OperationTraitObject {

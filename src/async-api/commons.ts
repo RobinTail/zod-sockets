@@ -1,9 +1,9 @@
 import type {
   InfoObject,
   ServerObject as OASServerObject,
+  ServerVariableObject as OASServerVariableObject,
   ReferenceObject,
   SchemaObject,
-  ServerVariableObject,
 } from "openapi3-ts/oas31";
 import {
   SocketIOChannelBinding,
@@ -15,7 +15,7 @@ import {
 export type Protocol = "socket.io";
 
 export interface ServerObject extends Omit<OASServerObject, "variables"> {
-  variables?: Record<string, AsyncServerVariableObject>;
+  variables?: Record<string, ServerVariableObject>;
   protocol: Protocol;
   protocolVersion?: string;
   security?: SecurityObject[];
@@ -49,7 +49,7 @@ export interface ChannelItemObject {
   bindings?: Record<Protocol, SocketIOChannelBinding>;
 }
 
-export interface AsyncServerVariableObject extends ServerVariableObject {
+export interface ServerVariableObject extends OASServerVariableObject {
   examples?: string[];
 }
 

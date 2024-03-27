@@ -12,14 +12,21 @@ import {
   SocketIOServerBinding,
 } from "./socket-io-binding";
 
-export type Protocol = "socket.io";
+/**
+ * @fileoverview AsyncAPI specification
+ * @version 2.6.0
+ */
+
+interface Bindings<T> {
+  "socket.io"?: T;
+}
 
 export interface ServerObject extends Omit<OASServerObject, "variables"> {
   variables?: Record<string, ServerVariableObject>;
   protocol: string; // not the same as the Protocol for binding
   protocolVersion?: string;
   security?: SecurityRequirementObject[];
-  bindings?: Record<Protocol, SocketIOServerBinding>;
+  bindings?: Bindings<SocketIOServerBinding>;
 }
 
 export interface AsyncApiObject {
@@ -46,7 +53,7 @@ export interface ChannelItemObject {
   /** @desc Describes a map of parameters included in a channel name. */
   parameters?: ParametersObject;
   /** @desc Map describing protocol-specific definitions for a channel. */
-  bindings?: Record<Protocol, SocketIOChannelBinding>;
+  bindings?: Bindings<SocketIOChannelBinding>;
 }
 
 export interface ServerVariableObject extends OASServerVariableObject {
@@ -66,10 +73,10 @@ export interface ComponentsObject {
   correlationIds?: Record<string, CorrelationIDObject>;
   operationTraits?: Record<string, OperationTraitObject>;
   messageTraits?: Record<string, MessageTraitObject>;
-  serverBindings?: Record<Protocol, SocketIOServerBinding>;
-  channelBindings?: Record<Protocol, SocketIOChannelBinding>;
-  operationBindings?: Record<Protocol, SocketIOOperationBinding>;
-  messageBindings?: Record<Protocol, SocketIOMessageBinding>;
+  serverBindings?: Bindings<SocketIOServerBinding>;
+  channelBindings?: Bindings<SocketIOChannelBinding>;
+  operationBindings?: Bindings<SocketIOOperationBinding>;
+  messageBindings?: Bindings<SocketIOMessageBinding>;
 }
 
 export interface MessageObject extends MessageTraitObject {
@@ -94,7 +101,7 @@ export interface OperationTraitObject {
   description?: string;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Record<Protocol, SocketIOOperationBinding>;
+  bindings?: Bindings<SocketIOOperationBinding>;
 }
 
 export interface MessageTraitObject {
@@ -110,7 +117,7 @@ export interface MessageTraitObject {
   description?: string;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Record<Protocol, SocketIOMessageBinding>;
+  bindings?: Bindings<SocketIOMessageBinding>;
 }
 
 export interface CorrelationIDObject {

@@ -79,6 +79,7 @@ export interface ServerVariableObject extends OASServerVariableObject {
   examples?: string[];
 }
 
+/** @since 3.0.0 added replies */
 export interface ComponentsObject {
   schemas?: Record<string, SchemaObject>;
   servers?: Record<string, ServerObject>;
@@ -90,6 +91,7 @@ export interface ComponentsObject {
   correlationIds?: Record<string, CorrelationIDObject>;
   operationTraits?: Record<string, OperationTraitObject>;
   messageTraits?: Record<string, MessageTraitObject>;
+  replies?: Record<string, OperationReplyObject>;
   serverBindings?: Bindings<WSServerBinding>;
   channelBindings?: Bindings<WSChannelBinding>;
   operationBindings?: Bindings<WSOperationBinding>;
@@ -111,9 +113,37 @@ export interface OperationObject extends OperationTraitObject {
   channel: ReferenceObject;
   /** @desc A list of $ref pointers pointing to the supported Message Objects that can be processed by this operation */
   messages?: ReferenceObject[];
-  // @todo
-  reply?: unknown;
+  reply?: OperationReplyObject | ReferenceObject;
   traits?: Record<string, OperationTraitObject>;
+}
+
+/**
+ * @desc Describes the reply part that MAY be applied to an Operation Object.
+ * @desc If an operation implements the request/reply pattern, the reply object represents the response message.
+ * @since 3.0.0 new
+ * */
+interface OperationReplyObject {
+  /** @desc Definition of the address that implementations MUST use for the reply. */
+  address?: OperationReplyAddressObject | ReferenceObject;
+  /** @desc A $ref pointer to the definition of the channel in which this operation is performed. */
+  channel?: ReferenceObject;
+  /** @desc A list of pointers to the supported Message Objects that can be processed by this operation as reply */
+  messages?: ReferenceObject[];
+}
+
+/**
+ * @desc An object that specifies where an operation has to send the reply.
+ * @since 3.0.0 new
+ * */
+interface OperationReplyAddressObject {
+  /**
+   * @desc A runtime expression that specifies the location of the reply address.
+   * @example $message.header#/replyTo
+   * @example $message.payload#/messageId
+   * @link https://www.asyncapi.com/docs/reference/specification/v3.0.0#runtimeExpression
+   * */
+  location: string;
+  description?: string;
 }
 
 /**
@@ -165,6 +195,7 @@ export interface CorrelationIDObject {
   /**
    * @desc A runtime expression that specifies the location of the correlation ID.
    * @example $message.header#/correlationId
+   * @link https://www.asyncapi.com/docs/reference/specification/v3.0.0#runtimeExpression
    * */
   location: string;
 }
@@ -220,7 +251,10 @@ export interface OAuthFlowObject {
 /** @since 3.0.0 partially extends SchemaObject; schema prop removed */
 export interface ParameterObject
   extends Pick<SchemaObject, "enum" | "default" | "description" | "examples"> {
-  /** @desc A runtime expression that specifies the location of the parameter value. */
+  /**
+   * @desc A runtime expression that specifies the location of the parameter value.
+   * @link https://www.asyncapi.com/docs/reference/specification/v3.0.0#runtimeExpression
+   * */
   location?: string;
 }
 

@@ -115,6 +115,10 @@ export interface MessageTraitObject {
 
 export interface CorrelationIDObject {
   description?: string;
+  /**
+   * @desc A runtime expression that specifies the location of the correlation ID.
+   * @example $message.header#/correlationId
+   * */
   location: string;
 }
 

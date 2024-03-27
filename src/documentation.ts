@@ -2,7 +2,7 @@ import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { AsyncApiBuilder } from "./async-api/document-builder";
-import { AsyncChannelObject } from "./async-api/commons";
+import { ChannelItemObject } from "./async-api/commons";
 import { SocketIOChannelBinding } from "./async-api/socket-io-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
@@ -81,7 +81,7 @@ export class Documentation extends AsyncApiBuilder {
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       const channelId = makeCleanId(normalizeNS(ns)) || "Root";
-      const channel: AsyncChannelObject = {
+      const channel: ChannelItemObject = {
         description: `Namespace ${normalizeNS(ns)}`,
         bindings: { "socket.io": channelBinding },
         subscribe: {

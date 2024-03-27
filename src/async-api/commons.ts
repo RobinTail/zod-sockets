@@ -35,9 +35,9 @@ export interface AsyncApiObject {
   defaultContentType?: string;
 }
 
-export type ChannelsObject = Record<string, AsyncChannelObject>;
+export type ChannelsObject = Record<string, ChannelItemObject>;
 
-export interface AsyncChannelObject {
+export interface ChannelItemObject {
   description?: string;
   /** @desc the messages produced by the application and sent to the channel. */
   subscribe?: AsyncOperationObject;

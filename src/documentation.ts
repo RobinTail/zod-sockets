@@ -7,7 +7,8 @@ import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
-import { Namespaces, normalizeNS } from "./namespace";
+import { Emission } from "./emission";
+import { Examples, Namespaces, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
 
 interface DocumentationParams {
@@ -21,6 +22,17 @@ interface DocumentationParams {
   actions: AbstractAction[];
   config: Config<Namespaces>;
 }
+
+const getEventExamples = (
+  event: string,
+  examples?: { [K in string]?: Examples<Emission> | Examples<Emission>[] },
+): Examples<Emission>[] | undefined => {
+  const eventExamples = examples?.[event];
+  return (
+    eventExamples &&
+    (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
+  );
+};
 
 export class Documentation extends AsyncApiBuilder {
   public constructor({
@@ -92,27 +104,25 @@ export class Documentation extends AsyncApiBuilder {
         const ackId = lcFirst(
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
-        const example = examples?.[event];
+        const eventExamples = getEventExamples(event, examples);
         messages[messageId] = {
           name: event,
           title: event,
           payload: walkSchema({ direction: "out", schema, ...commons }),
           examples:
-            example &&
-            (Array.isArray(example) ? example : [example]).map(
-              ({ payload }) => ({
-                summary: "Implies array (tuple)",
-                payload: Object.assign({}, payload),
-              }),
-            ),
+            eventExamples &&
+            eventExamples.map(({ payload }) => ({
+              summary: "Implies array (tuple)",
+              payload: Object.assign({}, payload),
+            })),
         };
         if (ack) {
           messages[ackId] = {
             title: `Acknowledgement for ${event}`,
             payload: walkSchema({ direction: "in", schema: ack, ...commons }),
             examples:
-              example &&
-              (Array.isArray(example) ? example : [example]).map((payload) => ({
+              eventExamples &&
+              eventExamples.map((payload) => ({
                 summary: "Implies array (tuple)",
                 payload: Object.assign({}, payload),
               })),

@@ -10,7 +10,7 @@ export const normalizeNS = (name: string): string => {
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 };
 
-interface Examples<T extends Emission> {
+export interface Examples<T extends Emission> {
   payload?: z.output<T["schema"]>;
   ack?: T["ack"] extends z.AnyZodTuple ? z.input<T["ack"]> : never;
 }

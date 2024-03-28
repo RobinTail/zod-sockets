@@ -32,12 +32,3 @@ export type Namespaces = Record<
   string,
   Namespace<EmissionMap, z.SomeZodObject>
 >;
-
-export const fallbackNamespaces = {
-  [rootNS]: {
-    emission: {},
-    hooks: {},
-    metadata: z.object({}),
-  } satisfies Namespace<{}, z.ZodObject<{}>>,
-};
-export type FallbackNamespaces = typeof fallbackNamespaces;

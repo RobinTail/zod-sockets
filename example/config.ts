@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { Config } from "../src";
+import { createSimpleConfig } from "../src";
 
-export const config = new Config().addNamespace({
+export const config = createSimpleConfig({
   emission: {
     time: {
       schema: z.tuple([

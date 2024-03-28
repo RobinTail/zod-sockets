@@ -1,14 +1,7 @@
 import { z } from "zod";
 import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
-import {
-  FallbackNamespaces,
-  Namespace,
-  Namespaces,
-  RootNS,
-  fallbackNamespaces,
-  rootNS,
-} from "./namespace";
+import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
 
 interface ConstructorOptions<NS extends Namespaces> {
   /**
@@ -28,13 +21,13 @@ interface ConstructorOptions<NS extends Namespaces> {
   startupLogo?: boolean;
   /**
    * @desc Define namespaces inline or consider using addNamespace() method
-   * @default fallbackNamespaces
-   * @see fallbackNamespaces
+   * @default {}
+   * @see Namespaces
    * */
   namespaces?: NS;
 }
 
-export class Config<T extends Namespaces = FallbackNamespaces> {
+export class Config<T extends Namespaces = {}> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
@@ -44,7 +37,7 @@ export class Config<T extends Namespaces = FallbackNamespaces> {
     logger = console,
     timeout = 2000,
     startupLogo = true,
-    namespaces = fallbackNamespaces as unknown as T,
+    namespaces = {} as T,
   }: ConstructorOptions<T> = {}) {
     this.logger = logger;
     this.timeout = timeout;
@@ -73,3 +66,22 @@ export class Config<T extends Namespaces = FallbackNamespaces> {
     });
   }
 }
+
+/** @desc Shorthand for single namespace config (root namespace only) */
+export const createSimpleConfig = <
+  E extends EmissionMap,
+  D extends z.SomeZodObject,
+>({
+  startupLogo,
+  timeout,
+  logger,
+  emission,
+  hooks,
+  metadata,
+}: Omit<ConstructorOptions<never>, "namespaces"> &
+  Partial<Namespace<E, D>> = {}) =>
+  new Config({ startupLogo, timeout, logger }).addNamespace({
+    emission,
+    metadata,
+    hooks,
+  });

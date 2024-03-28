@@ -2,14 +2,14 @@ import { SchemaObject } from "openapi3-ts/oas31";
 import { config as exampleConfig } from "../example/config";
 import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";
-import { Config } from "./config";
+import { createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";
 import { z } from "zod";
 import { describe, expect, test, vi } from "vitest";
 import { protocol } from "engine.io";
 
 describe("Documentation", () => {
-  const sampleConfig = new Config();
+  const sampleConfig = createSimpleConfig();
   const factory = new ActionsFactory(sampleConfig);
 
   describe("Basic cases", () => {

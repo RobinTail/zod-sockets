@@ -2,10 +2,10 @@ import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { Action } from "./action";
 import { ActionsFactory } from "./actions-factory";
-import { Config } from "./config";
+import { createSimpleConfig } from "./config";
 
 describe("ActionsFactory", () => {
-  const factory = new ActionsFactory(new Config());
+  const factory = new ActionsFactory(createSimpleConfig());
 
   describe("constructor", () => {
     test("should create a factory", () => {

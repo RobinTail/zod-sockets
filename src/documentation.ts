@@ -67,12 +67,10 @@ export class Documentation extends AsyncApiBuilder {
         ...walkSchema({
           direction: "in",
           schema: z.object({
-            EIO: z
-              .literal("4")
-              .describe("Mandatory, the version of the protocol"),
+            EIO: z.literal("4").describe("The version of the protocol"),
             transport: z
               .enum(["polling", "websocket"])
-              .describe("Mandatory, the name of the transport."),
+              .describe("The name of the transport"),
             sid: z.string().optional().describe("The session identifier"),
           }),
           ...commons,

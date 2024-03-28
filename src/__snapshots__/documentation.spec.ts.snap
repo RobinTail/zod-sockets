@@ -77,6 +77,7 @@ channels:
             - "1"
             - "2"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -96,6 +97,7 @@ channels:
             - "0"
             - "1"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -204,6 +206,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -243,6 +246,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -335,6 +339,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -357,6 +362,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -459,6 +465,7 @@ channels:
             - "2"
             - "3"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -472,6 +479,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -580,6 +588,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingName:
         title: Acknowledgement for name
         payload:
@@ -596,6 +605,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationName:
@@ -737,6 +747,10 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": Hello there
       rootIncomingPing:
         name: ping
         title: ping
@@ -748,6 +762,10 @@ channels:
           additionalProperties:
             format: any
             description: Anything
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": something
       rootAckForIncomingPing:
         title: Acknowledgement for ping
         payload:
@@ -764,6 +782,11 @@ channels:
           additionalProperties:
             format: any
             description: echo
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": pong
+              "1": something
       rootIncomingSubscribe:
         name: subscribe
         title: subscribe
@@ -775,6 +798,7 @@ channels:
           additionalProperties:
             format: any
             description: Does not matter
+        examples: []
 components: {}
 operations:
   RootSendOperationTime:
@@ -916,6 +940,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -931,6 +956,7 @@ channels:
             - "0"
             - "1"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1066,6 +1092,7 @@ channels:
             - "7"
             - "8"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1078,6 +1105,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1218,6 +1246,7 @@ channels:
             - "12"
             - "13"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1230,6 +1259,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1317,6 +1347,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1331,6 +1362,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1412,6 +1444,7 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1468,6 +1501,7 @@ channels:
             - "4"
             - "5"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1563,6 +1597,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1574,6 +1609,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1658,6 +1694,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1666,6 +1703,7 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1755,6 +1793,7 @@ channels:
             - "0"
             - "1"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1763,6 +1802,7 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1856,6 +1896,7 @@ channels:
             - "1"
             - "2"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1864,6 +1905,7 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1945,6 +1987,7 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1953,6 +1996,7 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:
@@ -2037,6 +2081,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -2048,6 +2093,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
   Test:
     address: /test
     title: Namespace /test
@@ -2181,6 +2227,7 @@ channels:
             - "0"
             - "1"
           additionalProperties: false
+        examples: []
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -2194,6 +2241,7 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples: []
 components: {}
 operations:
   RootRecvOperationTest:

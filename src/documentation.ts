@@ -145,6 +145,10 @@ export class Documentation extends AsyncApiBuilder {
               schema: action.getSchema("input"),
               ...commons,
             }),
+            examples: action.getExamples("input").map((payload) => ({
+              summary: "Implies array (tuple)",
+              payload: Object.assign({}, payload),
+            })),
           };
           if (output) {
             messages[ackId] = {
@@ -154,6 +158,10 @@ export class Documentation extends AsyncApiBuilder {
                 schema: output,
                 ...commons,
               }),
+              examples: action.getExamples("output").map((payload) => ({
+                summary: "Implies array (tuple)",
+                payload: Object.assign({}, payload),
+              })),
             };
           }
           const recvOperationId = makeCleanId(

@@ -31,7 +31,7 @@ export class Action<
   readonly #event: string;
   readonly #namespace: keyof NS;
   readonly #inputSchema: IN;
-  readonly #outputSchema: OUT | undefined;
+  readonly #outputSchema: OUT;
   readonly #examples: Array<{
     variant: "input" | "output";
     payload: Array<
@@ -52,7 +52,8 @@ export class Action<
     this.#event = action.event;
     this.#namespace = action.ns || rootNS;
     this.#inputSchema = action.input;
-    this.#outputSchema = "output" in action ? action.output : undefined;
+    this.#outputSchema =
+      "output" in action ? action.output : (undefined as OUT);
     this.#examples = [];
     this.#handler = action.handler;
   }
@@ -66,7 +67,7 @@ export class Action<
   }
 
   public override getSchema(variant: "input"): IN;
-  public override getSchema(variant: "output"): OUT | undefined;
+  public override getSchema(variant: "output"): OUT;
   public override getSchema(variant: "input" | "output") {
     return variant === "input" ? this.#inputSchema : this.#outputSchema;
   }

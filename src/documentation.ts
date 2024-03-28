@@ -71,7 +71,7 @@ export class Documentation extends AsyncApiBuilder {
               .literal("4")
               .describe("Mandatory, the version of the protocol"),
             transport: z
-              .union([z.literal("polling"), z.literal("websocket")])
+              .enum(["polling", "websocket"])
               .describe("Mandatory, the name of the transport."),
             sid: z.string().optional().describe("The session identifier"),
           }),

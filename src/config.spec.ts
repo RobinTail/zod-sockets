@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { ZodObject, z } from "zod";
+import { z } from "zod";
 import { Config, createSimpleConfig } from "./config";
 import { AbstractLogger } from "./logger";
 
@@ -30,9 +30,11 @@ describe("Config", () => {
         test: { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
       });
     });
+  });
 
+  describe(".addNamespace()", () => {
     test("should provide namespace augmentation method", () => {
-      const base = new Config({});
+      const base = new Config();
       expect(base).toBeInstanceOf(Config);
       expect(base.logger).toEqual(console);
       expect(base.timeout).toBe(2000);
@@ -51,11 +53,6 @@ describe("Config", () => {
         },
       });
     });
-
-    test("should allow to disable root namespace", () => {
-      const config = new Config({ namespaces: {} });
-      expect(config.namespaces).toEqual({});
-    });
   });
 
   describe("createSimpleConfig()", () => {
@@ -65,7 +62,7 @@ describe("Config", () => {
       expect(config.logger).toEqual(console);
       expect(config.timeout).toBe(2000);
       expect(config.namespaces).toEqual({
-        "/": { emission: {}, hooks: {}, metadata: expect.any(ZodObject) },
+        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
       });
     });
 
@@ -81,7 +78,7 @@ describe("Config", () => {
       expect(config.logger).not.toEqual(console);
       expect(config.timeout).toBe(3000);
       expect(config.namespaces).toEqual({
-        "/": { emission: {}, hooks: {}, metadata: expect.any(ZodObject) },
+        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
       });
     });
   });

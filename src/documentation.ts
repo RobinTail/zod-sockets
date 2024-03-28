@@ -23,14 +23,17 @@ interface DocumentationParams {
   config: Config<Namespaces>;
 }
 
-const getEventExamples = (
+const getEventExamples = <T extends Examples<Emission>, V extends keyof T>(
   event: string,
-  examples?: { [K in string]?: Examples<Emission> | Examples<Emission>[] },
-): Examples<Emission>[] | undefined => {
+  variant: V,
+  examples?: { [K in string]?: T | T[] },
+): T[V][] | undefined => {
   const eventExamples = examples?.[event];
   return (
     eventExamples &&
-    (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
+    (Array.isArray(eventExamples) ? eventExamples : [eventExamples]).map(
+      (example) => example[variant],
+    )
   );
 };
 
@@ -104,28 +107,27 @@ export class Documentation extends AsyncApiBuilder {
         const ackId = lcFirst(
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
-        const eventExamples = getEventExamples(event, examples);
         messages[messageId] = {
           name: event,
           title: event,
           payload: walkSchema({ direction: "out", schema, ...commons }),
-          examples:
-            eventExamples &&
-            eventExamples.map(({ payload }) => ({
+          examples: getEventExamples(event, "payload", examples)?.map(
+            (example) => ({
               summary: "Implies array (tuple)",
-              payload: Object.assign({}, payload),
-            })),
+              payload: Object.assign({}, example),
+            }),
+          ),
         };
         if (ack) {
           messages[ackId] = {
             title: `Acknowledgement for ${event}`,
             payload: walkSchema({ direction: "in", schema: ack, ...commons }),
-            examples:
-              eventExamples &&
-              eventExamples.map((payload) => ({
+            examples: getEventExamples(event, "ack", examples)?.map(
+              (example) => ({
                 summary: "Implies array (tuple)",
-                payload: Object.assign({}, payload),
-              })),
+                payload: Object.assign({}, example),
+              }),
+            ),
           };
         }
         const sendOperationId = makeCleanId(

@@ -22,7 +22,7 @@ interface ConstructorOptions<NS extends Namespaces> {
   /**
    * @desc Define namespaces inline or consider using addNamespace() method
    * @default {}
-   * @see Namespaces
+   * @see Namespace
    * */
   namespaces?: NS;
 }

@@ -17,11 +17,7 @@
 // if using the root namespace only:
 import { createSimpleConfig } from "zod-sockets";
 const simpleConfig = createSimpleConfig({
-  logger,
-  timeout,
-  emission,
-  hooks,
-  metadata,
+  /* logger, timeout, emission, hooks, metadata */
 });
 
 // if using namespaces other than "/":
@@ -29,15 +25,11 @@ import { Config } from "zod-sockets";
 const config = new Config({ logger, timeout })
   .addNamespace({
     path: "ns1",
-    emission,
-    hooks,
-    metadata,
+    /* emission, hooks, metadata */
   })
   .addNamespace({
     path: "ns2",
-    emission,
-    hooks,
-    metadata,
+    /* emission, hooks, metadata */
   });
 ```
 

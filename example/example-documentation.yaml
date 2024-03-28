@@ -42,16 +42,13 @@ channels:
               type: string
               enum:
                 - "4"
-              description: Mandatory, the version of the protocol
+              description: The version of the protocol
             transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
-              description: Mandatory, the name of the transport.
+              type: string
+              enum:
+                - polling
+                - websocket
+              description: The name of the transport
             sid:
               type: string
               description: The session identifier

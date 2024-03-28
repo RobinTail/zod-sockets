@@ -43,10 +43,10 @@ yarn add zod-sockets zod socket.io typescript
 ## Set up config
 
 ```typescript
-import { createConfig } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 
-// defaults: root namespace only, console logger, timeout 2s
-const config = createConfig();
+// shorthand for root namespace only, defaults: console logger, timeout 2s
+const config = createSimpleConfig();
 ```
 
 ## Create a factory
@@ -111,36 +111,6 @@ for sending the `ping` event to `ws://localhost:8090` with acknowledgement.
 
 # Basic features
 
-## Namespaces first
-
-Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
-different essence, payload and handlers. You can add `namespaces` to the argument of `createConfig()` or use
-`addNamespace()` method after it. The default namespace is a root one having `path` equal to `/`. Namespaces may have
-`emission` and `hooks`.
-Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
-
-```typescript
-import { createConfig } from "zod-sockets";
-
-const config = createConfig({
-  namespaces: {
-    // The namespace "/public"
-    public: {
-      emission: { chat: { schema } },
-      hooks: {
-        onStartup: () => {},
-        onConnection: () => {},
-        onDisconnect: () => {},
-        onAnyIncoming: () => {},
-        onAnyOutgoing: () => {},
-      },
-    },
-  },
-}).addNamespace({
-  path: "private", // The namespace "/private" has no emission
-});
-```
-
 ## Emission
 
 The outgoing events should be configured using `z.tuple()` schemas. Those tuples describe the types of the arguments
@@ -151,10 +121,9 @@ development. Consider the following examples of two outgoing events, with and wi
 
 ```typescript
 import { z } from "zod";
-import { createConfig } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 
-const config = createConfig().addNamespace({
-  // path: "/", // optional, default: root namespace
+const config = createSimpleConfig({
   emission: {
     // enabling Socket::emit("chat", "message", { from: "someone" })
     chat: {
@@ -222,7 +191,7 @@ The library supports any logger having `info()`, `debug()`, `error()` and
 
 ```typescript
 import pino, { Logger } from "pino";
-import { createConfig } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 
 const logger = pino({
   transport: {
@@ -230,7 +199,7 @@ const logger = pino({
     options: { colorize: true },
   },
 });
-const config = createConfig({ logger });
+const config = createSimpleConfig({ logger });
 
 // Setting the type of logger used
 declare module "zod-sockets" {
@@ -241,16 +210,16 @@ declare module "zod-sockets" {
 ### With Express Zod API
 
 If you're using `express-zod-api`, you can reuse the same logger. If it's a custom logger — supply the same instance to
-both `createConfig()` methods of two libraries. In case you're using the default `winston` logger provided by
+configs of both libraries. In case you're using the default `winston` logger provided by
 `express-zod-api`, you can obtain its instance from the returns of the `createServer()` method.
 
 ```typescript
 import { createServer } from "express-zod-api";
-import { createConfig } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 import type { Logger } from "winston";
 
 const { logger } = await createServer();
-const config = createConfig({ logger });
+const config = createSimpleConfig({ logger });
 
 // Setting the type of logger used
 declare module "zod-sockets" {
@@ -342,9 +311,9 @@ emit events regardless the incoming ones by setting the `onConnection` property 
 argument, which has a similar interface except `input` and fires for every connected client:
 
 ```typescript
-import { createConfig } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 
-const config = createConfig().addNamespace({
+const config = createSimpleConfig({
   // emission: { ... },
   hooks: {
     onConnection: async ({ client, withRooms, all }) => {
@@ -360,9 +329,9 @@ Moreover, you can emit events regardless the client activity at all by setting t
 of the `addNamespace()` argument. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript
-import { createConfig } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 
-const config = createConfig().addNamespace({
+const config = createSimpleConfig({
   hooks: {
     onStartup: async ({ all, withRooms }) => {
       // sending to everyone in a room
@@ -440,9 +409,9 @@ Please avoid transformations in those schemas since they are not going to be app
 
 ```typescript
 import { z } from "zod";
-import { createConfig } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 
-const config = createConfig().addNamespace({
+const config = createSimpleConfig({
   metadata: z.object({
     /** @desc Number of messages sent to the chat */
     msgCount: z.number().int(),
@@ -473,6 +442,36 @@ assistance of its argument and may throw `ZodError` if it does not pass the vali
 const handler = async ({ client }) => {
   client.setData({ msgCount: 4 });
 };
+```
+
+## Namespaces
+
+Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
+different essence, payload and handlers. For using namespaces replace the `createSimpleConfig()` method with
+`new Config()`, then use its `.addNamespace()` method for each namespace. Namespaces may have `emission` and `hooks`.
+Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
+
+```typescript
+import { Config } from "zod-sockets";
+
+const config = new Config({
+  logger,
+  timeout: 2000,
+})
+  .addNamespace({
+    // The namespace "/public"
+    emission: { chat: { schema } },
+    hooks: {
+      onStartup: () => {},
+      onConnection: () => {},
+      onDisconnect: () => {},
+      onAnyIncoming: () => {},
+      onAnyOutgoing: () => {},
+    },
+  })
+  .addNamespace({
+    path: "private", // The namespace "/private" has no emission
+  });
 ```
 
 # Integration

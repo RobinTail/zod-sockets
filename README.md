@@ -526,7 +526,8 @@ const yamlString = new Documentation({
 }).getSpecAsYaml();
 ```
 
-_See the example of the generated documentation [here](example/example-documentation.yaml)_
+See the example of the generated documentation [on GitHub](example/example-documentation.yaml) or
+[open in Studio](https://studio.asyncapi.com/?url=https://raw.githubusercontent.com/RobinTail/zod-sockets/main/example/example-documentation.yaml).
 
 # Next
 

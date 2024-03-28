@@ -55,5 +55,10 @@ describe("Config", () => {
         },
       });
     });
+
+    test("should allow to disable root namespace", () => {
+      const config = new Config({ namespaces: {} });
+      expect(config.namespaces).toEqual({});
+    });
   });
 });

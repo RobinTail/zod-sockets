@@ -2,6 +2,45 @@
 
 ## Version 0
 
+### v0.13.0
+
+- Config creation changes aim to improve the clarity and make it easier to begin using this library for the first time;
+- Easier config for a simple applications:
+  - Replacing `createConfig()` with `createSimpleConfig()` - for a single namespace (root namespace only).
+- Making namespaces opt-in feature:
+  - Use the exposed `new Config()` and its `.addNamespace()` method of each namespace;
+  - Fallbacks removed from `Config::constructor` — it creates no namespaces by default,
+    but `addNamespace` creates root namespace when `path` prop is omitted;
+- See the migration advice below.
+
+```ts
+// if using the root namespace only:
+import { createSimpleConfig } from "zod-sockets";
+const simpleConfig = createSimpleConfig({
+  logger,
+  timeout,
+  emission,
+  hooks,
+  metadata,
+});
+
+// if using namespaces other than "/":
+import { Config } from "zod-sockets";
+const config = new Config({ logger, timeout })
+  .addNamespace({
+    path: "ns1",
+    emission,
+    hooks,
+    metadata,
+  })
+  .addNamespace({
+    path: "ns2",
+    emission,
+    hooks,
+    metadata,
+  });
+```
+
 ### v0.12.0
 
 - Switching to AsyncAPI version 3.0.0 for generating documentation:

@@ -20,7 +20,7 @@ export abstract class AbstractAction {
     variant: "input" | "output",
     payload: unknown[],
   ): this;
-  public abstract getExamples(variant: "input" | "output"): unknown[];
+  public abstract getExamples(variant: "input" | "output"): unknown[][];
 }
 
 export class Action<

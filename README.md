@@ -409,7 +409,7 @@ Please avoid transformations in those schemas since they are not going to be app
 
 ```typescript
 import { z } from "zod";
-import { Config } from "zod-sockets";
+import { createSimpleConfig } from "zod-sockets";
 
 const config = createSimpleConfig({
   metadata: z.object({

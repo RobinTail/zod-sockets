@@ -24,9 +24,9 @@ export abstract class AbstractAction {
 }
 
 export class Action<
-  IN extends z.AnyZodTuple,
-  OUT extends z.AnyZodTuple,
   NS extends Namespaces,
+  IN extends z.AnyZodTuple,
+  OUT extends z.AnyZodTuple | undefined = undefined,
 > extends AbstractAction {
   readonly #event: string;
   readonly #namespace: keyof NS;
@@ -34,16 +34,18 @@ export class Action<
   readonly #outputSchema: OUT | undefined;
   readonly #examples: Array<{
     variant: "input" | "output";
-    payload: Array<z.input<IN> | z.output<OUT>>;
+    payload: Array<
+      z.input<IN> | (OUT extends z.AnyZodTuple ? z.output<OUT> : never)
+    >;
   }>;
   readonly #handler: Handler<
     ActionContext<z.output<IN>, EmissionMap, z.SomeZodObject>,
-    z.input<OUT> | void
+    z.input<z.AnyZodTuple> | void // type compliance fix here
   >;
 
   public constructor(
     action:
-      | ActionWithAckDef<IN, OUT, NS, keyof NS>
+      | ActionWithAckDef<IN, NonNullable<OUT>, NS, keyof NS>
       | ActionNoAckDef<IN, NS, keyof NS>,
   ) {
     super();
@@ -84,11 +86,11 @@ export class Action<
   }
 
   /** @throws z.ZodError */
-  #parseOutput(output: z.input<OUT> | void) {
+  #parseOutput(output: z.input<z.AnyZodTuple> | void) {
     if (!this.#outputSchema) {
       return;
     }
-    return this.#outputSchema.parse(output) as z.output<OUT>;
+    return this.#outputSchema.parse(output);
   }
 
   public override async execute({
@@ -125,14 +127,16 @@ export class Action<
   ): this;
   public override example(
     variant: "input" | "output",
-    payload: z.input<IN> | z.output<OUT>,
+    payload: z.input<IN> | (OUT extends z.AnyZodTuple ? z.output<OUT> : never),
   ): this {
     this.#examples.push({ variant, payload });
     return this;
   }
 
   public override getExamples(variant: "input"): z.input<IN>[];
-  public override getExamples(variant: "output"): z.output<OUT>[];
+  public override getExamples(
+    variant: "output",
+  ): OUT extends z.AnyZodTuple ? z.output<OUT>[] : never;
   public override getExamples(variant: "input" | "output") {
     return this.#examples
       .filter((entry) => entry.variant === variant)

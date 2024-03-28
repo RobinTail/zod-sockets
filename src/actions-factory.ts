@@ -52,11 +52,13 @@ export class ActionsFactory<NS extends Namespaces> {
 
   public build<
     IN extends z.AnyZodTuple,
-    OUT extends z.AnyZodTuple,
+    OUT extends z.AnyZodTuple | undefined = undefined,
     K extends keyof NS = RootNS,
   >(
-    def: ActionNoAckDef<IN, NS, K> | ActionWithAckDef<IN, OUT, NS, K>,
-  ): Action<IN, OUT, NS> {
+    def:
+      | ActionNoAckDef<IN, NS, K>
+      | ActionWithAckDef<IN, NonNullable<OUT>, NS, K>,
+  ): Action<NS, IN, OUT> {
     return new Action(def);
   }
 }

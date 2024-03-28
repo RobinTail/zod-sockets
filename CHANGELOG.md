@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.13.1
+
+- Minor adjustments to the documentation.
+
 ### v0.13.0
 
 - Config creation changes aim to improve the clarity and make it easier to begin using this library for the first time;

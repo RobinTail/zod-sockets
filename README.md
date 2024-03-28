@@ -241,15 +241,14 @@ import { ActionsFactory } from "zod-sockets";
 const actionsFactory = new ActionsFactory(config);
 ```
 
-Produce actions using the `build()` method accepting an object having the assigned namespace `ns` (optional, root
-namespace `/` is default), the incoming `event` name, the `input` schema for its payload (excluding acknowledgment) and
-a `handler`, which is a function where you place your implementation for handling the event. The argument of the
-`handler` in an object having several handy entities, the most important of them is `input` property, being the
-validated event payload:
+Produce actions using the `build()` method accepting an object having the incoming `event` name, the `input` schema for
+its payload (excluding acknowledgment) and a `handler`, which is a function where you place your implementation for
+handling the event. The argument of the `handler` in an object having several handy entities, the most important of
+them is `input` property, being the validated event payload:
 
 ```typescript
 const onChat = actionsFactory.build({
-  ns: "/", // optional, root namespace is default
+  // ns: "/", // optional, root namespace is default
   event: "chat",
   input: z.tuple([z.string()]),
   handler: async ({ input: [message], client, all, withRooms, logger }) => {
@@ -307,8 +306,8 @@ actionsFactory.build({
 ### In Client context
 
 The previous example illustrated the events dispatching due to or in a context of an incoming event. But you can also
-emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the `addNamespace()`
-argument, which has a similar interface except `input` and fires for every connected client:
+emit events regardless the incoming ones by setting the `onConnection` property within `hooks` of the config, which
+has a similar interface except `input` and fires for every connected client:
 
 ```typescript
 import { createSimpleConfig } from "zod-sockets";
@@ -326,7 +325,7 @@ const config = createSimpleConfig({
 ### Independent context
 
 Moreover, you can emit events regardless the client activity at all by setting the `onStartup` property within `hooks`
-of the `addNamespace()` argument. The implementation may have a `setInterval()` for recurring emission.
+of the config. The implementation may have a `setInterval()` for recurring emission.
 
 ```typescript
 import { createSimpleConfig } from "zod-sockets";
@@ -404,7 +403,7 @@ Initially it is an empty object.
 
 ### Defining constraints
 
-You can specify the schema of the metadata per namespace.
+You can specify the schema of the `metadata` in config.
 Please avoid transformations in those schemas since they are not going to be applied.
 
 ```typescript
@@ -448,8 +447,8 @@ const handler = async ({ client }) => {
 
 Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
 different essence, payload and handlers. For using namespaces replace the `createSimpleConfig()` method with
-`new Config()`, then use its `.addNamespace()` method for each namespace. Namespaces may have `emission` and `hooks`.
-Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
+`new Config()`, then use its `.addNamespace()` method for each namespace. Namespaces may have `emission`, `hooks` and
+`metadata`. Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 ```typescript
 import { Config } from "zod-sockets";
@@ -468,6 +467,7 @@ const config = new Config({
       onAnyIncoming: () => {},
       onAnyOutgoing: () => {},
     },
+    metadata: z.object({ msgCount: z.number().int() }),
   })
   .addNamespace({
     path: "private", // The namespace "/private" has no emission

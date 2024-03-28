@@ -100,16 +100,6 @@ const tryFlattenIntersection = (
   if (left.required || right.required) {
     flat.required = union(left.required || [], right.required || []);
   }
-  // @todo consider supporting examples
-  /*
-  if (left.examples || right.examples) {
-    flat.examples = combinations(
-      left.examples || [],
-      right.examples || [],
-      ([a, b]) => mergeDeepRight(a, b),
-    );
-  }
-  */
   return flat;
 };
 
@@ -486,11 +476,9 @@ export const onEach: Depicter<z.ZodTypeAny, "each"> = ({
     return {};
   }
   const { description } = schema;
-  const shouldAvoidParsing = schema instanceof z.ZodLazy;
   const hasTypePropertyInDepiction = prev.type !== undefined;
   const isResponseHavingCoercion = direction === "out" && hasCoercion(schema);
   const isActuallyNullable =
-    !shouldAvoidParsing &&
     hasTypePropertyInDepiction &&
     !isResponseHavingCoercion &&
     schema.isNullable();
@@ -501,7 +489,6 @@ export const onEach: Depicter<z.ZodTypeAny, "each"> = ({
   if (isActuallyNullable) {
     result.type = makeNullableType(prev);
   }
-  // @todo getExamples() when !shouldAvoidParsing
   return result;
 };
 

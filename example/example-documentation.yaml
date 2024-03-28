@@ -44,13 +44,10 @@ channels:
                 - "4"
               description: Mandatory, the version of the protocol
             transport:
-              oneOf:
-                - type: string
-                  enum:
-                    - polling
-                - type: string
-                  enum:
-                    - websocket
+              type: string
+              enum:
+                - polling
+                - websocket
               description: Mandatory, the name of the transport.
             sid:
               type: string

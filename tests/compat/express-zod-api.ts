@@ -1,6 +1,6 @@
 import { createConfig, createServer } from "express-zod-api";
 import { Server } from "socket.io";
-import { Config, attachSockets } from "zod-sockets";
+import { attachSockets, createSimpleConfig } from "zod-sockets";
 
 const serverConfig = createConfig({
   server: { listen: 8090 },
@@ -10,10 +10,7 @@ const serverConfig = createConfig({
 
 const { httpServer, logger } = await createServer(serverConfig, {});
 
-const socketsConfig = new Config({
-  logger,
-  timeout: 2000,
-});
+const socketsConfig = createSimpleConfig({ logger });
 
 const io = new Server();
 await attachSockets({

@@ -1,12 +1,12 @@
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { Config, createConfig } from "./config";
+import { Config } from "./config";
 import { AbstractLogger } from "./logger";
 
 describe("Config", () => {
   describe("createConfig()", () => {
     test("should create config without any argument", () => {
-      const config = createConfig();
+      const config = new Config();
       expect(config).toBeInstanceOf(Config);
       expect(config.logger).toEqual(console);
       expect(config.timeout).toBe(2000);
@@ -16,7 +16,7 @@ describe("Config", () => {
     });
 
     test("should create the class instance from the definition", () => {
-      const config = createConfig({
+      const config = new Config({
         namespaces: {
           "/": { emission: {}, hooks: {}, metadata: z.object({}) },
           test: { emission: {}, hooks: {}, metadata: z.object({}) },
@@ -34,7 +34,7 @@ describe("Config", () => {
     });
 
     test("should set defaults and provide namespace augmentation method", () => {
-      const base = createConfig({});
+      const base = new Config({});
       expect(base).toBeInstanceOf(Config);
       expect(base.logger).toEqual(console);
       expect(base.timeout).toBe(2000);

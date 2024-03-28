@@ -28,13 +28,13 @@ interface ConstructorOptions<NS extends Namespaces> {
   startupLogo?: boolean;
   /**
    * @desc Define namespaces inline or consider using addNamespace() method
-   * @default {}
-   * @see Namespace
+   * @default fallbackNamespaces
+   * @see fallbackNamespaces
    * */
   namespaces?: NS;
 }
 
-export class Config<T extends Namespaces> {
+export class Config<T extends Namespaces = FallbackNamespaces> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
@@ -45,7 +45,7 @@ export class Config<T extends Namespaces> {
     timeout = 2000,
     startupLogo = true,
     namespaces = fallbackNamespaces as unknown as T,
-  }: ConstructorOptions<T>) {
+  }: ConstructorOptions<T> = {}) {
     this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;
@@ -73,7 +73,3 @@ export class Config<T extends Namespaces> {
     });
   }
 }
-
-export const createConfig = <T extends Namespaces = FallbackNamespaces>(
-  def: ConstructorOptions<T> = {},
-) => new Config(def);

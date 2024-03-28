@@ -2,17 +2,10 @@ import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { Action } from "./action";
 import { ActionsFactory } from "./actions-factory";
-import { createConfig } from "./config";
-import { AbstractLogger } from "./logger";
+import { Config } from "./config";
 
 describe("ActionsFactory", () => {
-  const factory = new ActionsFactory(
-    createConfig({
-      namespaces: {},
-      timeout: 2000,
-      logger: { debug: vi.fn() } as unknown as AbstractLogger,
-    }),
-  );
+  const factory = new ActionsFactory(new Config());
 
   describe("constructor", () => {
     test("should create a factory", () => {
@@ -24,7 +17,7 @@ describe("ActionsFactory", () => {
         factory.build({
           event: "test",
           input: z.tuple([z.string()]),
-          handler: vi.fn(),
+          handler: vi.fn<any>(),
         }),
       ).toBeInstanceOf(Action);
     });

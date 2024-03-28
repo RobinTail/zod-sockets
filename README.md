@@ -45,7 +45,8 @@ yarn add zod-sockets zod socket.io typescript
 ```typescript
 import { createSimpleConfig } from "zod-sockets";
 
-const config = createSimpleConfig(); // shorthand for root namespace only
+// shorthand for root namespace only, defaults: console logger, timeout 2s
+const config = createSimpleConfig();
 ```
 
 ## Create a factory

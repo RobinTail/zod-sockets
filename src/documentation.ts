@@ -82,7 +82,7 @@ export class Documentation extends AsyncApiBuilder {
       },
     };
 
-    for (const [ns, { emission }] of Object.entries(namespaces)) {
+    for (const [ns, { emission, examples }] of Object.entries(namespaces)) {
       const channelId = makeCleanId(normalizeNS(ns)) || "Root";
       const messages: MessagesObject = {};
       for (const [event, { schema, ack }] of Object.entries(emission)) {
@@ -92,15 +92,30 @@ export class Documentation extends AsyncApiBuilder {
         const ackId = lcFirst(
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
+        const example = examples?.[event];
         messages[messageId] = {
           name: event,
           title: event,
           payload: walkSchema({ direction: "out", schema, ...commons }),
+          examples:
+            example &&
+            (Array.isArray(example) ? example : [example]).map(
+              ({ payload }) => ({
+                summary: "Implies array (tuple)",
+                payload: Object.assign({}, payload),
+              }),
+            ),
         };
         if (ack) {
           messages[ackId] = {
             title: `Acknowledgement for ${event}`,
             payload: walkSchema({ direction: "in", schema: ack, ...commons }),
+            examples:
+              example &&
+              (Array.isArray(example) ? example : [example]).map((payload) => ({
+                summary: "Implies array (tuple)",
+                payload: Object.assign({}, payload),
+              })),
           };
         }
         const sendOperationId = makeCleanId(

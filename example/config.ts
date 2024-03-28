@@ -23,6 +23,14 @@ export const config = createSimpleConfig({
       schema: z.tuple([z.string().array().describe("room IDs")]),
     },
   },
+  examples: {
+    time: { payload: ["2024-03-28T21:13:15.084Z"] },
+    chat: { payload: ["Hello there!", { from: "123abc" }] },
+    rooms: [
+      { payload: [["room1", "room2"]] },
+      { payload: [["room3", "room4", "room5"]] },
+    ],
+  },
   hooks: {
     onConnection: async ({ client }) => {
       await client.broadcast("chat", `${client.id} entered the chat`, {

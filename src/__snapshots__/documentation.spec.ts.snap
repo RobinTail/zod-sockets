@@ -696,6 +696,10 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": 2024-03-28T21:13:15.084Z
       rootOutgoingChat:
         name: chat
         title: chat
@@ -719,6 +723,12 @@ channels:
             - "0"
             - "1"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": Hello there!
+              "1":
+                from: 123abc
       rootOutgoingRooms:
         name: rooms
         title: rooms
@@ -734,6 +744,18 @@ channels:
           required:
             - "0"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0":
+                - room1
+                - room2
+          - summary: Implies array (tuple)
+            payload:
+              "0":
+                - room3
+                - room4
+                - room5
       rootIncomingChat:
         name: chat
         title: chat

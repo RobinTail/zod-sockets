@@ -16,6 +16,11 @@ export abstract class AbstractAction {
   ): Promise<void>;
   public abstract getSchema(variant: "input"): z.AnyZodTuple;
   public abstract getSchema(variant: "output"): z.AnyZodTuple | undefined;
+  public abstract example(
+    variant: "input" | "output",
+    payload: unknown[],
+  ): this;
+  public abstract getExamples(variant: "input" | "output"): unknown[];
 }
 
 export class Action<
@@ -27,6 +32,10 @@ export class Action<
   readonly #namespace: keyof NS;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT | undefined;
+  readonly #examples: Array<{
+    variant: "input" | "output";
+    payload: Array<z.input<IN> | z.output<OUT>>;
+  }>;
   readonly #handler: Handler<
     ActionContext<z.output<IN>, EmissionMap, z.SomeZodObject>,
     z.input<OUT> | void
@@ -42,6 +51,7 @@ export class Action<
     this.#namespace = action.ns || rootNS;
     this.#inputSchema = action.input;
     this.#outputSchema = "output" in action ? action.output : undefined;
+    this.#examples = [];
     this.#handler = action.handler;
   }
 
@@ -106,5 +116,26 @@ export class Action<
     } catch (error) {
       logger.error(`${event} handling error`, error);
     }
+  }
+
+  public override example(variant: "input", payload: z.input<IN>): this;
+  public override example(
+    variant: "output",
+    payload: OUT extends z.AnyZodTuple ? z.output<OUT> : never,
+  ): this;
+  public override example(
+    variant: "input" | "output",
+    payload: z.input<IN> | z.output<OUT>,
+  ): this {
+    this.#examples.push({ variant, payload });
+    return this;
+  }
+
+  public override getExamples(variant: "input"): z.input<IN>[];
+  public override getExamples(variant: "output"): z.output<OUT>[];
+  public override getExamples(variant: "input" | "output") {
+    return this.#examples
+      .filter((entry) => entry.variant === variant)
+      .map(({ payload }) => payload);
   }
 }

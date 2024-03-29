@@ -15,7 +15,7 @@ import {
   ReferenceObject,
   SchemaObject,
   SchemaObjectType,
-} from "./async-api/commons";
+} from "./async-api/model";
 import { isReferenceObject } from "./async-api/helpers";
 import { hasCoercion, tryToTransform } from "./common-helpers";
 import {

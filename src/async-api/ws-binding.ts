@@ -1,4 +1,4 @@
-import type { ReferenceObject, SchemaObject } from "./commons";
+import type { ReferenceObject, SchemaObject } from "./model";
 /**
  * @see https://github.com/asyncapi/bindings/tree/master/websockets
  * @desc This object MUST NOT contain any properties. Its name is reserved for future use.

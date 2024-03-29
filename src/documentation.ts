@@ -4,8 +4,8 @@ import {
   ContactObject,
   LicenseObject,
   MessagesObject,
-} from "./async-api/commons";
-import { AsyncApiBuilder } from "./async-api/document-builder";
+} from "./async-api/model";
+import { AsyncApiBuilder } from "./async-api/builder";
 import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";

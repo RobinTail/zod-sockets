@@ -1,0 +1,27 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AsyncApiBuilder > getSpec() > should return the document 1`] = `
+{
+  "asyncapi": "3.0.0",
+  "channels": {},
+  "components": {},
+  "info": {
+    "title": "test",
+    "version": "1.0.0",
+  },
+  "servers": {},
+}
+`;
+
+exports[`AsyncApiBuilder > getSpecAsJson() > should return the document 1`] = `"{"asyncapi":"3.0.0","info":{"title":"test","version":"1.0.0"},"servers":{},"channels":{},"components":{}}"`;
+
+exports[`AsyncApiBuilder > getSpecAsYaml() > should return the document 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: test
+  version: 1.0.0
+servers: {}
+channels: {}
+components: {}
+"
+`;

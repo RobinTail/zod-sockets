@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { AsyncApiBuilder } from "./document-builder";
+import { AsyncApiBuilder } from "./builder";
 
-describe("AsyncApiDocumentBuilder", () => {
+describe("AsyncApiBuilder", () => {
   const builder = new AsyncApiBuilder({
     info: { title: "test", version: "1.0.0" },
   });

@@ -136,12 +136,12 @@ interface Draft07 {
   readOnly?: boolean;
   writeOnly?: boolean;
   properties?: { [propertyName: string]: SchemaObject | ReferenceObject };
-  patternProperties?: { [pattern: string]: SchemaObject | ReferenceObject }; // @todo explore
+  patternProperties?: { [pattern: string]: SchemaObject | ReferenceObject };
   additionalProperties?: SchemaObject | ReferenceObject | boolean;
   additionalItems?: SchemaObject;
   items?: SchemaObject | ReferenceObject;
-  propertyNames?: SchemaObject | ReferenceObject; // @todo explore
-  contains?: SchemaObject; // @todo explore
+  propertyNames?: SchemaObject | ReferenceObject;
+  contains?: SchemaObject;
   allOf?: (SchemaObject | ReferenceObject)[];
   oneOf?: (SchemaObject | ReferenceObject)[];
   anyOf?: (SchemaObject | ReferenceObject)[];

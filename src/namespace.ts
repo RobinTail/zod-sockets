@@ -10,7 +10,7 @@ export const normalizeNS = (name: string): string => {
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 };
 
-export interface Examples<T extends Emission> {
+export interface Example<T extends Emission> {
   payload?: z.output<T["schema"]>;
   ack?: T["ack"] extends z.AnyZodTuple ? z.input<T["ack"]> : never;
 }
@@ -22,7 +22,7 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
    * */
   emission: E;
   examples?: {
-    [K in keyof E]?: Examples<E[K]> | Examples<E[K]>[];
+    [K in keyof E]?: Example<E[K]> | Example<E[K]>[];
   };
   /**
    * @desc Handlers for some events in different contexts

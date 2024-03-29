@@ -14,7 +14,7 @@ import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
 import { Emission } from "./emission";
-import { Examples, Namespaces, normalizeNS } from "./namespace";
+import { Example, Namespaces, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
 
 interface DocumentationParams {
@@ -29,7 +29,7 @@ interface DocumentationParams {
   config: Config<Namespaces>;
 }
 
-const getEmissionExamples = <T extends Examples<Emission>, V extends keyof T>(
+const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
   event: string,
   variant: V,
   nsExamples?: { [K in string]?: T | T[] },

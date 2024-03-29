@@ -103,8 +103,9 @@ export class Documentation extends AsyncApiBuilder {
         this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
       }
     }
-    for (const [ns, { emission, examples }] of Object.entries(namespaces)) {
-      const channelId = makeCleanId(normalizeNS(ns)) || "Root";
+    for (const [dirty, { emission, examples }] of Object.entries(namespaces)) {
+      const ns = normalizeNS(dirty);
+      const channelId = makeCleanId(ns) || "Root";
       const messages: MessagesObject = {};
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const messageId = lcFirst(
@@ -136,7 +137,7 @@ export class Documentation extends AsyncApiBuilder {
             channelId,
             messageId,
             ackId: ack && ackId,
-            ns: normalizeNS(ns),
+            ns,
           }),
         );
       }
@@ -172,15 +173,15 @@ export class Documentation extends AsyncApiBuilder {
               channelId,
               messageId,
               event,
-              ns: normalizeNS(ns),
+              ns,
               ackId: output && ackId,
             }),
           );
         }
       }
       const channel: ChannelObject = {
-        address: normalizeNS(ns),
-        title: `Namespace ${normalizeNS(ns)}`,
+        address: ns,
+        title: `Namespace ${ns}`,
         bindings: { ws: channelBinding },
         messages,
       };

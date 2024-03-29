@@ -15,8 +15,14 @@ import {
   xprod,
 } from "ramda";
 import { z } from "zod";
+import { MessageObject } from "./async-api/commons";
 import { hasCoercion, tryToTransform } from "./common-helpers";
-import { HandlingRules, HandlingVariant, SchemaHandler } from "./schema-walker";
+import {
+  HandlingRules,
+  HandlingVariant,
+  SchemaHandler,
+  walkSchema,
+} from "./schema-walker";
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
@@ -494,3 +500,54 @@ export const onEach: Depicter<z.ZodTypeAny, "each"> = ({
 
 export const onMissing: Depicter<z.ZodTypeAny, "last"> = ({ schema }) =>
   assert.fail(`Zod type ${schema.constructor.name} is unsupported.`);
+
+/** @desc Add examples to the top level tuples */
+export const withExamples = <T extends SchemaObject | ReferenceObject>(
+  subject: T,
+  examples?: unknown[][],
+): T => {
+  if (isReferenceObject(subject) || !examples) {
+    return subject;
+  }
+  if (subject.type === "object" && subject.format === "tuple") {
+    for (const example of examples) {
+      for (let index = 0; index < example.length; index++) {
+        const strIdx = `${index}`;
+        if (subject.properties && strIdx in subject.properties) {
+          const prop = subject.properties[strIdx];
+          if (!isReferenceObject(prop)) {
+            prop.examples = [...(prop.examples || []), example[index]];
+          }
+        }
+      }
+    }
+  }
+  return subject;
+};
+
+export const depictMessage = ({
+  event,
+  schema,
+  examples,
+  direction,
+  isAck,
+}: {
+  event: string;
+  schema: z.AnyZodTuple;
+  examples?: z.infer<z.AnyZodTuple>[];
+  isAck?: boolean;
+} & AsyncAPIContext): MessageObject => ({
+  name: isAck ? undefined : event,
+  title: isAck ? `Acknowledgement for ${event}` : event,
+  payload: withExamples(
+    walkSchema({ schema, direction, onMissing, onEach, rules: depicters }),
+    examples,
+  ),
+  examples:
+    examples && examples.length
+      ? examples.map((example) => ({
+          summary: "Implies array (tuple)",
+          payload: Object.assign({}, example),
+        }))
+      : undefined,
+});

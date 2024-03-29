@@ -1,10 +1,4 @@
-import {
-  ContactObject,
-  LicenseObject,
-  ReferenceObject,
-  SchemaObject,
-  isReferenceObject,
-} from "openapi3-ts/oas31";
+import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { ChannelObject, MessagesObject } from "./async-api/commons";
@@ -12,7 +6,12 @@ import { AsyncApiBuilder } from "./async-api/document-builder";
 import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
-import { depicters, onEach, onMissing } from "./documentation-helpers";
+import {
+  depictMessage,
+  depicters,
+  onEach,
+  onMissing,
+} from "./documentation-helpers";
 import { Emission } from "./emission";
 import { Example, Namespaces, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
@@ -41,30 +40,6 @@ const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
       .map((example) => example[variant])
       .filter((value): value is NonNullable<typeof value> => !!value)
   );
-};
-
-/** @desc Add examples to the top level tuples */
-export const withExamples = <T extends SchemaObject | ReferenceObject>(
-  subject: T,
-  examples?: unknown[][],
-): T => {
-  if (isReferenceObject(subject) || !examples) {
-    return subject;
-  }
-  if (subject.type === "object" && subject.format === "tuple") {
-    for (const example of examples) {
-      for (let index = 0; index < example.length; index++) {
-        const strIdx = `${index}`;
-        if (subject.properties && strIdx in subject.properties) {
-          const prop = subject.properties[strIdx];
-          if (!isReferenceObject(prop)) {
-            prop.examples = [...(prop.examples || []), example[index]];
-          }
-        }
-      }
-    }
-  }
-  return subject;
 };
 
 const commons = { onEach, onMissing, rules: depicters };
@@ -138,31 +113,21 @@ export class Documentation extends AsyncApiBuilder {
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
         const payloadExamples = getEmissionExamples(event, "payload", examples);
-        messages[messageId] = {
-          name: event,
-          title: event,
-          payload: withExamples(
-            walkSchema({ direction: "out", schema, ...commons }),
-            payloadExamples,
-          ),
-          examples: payloadExamples?.map((example) => ({
-            summary: "Implies array (tuple)",
-            payload: Object.assign({}, example),
-          })),
-        };
+        messages[messageId] = depictMessage({
+          event,
+          schema,
+          direction: "out",
+          examples: payloadExamples,
+        });
         if (ack) {
           const ackExamples = getEmissionExamples(event, "ack", examples);
-          messages[ackId] = {
-            title: `Acknowledgement for ${event}`,
-            payload: withExamples(
-              walkSchema({ direction: "in", schema: ack, ...commons }),
-              ackExamples,
-            ),
-            examples: ackExamples?.map((example) => ({
-              summary: "Implies array (tuple)",
-              payload: Object.assign({}, example),
-            })),
-          };
+          messages[ackId] = depictMessage({
+            event,
+            schema: ack,
+            examples: ackExamples,
+            direction: "in",
+            isAck: true,
+          });
         }
         const sendOperationId = makeCleanId(
           `${channelId} send operation ${event}`,
@@ -199,43 +164,21 @@ export class Documentation extends AsyncApiBuilder {
           );
           const output = action.getSchema("output");
           const inputExamples = action.getExamples("input");
-          messages[messageId] = {
-            name: event,
-            title: event,
-            payload: withExamples(
-              walkSchema({
-                direction: "in",
-                schema: action.getSchema("input"),
-                ...commons,
-              }),
-              inputExamples,
-            ),
-            examples: inputExamples.length
-              ? inputExamples.map((payload) => ({
-                  summary: "Implies array (tuple)",
-                  payload: Object.assign({}, payload),
-                }))
-              : undefined,
-          };
+          messages[messageId] = depictMessage({
+            event,
+            schema: action.getSchema("input"),
+            examples: inputExamples,
+            direction: "in",
+          });
           if (output) {
             const outputExamples = action.getExamples("output");
-            messages[ackId] = {
-              title: `Acknowledgement for ${event}`,
-              payload: withExamples(
-                walkSchema({
-                  direction: "out",
-                  schema: output,
-                  ...commons,
-                }),
-                outputExamples,
-              ),
-              examples: outputExamples.length
-                ? outputExamples.map((payload) => ({
-                    summary: "Implies array (tuple)",
-                    payload: Object.assign({}, payload),
-                  }))
-                : undefined,
-            };
+            messages[ackId] = depictMessage({
+              event,
+              schema: output,
+              examples: outputExamples,
+              direction: "out",
+              isAck: true,
+            });
           }
           const recvOperationId = makeCleanId(
             `${channelId} recv operation ${event}`,

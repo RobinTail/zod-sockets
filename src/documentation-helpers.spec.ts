@@ -30,6 +30,7 @@ import {
   depicters,
   onEach,
   onMissing,
+  withExamples,
 } from "./documentation-helpers";
 import { walkSchema } from "./schema-walker";
 import { describe, expect, test } from "vitest";
@@ -554,5 +555,12 @@ describe("Documentation helpers", () => {
         ).toEqual({});
       },
     );
+  });
+
+  describe("withExamples()", () => {
+    test("should return the subject if it's a reference or no examples given", () => {
+      expect(withExamples({ $ref: "test" })).toEqual({ $ref: "test" });
+      expect(withExamples({ type: "boolean" })).toEqual({ type: "boolean" });
+    });
   });
 });

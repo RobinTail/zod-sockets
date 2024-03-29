@@ -528,6 +528,41 @@ const yamlString = new Documentation({
 See the example of the generated documentation [on GitHub](example/example-documentation.yaml) or
 [open in Studio](https://studio.asyncapi.com/?url=https://raw.githubusercontent.com/RobinTail/zod-sockets/main/example/example-documentation.yaml).
 
+### Adding examples to the documentation
+
+You can add `Action` examples using its `.example()` method, and Emission examples you can describe in the `examples`
+property of namespace config.
+
+```ts
+import { createSimpleConfig, ActionsFactory } from "zod-sockets";
+
+// Examples for outgoing events (emission)
+const config = createSimpleConfig({
+  emission: {
+    event1: { schema },
+    event2: { schema, ack },
+  },
+  examples: {
+    event1: { schema: ["example payload"] }, // single example
+    event2: [
+      // multiple examples
+      { schema: ["example payload"], ack: ["example acknowledgement"] },
+      { schema: ["example payload"], ack: ["example acknowledgement"] },
+    ],
+  },
+});
+
+// Examples for incoming event (action)
+const factory = new ActionsFactory(config);
+const action = factory
+  .build({
+    input: payloadSchema,
+    output: ackSchema,
+  })
+  .example("input", ["example payload"])
+  .example("output", ["example acknowledgement"]);
+```
+
 # Next
 
 More information is coming soon when the public API becomes stable (v1).

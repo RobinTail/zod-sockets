@@ -9,7 +9,7 @@
   - Describe Emission examples using `examples` property in namespace config.
 
 ```ts
-import { createSimpleConfig } from "zod-sockets";
+import { createSimpleConfig, ActionsFactory } from "zod-sockets";
 
 // Examples for outgoing events (emission)
 const config = createSimpleConfig({
@@ -18,23 +18,24 @@ const config = createSimpleConfig({
     event2: { schema, ack },
   },
   examples: {
-    event1: { schema: [] }, // single example
+    event1: { schema: ["example payload"] }, // single example
     event2: [
       // multiple examples
-      { schema: [], ack: [] },
-      { schema: [], ack: [] },
+      { schema: ["example payload"], ack: ["example acknowledgement"] },
+      { schema: ["example payload"], ack: ["example acknowledgement"] },
     ],
   },
 });
 
 // Examples for incoming event (action)
+const factory = new ActionsFactory(config);
 const action = factory
   .build({
     input: payloadSchema,
     output: ackSchema,
   })
   .example("input", ["example payload"])
-  .example("output", ["exacmple acknowledgement"]);
+  .example("output", ["example acknowledgement"]);
 ```
 
 ### v0.13.1

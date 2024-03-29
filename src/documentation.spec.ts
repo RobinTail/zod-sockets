@@ -40,8 +40,8 @@ describe("Documentation", () => {
         (
           (doc.channels!.Root.bindings?.ws?.query as SchemaObject).properties
             ?.EIO as SchemaObject
-        ).enum,
-      ).toEqual([protocol.toString()]);
+        ).const,
+      ).toEqual(protocol.toString());
     });
 
     test("should generate the correct schema for complex types", () => {

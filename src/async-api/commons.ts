@@ -126,11 +126,11 @@ interface Draft07 {
   pattern?: string;
   maxItems?: number;
   minItems?: number;
-  uniqueItems?: boolean; // @todo explore
+  uniqueItems?: boolean;
   maxProperties?: number;
   minProperties?: number;
   enum?: any[];
-  const?: any; // @todo explore: enum of single value
+  const?: any;
   examples?: any[];
   // if,then,else
   readOnly?: boolean;

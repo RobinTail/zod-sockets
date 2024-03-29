@@ -1,7 +1,4 @@
-import type {
-  ServerVariableObject as OASServerVariableObject,
-  SchemaObject,
-} from "openapi3-ts/oas31";
+import type { SchemaObject } from "openapi3-ts/oas31";
 import {
   WSChannelBinding,
   WSMessageBinding,
@@ -95,7 +92,10 @@ export interface ChannelObject {
   bindings?: Bindings<WSChannelBinding>;
 }
 
-export interface ServerVariableObject extends OASServerVariableObject {
+export interface ServerVariableObject {
+  enum?: string[] | boolean[] | number[];
+  default: string | boolean | number;
+  description?: string;
   examples?: string[];
 }
 

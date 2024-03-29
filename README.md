@@ -447,8 +447,8 @@ const handler = async ({ client }) => {
 
 Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
 different essence, payload and handlers. For using namespaces replace the `createSimpleConfig()` method with
-`new Config()`, then use its `.addNamespace()` method for each namespace. Namespaces may have `emission`, `hooks` and
-`metadata`. Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
+`new Config()`, then use its `.addNamespace()` method for each namespace. Namespaces may have `emission`, `examples`,
+`hooks` and `metadata`. Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 ```typescript
 import { Config } from "zod-sockets";
@@ -460,6 +460,7 @@ const config = new Config({
   .addNamespace({
     // The namespace "/public"
     emission: { chat: { schema } },
+    examples: {}, // see Generating documentation section
     hooks: {
       onStartup: () => {},
       onConnection: () => {},

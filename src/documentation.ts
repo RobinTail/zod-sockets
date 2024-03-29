@@ -1,18 +1,18 @@
-import {
-  ContactObject,
-  LicenseObject,
-  ReferenceObject,
-  SchemaObject,
-  isReferenceObject,
-} from "openapi3-ts/oas31";
+import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
-import { ChannelObject, MessagesObject } from "./async-api/commons";
+import { MessagesObject } from "./async-api/commons";
 import { AsyncApiBuilder } from "./async-api/document-builder";
 import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
-import { depicters, onEach, onMissing } from "./documentation-helpers";
+import {
+  depictMessage,
+  depictOperation,
+  depicters,
+  onEach,
+  onMissing,
+} from "./documentation-helpers";
 import { Emission } from "./emission";
 import { Example, Namespaces, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
@@ -43,61 +43,10 @@ const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
   );
 };
 
-/** @desc Add examples to the top level tuples */
-export const withExamples = <T extends SchemaObject | ReferenceObject>(
-  subject: T,
-  examples?: unknown[][],
-): T => {
-  if (isReferenceObject(subject) || !examples) {
-    return subject;
-  }
-  if (subject.type === "object" && subject.format === "tuple") {
-    for (const example of examples) {
-      for (let index = 0; index < example.length; index++) {
-        const strIdx = `${index}`;
-        if (subject.properties && strIdx in subject.properties) {
-          const prop = subject.properties[strIdx];
-          if (!isReferenceObject(prop)) {
-            prop.examples = [...(prop.examples || []), example[index]];
-          }
-        }
-      }
-    }
-  }
-  return subject;
-};
-
 export class Documentation extends AsyncApiBuilder {
-  public constructor({
-    actions,
-    config: { namespaces },
-    title,
-    version,
-    documentId,
-    description,
-    contact,
-    license,
-    servers = {},
-  }: DocumentationParams) {
-    super({
-      info: { title, version, contact, license, description },
-      id: documentId,
-      defaultContentType: "text/plain",
-    });
-    for (const server in servers) {
-      const uri = new URL(servers[server].url);
-      this.addServer(server, {
-        description: servers[server].description,
-        host: uri.host,
-        pathname: uri.pathname,
-        protocol: uri.protocol.slice(0, -1),
-      });
-      if (!this.document.id) {
-        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
-      }
-    }
+  #makeChannelBinding(): WSChannelBinding {
     const commons = { onEach, onMissing, rules: depicters };
-    const channelBinding: WSChannelBinding = {
+    return {
       bindingVersion: "0.1.0",
       method: "GET",
       headers: walkSchema({
@@ -126,9 +75,40 @@ export class Documentation extends AsyncApiBuilder {
         },
       },
     };
+  }
 
-    for (const [ns, { emission, examples }] of Object.entries(namespaces)) {
-      const channelId = makeCleanId(normalizeNS(ns)) || "Root";
+  public constructor({
+    actions,
+    config: { namespaces },
+    title,
+    version,
+    documentId,
+    description,
+    contact,
+    license,
+    servers = {},
+  }: DocumentationParams) {
+    super({
+      info: { title, version, contact, license, description },
+      id: documentId,
+      defaultContentType: "text/plain",
+    });
+    for (const server in servers) {
+      const uri = new URL(servers[server].url);
+      this.addServer(server, {
+        description: servers[server].description,
+        host: uri.host,
+        pathname: uri.pathname,
+        protocol: uri.protocol.slice(0, -1),
+      });
+      if (!this.document.id) {
+        this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
+      }
+    }
+    const channelBinding = this.#makeChannelBinding();
+    for (const [dirty, { emission, examples }] of Object.entries(namespaces)) {
+      const ns = normalizeNS(dirty);
+      const channelId = makeCleanId(ns) || "Root";
       const messages: MessagesObject = {};
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const messageId = lcFirst(
@@ -137,56 +117,32 @@ export class Documentation extends AsyncApiBuilder {
         const ackId = lcFirst(
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
-        const payloadExamples = getEmissionExamples(event, "payload", examples);
-        messages[messageId] = {
-          name: event,
-          title: event,
-          payload: withExamples(
-            walkSchema({ direction: "out", schema, ...commons }),
-            payloadExamples,
-          ),
-          examples: payloadExamples?.map((example) => ({
-            summary: "Implies array (tuple)",
-            payload: Object.assign({}, example),
-          })),
-        };
-        if (ack) {
-          const ackExamples = getEmissionExamples(event, "ack", examples);
-          messages[ackId] = {
-            title: `Acknowledgement for ${event}`,
-            payload: withExamples(
-              walkSchema({ direction: "in", schema: ack, ...commons }),
-              ackExamples,
-            ),
-            examples: ackExamples?.map((example) => ({
-              summary: "Implies array (tuple)",
-              payload: Object.assign({}, example),
-            })),
-          };
-        }
-        const sendOperationId = makeCleanId(
-          `${channelId} send operation ${event}`,
-        );
-        this.addOperation(sendOperationId, {
-          action: "send",
-          channel: { $ref: `#/channels/${channelId}` },
-          messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
-          title: event,
-          summary: `Outgoing event ${event}`,
-          description: `The message produced by the application within the ${normalizeNS(ns)} namespace`,
-          reply: ack
-            ? {
-                address: {
-                  location: "$message.payload#",
-                  description: "Last argument: acknowledgement handler",
-                },
-                channel: { $ref: `#/channels/${channelId}` },
-                messages: [
-                  { $ref: `#/channels/${channelId}/messages/${ackId}` },
-                ],
-              }
-            : undefined,
+        messages[messageId] = depictMessage({
+          event,
+          schema,
+          direction: "out",
+          examples: getEmissionExamples(event, "payload", examples),
         });
+        if (ack) {
+          messages[ackId] = depictMessage({
+            event,
+            schema: ack,
+            examples: getEmissionExamples(event, "ack", examples),
+            direction: "in",
+            isAck: true,
+          });
+        }
+        this.addOperation(
+          makeCleanId(`${channelId} send operation ${event}`),
+          depictOperation({
+            direction: "out",
+            event,
+            channelId,
+            messageId,
+            ackId: ack && ackId,
+            ns,
+          }),
+        );
       }
       for (const action of actions) {
         if (action.getNamespace() === ns) {
@@ -198,79 +154,40 @@ export class Documentation extends AsyncApiBuilder {
             makeCleanId(`${channelId} ack for incoming ${event}`),
           );
           const output = action.getSchema("output");
-          const inputExamples = action.getExamples("input");
-          messages[messageId] = {
-            name: event,
-            title: event,
-            payload: withExamples(
-              walkSchema({
-                direction: "in",
-                schema: action.getSchema("input"),
-                ...commons,
-              }),
-              inputExamples,
-            ),
-            examples: inputExamples.length
-              ? inputExamples.map((payload) => ({
-                  summary: "Implies array (tuple)",
-                  payload: Object.assign({}, payload),
-                }))
-              : undefined,
-          };
-          if (output) {
-            const outputExamples = action.getExamples("output");
-            messages[ackId] = {
-              title: `Acknowledgement for ${event}`,
-              payload: withExamples(
-                walkSchema({
-                  direction: "out",
-                  schema: output,
-                  ...commons,
-                }),
-                outputExamples,
-              ),
-              examples: outputExamples.length
-                ? outputExamples.map((payload) => ({
-                    summary: "Implies array (tuple)",
-                    payload: Object.assign({}, payload),
-                  }))
-                : undefined,
-            };
-          }
-          const recvOperationId = makeCleanId(
-            `${channelId} recv operation ${event}`,
-          );
-          this.addOperation(recvOperationId, {
-            action: "receive",
-            channel: { $ref: `#/channels/${channelId}` },
-            messages: [
-              { $ref: `#/channels/${channelId}/messages/${messageId}` },
-            ],
-            title: event,
-            summary: `Incoming event ${event}`,
-            description: `The message consumed by the application within the ${normalizeNS(ns)} namespace`,
-            reply: output
-              ? {
-                  address: {
-                    location: "$message.payload#",
-                    description: "Last argument: acknowledgement handler",
-                  },
-                  channel: { $ref: `#/channels/${channelId}` },
-                  messages: [
-                    { $ref: `#/channels/${channelId}/messages/${ackId}` },
-                  ],
-                }
-              : undefined,
+          messages[messageId] = depictMessage({
+            event,
+            schema: action.getSchema("input"),
+            examples: action.getExamples("input"),
+            direction: "in",
           });
+          if (output) {
+            messages[ackId] = depictMessage({
+              event,
+              schema: output,
+              examples: action.getExamples("output"),
+              direction: "out",
+              isAck: true,
+            });
+          }
+          this.addOperation(
+            makeCleanId(`${channelId} recv operation ${event}`),
+            depictOperation({
+              direction: "in",
+              channelId,
+              messageId,
+              event,
+              ns,
+              ackId: output && ackId,
+            }),
+          );
         }
       }
-      const channel: ChannelObject = {
-        address: normalizeNS(ns),
-        title: `Namespace ${normalizeNS(ns)}`,
+      this.addChannel(channelId, {
+        address: ns,
+        title: `Namespace ${ns}`,
         bindings: { ws: channelBinding },
         messages,
-      };
-      this.addChannel(channelId, channel);
+      });
     }
   }
 }

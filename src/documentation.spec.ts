@@ -3,7 +3,7 @@ import { config as exampleConfig } from "../example/config";
 import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";
 import { createSimpleConfig } from "./config";
-import { Documentation, withExamples } from "./documentation";
+import { Documentation } from "./documentation";
 import { z } from "zod";
 import { describe, expect, test, vi } from "vitest";
 import { protocol } from "engine.io";
@@ -442,13 +442,6 @@ describe("Documentation", () => {
             title: "Testing unsupported types",
           }),
       ).toThrow(`Zod type ${zodType._def.typeName} is unsupported.`);
-    });
-  });
-
-  describe("withExamples()", () => {
-    test("should return the subject if it's a reference or no examples given", () => {
-      expect(withExamples({ $ref: "test" })).toEqual({ $ref: "test" });
-      expect(withExamples({ type: "boolean" })).toEqual({ type: "boolean" });
     });
   });
 });

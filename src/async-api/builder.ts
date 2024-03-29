@@ -3,7 +3,7 @@ import {
   ChannelObject,
   OperationObject,
   ServerObject,
-} from "./commons";
+} from "./model";
 import yaml from "yaml";
 
 export class AsyncApiBuilder {

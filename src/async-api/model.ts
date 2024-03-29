@@ -1,9 +1,4 @@
-import {
-  WSChannelBinding,
-  WSMessageBinding,
-  WSOperationBinding,
-  WSServerBinding,
-} from "./ws-binding";
+import { WS } from "./websockets";
 
 /**
  * @fileoverview AsyncAPI specification
@@ -26,7 +21,7 @@ export interface ServerObject {
   security?: SecuritySchemeObject[];
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Bindings<WSServerBinding>;
+  bindings?: Bindings<WS.Server>;
 }
 
 export interface ContactObject {
@@ -88,7 +83,7 @@ export interface ChannelObject {
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   /** @desc Map describing protocol-specific definitions for a channel. */
-  bindings?: Bindings<WSChannelBinding>;
+  bindings?: Bindings<WS.Channel>;
 }
 
 export interface ServerVariableObject {
@@ -196,10 +191,10 @@ export interface ComponentsObject {
   operationTraits?: Record<string, OperationTraitObject>;
   messageTraits?: Record<string, MessageTraitObject>;
   replies?: Record<string, OperationReplyObject>;
-  serverBindings?: Bindings<WSServerBinding>;
-  channelBindings?: Bindings<WSChannelBinding>;
-  operationBindings?: Bindings<WSOperationBinding>;
-  messageBindings?: Bindings<WSMessageBinding>;
+  serverBindings?: Bindings<WS.Server>;
+  channelBindings?: Bindings<WS.Channel>;
+  operationBindings?: Bindings<WS.Operation>;
+  messageBindings?: Bindings<WS.Message>;
 }
 
 /** @since 3.0.0 supports MultiFormatSchemaObject in payload */
@@ -265,7 +260,7 @@ export interface OperationTraitObject {
   security?: SecuritySchemeObject[];
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Bindings<WSOperationBinding>;
+  bindings?: Bindings<WS.Operation>;
 }
 
 /** @since 3.0.0 messageId moved to MessagesObject, schemaFormat moved to MultiFormatSchemaObject */
@@ -279,7 +274,7 @@ export interface MessageTraitObject {
   description?: string;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
-  bindings?: Bindings<WSMessageBinding>;
+  bindings?: Bindings<WS.Message>;
   examples?: MessageExampleObject[];
 }
 

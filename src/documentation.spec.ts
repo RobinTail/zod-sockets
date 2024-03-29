@@ -1,4 +1,4 @@
-import { SchemaObject } from "./async-api/commons";
+import { SchemaObject } from "./async-api/model";
 import { config as exampleConfig } from "../example/config";
 import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";

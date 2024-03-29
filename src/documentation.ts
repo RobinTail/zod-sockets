@@ -4,9 +4,9 @@ import {
   ContactObject,
   LicenseObject,
   MessagesObject,
-} from "./async-api/commons";
-import { AsyncApiBuilder } from "./async-api/document-builder";
-import { WSChannelBinding } from "./async-api/ws-binding";
+} from "./async-api/model";
+import { AsyncApiBuilder } from "./async-api/builder";
+import { WS } from "./async-api/websockets";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import {
@@ -47,7 +47,7 @@ const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
 };
 
 export class Documentation extends AsyncApiBuilder {
-  #makeChannelBinding(): WSChannelBinding {
+  #makeChannelBinding(): WS.Channel {
     const commons = { onEach, onMissing, rules: depicters };
     return {
       bindingVersion: "0.1.0",

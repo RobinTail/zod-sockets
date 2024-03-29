@@ -62,9 +62,7 @@ exports[`Documentation helpers > depictDefault() > should set default property 1
 
 exports[`Documentation helpers > depictDiscriminatedUnion() > should wrap next depicters in oneOf prop and set discriminator prop 1`] = `
 {
-  "discriminator": {
-    "propertyName": "status",
-  },
+  "discriminator": "status",
   "oneOf": [
     {
       "properties": {

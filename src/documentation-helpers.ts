@@ -1,11 +1,5 @@
 import assert from "node:assert/strict";
 import {
-  ReferenceObject,
-  SchemaObject,
-  SchemaObjectType,
-  isReferenceObject,
-} from "openapi3-ts/oas31";
-import {
   concat,
   fromPairs,
   map,
@@ -15,7 +9,14 @@ import {
   xprod,
 } from "ramda";
 import { z } from "zod";
-import { MessageObject, OperationObject } from "./async-api/commons";
+import {
+  MessageObject,
+  OperationObject,
+  ReferenceObject,
+  SchemaObject,
+  SchemaObjectType,
+} from "./async-api/commons";
+import { isReferenceObject } from "./async-api/helpers";
 import { hasCoercion, tryToTransform } from "./common-helpers";
 import {
   HandlingRules,
@@ -72,7 +73,7 @@ export const depictDiscriminatedUnion: Depicter<
   z.ZodDiscriminatedUnion<string, z.ZodDiscriminatedUnionOption<string>[]>
 > = ({ schema: { options, discriminator }, next }) => {
   return {
-    discriminator: { propertyName: discriminator },
+    discriminator,
     oneOf: Array.from(options.values()).map(next),
   };
 };

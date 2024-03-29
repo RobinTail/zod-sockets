@@ -1,4 +1,4 @@
-import { SchemaObject } from "openapi3-ts/oas31";
+import { SchemaObject } from "./async-api/commons";
 import { config as exampleConfig } from "../example/config";
 import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";

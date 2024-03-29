@@ -176,8 +176,7 @@ channels:
           format: tuple
           properties:
             "0":
-              discriminator:
-                propertyName: type
+              discriminator: type
               oneOf:
                 - type: object
                   properties:
@@ -211,8 +210,7 @@ channels:
           format: tuple
           properties:
             "0":
-              discriminator:
-                propertyName: status
+              discriminator: status
               oneOf:
                 - type: object
                   properties:

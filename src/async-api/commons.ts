@@ -108,7 +108,7 @@ export type SchemaObjectType =
   | "array";
 
 /**
- * @desc extends DRAFT-07
+ * @desc DRAFT-07
  * @link https://json-schema.org/specification-links#draft-7
  * @link https://json-schema.org/draft-07/draft-handrews-json-schema-validation-01
  * */
@@ -130,7 +130,7 @@ interface Draft07 {
   maxProperties?: number;
   minProperties?: number;
   enum?: any[];
-  const: any; // @todo explore: enum of single value
+  const?: any; // @todo explore: enum of single value
   examples?: any[];
   // if,then,else
   readOnly?: boolean;

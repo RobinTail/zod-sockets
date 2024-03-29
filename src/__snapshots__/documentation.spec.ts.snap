@@ -683,9 +683,15 @@ channels:
             "0":
               type: string
               description: current ISO time
+              examples:
+                - 2024-03-28T21:13:15.084Z
           required:
             - "0"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": 2024-03-28T21:13:15.084Z
       rootOutgoingChat:
         name: chat
         title: chat
@@ -696,6 +702,8 @@ channels:
             "0":
               type: string
               description: message
+              examples:
+                - Hello there!
             "1":
               type: object
               properties:
@@ -705,10 +713,18 @@ channels:
               required:
                 - from
               description: extra info
+              examples:
+                - &a1
+                  from: 123abc
           required:
             - "0"
             - "1"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": Hello there!
+              "1": *a1
       rootOutgoingRooms:
         name: rooms
         title: rooms
@@ -721,9 +737,24 @@ channels:
               items:
                 type: string
               description: room IDs
+              examples:
+                - &a2
+                  - room1
+                  - room2
+                - &a3
+                  - room3
+                  - room4
+                  - room5
           required:
             - "0"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": *a2
+          - summary: Implies array (tuple)
+            payload:
+              "0": *a3
       rootIncomingChat:
         name: chat
         title: chat
@@ -734,9 +765,15 @@ channels:
             "0":
               type: string
               description: message
+              examples:
+                - Hello there
           required:
             - "0"
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": Hello there
       rootIncomingPing:
         name: ping
         title: ping
@@ -748,6 +785,10 @@ channels:
           additionalProperties:
             format: any
             description: Anything
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": something
       rootAckForIncomingPing:
         title: Acknowledgement for ping
         payload:
@@ -759,11 +800,18 @@ channels:
               enum:
                 - pong
               description: literally
+              examples:
+                - pong
           required:
             - "0"
           additionalProperties:
             format: any
             description: echo
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": pong
+              "1": something
       rootIncomingSubscribe:
         name: subscribe
         title: subscribe
@@ -2063,6 +2111,9 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload: {}
       testAckForOutgoingWithAck:
         title: Acknowledgement for withAck
         payload:
@@ -2071,10 +2122,16 @@ channels:
           properties:
             "0":
               format: any
+              examples:
+                - something
           required:
             - "0"
           additionalProperties:
             format: any
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": something
 components: {}
 operations:
   RootRecvOperationTest:

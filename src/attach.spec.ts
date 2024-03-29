@@ -57,6 +57,8 @@ describe("Attach", () => {
         getNamespace: () => "/",
         getEvent: () => "test",
         getSchema: vi.fn(),
+        example: vi.fn(),
+        getExamples: vi.fn(),
       },
     ];
 

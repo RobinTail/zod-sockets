@@ -1,13 +1,20 @@
-import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
+import {
+  ContactObject,
+  LicenseObject,
+  ReferenceObject,
+  SchemaObject,
+  isReferenceObject,
+} from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
-import { AsyncApiBuilder } from "./async-api/document-builder";
 import { ChannelObject, MessagesObject } from "./async-api/commons";
+import { AsyncApiBuilder } from "./async-api/document-builder";
 import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { depicters, onEach, onMissing } from "./documentation-helpers";
-import { Namespaces, normalizeNS } from "./namespace";
+import { Emission } from "./emission";
+import { Example, Namespaces, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
 
 interface DocumentationParams {
@@ -21,6 +28,44 @@ interface DocumentationParams {
   actions: AbstractAction[];
   config: Config<Namespaces>;
 }
+
+const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
+  event: string,
+  variant: V,
+  nsExamples?: { [K in string]?: T | T[] },
+): NonNullable<T[V]>[] | undefined => {
+  const eventExamples = nsExamples?.[event];
+  return (
+    eventExamples &&
+    (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
+      .map((example) => example[variant])
+      .filter((value): value is NonNullable<typeof value> => !!value)
+  );
+};
+
+/** @desc Add examples to the top level tuples */
+export const withExamples = <T extends SchemaObject | ReferenceObject>(
+  subject: T,
+  examples?: unknown[][],
+): T => {
+  if (isReferenceObject(subject) || !examples) {
+    return subject;
+  }
+  if (subject.type === "object" && subject.format === "tuple") {
+    for (const example of examples) {
+      for (let index = 0; index < example.length; index++) {
+        const strIdx = `${index}`;
+        if (subject.properties && strIdx in subject.properties) {
+          const prop = subject.properties[strIdx];
+          if (!isReferenceObject(prop)) {
+            prop.examples = [...(prop.examples || []), example[index]];
+          }
+        }
+      }
+    }
+  }
+  return subject;
+};
 
 export class Documentation extends AsyncApiBuilder {
   public constructor({
@@ -82,7 +127,7 @@ export class Documentation extends AsyncApiBuilder {
       },
     };
 
-    for (const [ns, { emission }] of Object.entries(namespaces)) {
+    for (const [ns, { emission, examples }] of Object.entries(namespaces)) {
       const channelId = makeCleanId(normalizeNS(ns)) || "Root";
       const messages: MessagesObject = {};
       for (const [event, { schema, ack }] of Object.entries(emission)) {
@@ -92,15 +137,31 @@ export class Documentation extends AsyncApiBuilder {
         const ackId = lcFirst(
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
+        const payloadExamples = getEmissionExamples(event, "payload", examples);
         messages[messageId] = {
           name: event,
           title: event,
-          payload: walkSchema({ direction: "out", schema, ...commons }),
+          payload: withExamples(
+            walkSchema({ direction: "out", schema, ...commons }),
+            payloadExamples,
+          ),
+          examples: payloadExamples?.map((example) => ({
+            summary: "Implies array (tuple)",
+            payload: Object.assign({}, example),
+          })),
         };
         if (ack) {
+          const ackExamples = getEmissionExamples(event, "ack", examples);
           messages[ackId] = {
             title: `Acknowledgement for ${event}`,
-            payload: walkSchema({ direction: "in", schema: ack, ...commons }),
+            payload: withExamples(
+              walkSchema({ direction: "in", schema: ack, ...commons }),
+              ackExamples,
+            ),
+            examples: ackExamples?.map((example) => ({
+              summary: "Implies array (tuple)",
+              payload: Object.assign({}, example),
+            })),
           };
         }
         const sendOperationId = makeCleanId(
@@ -137,23 +198,43 @@ export class Documentation extends AsyncApiBuilder {
             makeCleanId(`${channelId} ack for incoming ${event}`),
           );
           const output = action.getSchema("output");
+          const inputExamples = action.getExamples("input");
           messages[messageId] = {
             name: event,
             title: event,
-            payload: walkSchema({
-              direction: "in",
-              schema: action.getSchema("input"),
-              ...commons,
-            }),
-          };
-          if (output) {
-            messages[ackId] = {
-              title: `Acknowledgement for ${event}`,
-              payload: walkSchema({
-                direction: "out",
-                schema: output,
+            payload: withExamples(
+              walkSchema({
+                direction: "in",
+                schema: action.getSchema("input"),
                 ...commons,
               }),
+              inputExamples,
+            ),
+            examples: inputExamples.length
+              ? inputExamples.map((payload) => ({
+                  summary: "Implies array (tuple)",
+                  payload: Object.assign({}, payload),
+                }))
+              : undefined,
+          };
+          if (output) {
+            const outputExamples = action.getExamples("output");
+            messages[ackId] = {
+              title: `Acknowledgement for ${event}`,
+              payload: withExamples(
+                walkSchema({
+                  direction: "out",
+                  schema: output,
+                  ...commons,
+                }),
+                outputExamples,
+              ),
+              examples: outputExamples.length
+                ? outputExamples.map((payload) => ({
+                    summary: "Implies array (tuple)",
+                    payload: Object.assign({}, payload),
+                  }))
+                : undefined,
             };
           }
           const recvOperationId = makeCleanId(

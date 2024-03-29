@@ -60,35 +60,27 @@ channels:
         name: time
         title: time
         payload:
-          type: object
-          format: tuple
-          properties:
-            "0":
-              type: string
+          type: array
+          items:
+            - type: string
               description: current ISO time
               examples:
                 - 2024-03-28T21:13:15.084Z
-          required:
-            - "0"
-          additionalProperties: false
+          additionalItems: false
         examples:
-          - summary: Implies array (tuple)
-            payload:
-              "0": 2024-03-28T21:13:15.084Z
+          - payload:
+              - 2024-03-28T21:13:15.084Z
       rootOutgoingChat:
         name: chat
         title: chat
         payload:
-          type: object
-          format: tuple
-          properties:
-            "0":
-              type: string
+          type: array
+          items:
+            - type: string
               description: message
               examples:
                 - Hello there!
-            "1":
-              type: object
+            - type: object
               properties:
                 from:
                   type: string
@@ -99,24 +91,18 @@ channels:
               examples:
                 - &a1
                   from: 123abc
-          required:
-            - "0"
-            - "1"
-          additionalProperties: false
+          additionalItems: false
         examples:
-          - summary: Implies array (tuple)
-            payload:
-              "0": Hello there!
-              "1": *a1
+          - payload:
+              - Hello there!
+              - *a1
       rootOutgoingRooms:
         name: rooms
         title: rooms
         payload:
-          type: object
-          format: tuple
-          properties:
-            "0":
-              type: array
+          type: array
+          items:
+            - type: array
               items:
                 type: string
               description: room IDs
@@ -128,81 +114,60 @@ channels:
                   - room3
                   - room4
                   - room5
-          required:
-            - "0"
-          additionalProperties: false
+          additionalItems: false
         examples:
-          - summary: Implies array (tuple)
-            payload:
-              "0": *a2
-          - summary: Implies array (tuple)
-            payload:
-              "0": *a3
+          - payload:
+              - *a2
+          - payload:
+              - *a3
       rootIncomingChat:
         name: chat
         title: chat
         payload:
-          type: object
-          format: tuple
-          properties:
-            "0":
-              type: string
+          type: array
+          items:
+            - type: string
               description: message
               examples:
                 - Hello there
-          required:
-            - "0"
-          additionalProperties: false
+          additionalItems: false
         examples:
-          - summary: Implies array (tuple)
-            payload:
-              "0": Hello there
+          - payload:
+              - Hello there
       rootIncomingPing:
         name: ping
         title: ping
         payload:
-          type: object
-          format: tuple
-          properties: {}
-          required: []
-          additionalProperties:
+          type: array
+          additionalItems:
             format: any
             description: Anything
         examples:
-          - summary: Implies array (tuple)
-            payload:
-              "0": something
+          - payload:
+              - something
       rootAckForIncomingPing:
         title: Acknowledgement for ping
         payload:
-          type: object
-          format: tuple
-          properties:
-            "0":
-              type: string
+          type: array
+          items:
+            - type: string
               const: pong
               description: literally
               examples:
                 - pong
-          required:
-            - "0"
-          additionalProperties:
+          additionalItems:
             format: any
             description: echo
         examples:
-          - summary: Implies array (tuple)
-            payload:
-              "0": pong
-              "1": something
+          - payload:
+              - pong
+              - something
       rootIncomingSubscribe:
         name: subscribe
         title: subscribe
         payload:
-          type: object
-          format: tuple
-          properties: {}
-          required: []
-          additionalProperties:
+          type: array
+          additionalItems:
             format: any
             description: Does not matter
 components: {}

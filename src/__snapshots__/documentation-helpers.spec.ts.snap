@@ -702,28 +702,44 @@ exports[`Documentation helpers > depictString() > should set type:string 1`] = `
 }
 `;
 
-exports[`Documentation helpers > depictTuple() > should depict as an object with numeric keys 1`] = `
+exports[`Documentation helpers > depictTuple() > must use no items if the tuple is empty 1`] = `
 {
-  "additionalProperties": false,
-  "format": "tuple",
-  "properties": {
-    "0": {
+  "additionalItems": false,
+  "items": undefined,
+  "type": "array",
+}
+`;
+
+exports[`Documentation helpers > depictTuple() > should depict as array with individual items 1`] = `
+{
+  "additionalItems": false,
+  "items": [
+    {
       "type": "boolean",
     },
-    "1": {
+    {
       "type": "string",
     },
-    "2": {
+    {
       "const": "test",
       "type": "string",
     },
-  },
-  "required": [
-    "0",
-    "1",
-    "2",
   ],
-  "type": "object",
+  "type": "array",
+}
+`;
+
+exports[`Documentation helpers > depictTuple() > should depict rest if defined 1`] = `
+{
+  "additionalItems": {
+    "type": "string",
+  },
+  "items": [
+    {
+      "type": "boolean",
+    },
+  ],
+  "type": "array",
 }
 `;
 

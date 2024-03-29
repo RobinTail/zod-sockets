@@ -1,13 +1,5 @@
 import assert from "node:assert/strict";
-import {
-  concat,
-  fromPairs,
-  map,
-  mergeDeepWith,
-  range,
-  union,
-  xprod,
-} from "ramda";
+import { concat, fromPairs, map, mergeDeepWith, union, xprod } from "ramda";
 import { z } from "zod";
 import {
   MessageObject,
@@ -254,10 +246,7 @@ export const depictArray: Depicter<z.ZodArray<z.ZodTypeAny>> = ({
   return result;
 };
 
-/**
- * @desc AsyncAPI does not support prefixItems, so tuples are depicted as objects with numeric properties
- * @todo use prefixItems when supported
- * */
+/** @desc AsyncAPI uses items of draft-07 instead of prefixItems */
 export const depictTuple: Depicter<z.AnyZodTuple> = ({
   schema: {
     items,
@@ -265,14 +254,11 @@ export const depictTuple: Depicter<z.AnyZodTuple> = ({
   },
   next,
 }) => ({
-  type: "object",
-  format: "tuple",
-  properties: items.reduce(
-    (agg, item, index) => ({ ...agg, [index]: next(item) }),
-    {},
-  ),
-  required: range(0, items.length).map(String),
-  additionalProperties: rest === null ? false : next(rest),
+  type: "array",
+  items: items.length
+    ? (items.map(next) as [SchemaObject, ...SchemaObject[]]) // ensured by length
+    : undefined,
+  additionalItems: rest === null ? false : next(rest),
 });
 
 export const depictString: Depicter<z.ZodString> = ({
@@ -510,15 +496,16 @@ export const withExamples = <T extends SchemaObject | ReferenceObject>(
   if (isReferenceObject(subject) || !examples) {
     return subject;
   }
-  if (subject.type === "object" && subject.format === "tuple") {
+  if (
+    subject.type === "array" &&
+    subject.items &&
+    Array.isArray(subject.items)
+  ) {
     for (const example of examples) {
       for (let index = 0; index < example.length; index++) {
-        const strIdx = `${index}`;
-        if (subject.properties && strIdx in subject.properties) {
-          const prop = subject.properties[strIdx];
-          if (!isReferenceObject(prop)) {
-            prop.examples = [...(prop.examples || []), example[index]];
-          }
+        const item = subject.items[index];
+        if (item && !isReferenceObject(item)) {
+          item.examples = [...(item.examples || []), example[index]];
         }
       }
     }
@@ -546,10 +533,7 @@ export const depictMessage = ({
   ),
   examples:
     examples && examples.length
-      ? examples.map((example) => ({
-          summary: "Implies array (tuple)",
-          payload: Object.assign({}, example),
-        }))
+      ? examples.map((example) => ({ payload: example }))
       : undefined,
 });
 

@@ -369,10 +369,28 @@ describe("Documentation helpers", () => {
   });
 
   describe("depictTuple()", () => {
-    test("should depict as an object with numeric keys", () => {
+    test("should depict as array with individual items", () => {
       expect(
         depictTuple({
           schema: z.tuple([z.boolean(), z.string(), z.literal("test")]),
+          ...requestCtx,
+          next: makeNext(requestCtx),
+        }),
+      ).toMatchSnapshot();
+    });
+    test("should depict rest if defined", () => {
+      expect(
+        depictTuple({
+          schema: z.tuple([z.boolean()]).rest(z.string()),
+          ...requestCtx,
+          next: makeNext(requestCtx),
+        }),
+      ).toMatchSnapshot();
+    });
+    test("must use no items if the tuple is empty", () => {
+      expect(
+        depictTuple({
+          schema: z.tuple([]),
           ...requestCtx,
           next: makeNext(requestCtx),
         }),

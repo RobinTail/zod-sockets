@@ -1,7 +1,5 @@
 import type {
-  InfoObject as OASInfoObject,
   ServerVariableObject as OASServerVariableObject,
-  ReferenceObject,
   SchemaObject,
 } from "openapi3-ts/oas31";
 import {
@@ -35,8 +33,25 @@ export interface ServerObject {
   bindings?: Bindings<WSServerBinding>;
 }
 
+export interface ContactObject {
+  name?: string;
+  url?: string;
+  email?: string;
+}
+
+export interface LicenseObject {
+  name: string;
+  url?: string;
+}
+
 /** @since 3.0.0 contains tags and externalDocs */
-export interface InfoObject extends OASInfoObject {
+export interface InfoObject {
+  title: string;
+  version: string;
+  description?: string;
+  termsOfService?: string;
+  contact?: ContactObject;
+  license?: LicenseObject;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
 }
@@ -58,6 +73,10 @@ export interface AsyncApiObject {
  * @since 3.0.0 An identifier for the described channel. The channelId value is case-sensitive.
  * */
 export type ChannelsObject = Record<string, ChannelObject>;
+
+export interface ReferenceObject {
+  $ref: string;
+}
 
 /** @since 3.0.0 renamed; added address, title, summary, messages, servers, tags, externalDocs; removed pubs/subs */
 export interface ChannelObject {

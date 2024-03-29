@@ -4,7 +4,8 @@
 
 ### v0.14.1
 
-- Fixed broken publishing workflow.
+- Fixed broken publishing workflow (broken release).
+- The following versions and deprecated: 0.14.0, 0.13.1, 0.13.0, 0.12.0, 0.11.3, 0.11.2.
 
 ### v0.14.0
 

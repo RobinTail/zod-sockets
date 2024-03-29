@@ -15,7 +15,7 @@ import {
   xprod,
 } from "ramda";
 import { z } from "zod";
-import { MessageObject } from "./async-api/commons";
+import { MessageObject, OperationObject } from "./async-api/commons";
 import { hasCoercion, tryToTransform } from "./common-helpers";
 import {
   HandlingRules,
@@ -550,4 +550,38 @@ export const depictMessage = ({
           payload: Object.assign({}, example),
         }))
       : undefined,
+});
+
+export const depictOperation = ({
+  direction,
+  channelId,
+  messageId,
+  ackId,
+  event,
+  ns,
+}: {
+  channelId: string;
+  messageId: string;
+  ackId?: string;
+  event: string;
+  ns: string;
+} & AsyncAPIContext): OperationObject => ({
+  action: direction === "out" ? "send" : "receive",
+  channel: { $ref: `#/channels/${channelId}` },
+  messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
+  title: event,
+  summary: `${direction === "out" ? "Outgoing" : "Incoming"} event ${event}`,
+  description:
+    `The message ${direction === "out" ? "produced" : "consumed"} by ` +
+    `the application within the ${ns} namespace`,
+  reply: ackId
+    ? {
+        address: {
+          location: "$message.payload#",
+          description: "Last argument: acknowledgement handler",
+        },
+        channel: { $ref: `#/channels/${channelId}` },
+        messages: [{ $ref: `#/channels/${channelId}/messages/${ackId}` }],
+      }
+    : undefined,
 });

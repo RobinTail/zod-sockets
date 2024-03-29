@@ -8,6 +8,7 @@ import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import {
   depictMessage,
+  depictOperation,
   depicters,
   onEach,
   onMissing,
@@ -127,29 +128,17 @@ export class Documentation extends AsyncApiBuilder {
             isAck: true,
           });
         }
-        const sendOperationId = makeCleanId(
-          `${channelId} send operation ${event}`,
+        this.addOperation(
+          makeCleanId(`${channelId} send operation ${event}`),
+          depictOperation({
+            direction: "out",
+            event,
+            channelId,
+            messageId,
+            ackId: ack && ackId,
+            ns: normalizeNS(ns),
+          }),
         );
-        this.addOperation(sendOperationId, {
-          action: "send",
-          channel: { $ref: `#/channels/${channelId}` },
-          messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
-          title: event,
-          summary: `Outgoing event ${event}`,
-          description: `The message produced by the application within the ${normalizeNS(ns)} namespace`,
-          reply: ack
-            ? {
-                address: {
-                  location: "$message.payload#",
-                  description: "Last argument: acknowledgement handler",
-                },
-                channel: { $ref: `#/channels/${channelId}` },
-                messages: [
-                  { $ref: `#/channels/${channelId}/messages/${ackId}` },
-                ],
-              }
-            : undefined,
-        });
       }
       for (const action of actions) {
         if (action.getNamespace() === ns) {
@@ -176,31 +165,17 @@ export class Documentation extends AsyncApiBuilder {
               isAck: true,
             });
           }
-          const recvOperationId = makeCleanId(
-            `${channelId} recv operation ${event}`,
+          this.addOperation(
+            makeCleanId(`${channelId} recv operation ${event}`),
+            depictOperation({
+              direction: "in",
+              channelId,
+              messageId,
+              event,
+              ns: normalizeNS(ns),
+              ackId: output && ackId,
+            }),
           );
-          this.addOperation(recvOperationId, {
-            action: "receive",
-            channel: { $ref: `#/channels/${channelId}` },
-            messages: [
-              { $ref: `#/channels/${channelId}/messages/${messageId}` },
-            ],
-            title: event,
-            summary: `Incoming event ${event}`,
-            description: `The message consumed by the application within the ${normalizeNS(ns)} namespace`,
-            reply: output
-              ? {
-                  address: {
-                    location: "$message.payload#",
-                    description: "Last argument: acknowledgement handler",
-                  },
-                  channel: { $ref: `#/channels/${channelId}` },
-                  messages: [
-                    { $ref: `#/channels/${channelId}/messages/${ackId}` },
-                  ],
-                }
-              : undefined,
-          });
         }
       }
       const channel: ChannelObject = {

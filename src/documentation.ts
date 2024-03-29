@@ -112,19 +112,17 @@ export class Documentation extends AsyncApiBuilder {
         const ackId = lcFirst(
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
-        const payloadExamples = getEmissionExamples(event, "payload", examples);
         messages[messageId] = depictMessage({
           event,
           schema,
           direction: "out",
-          examples: payloadExamples,
+          examples: getEmissionExamples(event, "payload", examples),
         });
         if (ack) {
-          const ackExamples = getEmissionExamples(event, "ack", examples);
           messages[ackId] = depictMessage({
             event,
             schema: ack,
-            examples: ackExamples,
+            examples: getEmissionExamples(event, "ack", examples),
             direction: "in",
             isAck: true,
           });
@@ -163,19 +161,17 @@ export class Documentation extends AsyncApiBuilder {
             makeCleanId(`${channelId} ack for incoming ${event}`),
           );
           const output = action.getSchema("output");
-          const inputExamples = action.getExamples("input");
           messages[messageId] = depictMessage({
             event,
             schema: action.getSchema("input"),
-            examples: inputExamples,
+            examples: action.getExamples("input"),
             direction: "in",
           });
           if (output) {
-            const outputExamples = action.getExamples("output");
             messages[ackId] = depictMessage({
               event,
               schema: output,
-              examples: outputExamples,
+              examples: action.getExamples("output"),
               direction: "out",
               isAck: true,
             });

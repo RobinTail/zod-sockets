@@ -2,6 +2,16 @@
 
 ## Version 0
 
+### v0.14.2
+
+- Detaching from OpenAPI:
+  - Reducing dependencies;
+  - AsyncAPI 3.0.0 stricter compliance;
+  - Extending from JSON Schema Draft-07 with several proprietary features of AsyncAPI standard.
+- Several adjustments made in this regard:
+  - `discriminator` field changed to `string`;
+  - using `const` field for `z.literal()`.
+
 ### v0.14.1
 
 - Fixed broken publishing workflow (broken release).

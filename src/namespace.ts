@@ -21,6 +21,7 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
    * @default {}
    * */
   emission: E;
+  /** @desc Examples for the emission per event */
   examples?: {
     [K in keyof E]?: Example<E[K]> | Example<E[K]>[];
   };

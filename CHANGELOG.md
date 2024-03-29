@@ -2,6 +2,41 @@
 
 ## Version 0
 
+### v0.14.0
+
+- Featuring examples in the generated documentation:
+  - Describe `Action` examples using its `.example()` method;
+  - Describe Emission examples using `examples` property in namespace config.
+
+```ts
+import { createSimpleConfig } from "zod-sockets";
+
+// Examples for outgoing events (emission)
+const config = createSimpleConfig({
+  emission: {
+    event1: { schema },
+    event2: { schema, ack },
+  },
+  examples: {
+    event1: { schema: [] }, // single example
+    event2: [
+      // multiple examples
+      { schema: [], ack: [] },
+      { schema: [], ack: [] },
+    ],
+  },
+});
+
+// Examples for incoming event (action)
+const action = factory
+  .build({
+    input: payloadSchema,
+    output: ackSchema,
+  })
+  .example("input", ["example payload"])
+  .example("output", ["exacmple acknowledgement"]);
+```
+
 ### v0.13.1
 
 - Minor adjustments to the documentation.

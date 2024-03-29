@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.15.0
+
+- Major improvement to the generated documentation: depicting payloads as actual tuples they are.
+
 ### v0.14.2
 
 - Detaching from OpenAPI:

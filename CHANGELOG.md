@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.14.1
+
+- Fixed broken publishing workflow.
+
 ### v0.14.0
 
 - Featuring examples in the generated documentation:

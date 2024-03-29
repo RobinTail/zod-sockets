@@ -29,19 +29,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -183,8 +180,7 @@ channels:
           properties:
             "0":
               type: string
-              enum:
-                - pong
+              const: pong
               description: literally
               examples:
                 - pong

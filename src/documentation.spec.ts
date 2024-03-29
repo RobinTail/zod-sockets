@@ -1,4 +1,4 @@
-import { SchemaObject } from "openapi3-ts/oas31";
+import { SchemaObject } from "./async-api/commons";
 import { config as exampleConfig } from "../example/config";
 import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";
@@ -40,8 +40,8 @@ describe("Documentation", () => {
         (
           (doc.channels!.Root.bindings?.ws?.query as SchemaObject).properties
             ?.EIO as SchemaObject
-        ).enum,
-      ).toEqual([protocol.toString()]);
+        ).const,
+      ).toEqual(protocol.toString());
     });
 
     test("should generate the correct schema for complex types", () => {

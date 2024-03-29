@@ -1,9 +1,3 @@
-import type {
-  InfoObject as OASInfoObject,
-  ServerVariableObject as OASServerVariableObject,
-  ReferenceObject,
-  SchemaObject,
-} from "openapi3-ts/oas31";
 import {
   WSChannelBinding,
   WSMessageBinding,
@@ -35,8 +29,25 @@ export interface ServerObject {
   bindings?: Bindings<WSServerBinding>;
 }
 
+export interface ContactObject {
+  name?: string;
+  url?: string;
+  email?: string;
+}
+
+export interface LicenseObject {
+  name: string;
+  url?: string;
+}
+
 /** @since 3.0.0 contains tags and externalDocs */
-export interface InfoObject extends OASInfoObject {
+export interface InfoObject {
+  title: string;
+  version: string;
+  description?: string;
+  termsOfService?: string;
+  contact?: ContactObject;
+  license?: LicenseObject;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
 }
@@ -59,6 +70,10 @@ export interface AsyncApiObject {
  * */
 export type ChannelsObject = Record<string, ChannelObject>;
 
+export interface ReferenceObject {
+  $ref: string;
+}
+
 /** @since 3.0.0 renamed; added address, title, summary, messages, servers, tags, externalDocs; removed pubs/subs */
 export interface ChannelObject {
   /** @desc Typically the "topic name", "routing key", "event type", or "path". */
@@ -76,8 +91,96 @@ export interface ChannelObject {
   bindings?: Bindings<WSChannelBinding>;
 }
 
-export interface ServerVariableObject extends OASServerVariableObject {
+export interface ServerVariableObject {
+  enum?: string[] | boolean[] | number[];
+  default: string | boolean | number;
+  description?: string;
   examples?: string[];
+}
+
+export type SchemaObjectType =
+  | "integer"
+  | "number"
+  | "string"
+  | "boolean"
+  | "object"
+  | "null"
+  | "array";
+
+/**
+ * @desc DRAFT-07
+ * @link https://json-schema.org/specification-links#draft-7
+ * @link https://json-schema.org/draft-07/draft-handrews-json-schema-validation-01
+ * */
+interface Draft07 {
+  title?: string;
+  type?: SchemaObjectType | SchemaObjectType[];
+  required?: string[];
+  multipleOf?: number;
+  maximum?: number;
+  exclusiveMaximum?: number;
+  minimum?: number;
+  exclusiveMinimum?: number;
+  maxLength?: number;
+  minLength?: number;
+  pattern?: string;
+  maxItems?: number;
+  minItems?: number;
+  uniqueItems?: boolean;
+  maxProperties?: number;
+  minProperties?: number;
+  enum?: any[];
+  const?: any;
+  examples?: any[];
+  // if,then,else
+  readOnly?: boolean;
+  writeOnly?: boolean;
+  properties?: { [propertyName: string]: SchemaObject | ReferenceObject };
+  patternProperties?: { [pattern: string]: SchemaObject | ReferenceObject };
+  additionalProperties?: SchemaObject | ReferenceObject | boolean;
+  additionalItems?: SchemaObject;
+  items?: SchemaObject | ReferenceObject;
+  propertyNames?: SchemaObject | ReferenceObject;
+  contains?: SchemaObject;
+  allOf?: (SchemaObject | ReferenceObject)[];
+  oneOf?: (SchemaObject | ReferenceObject)[];
+  anyOf?: (SchemaObject | ReferenceObject)[];
+  not?: SchemaObject | ReferenceObject;
+  /**
+   * @desc JSON Schema compliant Content-Type, optional when specified as a key of ContentObject
+   * @example image/png
+   */
+  contentMediaType?: string;
+  /**
+   * @desc Specifies the Content-Encoding for the schema, supports all encodings from RFC4648, and "quoted-printable" from RFC2045
+   * @override format
+   * @see https://datatracker.ietf.org/doc/html/rfc4648
+   * @see https://datatracker.ietf.org/doc/html/rfc2045#section-6.7
+   * @example base64
+   */
+  contentEncoding?: string;
+}
+
+/** @link https://www.asyncapi.com/docs/reference/specification/v3.0.0#schemaObject */
+export interface SchemaObject extends Draft07 {
+  // overrides:
+  description?: string; // supports markdown
+  format?:
+    | "int32" // no changes, but declared as more loose
+    | "int64"
+    | "float"
+    | "double"
+    | "byte"
+    | "binary"
+    | "date"
+    | "date-time"
+    | "password"
+    | string;
+  default?: any; // must comply the type
+  // proprietary:
+  discriminator?: string;
+  externalDocs?: ExternalDocumentationObject | ReferenceObject;
+  deprecated?: boolean;
 }
 
 /** @since 3.0.0 added replies */

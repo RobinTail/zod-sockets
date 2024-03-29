@@ -20,19 +20,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -85,8 +82,7 @@ channels:
           properties:
             "0":
               type: string
-              enum:
-                - something
+              const: something
             "1":
               type: number
               format: double
@@ -138,19 +134,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -176,15 +169,13 @@ channels:
           format: tuple
           properties:
             "0":
-              discriminator:
-                propertyName: type
+              discriminator: type
               oneOf:
                 - type: object
                   properties:
                     type:
                       type: string
-                      enum:
-                        - a
+                      const: a
                     a:
                       type: string
                   required:
@@ -194,8 +185,7 @@ channels:
                   properties:
                     type:
                       type: string
-                      enum:
-                        - b
+                      const: b
                     b:
                       type: string
                   required:
@@ -211,15 +201,13 @@ channels:
           format: tuple
           properties:
             "0":
-              discriminator:
-                propertyName: status
+              discriminator: status
               oneOf:
                 - type: object
                   properties:
                     status:
                       type: string
-                      enum:
-                        - success
+                      const: success
                     data:
                       format: any
                   required:
@@ -228,8 +216,7 @@ channels:
                   properties:
                     status:
                       type: string
-                      enum:
-                        - error
+                      const: error
                     error:
                       type: object
                       properties:
@@ -285,19 +272,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -399,19 +383,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -514,19 +495,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -643,19 +621,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -797,8 +772,7 @@ channels:
           properties:
             "0":
               type: string
-              enum:
-                - pong
+              const: pong
               description: literally
               examples:
                 - pong
@@ -910,19 +884,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1021,19 +992,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1168,19 +1136,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1320,19 +1285,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1421,19 +1383,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1558,19 +1517,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1664,19 +1620,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1756,19 +1709,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1853,19 +1803,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -1954,19 +1901,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -2043,19 +1987,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string
@@ -2191,19 +2132,16 @@ channels:
           properties:
             connection:
               type: string
-              enum:
-                - Upgrade
+              const: Upgrade
             upgrade:
               type: string
-              enum:
-                - websocket
+              const: websocket
         query:
           type: object
           properties:
             EIO:
               type: string
-              enum:
-                - "4"
+              const: "4"
               description: The version of the protocol
             transport:
               type: string

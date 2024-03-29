@@ -133,8 +133,15 @@ interface Draft07 {
   properties?: { [propertyName: string]: SchemaObject | ReferenceObject };
   patternProperties?: { [pattern: string]: SchemaObject | ReferenceObject };
   additionalProperties?: SchemaObject | ReferenceObject | boolean;
-  additionalItems?: SchemaObject;
-  items?: SchemaObject | ReferenceObject;
+  additionalItems?: SchemaObject | ReferenceObject | boolean; // +bool since draft-04
+  items?:
+    | SchemaObject
+    | ReferenceObject
+    // non-empty tuple:
+    | [
+        SchemaObject | ReferenceObject,
+        ...Array<SchemaObject | ReferenceObject>,
+      ];
   propertyNames?: SchemaObject | ReferenceObject;
   contains?: SchemaObject;
   allOf?: (SchemaObject | ReferenceObject)[];

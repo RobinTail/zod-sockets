@@ -54,6 +54,7 @@
     "build:tests": "tsx tools/make-tests.ts",
     "precommit": "yarn lint && yarn test && yarn build && git add example/example* coverage.svg",
     "postversion": "git push && git push --tags",
+    "prepublishOnly": "yarn lint && yarn test && yarn build",
     "hooks": "husky"
   },
   "dependencies": {

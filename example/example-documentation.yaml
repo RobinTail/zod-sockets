@@ -209,7 +209,6 @@ channels:
           additionalProperties:
             format: any
             description: Does not matter
-        examples: []
 components: {}
 operations:
   RootSendOperationTime:

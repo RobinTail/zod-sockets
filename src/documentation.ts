@@ -185,10 +185,12 @@ export class Documentation extends AsyncApiBuilder {
               }),
               inputExamples,
             ),
-            examples: inputExamples.map((payload) => ({
-              summary: "Implies array (tuple)",
-              payload: Object.assign({}, payload),
-            })),
+            examples: inputExamples.length
+              ? inputExamples.map((payload) => ({
+                  summary: "Implies array (tuple)",
+                  payload: Object.assign({}, payload),
+                }))
+              : undefined,
           };
           if (output) {
             const outputExamples = action.getExamples("output");
@@ -202,10 +204,12 @@ export class Documentation extends AsyncApiBuilder {
                 }),
                 outputExamples,
               ),
-              examples: outputExamples.map((payload) => ({
-                summary: "Implies array (tuple)",
-                payload: Object.assign({}, payload),
-              })),
+              examples: outputExamples.length
+                ? outputExamples.map((payload) => ({
+                    summary: "Implies array (tuple)",
+                    payload: Object.assign({}, payload),
+                  }))
+                : undefined,
             };
           }
           const recvOperationId = makeCleanId(

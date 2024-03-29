@@ -1,17 +1,18 @@
-import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
+import {
+  ContactObject,
+  LicenseObject,
+  ReferenceObject,
+  SchemaObject,
+  isReferenceObject,
+} from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
-import { AsyncApiBuilder } from "./async-api/document-builder";
 import { ChannelObject, MessagesObject } from "./async-api/commons";
+import { AsyncApiBuilder } from "./async-api/document-builder";
 import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
-import {
-  addExamples,
-  depicters,
-  onEach,
-  onMissing,
-} from "./documentation-helpers";
+import { depicters, onEach, onMissing } from "./documentation-helpers";
 import { Emission } from "./emission";
 import { Examples, Namespaces, normalizeNS } from "./namespace";
 import { walkSchema } from "./schema-walker";
@@ -40,6 +41,30 @@ const getEmissionExamples = <T extends Examples<Emission>, V extends keyof T>(
       .map((example) => example[variant])
       .filter((value): value is NonNullable<typeof value> => !!value)
   );
+};
+
+/** @desc Add examples to the top level tuples */
+export const withExamples = <T extends SchemaObject | ReferenceObject>(
+  subject: T,
+  examples?: unknown[][],
+): T => {
+  if (isReferenceObject(subject) || !examples) {
+    return subject;
+  }
+  if (subject.type === "object" && subject.format === "tuple") {
+    for (const example of examples) {
+      for (let index = 0; index < example.length; index++) {
+        const strIdx = `${index}`;
+        if (subject.properties && strIdx in subject.properties) {
+          const prop = subject.properties[strIdx];
+          if (!isReferenceObject(prop)) {
+            prop.examples = [...(prop.examples || []), example[index]];
+          }
+        }
+      }
+    }
+  }
+  return subject;
 };
 
 export class Documentation extends AsyncApiBuilder {
@@ -116,7 +141,7 @@ export class Documentation extends AsyncApiBuilder {
         messages[messageId] = {
           name: event,
           title: event,
-          payload: addExamples(
+          payload: withExamples(
             walkSchema({ direction: "out", schema, ...commons }),
             payloadExamples,
           ),
@@ -129,7 +154,7 @@ export class Documentation extends AsyncApiBuilder {
           const ackExamples = getEmissionExamples(event, "ack", examples);
           messages[ackId] = {
             title: `Acknowledgement for ${event}`,
-            payload: addExamples(
+            payload: withExamples(
               walkSchema({ direction: "in", schema: ack, ...commons }),
               ackExamples,
             ),
@@ -177,7 +202,7 @@ export class Documentation extends AsyncApiBuilder {
           messages[messageId] = {
             name: event,
             title: event,
-            payload: addExamples(
+            payload: withExamples(
               walkSchema({
                 direction: "in",
                 schema: action.getSchema("input"),
@@ -196,7 +221,7 @@ export class Documentation extends AsyncApiBuilder {
             const outputExamples = action.getExamples("output");
             messages[ackId] = {
               title: `Acknowledgement for ${event}`,
-              payload: addExamples(
+              payload: withExamples(
                 walkSchema({
                   direction: "out",
                   schema: output,

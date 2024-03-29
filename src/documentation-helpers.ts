@@ -268,30 +268,6 @@ export const depictTuple: Depicter<z.AnyZodTuple> = ({
   additionalProperties: rest === null ? false : next(rest),
 });
 
-/** @desc Add examples to the top level tuples */
-export const addExamples = <T extends SchemaObject | ReferenceObject>(
-  subject: T,
-  examples?: unknown[][],
-): T => {
-  if (isReferenceObject(subject) || !examples) {
-    return subject;
-  }
-  if (subject.type === "object" && subject.format === "tuple") {
-    for (const example of examples) {
-      for (let index = 0; index < example.length; index++) {
-        const strIdx = `${index}`;
-        if (subject.properties && strIdx in subject.properties) {
-          const prop = subject.properties[strIdx];
-          if (!isReferenceObject(prop)) {
-            prop.examples = [...(prop.examples || []), example[index]];
-          }
-        }
-      }
-    }
-  }
-  return subject;
-};
-
 export const depictString: Depicter<z.ZodString> = ({
   schema: {
     isEmail,

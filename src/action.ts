@@ -18,9 +18,11 @@ export abstract class AbstractAction {
   public abstract getSchema(variant: "output"): z.AnyZodTuple | undefined;
   public abstract example(
     variant: "input" | "output",
-    payload: unknown[],
+    payload: z.infer<z.AnyZodTuple>,
   ): this;
-  public abstract getExamples(variant: "input" | "output"): unknown[][];
+  public abstract getExamples(
+    variant: "input" | "output",
+  ): z.infer<z.AnyZodTuple>[];
 }
 
 export class Action<

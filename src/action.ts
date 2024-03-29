@@ -89,11 +89,11 @@ export class Action<
   }
 
   /** @throws z.ZodError */
-  #parseOutput(output: z.input<z.AnyZodTuple> | void) {
+  #parseOutput(output: z.input<NonNullable<OUT>> | void) {
     if (!this.#outputSchema) {
       return;
     }
-    return this.#outputSchema.parse(output);
+    return this.#outputSchema.parse(output) as z.output<NonNullable<OUT>>;
   }
 
   public override async execute({

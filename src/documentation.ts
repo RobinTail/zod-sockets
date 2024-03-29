@@ -67,6 +67,37 @@ export const withExamples = <T extends SchemaObject | ReferenceObject>(
   return subject;
 };
 
+const commons = { onEach, onMissing, rules: depicters };
+const channelBinding: WSChannelBinding = {
+  bindingVersion: "0.1.0",
+  method: "GET",
+  headers: walkSchema({
+    direction: "in",
+    schema: z.object({
+      connection: z.literal("Upgrade").optional(),
+      upgrade: z.literal("websocket").optional(),
+    }),
+    ...commons,
+  }),
+  query: {
+    ...walkSchema({
+      direction: "in",
+      schema: z.object({
+        EIO: z.literal("4").describe("The version of the protocol"),
+        transport: z
+          .enum(["polling", "websocket"])
+          .describe("The name of the transport"),
+        sid: z.string().optional().describe("The session identifier"),
+      }),
+      ...commons,
+    }),
+    externalDocs: {
+      description: "Engine.IO Protocol",
+      url: "https://socket.io/docs/v4/engine-io-protocol/",
+    },
+  },
+};
+
 export class Documentation extends AsyncApiBuilder {
   public constructor({
     actions,
@@ -96,37 +127,6 @@ export class Documentation extends AsyncApiBuilder {
         this.document.id = `urn:${uri.host.split(".").concat(uri.pathname.slice(1).split("/")).join(":")}`;
       }
     }
-    const commons = { onEach, onMissing, rules: depicters };
-    const channelBinding: WSChannelBinding = {
-      bindingVersion: "0.1.0",
-      method: "GET",
-      headers: walkSchema({
-        direction: "in",
-        schema: z.object({
-          connection: z.literal("Upgrade").optional(),
-          upgrade: z.literal("websocket").optional(),
-        }),
-        ...commons,
-      }),
-      query: {
-        ...walkSchema({
-          direction: "in",
-          schema: z.object({
-            EIO: z.literal("4").describe("The version of the protocol"),
-            transport: z
-              .enum(["polling", "websocket"])
-              .describe("The name of the transport"),
-            sid: z.string().optional().describe("The session identifier"),
-          }),
-          ...commons,
-        }),
-        externalDocs: {
-          description: "Engine.IO Protocol",
-          url: "https://socket.io/docs/v4/engine-io-protocol/",
-        },
-      },
-    };
-
     for (const [ns, { emission, examples }] of Object.entries(namespaces)) {
       const channelId = makeCleanId(normalizeNS(ns)) || "Root";
       const messages: MessagesObject = {};

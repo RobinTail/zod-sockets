@@ -1,7 +1,7 @@
 import { ContactObject, LicenseObject } from "openapi3-ts/oas31";
 import { z } from "zod";
 import { AbstractAction } from "./action";
-import { ChannelObject, MessagesObject } from "./async-api/commons";
+import { MessagesObject } from "./async-api/commons";
 import { AsyncApiBuilder } from "./async-api/document-builder";
 import { WSChannelBinding } from "./async-api/ws-binding";
 import { lcFirst, makeCleanId } from "./common-helpers";
@@ -182,13 +182,12 @@ export class Documentation extends AsyncApiBuilder {
           );
         }
       }
-      const channel: ChannelObject = {
+      this.addChannel(channelId, {
         address: ns,
         title: `Namespace ${ns}`,
         bindings: { ws: channelBinding },
         messages,
-      };
-      this.addChannel(channelId, channel);
+      });
     }
   }
 }

@@ -269,6 +269,9 @@ describe("Documentation", () => {
               ack: z.tuple([z.any()]).rest(z.any()),
             },
           },
+          examples: {
+            withAck: { payload: [], ack: ["something"] },
+          },
         }),
         actions: [
           factory.build({

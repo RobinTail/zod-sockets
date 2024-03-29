@@ -2111,6 +2111,9 @@ channels:
           properties: {}
           required: []
           additionalProperties: false
+        examples:
+          - summary: Implies array (tuple)
+            payload: {}
       testAckForOutgoingWithAck:
         title: Acknowledgement for withAck
         payload:
@@ -2119,10 +2122,16 @@ channels:
           properties:
             "0":
               format: any
+              examples:
+                - something
           required:
             - "0"
           additionalProperties:
             format: any
+        examples:
+          - summary: Implies array (tuple)
+            payload:
+              "0": something
 components: {}
 operations:
   RootRecvOperationTest:

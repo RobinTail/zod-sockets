@@ -28,12 +28,12 @@ interface DocumentationParams {
   config: Config<Namespaces>;
 }
 
-const getEventExamples = <T extends Examples<Emission>, V extends keyof T>(
+const getEmissionExamples = <T extends Examples<Emission>, V extends keyof T>(
   event: string,
   variant: V,
-  examples?: { [K in string]?: T | T[] },
+  nsExamples?: { [K in string]?: T | T[] },
 ): NonNullable<T[V]>[] | undefined => {
-  const eventExamples = examples?.[event];
+  const eventExamples = nsExamples?.[event];
   return (
     eventExamples &&
     (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
@@ -112,7 +112,7 @@ export class Documentation extends AsyncApiBuilder {
         const ackId = lcFirst(
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
-        const payloadExamples = getEventExamples(event, "payload", examples);
+        const payloadExamples = getEmissionExamples(event, "payload", examples);
         messages[messageId] = {
           name: event,
           title: event,
@@ -126,7 +126,7 @@ export class Documentation extends AsyncApiBuilder {
           })),
         };
         if (ack) {
-          const ackExamples = getEventExamples(event, "ack", examples);
+          const ackExamples = getEmissionExamples(event, "ack", examples);
           messages[ackId] = {
             title: `Acknowledgement for ${event}`,
             payload: addExamples(

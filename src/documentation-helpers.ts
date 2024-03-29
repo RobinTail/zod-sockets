@@ -268,6 +268,7 @@ export const depictTuple: Depicter<z.AnyZodTuple> = ({
   additionalProperties: rest === null ? false : next(rest),
 });
 
+/** @desc Add examples to the top level tuples */
 export const addExamples = <T extends SchemaObject | ReferenceObject>(
   subject: T,
   examples?: unknown[][],

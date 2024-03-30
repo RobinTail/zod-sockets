@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.15.1
+
+- Changed runtime dependency: replaced `chalk` with `ansis`.
+
 ### v0.15.0
 
 - Major improvement to the generated documentation: depicting payloads as actual tuples they are.

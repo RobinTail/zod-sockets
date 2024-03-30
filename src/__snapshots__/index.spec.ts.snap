@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Entrypoint > should expose certain entities 1`] = `
+{
+  "AbstractAction": [Function],
+  "ActionsFactory": [Function],
+  "Config": [Function],
+  "Documentation": [Function],
+  "Integration": [Function],
+  "attachSockets": [Function],
+  "createSimpleConfig": [Function],
+}
+`;

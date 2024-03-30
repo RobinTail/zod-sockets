@@ -100,9 +100,7 @@ export const attachSockets = async <NS extends Namespaces>({
     });
     await onStartup(nsCtx);
   }
-  (startupLogo ? console.log : () => {})(
-    getStartupLogo((await import("chalk")).default), // chalk v5 is ESM only
-  );
+  (startupLogo ? console.log : () => {})(getStartupLogo());
   rootLogger.info("Listening", target.address());
   return io.attach(target);
 };

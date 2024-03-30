@@ -1,4 +1,4 @@
-import { ChalkInstance } from "chalk";
+import { hex } from "ansis";
 import { T, always, cond, gt } from "ramda";
 
 const georgia11 = `
@@ -12,15 +12,15 @@ M’   AMV                   MM      ,MI    "Y                     MM           
 AMVmmmmMM  `Ybmd9’   `Wbmd"MML.    P"Ybmmd"   `Ybmd9’   YMbmd’ .JMML. YA. `Mbmmd’   `Mbmo M9mmmP’
 `;
 
-export const getStartupLogo = (chalk: ChalkInstance) =>
+export const getStartupLogo = () =>
   georgia11
     .split("\n")
     .map((line, index) => {
       const color = cond([
-        [gt(4), always(chalk.hex("#FCF434"))],
-        [gt(5), always(chalk.hex("#FFF"))],
-        [gt(8), always(chalk.hex("#9C59D1"))],
-        [T, always(chalk.hex("#2C2C2C"))],
+        [gt(4), always(hex("#FCF434"))],
+        [gt(5), always(hex("#FFF"))],
+        [gt(8), always(hex("#9C59D1"))],
+        [T, always(hex("#2C2C2C"))],
       ])(index);
       return color(line);
     })

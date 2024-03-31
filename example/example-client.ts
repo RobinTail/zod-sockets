@@ -28,6 +28,7 @@ export namespace Root {
           cb3: (literally: "pong", ...echo: unknown[]) => void,
         ) => void);
     subscribe: (...doesNotMatter: unknown[]) => void;
+    unsubscribe: (...doesNotMatter: unknown[]) => void;
   }
   /** @example const socket: Root.Socket = io(Root.path) */
   export type Socket = SocketBase<Emission, Actions>;

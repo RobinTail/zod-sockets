@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { createSimpleConfig } from "../src";
 
+/**
+ * @see onSubscribe
+ * @see onUnsubscribe
+ * */
 export const subscribersRoom = "subscribers";
 
 export const config = createSimpleConfig({

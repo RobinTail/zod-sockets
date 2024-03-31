@@ -5,7 +5,8 @@
 ### v0.16.0
 
 - Added `.emit()` method to the clients returned by `getClients()` method of `all` or `withRoom()`;
-- Improved types for `getData()` in the for the clients returned by `getClients()` method.
+- Improved types for `getData()` in the for the clients returned by `getClients()` method;
+- Better example of a subscription service using rooms.
 
 ```ts
 // sending to someone knowing their id:

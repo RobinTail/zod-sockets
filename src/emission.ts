@@ -65,10 +65,7 @@ export function makeEmitter({
 }: {
   subject:
     | Socket
-    | RemoteSocket<
-        Record<string, z.infer<z.ZodFunction<z.AnyZodTuple, z.ZodVoid>>>,
-        unknown
-      >
+    | RemoteSocket<Record<string, (...args: any[]) => void>, unknown>
     | Socket["broadcast"]
     | Server;
 } & EmitterConfig<EmissionMap>) {

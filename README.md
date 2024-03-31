@@ -5,8 +5,6 @@
 
 **Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers.**
 
-Version 0 is unstable — public API may be changed at any time.
-
 # How it works
 
 ## Technologies

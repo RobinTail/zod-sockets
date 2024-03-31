@@ -7,7 +7,7 @@ import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
 import { ClientContext, IndependentContext } from "./handler";
 import { Namespaces, normalizeNS } from "./namespace";
-import { getRemoteClients } from "./remote-client";
+import { makeRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
 export const attachSockets = async <NS extends Namespaces>({
@@ -56,7 +56,7 @@ export const attachSockets = async <NS extends Namespaces>({
       withRooms: makeRoomService({ subject: io, metadata, ...emitCfg }),
       all: {
         getClients: async () =>
-          getRemoteClients({
+          makeRemoteClients({
             sockets: await ns.fetchSockets(),
             metadata,
             ...emitCfg,

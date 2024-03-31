@@ -1,10 +1,10 @@
 import { RemoteSocket } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { getRemoteClients } from "./remote-client";
+import { makeRemoteClients } from "./remote-client";
 
 describe("RemoteClient", () => {
-  describe("getRemoteClients()", () => {
+  describe("makeRemoteClients()", () => {
     const socketsMock = [
       {
         id: "ONE",
@@ -24,7 +24,7 @@ describe("RemoteClient", () => {
     ];
 
     test("should map RemoteSockets to RemoteClients", () => {
-      const clients = getRemoteClients({
+      const clients = makeRemoteClients({
         sockets: socketsMock as unknown as RemoteSocket<any, unknown>[],
         metadata: z.object({ name: z.string() }),
         emission: { test: { schema: z.tuple([z.string()]) } },

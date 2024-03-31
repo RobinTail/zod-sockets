@@ -12,7 +12,7 @@ export interface RemoteClient<E extends EmissionMap, D extends z.SomeZodObject>
   emit: Emitter<E>;
 }
 
-export const getRemoteClients = <
+export const makeRemoteClients = <
   E extends EmissionMap,
   D extends z.SomeZodObject,
 >({

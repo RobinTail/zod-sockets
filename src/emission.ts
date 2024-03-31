@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import type { RemoteSocket, Server, Socket } from "socket.io";
 import { z } from "zod";
-import { RemoteClient, getRemoteClients } from "./remote-client";
+import { RemoteClient, makeRemoteClients } from "./remote-client";
 
 export interface Emission {
   schema: z.AnyZodTuple;
@@ -101,7 +101,7 @@ export const makeRoomService =
   } & EmitterConfig<E>): RoomService<E, D> =>
   (rooms) => ({
     getClients: async () =>
-      getRemoteClients({
+      makeRemoteClients({
         sockets: await subject.in(rooms).fetchSockets(),
         ...rest,
       }),

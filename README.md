@@ -400,6 +400,14 @@ const handler = async ({ all, logger }) => {
 };
 ```
 
+### Subscriptions
+
+In order to implement a subscription service you can utilize the rooms feature and make to events: for
+[subscribing](example/actions/subscribe.ts) and [unsubscribing](example/actions/unsubscribe.ts). Handlers of those
+events can simply do `client.join()` and `client.leave()` to/from a certain room. A simple `setInterval()` function
+within an [Independent Context](#independent-context) (`onStartup` hook) can broadcast to those who are in that room.
+See the [example implementation](example/config.ts).
+
 ## Metadata
 
 Metadata is a custom object-based structure for reading and storing additional information about the clients.

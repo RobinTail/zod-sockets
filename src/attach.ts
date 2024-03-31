@@ -55,7 +55,12 @@ export const attachSockets = async <NS extends Namespaces>({
       logger: rootLogger,
       withRooms: makeRoomService({ subject: io, metadata, ...emitCfg }),
       all: {
-        getClients: async () => getRemoteClients(await ns.fetchSockets()),
+        getClients: async () =>
+          getRemoteClients({
+            sockets: await ns.fetchSockets(),
+            metadata,
+            ...emitCfg,
+          }),
         getRooms: () => Array.from(ns.adapter.rooms.keys()),
         broadcast: makeEmitter({ subject: io, ...emitCfg }),
       },

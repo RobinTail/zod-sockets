@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import type { Server, Socket } from "socket.io";
+import type { RemoteSocket, Server, Socket } from "socket.io";
 import { z } from "zod";
 import { RemoteClient, getRemoteClients } from "./remote-client";
 
@@ -36,7 +36,7 @@ export type RoomService<E extends EmissionMap, D extends z.SomeZodObject> = (
    * @throws Error on ack timeout
    * */
   broadcast: Broadcaster<E>;
-  getClients: () => Promise<RemoteClient<D>[]>;
+  getClients: () => Promise<RemoteClient<E, D>[]>;
 };
 
 export interface EmitterConfig<E extends EmissionMap> {
@@ -46,16 +46,31 @@ export interface EmitterConfig<E extends EmissionMap> {
 
 export function makeEmitter<E extends EmissionMap>(
   props: { subject: Socket } & EmitterConfig<E>,
-): Emitter<EmissionMap>;
+): Emitter<E>;
+export function makeEmitter<E extends EmissionMap>(
+  props: {
+    subject: RemoteSocket<
+      { [K in keyof E]: z.infer<z.ZodFunction<E[K]["schema"], z.ZodVoid>> },
+      unknown
+    >;
+  } & EmitterConfig<E>,
+): Emitter<E>;
 export function makeEmitter<E extends EmissionMap>(
   props: { subject: Socket["broadcast"] | Server } & EmitterConfig<E>,
-): Broadcaster<EmissionMap>;
+): Broadcaster<E>;
 export function makeEmitter({
   subject,
   emission,
   timeout,
 }: {
-  subject: Socket | Socket["broadcast"] | Server;
+  subject:
+    | Socket
+    | RemoteSocket<
+        { [K: string]: z.infer<z.ZodFunction<z.AnyZodTuple, z.ZodVoid>> },
+        unknown
+      >
+    | Socket["broadcast"]
+    | Server;
 } & EmitterConfig<EmissionMap>) {
   /**
    * @throws z.ZodError on validation
@@ -86,7 +101,10 @@ export const makeRoomService =
   } & EmitterConfig<E>): RoomService<E, D> =>
   (rooms) => ({
     getClients: async () =>
-      getRemoteClients(await subject.in(rooms).fetchSockets()),
+      getRemoteClients({
+        sockets: await subject.in(rooms).fetchSockets(),
+        ...rest,
+      }),
     broadcast: makeEmitter({
       ...rest,
       subject: subject.to(rooms),

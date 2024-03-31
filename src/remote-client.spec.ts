@@ -12,15 +12,22 @@ describe("RemoteClient", () => {
         data: { name: "TEST" },
         join: vi.fn(),
         leave: vi.fn(),
+        emit: vi.fn(),
       },
-      { id: "TWO", rooms: new Set(["room2"]), join: vi.fn(), leave: vi.fn() },
+      {
+        id: "TWO",
+        rooms: new Set(["room2"]),
+        join: vi.fn(),
+        leave: vi.fn(),
+        emit: vi.fn(),
+      },
     ];
 
     test("should map RemoteSockets to RemoteClients", () => {
       const clients = getRemoteClients({
         sockets: socketsMock as unknown as RemoteSocket<any, unknown>[],
         metadata: z.object({ name: z.string() }),
-        emission: {},
+        emission: { test: { schema: z.tuple([z.string()]) } },
         timeout: 2000,
       });
       expect(clients).toEqual([
@@ -45,6 +52,10 @@ describe("RemoteClient", () => {
       // getData:
       expect(clients[0].getData()).toEqual({ name: "TEST" });
       expect(clients[1].getData()).toEqual({});
+
+      // emit
+      clients[0].emit("test", "something");
+      expect(socketsMock[0].emit).toHaveBeenLastCalledWith("test", "something");
     });
   });
 });

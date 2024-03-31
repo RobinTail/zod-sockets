@@ -166,6 +166,7 @@ describe("Attach", () => {
           getData: expect.any(Function),
           join: expect.any(Function),
           leave: expect.any(Function),
+          emit: expect.any(Function),
         },
         {
           id: "other",
@@ -173,6 +174,7 @@ describe("Attach", () => {
           getData: expect.any(Function),
           join: expect.any(Function),
           leave: expect.any(Function),
+          emit: expect.any(Function),
         },
       ]);
 

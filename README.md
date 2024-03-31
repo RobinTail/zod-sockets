@@ -333,12 +333,16 @@ import { createSimpleConfig } from "zod-sockets";
 const config = createSimpleConfig({
   hooks: {
     onStartup: async ({ all, withRooms }) => {
-      // sending to everyone in a room
+      // sending to everyone in a room:
       withRooms("room1").broadcast("event", ...payload);
       // sending to everyone within several rooms:
       withRooms(["room1", "room2"]).broadcast("event", ...payload);
-      // sending to everyone everywhere
+      // sending to everyone everywhere:
       all.broadcast("event", ...payload);
+      // sending to some particular user by familiar id:
+      (await all.getClients())
+        .find(({ id }) => id === "someId")
+        ?.emit("event", ...payload);
     },
   },
 });

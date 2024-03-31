@@ -58,6 +58,7 @@ describe("Entrypoint", () => {
             id: "",
             rooms: [""],
             getData: () => ({ count: 1 }),
+            emit: async () => true,
             join: () => {},
             leave: () => {},
           },

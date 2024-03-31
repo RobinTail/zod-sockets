@@ -2,6 +2,19 @@
 
 ## Version 0
 
+### v0.16.0
+
+- Added `.emit()` method to the clients returned by `getClients()` method of `all` or `withRoom()`;
+- Improved types for `getData()` in the for the clients returned by `getClients()` method;
+- Better example of a subscription service using rooms.
+
+```ts
+// sending to someone knowing their id:
+(await all.getClients())
+  .find(({ id }) => id === "someId")
+  ?.emit("event", ...payload);
+```
+
 ### v0.15.1
 
 - Changed runtime dependency: replaced `chalk` with `ansis`.

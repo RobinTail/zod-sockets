@@ -710,6 +710,14 @@ channels:
           additionalItems:
             format: any
             description: Does not matter
+      rootIncomingUnsubscribe:
+        name: unsubscribe
+        title: unsubscribe
+        payload:
+          type: array
+          additionalItems:
+            format: any
+            description: Does not matter
 components: {}
 operations:
   RootSendOperationTime:
@@ -773,6 +781,15 @@ operations:
       - $ref: "#/channels/Root/messages/rootIncomingSubscribe"
     title: subscribe
     summary: Incoming event subscribe
+    description: The message consumed by the application within the / namespace
+  RootRecvOperationUnsubscribe:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingUnsubscribe"
+    title: unsubscribe
+    summary: Incoming event unsubscribe
     description: The message consumed by the application within the / namespace
 "
 `;

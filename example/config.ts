@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { createSimpleConfig } from "../src";
 
+/**
+ * @see onSubscribe
+ * @see onUnsubscribe
+ * */
+export const subscribersRoom = "subscribers";
+
 export const config = createSimpleConfig({
   emission: {
     time: {
@@ -37,10 +43,13 @@ export const config = createSimpleConfig({
         from: client.id,
       });
     },
-    onStartup: async ({ all }) => {
+    onStartup: async ({ all, withRooms }) => {
       setInterval(() => {
-        all.broadcast("rooms", all.getRooms());
+        all.broadcast("rooms", all.getRooms()); // <— payload type constraints
       }, 30000);
+      setInterval(() => {
+        withRooms(subscribersRoom).broadcast("time", new Date()); // <— payload type constraints
+      }, 1000);
     },
   },
   metadata: z.object({

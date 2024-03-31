@@ -13,7 +13,7 @@ export interface IndependentContext<
     /** @desc Returns the list of available rooms */
     getRooms: () => string[];
     /** @desc Returns the list of familiar clients */
-    getClients: () => Promise<RemoteClient<D>[]>;
+    getClients: () => Promise<RemoteClient<E, D>[]>;
     /** @desc Emits an event to everyone */
     broadcast: Broadcaster<E>;
   };

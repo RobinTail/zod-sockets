@@ -333,12 +333,16 @@ import { createSimpleConfig } from "zod-sockets";
 const config = createSimpleConfig({
   hooks: {
     onStartup: async ({ all, withRooms }) => {
-      // sending to everyone in a room
+      // sending to everyone in a room:
       withRooms("room1").broadcast("event", ...payload);
       // sending to everyone within several rooms:
       withRooms(["room1", "room2"]).broadcast("event", ...payload);
-      // sending to everyone everywhere
+      // sending to everyone everywhere:
       all.broadcast("event", ...payload);
+      // sending to some particular user by familiar id:
+      (await all.getClients())
+        .find(({ id }) => id === "someId")
+        ?.emit("event", ...payload);
     },
   },
 });
@@ -395,6 +399,14 @@ const handler = async ({ all, logger }) => {
   }
 };
 ```
+
+### Subscriptions
+
+In order to implement a subscription service you can utilize the rooms feature and make two Actions: for
+[subscribing](example/actions/subscribe.ts) and [unsubscribing](example/actions/unsubscribe.ts). Handlers of those
+Actions can simply do `client.join()` and `client.leave()` in order to address the client to/from a certain room. A
+simple `setInterval()` function within an [Independent Context](#independent-context) (`onStartup` hook) can broadcast
+to those who are in that room. See the [example implementation](example/config.ts).
 
 ## Metadata
 

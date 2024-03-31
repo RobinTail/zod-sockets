@@ -45,7 +45,7 @@ export const config = createSimpleConfig({
       }, 30000);
       setInterval(() => {
         withRooms(subscribersRoom).broadcast("time", new Date()); // <— payload type constraints
-      }, 5000);
+      }, 1000);
     },
   },
   metadata: z.object({

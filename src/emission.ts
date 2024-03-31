@@ -66,7 +66,7 @@ export function makeEmitter({
   subject:
     | Socket
     | RemoteSocket<
-        { [K: string]: z.infer<z.ZodFunction<z.AnyZodTuple, z.ZodVoid>> },
+        Record<string, z.infer<z.ZodFunction<z.AnyZodTuple, z.ZodVoid>>>,
         unknown
       >
     | Socket["broadcast"]

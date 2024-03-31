@@ -62,7 +62,7 @@ describe("Emission", () => {
       });
 
       test("should throw on unknown events", async () => {
-        await expect(emitter("invalid")).rejects.toThrowError(
+        await expect(emitter("invalid" as "one", "test")).rejects.toThrowError(
           "Unsupported event invalid",
         );
       });
@@ -99,6 +99,7 @@ describe("Emission", () => {
             getData: expect.any(Function),
             join: expect.any(Function),
             leave: expect.any(Function),
+            emit: expect.any(Function),
           },
           {
             id: "other",
@@ -106,6 +107,7 @@ describe("Emission", () => {
             getData: expect.any(Function),
             join: expect.any(Function),
             leave: expect.any(Function),
+            emit: expect.any(Function),
           },
         ]);
       },

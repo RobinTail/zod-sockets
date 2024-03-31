@@ -1,7 +1,6 @@
-import { RemoteSocket } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { makeRemoteClients } from "./remote-client";
+import { SomeRemoteSocket, makeRemoteClients } from "./remote-client";
 
 describe("RemoteClient", () => {
   describe("makeRemoteClients()", () => {
@@ -25,7 +24,7 @@ describe("RemoteClient", () => {
 
     test("should map RemoteSockets to RemoteClients", () => {
       const clients = makeRemoteClients({
-        sockets: socketsMock as unknown as RemoteSocket<any, unknown>[],
+        sockets: socketsMock as unknown as SomeRemoteSocket[],
         metadata: z.object({ name: z.string() }),
         emission: { test: { schema: z.tuple([z.string()]) } },
         timeout: 2000,

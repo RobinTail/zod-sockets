@@ -1,4 +1,5 @@
-import { RemoteSocket, Socket } from "socket.io";
+import type { Socket } from "socket.io";
+import { SomeRemoteSocket } from "./remote-client";
 
 export interface Distribution {
   join: (rooms: string | string[]) => void | Promise<void>;
@@ -6,7 +7,7 @@ export interface Distribution {
 }
 
 export const makeDistribution = (
-  subject: Socket | RemoteSocket<{}, unknown>,
+  subject: Socket | SomeRemoteSocket,
 ): Distribution => ({
   join: subject.join.bind(subject),
   leave: (rooms) =>

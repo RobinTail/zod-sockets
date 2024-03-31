@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import type { RemoteSocket, Server, Socket } from "socket.io";
 import { z } from "zod";
-import { RemoteClient, makeRemoteClients } from "./remote-client";
+import {
+  RemoteClient,
+  SomeRemoteSocket,
+  makeRemoteClients,
+} from "./remote-client";
 
 export interface Emission {
   schema: z.AnyZodTuple;
@@ -63,11 +67,7 @@ export function makeEmitter({
   emission,
   timeout,
 }: {
-  subject:
-    | Socket
-    | RemoteSocket<Record<string, (...args: any[]) => void>, unknown>
-    | Socket["broadcast"]
-    | Server;
+  subject: Socket | SomeRemoteSocket | Socket["broadcast"] | Server;
 } & EmitterConfig<EmissionMap>) {
   /**
    * @throws z.ZodError on validation

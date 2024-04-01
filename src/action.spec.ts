@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { AbstractAction, Action } from "./action";
@@ -84,6 +85,7 @@ describe("Action", () => {
         },
         client: {
           id: "ID",
+          handshake: { auth: {} } as Socket["handshake"],
           emit: emitMock,
           broadcast: broadcastMock,
           getRooms: getRoomsMock,
@@ -106,6 +108,7 @@ describe("Action", () => {
         },
         client: {
           id: "ID",
+          handshake: { auth: {} },
           emit: emitMock,
           broadcast: broadcastMock,
           isConnected: isConnectedMock,
@@ -132,6 +135,7 @@ describe("Action", () => {
         },
         client: {
           id: "ID",
+          handshake: { auth: {} } as Socket["handshake"],
           emit: emitMock,
           broadcast: broadcastMock,
           getRooms: getRoomsMock,
@@ -146,6 +150,7 @@ describe("Action", () => {
       expect(ackHandler).toHaveBeenLastCalledWith({
         client: {
           id: "ID",
+          handshake: { auth: {} },
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
           emit: emitMock,
@@ -180,6 +185,7 @@ describe("Action", () => {
         },
         client: {
           id: "ID",
+          handshake: { auth: {} } as Socket["handshake"],
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
           emit: emitMock,

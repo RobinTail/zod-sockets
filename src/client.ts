@@ -9,6 +9,7 @@ export interface Client<E extends EmissionMap, D extends z.SomeZodObject>
   isConnected: () => boolean;
   /** @alias Socket.id */
   id: Socket["id"];
+  handshake: Socket["handshake"];
   /** @desc Returns the list of the rooms the client in */
   getRooms: () => string[];
   /**

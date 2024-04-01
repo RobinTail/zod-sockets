@@ -342,9 +342,12 @@ export interface SecuritySchemeObject {
   description?: string;
   /** @desc for httpApiKey */
   name?: string;
-  /** @desc Valid values are "user" and "password" for apiKey and "query", "header" or "cookie" for httpApiKey. */
+  /** @desc Valid values are "user" and "password" for "apiKey" and "query", "header" or "cookie" for "httpApiKey". */
   in?: "user" | "password" | "query" | "header" | "cookie";
-  /** @desc for http */
+  /**
+   * @desc for http
+   * @link https://www.iana.org/assignments/http-authschemes/http-authschemes.xhtml
+   * */
   scheme?: string;
   /** @desc for http */
   bearerFormat?: string;
@@ -352,6 +355,8 @@ export interface SecuritySchemeObject {
   flows?: OAuthFlowsObject;
   /** @desc for openIdConnect */
   openIdConnectUrl?: string;
+  /** @desc List of the needed scope names. For "oauth2" and "openIdConnect" */
+  scopes?: string[];
 }
 
 export interface OAuthFlowsObject {
@@ -368,7 +373,7 @@ export interface OAuthFlowObject {
   tokenUrl?: string;
   refreshUrl?: string;
   /** @desc A map between the scope name and a short description for it. */
-  scopes: Record<string, string>;
+  availableScopes: Record<string, string>;
 }
 
 /** @since 3.0.0 partially extends SchemaObject; schema prop removed */

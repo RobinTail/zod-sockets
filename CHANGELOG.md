@@ -5,7 +5,6 @@
 ### v0.17.0
 
 - Added `handshake` property to the client objects:
-  - This might be required for implementing authentication;
   - See the Socket.IO documentation on handshake: https://socket.io/docs/v4/server-socket-instance/#sockethandshake
 
 ### v0.16.0

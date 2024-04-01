@@ -109,10 +109,18 @@ export class Documentation extends AsyncApiBuilder {
       }
     }
     const channelBinding = this.#makeChannelBinding();
-    for (const [dirty, { emission, examples }] of Object.entries(namespaces)) {
+    for (const [dirty, { emission, examples, security }] of Object.entries(
+      namespaces,
+    )) {
       const ns = normalizeNS(dirty);
       const channelId = makeCleanId(ns) || "Root";
       const messages: MessagesObject = {};
+      const securityIds: string[] = [];
+      for (const [index, schema] of Object.entries(security || [])) {
+        const id = lcFirst(makeCleanId(`${channelId} security ${index}`));
+        this.addSecurityScheme(id, schema);
+        securityIds.push(id);
+      }
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const messageId = lcFirst(
           makeCleanId(`${channelId} outgoing ${event}`),
@@ -144,6 +152,7 @@ export class Documentation extends AsyncApiBuilder {
             messageId,
             ackId: ack && ackId,
             ns,
+            securityIds,
           }),
         );
       }
@@ -181,6 +190,7 @@ export class Documentation extends AsyncApiBuilder {
               event,
               ns,
               ackId: output && ackId,
+              securityIds,
             }),
           );
         }

@@ -265,7 +265,7 @@ export interface OperationTraitObject {
   title?: string;
   summary?: string;
   description?: string;
-  security?: SecuritySchemeObject[];
+  security?: Array<SecuritySchemeObject | ReferenceObject>;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<WS.Operation>;

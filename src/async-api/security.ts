@@ -15,37 +15,61 @@ export interface OAuthFlowObject {
   availableScopes: Record<string, string>;
 }
 
-export interface SecuritySchemeObject {
+interface HttpApiKeySecurity {
+  type: "httpApiKey";
+  /** @desc The name of the header, query or cookie parameter to be used. */
+  name: string;
+  in: "query" | "header" | "cookie";
+}
+
+interface ApiKeySecurity {
+  type: "apiKey";
+  in: "user" | "password";
+}
+
+interface HttpSecurity {
+  type: "http";
+  /** @link https://www.iana.org/assignments/http-authschemes/http-authschemes.xhtml */
+  scheme?: string;
+  /** @example "Bearer" */
+  bearerFormat?: string;
+}
+
+interface ScopesHavingSecurity {
+  /** @desc List of the needed scope names. An empty array means no scopes are needed. */
+  scopes?: string[];
+}
+
+interface OAuth2Security extends ScopesHavingSecurity {
+  type: "oauth2";
+  flows: OAuthFlowsObject;
+}
+
+interface OpenIdConnectSecurity extends ScopesHavingSecurity {
+  type: "openIdConnect";
+  /** @desc OpenId Connect URL to discover OAuth2 configuration values */
+  openIdConnectUrl: string;
+}
+
+interface OtherSecurity {
   type:
     | "userPassword"
-    | "apiKey"
     | "X509"
     | "symmetricEncryption"
     | "asymmetricEncryption"
-    | "httpApiKey"
-    | "http"
-    | "oauth2"
-    | "openIdConnect"
     | "plain"
     | "scramSha256"
     | "scramSha512"
     | "gssapi";
-  description?: string;
-  /** @desc for httpApiKey */
-  name?: string;
-  /** @desc Valid values are "user" and "password" for "apiKey" and "query", "header" or "cookie" for "httpApiKey". */
-  in?: "user" | "password" | "query" | "header" | "cookie";
-  /**
-   * @desc for http
-   * @link https://www.iana.org/assignments/http-authschemes/http-authschemes.xhtml
-   * */
-  scheme?: string;
-  /** @desc for http */
-  bearerFormat?: string;
-  /** @desc for oauth2 */
-  flows?: OAuthFlowsObject;
-  /** @desc for openIdConnect */
-  openIdConnectUrl?: string;
-  /** @desc List of the needed scope names. For "oauth2" and "openIdConnect" */
-  scopes?: string[];
 }
+
+export type SecuritySchemeObject = {
+  description?: string;
+} & (
+  | HttpApiKeySecurity
+  | ApiKeySecurity
+  | HttpSecurity
+  | OAuth2Security
+  | OpenIdConnectSecurity
+  | OtherSecurity
+);

@@ -573,8 +573,3 @@ const action = factory
   .example("input", ["example payload"])
   .example("output", ["example acknowledgement"]);
 ```
-
-# Next
-
-More information is coming soon when the public API becomes stable (v1).
-Meanwhile, use the JSDoc annotations, IDE type assistance and explore the sources of the repo for informing yourself.

@@ -1,18 +1,25 @@
-export interface OAuthFlowsObject {
-  implicit?: OAuthFlowObject;
-  password?: OAuthFlowObject;
-  clientCredentials?: OAuthFlowObject;
-  authorizationCode?: OAuthFlowObject;
-}
-
-export interface OAuthFlowObject {
-  /** @desc for implicit and authorizationCode */
-  authorizationUrl?: string;
-  /** @desc for password, clientCredentials and authorizationCode */
-  tokenUrl?: string;
+interface FlowCommons {
+  /** @desc The URL to be used for obtaining refresh tokens. */
   refreshUrl?: string;
   /** @desc A map between the scope name and a short description for it. */
   availableScopes: Record<string, string>;
+}
+
+interface AuthHavingFlow {
+  /** @desc The authorization URL to be used for this flow. */
+  authorizationUrl: string;
+}
+
+interface TokenHavingFlow {
+  /** @desc The token URL to be used for this flow. */
+  tokenUrl: string;
+}
+
+export interface OAuthFlowsObject {
+  implicit?: FlowCommons & AuthHavingFlow;
+  password?: FlowCommons & TokenHavingFlow;
+  clientCredentials?: FlowCommons & TokenHavingFlow;
+  authorizationCode?: FlowCommons & AuthHavingFlow & TokenHavingFlow;
 }
 
 interface HttpApiKeySecurity {

@@ -245,15 +245,18 @@ describe("Documentation helpers", () => {
   });
 
   describe("depictLiteral()", () => {
-    test("should set type and involve const property", () => {
-      expect(
-        depictLiteral({
-          schema: z.literal("testing"),
-          ...requestCtx,
-          next: makeNext(requestCtx),
-        }),
-      ).toMatchSnapshot();
-    });
+    test.each(["testing", null, BigInt(123), Symbol("test")])(
+      "should set type and involve const property %#",
+      (value) => {
+        expect(
+          depictLiteral({
+            schema: z.literal(value),
+            ...requestCtx,
+            next: makeNext(requestCtx),
+          }),
+        ).toMatchSnapshot();
+      },
+    );
   });
 
   describe("depictObject()", () => {

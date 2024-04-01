@@ -331,9 +331,14 @@ export interface SecuritySchemeObject {
     | "X509"
     | "symmetricEncryption"
     | "asymmetricEncryption"
+    | "httpApiKey"
     | "http"
     | "oauth2"
-    | "openIdConnect";
+    | "openIdConnect"
+    | "plain"
+    | "scramSha256"
+    | "scramSha512"
+    | "gssapi";
   description?: string;
   /** @desc for httpApiKey */
   name?: string;

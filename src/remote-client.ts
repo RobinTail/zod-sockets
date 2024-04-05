@@ -11,6 +11,7 @@ export type SomeRemoteSocket = RemoteSocket<
 export interface RemoteClient<E extends EmissionMap, D extends z.SomeZodObject>
   extends Distribution {
   id: string;
+  handshake: SomeRemoteSocket["handshake"];
   rooms: string[];
   getData: () => Readonly<Partial<z.infer<D>>>;
   emit: Emitter<E>;
@@ -28,6 +29,7 @@ export const makeRemoteClients = <
 } & EmitterConfig<E>) =>
   sockets.map<RemoteClient<E, D>>((socket) => ({
     id: socket.id,
+    handshake: socket.handshake,
     rooms: Array.from(socket.rooms),
     getData: () => (socket.data || {}) as Partial<D>,
     emit: makeEmitter({ subject: socket, ...rest }),

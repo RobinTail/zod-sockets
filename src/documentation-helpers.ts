@@ -1,5 +1,14 @@
 import assert from "node:assert/strict";
-import { concat, fromPairs, map, mergeDeepWith, union, xprod } from "ramda";
+import {
+  concat,
+  type as detectType,
+  fromPairs,
+  map,
+  mergeDeepWith,
+  toLower,
+  union,
+  xprod,
+} from "ramda";
 import { z } from "zod";
 import {
   MessageObject,
@@ -139,17 +148,33 @@ export const depictNullable: Depicter<z.ZodNullable<z.ZodTypeAny>> = ({
   return nested;
 };
 
+const getSupportedType = (value: unknown): SchemaObjectType | undefined => {
+  const detected = toLower(detectType(value)); // toLower is typed well unlike .toLowerCase()
+  const isSupported =
+    detected === "number" ||
+    detected === "string" ||
+    detected === "boolean" ||
+    detected === "object" ||
+    detected === "null" ||
+    detected === "array";
+  return typeof value === "bigint"
+    ? "integer"
+    : isSupported
+      ? detected
+      : undefined;
+};
+
 export const depictEnum: Depicter<
   z.ZodEnum<[string, ...string[]]> | z.ZodNativeEnum<any> // keeping "any" for ZodNativeEnum as compatibility fix
 > = ({ schema }) => ({
-  type: typeof Object.values(schema.enum)[0] as "string" | "number",
+  type: getSupportedType(Object.values(schema.enum)[0]),
   enum: Object.values(schema.enum),
 });
 
 export const depictLiteral: Depicter<z.ZodLiteral<unknown>> = ({
   schema: { value },
 }) => ({
-  type: typeof value as "string" | "number" | "boolean",
+  type: getSupportedType(value), // constructor allows z.Primitive only, but ZodLiteral does not have that constrant
   const: value,
 });
 

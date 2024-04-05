@@ -42,6 +42,17 @@ describe("Entrypoint", () => {
       client: {
         isConnected: () => true,
         id: "",
+        handshake: {
+          headers: {},
+          time: "",
+          auth: {},
+          url: "",
+          address: "",
+          issued: 0,
+          secure: true,
+          xdomain: false,
+          query: {},
+        },
         getData: () => ({ count: 1 }),
         setData: () => {},
         join: () => {},
@@ -56,6 +67,17 @@ describe("Entrypoint", () => {
         getClients: async () => [
           {
             id: "",
+            handshake: {
+              headers: {},
+              time: "",
+              auth: {},
+              url: "",
+              address: "",
+              issued: 0,
+              secure: false,
+              xdomain: false,
+              query: {},
+            },
             rooms: [""],
             getData: () => ({ count: 1 }),
             emit: async () => true,

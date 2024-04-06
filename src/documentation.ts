@@ -164,8 +164,6 @@ export class Documentation extends AsyncApiBuilder {
             messageId,
             ackId: ack && ackId,
             ns,
-            // @todo perhaps not applicable
-            securityIds: nsSecurityIds,
           }),
         );
       }

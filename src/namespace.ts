@@ -25,11 +25,8 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
   examples?: {
     [K in keyof E]?: Example<E[K]> | Example<E[K]>[];
   };
-  /**
-   * @desc Handlers for some events in different contexts
-   * @default {}
-   * */
-  hooks: Hooks<E, D>;
+  /** @desc Handlers for some events in different contexts */
+  hooks: Partial<Hooks<E, D>>;
   /**
    * @desc Schema of the client metadata in this namespace
    * @default z.object({})

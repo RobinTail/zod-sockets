@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SecuritySchemeObject } from "./async-api/security";
 import { EmissionMap } from "./emission";
 import { AbstractLogger } from "./logger";
 import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
@@ -25,12 +26,14 @@ interface ConstructorOptions<NS extends Namespaces> {
    * @see Namespace
    * */
   namespaces?: NS;
+  security?: SecuritySchemeObject[];
 }
 
 export class Config<T extends Namespaces = {}> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
+  public readonly security: SecuritySchemeObject[];
   public readonly namespaces: T;
 
   public constructor({
@@ -38,11 +41,13 @@ export class Config<T extends Namespaces = {}> {
     timeout = 2000,
     startupLogo = true,
     namespaces = {} as T,
+    security = [],
   }: ConstructorOptions<T> = {}) {
     this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;
     this.namespaces = namespaces;
+    this.security = security;
   }
 
   public addNamespace<
@@ -54,6 +59,7 @@ export class Config<T extends Namespaces = {}> {
     emission = {} as E,
     metadata = z.object({}) as D,
     hooks = {},
+    security,
     examples,
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
@@ -65,7 +71,7 @@ export class Config<T extends Namespaces = {}> {
       startupLogo,
       namespaces: {
         ...namespaces,
-        [path]: { emission, examples, hooks, metadata },
+        [path]: { emission, examples, hooks, metadata, security },
       },
     });
   }
@@ -79,13 +85,14 @@ export const createSimpleConfig = <
   startupLogo,
   timeout,
   logger,
+  security,
   emission,
   examples,
   hooks,
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
-  new Config({ startupLogo, timeout, logger }).addNamespace({
+  new Config({ startupLogo, timeout, logger, security }).addNamespace({
     emission,
     examples,
     metadata,

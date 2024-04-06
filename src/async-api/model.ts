@@ -19,7 +19,7 @@ export interface ServerObject {
   title?: string;
   description?: string;
   variables?: Record<string, ServerVariableObject>;
-  security?: SecuritySchemeObject[];
+  security?: Array<SecuritySchemeObject | ReferenceObject>;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<WS.Server>;

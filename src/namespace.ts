@@ -16,10 +16,7 @@ export interface Example<T extends Emission> {
 }
 
 export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
-  /**
-   * @desc The events that the server can emit
-   * @default {}
-   * */
+  /** @desc The events that the server can emit */
   emission: E;
   /** @desc Examples for the emission per event */
   examples?: {
@@ -27,10 +24,7 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
   };
   /** @desc Handlers for some events in different contexts */
   hooks: Partial<Hooks<E, D>>;
-  /**
-   * @desc Schema of the client metadata in this namespace
-   * @default z.object({})
-   * */
+  /** @desc Schema of the client metadata in this namespace */
   metadata: D;
 }
 

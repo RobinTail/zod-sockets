@@ -45,6 +45,7 @@ export class Config<T extends Namespaces = {}> {
     this.namespaces = namespaces;
   }
 
+  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: undefined } */
   public addNamespace<
     E extends EmissionMap = {},
     D extends z.SomeZodObject = z.ZodObject<{}>,

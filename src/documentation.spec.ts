@@ -2,7 +2,7 @@ import { SchemaObject } from "./async-api/model";
 import { config as exampleConfig } from "../example/config";
 import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";
-import { createSimpleConfig } from "./config";
+import { Config, createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";
 import { z } from "zod";
 import { describe, expect, test, vi } from "vitest";
@@ -442,6 +442,44 @@ describe("Documentation", () => {
             title: "Testing unsupported types",
           }),
       ).toThrow(`Zod type ${zodType._def.typeName} is unsupported.`);
+    });
+  });
+
+  describe("Security", () => {
+    const secureConfig = new Config({
+      globalSecurity: [
+        {
+          type: "httpApiKey",
+          description: "Sample security schema",
+          in: "header",
+          name: "X-Api-Key",
+        },
+      ],
+    }).addNamespace({
+      security: [
+        {
+          type: "userPassword",
+          description: "Namespace level security sample",
+        },
+      ],
+    });
+    const secureFactory = new ActionsFactory(secureConfig);
+
+    test("should depict server and channel security", () => {
+      const spec = new Documentation({
+        config: secureConfig,
+        servers: { test: { url: "https://example.com" } },
+        actions: [
+          secureFactory.build({
+            event: "test",
+            input: z.tuple([]),
+            handler: async () => {},
+          }),
+        ],
+        version: "3.4.5",
+        title: "Testing security",
+      }).getSpecAsYaml();
+      expect(spec).toMatchSnapshot();
     });
   });
 });

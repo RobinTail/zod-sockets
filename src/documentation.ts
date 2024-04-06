@@ -82,7 +82,7 @@ export class Documentation extends AsyncApiBuilder {
 
   public constructor({
     actions,
-    config: { namespaces, security: serverSecurity },
+    config: { namespaces, globalSecurity },
     title,
     version,
     documentId,
@@ -96,11 +96,11 @@ export class Documentation extends AsyncApiBuilder {
       id: documentId,
       defaultContentType: "text/plain",
     });
-    const serverSecurityIds: string[] = [];
-    for (const [index, schema] of Object.entries(serverSecurity)) {
+    const globalSecurityIds: string[] = [];
+    for (const [index, schema] of Object.entries(globalSecurity)) {
       const id = lcFirst(makeCleanId(`server security ${index}`));
       this.addSecurityScheme(id, schema);
-      serverSecurityIds.push(id);
+      globalSecurityIds.push(id);
     }
     for (const server in servers) {
       const uri = new URL(servers[server].url);
@@ -109,8 +109,8 @@ export class Documentation extends AsyncApiBuilder {
         host: uri.host,
         pathname: uri.pathname,
         protocol: uri.protocol.slice(0, -1),
-        security: serverSecurityIds.length
-          ? serverSecurityIds.map((id) => ({
+        security: globalSecurityIds.length
+          ? globalSecurityIds.map((id) => ({
               $ref: `#/components/securitySchemes/${id}`,
             }))
           : undefined,
@@ -120,18 +120,17 @@ export class Documentation extends AsyncApiBuilder {
       }
     }
     const channelBinding = this.#makeChannelBinding();
-    for (const [
-      dirty,
-      { emission, examples, security: nsSecurity = [] },
-    ] of Object.entries(namespaces)) {
+    for (const [dirty, { emission, examples, security = [] }] of Object.entries(
+      namespaces,
+    )) {
       const ns = normalizeNS(dirty);
       const channelId = makeCleanId(ns) || "Root";
       const messages: MessagesObject = {};
-      const nsSecurityIds: string[] = [];
-      for (const [index, schema] of Object.entries(nsSecurity)) {
+      const securityIds: string[] = [];
+      for (const [index, schema] of Object.entries(security)) {
         const id = lcFirst(makeCleanId(`${channelId} security ${index}`));
         this.addSecurityScheme(id, schema);
-        nsSecurityIds.push(id);
+        securityIds.push(id);
       }
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const messageId = lcFirst(
@@ -201,7 +200,7 @@ export class Documentation extends AsyncApiBuilder {
               event,
               ns,
               ackId: output && ackId,
-              securityIds: nsSecurityIds,
+              securityIds: securityIds,
             }),
           );
         }

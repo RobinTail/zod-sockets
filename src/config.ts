@@ -26,14 +26,14 @@ interface ConstructorOptions<NS extends Namespaces> {
    * @see Namespace
    * */
   namespaces?: NS;
-  security?: SecuritySchemeObject[];
+  globalSecurity?: SecuritySchemeObject[];
 }
 
 export class Config<T extends Namespaces = {}> {
   public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
-  public readonly security: SecuritySchemeObject[];
+  public readonly globalSecurity: SecuritySchemeObject[];
   public readonly namespaces: T;
 
   public constructor({
@@ -41,13 +41,13 @@ export class Config<T extends Namespaces = {}> {
     timeout = 2000,
     startupLogo = true,
     namespaces = {} as T,
-    security = [],
+    globalSecurity = [],
   }: ConstructorOptions<T> = {}) {
     this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;
     this.namespaces = namespaces;
-    this.security = security;
+    this.globalSecurity = globalSecurity;
   }
 
   public addNamespace<
@@ -64,11 +64,12 @@ export class Config<T extends Namespaces = {}> {
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
   > {
-    const { logger, timeout, startupLogo, namespaces } = this;
+    const { logger, timeout, startupLogo, namespaces, globalSecurity } = this;
     return new Config({
       logger,
       timeout,
       startupLogo,
+      globalSecurity,
       namespaces: {
         ...namespaces,
         [path]: { emission, examples, hooks, metadata, security },
@@ -85,6 +86,7 @@ export const createSimpleConfig = <
   startupLogo,
   timeout,
   logger,
+  globalSecurity,
   security,
   emission,
   examples,
@@ -92,9 +94,10 @@ export const createSimpleConfig = <
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
-  new Config({ startupLogo, timeout, logger, security }).addNamespace({
+  new Config({ startupLogo, timeout, logger, globalSecurity }).addNamespace({
     emission,
     examples,
     metadata,
     hooks,
+    security,
   });

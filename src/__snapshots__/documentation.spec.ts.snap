@@ -1979,3 +1979,88 @@ operations:
         - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
 "
 `;
+
+exports[`Documentation > Security > should depict server and channel security 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing security
+  version: 3.4.5
+id: "urn:example:com:"
+defaultContentType: text/plain
+servers:
+  test:
+    host: example.com
+    pathname: /
+    protocol: https
+    security:
+      - $ref: "#/components/securitySchemes/serverSecurity0"
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              const: Upgrade
+            upgrade:
+              type: string
+              const: websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              type: string
+              const: "4"
+              description: The version of the protocol
+            transport:
+              type: string
+              enum:
+                - polling
+                - websocket
+              description: The name of the transport
+            sid:
+              type: string
+              description: The session identifier
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: array
+          additionalItems: false
+components:
+  securitySchemes:
+    serverSecurity0:
+      type: httpApiKey
+      description: Sample security schema
+      in: header
+      name: X-Api-Key
+    rootSecurity0:
+      type: userPassword
+      description: Namespace level security sample
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    security:
+      - $ref: "#/components/securitySchemes/rootSecurity0"
+"
+`;

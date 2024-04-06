@@ -45,7 +45,7 @@ export class Config<T extends Namespaces = {}> {
     this.namespaces = namespaces;
   }
 
-  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: undefined } */
+  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {} } */
   public addNamespace<
     E extends EmissionMap = {},
     D extends z.SomeZodObject = z.ZodObject<{}>,
@@ -55,20 +55,13 @@ export class Config<T extends Namespaces = {}> {
     emission = {} as E,
     metadata = z.object({}) as D,
     hooks = {},
-    examples,
+    examples = {},
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
   > {
-    const { logger, timeout, startupLogo, namespaces } = this;
-    return new Config({
-      logger,
-      timeout,
-      startupLogo,
-      namespaces: {
-        ...namespaces,
-        [path]: { emission, examples, hooks, metadata },
-      },
-    });
+    const { namespaces, ...rest } = this;
+    const ns: Namespace<E, D> = { emission, examples, hooks, metadata };
+    return new Config({ ...rest, namespaces: { ...namespaces, [path]: ns } });
   }
 }
 

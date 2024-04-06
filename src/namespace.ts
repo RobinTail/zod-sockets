@@ -19,7 +19,7 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
   /** @desc The events that the server can emit */
   emission: E;
   /** @desc Examples for the emission per event */
-  examples?: {
+  examples: {
     [K in keyof E]?: Example<E[K]> | Example<E[K]>[];
   };
   /** @desc Handlers for some events in different contexts */

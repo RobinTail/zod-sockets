@@ -35,9 +35,9 @@ interface DocumentationParams {
 const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
   event: string,
   variant: V,
-  nsExamples?: { [K in string]?: T | T[] },
+  nsExamples: { [K in string]?: T | T[] },
 ): NonNullable<T[V]>[] | undefined => {
-  const eventExamples = nsExamples?.[event];
+  const eventExamples = nsExamples[event];
   return (
     eventExamples &&
     (Array.isArray(eventExamples) ? eventExamples : [eventExamples])

@@ -2,6 +2,14 @@
 
 ## Version 0
 
+### v0.18.0
+
+- Fixed possibly invalid values of `type` property when depicting `z.literal()`, `z.enum()` and `z.nativeEnum()`;
+- Added depicting of `z.tuple().rest()` when used in a nested level of the schemas;
+- Upgraded all dependencies;
+- Consistent typing of the `Namespace` properties;
+- Client distribution methods `join()` and `leave()` made async (always return `Promise<void>`).
+
 ### v0.17.0
 
 - Added `handshake` property to the client objects:

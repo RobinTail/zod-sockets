@@ -63,8 +63,6 @@ describe("Attach", () => {
     ];
 
     test("should set the listeners", async () => {
-      const hooks = {};
-      (hooks as any).stub = vi.fn(); // for ensureNamespaces without setting actual hooks
       await attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
@@ -72,8 +70,6 @@ describe("Attach", () => {
         config: createSimpleConfig({
           startupLogo: false,
           timeout: 100,
-          emission: {},
-          hooks,
           metadata: z.object({ name: z.string() }),
           logger: loggerMock as unknown as AbstractLogger,
         }),

@@ -8,6 +8,6 @@ export const onUnsubscribe = actionsFactory.build({
   input: z.tuple([]).rest(z.unknown().describe("Does not matter")),
   handler: async ({ logger, client }) => {
     logger.info(`Unsubscribed ${client.id}`);
-    client.leave(subscribersRoom);
+    await client.leave(subscribersRoom);
   },
 });

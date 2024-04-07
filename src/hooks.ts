@@ -16,3 +16,15 @@ export interface Hooks<E extends EmissionMap, D extends z.SomeZodObject> {
   /** @desc A place for emitting events regardless clients activity */
   onStartup: Handler<IndependentContext<E, D>, void>;
 }
+
+export const defaultHooks: Hooks<EmissionMap, z.SomeZodObject> = {
+  onConnection: ({ client: { id, getData }, logger }) =>
+    logger.debug("Client connected", { ...getData(), id }),
+  onDisconnect: ({ client: { id, getData }, logger }) =>
+    logger.debug("Client disconnected", { ...getData(), id }),
+  onAnyIncoming: ({ event, client: { id, getData }, logger }) =>
+    logger.debug(`${event} from ${id}`, getData()),
+  onAnyOutgoing: ({ event, logger, payload }) =>
+    logger.debug(`Sending ${event}`, payload),
+  onStartup: ({ logger }) => logger.debug("Ready"),
+};

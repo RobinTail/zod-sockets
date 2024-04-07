@@ -6,6 +6,7 @@ import { Config } from "./config";
 import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
 import { ClientContext, IndependentContext } from "./handler";
+import { defaultHooks } from "./hooks";
 import { Namespaces, normalizeNS } from "./namespace";
 import { makeRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
@@ -40,16 +41,12 @@ export const attachSockets = async <NS extends Namespaces>({
     const ns = io.of(normalizeNS(name));
     const { emission, hooks, metadata } = namespaces[name];
     const {
-      onConnection = ({ client: { id, getData }, logger }) =>
-        logger.debug("Client connected", { ...getData(), id }),
-      onDisconnect = ({ client: { id, getData }, logger }) =>
-        logger.debug("Client disconnected", { ...getData(), id }),
-      onAnyIncoming = ({ event, client: { id, getData }, logger }) =>
-        logger.debug(`${event} from ${id}`, getData()),
-      onAnyOutgoing = ({ event, logger, payload }) =>
-        logger.debug(`Sending ${event}`, payload),
-      onStartup = ({ logger }) => logger.debug("Ready"),
-    } = hooks;
+      onConnection,
+      onDisconnect,
+      onAnyIncoming,
+      onAnyOutgoing,
+      onStartup,
+    } = { ...defaultHooks, ...hooks };
     const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
     const nsCtx: IndependentContext<NSEmissions, NSMeta> = {
       logger: rootLogger,

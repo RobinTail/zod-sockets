@@ -31,6 +31,7 @@ describe("Entrypoint", () => {
     >({
       emission: { event: { schema: z.tuple([]) } },
       hooks: {},
+      examples: {},
       metadata: z.object({ count: z.number() }),
     });
     expectType<
@@ -55,8 +56,8 @@ describe("Entrypoint", () => {
         },
         getData: () => ({ count: 1 }),
         setData: () => {},
-        join: () => {},
-        leave: () => {},
+        join: async () => {},
+        leave: async () => {},
         getRooms: () => [""],
         emit: async () => true,
         broadcast: async () => true,
@@ -81,8 +82,8 @@ describe("Entrypoint", () => {
             rooms: [""],
             getData: () => ({ count: 1 }),
             emit: async () => true,
-            join: () => {},
-            leave: () => {},
+            join: async () => {},
+            leave: async () => {},
           },
         ],
         broadcast: async () => true,

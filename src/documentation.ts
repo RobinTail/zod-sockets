@@ -33,18 +33,13 @@ interface DocumentationParams {
 }
 
 const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
-  event: string,
   variant: V,
-  nsExamples?: { [K in string]?: T | T[] },
-): NonNullable<T[V]>[] | undefined => {
-  const eventExamples = nsExamples?.[event];
-  return (
-    eventExamples &&
-    (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
-      .map((example) => example[variant])
-      .filter((value): value is NonNullable<typeof value> => !!value)
-  );
-};
+  eventExamples: T | T[] | undefined,
+): NonNullable<T[V]>[] | undefined =>
+  eventExamples &&
+  (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
+    .map((example) => example[variant])
+    .filter((value): value is NonNullable<typeof value> => !!value);
 
 export class Documentation extends AsyncApiBuilder {
   #makeChannelBinding(): WS.Channel {
@@ -124,13 +119,13 @@ export class Documentation extends AsyncApiBuilder {
           event,
           schema,
           direction: "out",
-          examples: getEmissionExamples(event, "payload", examples),
+          examples: getEmissionExamples("payload", examples[event]),
         });
         if (ack) {
           messages[ackId] = depictMessage({
             event,
             schema: ack,
-            examples: getEmissionExamples(event, "ack", examples),
+            examples: getEmissionExamples("ack", examples[event]),
             direction: "in",
             isAck: true,
           });

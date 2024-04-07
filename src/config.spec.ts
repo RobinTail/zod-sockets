@@ -16,8 +16,18 @@ describe("Config", () => {
     test("should create the class instance from the definition", () => {
       const config = new Config({
         namespaces: {
-          "/": { emission: {}, hooks: {}, metadata: z.object({}) },
-          test: { emission: {}, hooks: {}, metadata: z.object({}) },
+          "/": {
+            emission: {},
+            hooks: {},
+            metadata: z.object({}),
+            examples: {},
+          },
+          test: {
+            emission: {},
+            hooks: {},
+            metadata: z.object({}),
+            examples: {},
+          },
         },
         timeout: 3000,
         logger: { debug: vi.fn() } as unknown as AbstractLogger,
@@ -26,8 +36,18 @@ describe("Config", () => {
       expect(config.logger).toEqual({ debug: expect.any(Function) });
       expect(config.timeout).toBe(3000);
       expect(config.namespaces).toEqual({
-        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
-        test: { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
+        "/": {
+          emission: {},
+          hooks: {},
+          metadata: expect.any(z.ZodObject),
+          examples: {},
+        },
+        test: {
+          emission: {},
+          hooks: {},
+          metadata: expect.any(z.ZodObject),
+          examples: {},
+        },
       });
     });
   });
@@ -50,6 +70,7 @@ describe("Config", () => {
           emission: { test: { schema } },
           hooks: {},
           metadata: expect.any(z.ZodObject),
+          examples: {},
         },
       });
     });
@@ -62,7 +83,12 @@ describe("Config", () => {
       expect(config.logger).toEqual(console);
       expect(config.timeout).toBe(2000);
       expect(config.namespaces).toEqual({
-        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
+        "/": {
+          emission: {},
+          hooks: {},
+          metadata: expect.any(z.ZodObject),
+          examples: {},
+        },
       });
     });
 
@@ -78,7 +104,12 @@ describe("Config", () => {
       expect(config.logger).not.toEqual(console);
       expect(config.timeout).toBe(3000);
       expect(config.namespaces).toEqual({
-        "/": { emission: {}, hooks: {}, metadata: expect.any(z.ZodObject) },
+        "/": {
+          emission: {},
+          hooks: {},
+          metadata: expect.any(z.ZodObject),
+          examples: {},
+        },
       });
     });
   });

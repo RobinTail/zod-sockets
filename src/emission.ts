@@ -12,9 +12,7 @@ export interface Emission {
   ack?: z.AnyZodTuple;
 }
 
-export interface EmissionMap {
-  [event: string]: Emission;
-}
+export type EmissionMap = Record<string, Emission>;
 
 type TupleOrTrue<T> = T extends z.AnyZodTuple ? T : z.ZodLiteral<true>;
 type TuplesOrTrue<T> = T extends z.AnyZodTuple

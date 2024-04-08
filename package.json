@@ -58,7 +58,7 @@
     "hooks": "husky"
   },
   "dependencies": {
-    "ansis": "^3.0.0",
+    "ansis": "^3.0.2",
     "ramda": "^0.29.1",
     "yaml": "^2.4.1"
   },

@@ -1,6 +1,6 @@
 import { SchemaObject } from "./async-api/model";
-import { config as exampleConfig } from "../example/config";
-import { actions } from "../example/actions";
+import { config as exampleConfig } from "../examples/basics/config";
+import { actions } from "../examples/basics/actions";
 import { ActionsFactory } from "./actions-factory";
 import { createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";

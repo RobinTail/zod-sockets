@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createSimpleConfig } from "../src";
+import { createSimpleConfig } from "../../src";
 
 /**
  * @see onSubscribe

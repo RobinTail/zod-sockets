@@ -162,7 +162,7 @@ const config = new Config({ logger, timeout })
   - Since AsyncAPI does not yet support `prefixItems` feature for describing tuples, those are depicted as objects
     having numeric properties. I found it acceptable at the moment because
     [Arrays are Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array);
-  - See the example of the generated documentation [here](example/example-documentation.yaml).
+  - See the example of the generated documentation [here](examples/basics/example-documentation.yaml).
 
 ```typescript
 import { Documentation } from "zod-sockets";
@@ -222,7 +222,7 @@ const after = createConfig() // this makes root namespace "/"
   - It provides an ability to export the event definitions into a Typescript file for using on the frontend side;
   - For better naming of the functional arguments consider using `.describe()` method of the schemas;
   - There is also a special handling for the cases when event has both `.rest()` on the payload and an acknowledgement;
-  - See the [example of the generated code](example/example-client.ts).
+  - See the [example of the generated code](examples/basics/example-client.ts).
 
 ```typescript
 import { Integration } from "zod-sockets";

@@ -403,10 +403,10 @@ const handler = async ({ all, logger }) => {
 ### Subscriptions
 
 In order to implement a subscription service you can utilize the rooms feature and make two Actions: for
-[subscribing](example/actions/subscribe.ts) and [unsubscribing](example/actions/unsubscribe.ts). Handlers of those
+[subscribing](examples/basics/actions/subscribe.ts) and [unsubscribing](examples/basics/actions/unsubscribe.ts). Handlers of those
 Actions can simply do `client.join()` and `client.leave()` in order to address the client to/from a certain room. A
 simple `setInterval()` function within an [Independent Context](#independent-context) (`onStartup` hook) can broadcast
-to those who are in that room. See the [example implementation](example/config.ts).
+to those who are in that room. See the [example implementation](examples/basics/config.ts).
 
 ## Metadata
 
@@ -500,7 +500,7 @@ const integration = new Integration({ config, actions });
 const typescriptCode = integration.print(); // write this to a file
 ```
 
-Check out [the generated example](example/example-client.ts).
+Check out [the generated example](examples/basics/example-client.ts).
 
 You can adjust the naming of the produced functional arguments by applying the `.describe()` method to the schemas.
 
@@ -538,8 +538,8 @@ const yamlString = new Documentation({
 }).getSpecAsYaml();
 ```
 
-See the example of the generated documentation [on GitHub](example/example-documentation.yaml) or
-[open in Studio](https://studio.asyncapi.com/?url=https://raw.githubusercontent.com/RobinTail/zod-sockets/main/example/example-documentation.yaml).
+See the example of the generated documentation [on GitHub](examples/basics/example-documentation.yaml) or
+[open in Studio](https://studio.asyncapi.com/?url=https://raw.githubusercontent.com/RobinTail/zod-sockets/main/examples/basics/example-documentation.yaml).
 
 ### Adding examples to the documentation
 

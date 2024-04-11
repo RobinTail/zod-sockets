@@ -29,4 +29,4 @@ jobs:
     - name: Installing unreasonably large package
       run: yarn global add @asyncapi/cli
     - name: Validate
-      run: asyncapi validate ./example/example-documentation.yaml
+      run: asyncapi validate ./examples/examples-documentation.yaml

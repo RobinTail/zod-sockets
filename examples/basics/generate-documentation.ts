@@ -1,11 +1,11 @@
 import { writeFile } from "node:fs/promises";
-import { Documentation } from "../src";
+import { Documentation } from "../../src";
 import { actions } from "./actions";
 import { config } from "./config";
-import manifest from "../package.json";
+import manifest from "../../package.json";
 
 await writeFile(
-  "example/example-documentation.yaml",
+  "examples/basics/example-documentation.yaml",
   new Documentation({
     version: manifest.version,
     title: "Example APP",

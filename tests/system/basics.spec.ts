@@ -11,7 +11,7 @@ describe("System test on Example", async () => {
   };
 
   const example = spawn("tsx", ["index.ts"], {
-    cwd: "./example",
+    cwd: "./examples/basics",
   });
   example.stdout.on("data", listener);
   await waitFor(() => out.indexOf("Listening") > -1);

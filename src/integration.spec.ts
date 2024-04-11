@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { actions } from "../example/actions";
-import { config } from "../example/config";
+import { actions } from "../examples/basics/actions";
+import { config } from "../examples/basics/config";
 import { ActionsFactory } from "./actions-factory";
 import { Integration } from "./integration";
 

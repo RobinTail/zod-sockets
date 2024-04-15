@@ -62,6 +62,7 @@ describe("Action", () => {
     const emitMock = vi.fn();
     const broadcastMock = vi.fn();
     const isConnectedMock = vi.fn();
+    const getRequestMock = vi.fn();
     const withRoomsMock = vi.fn();
     const getRoomsMock = vi.fn();
     const getAllRoomsMock = vi.fn();
@@ -90,6 +91,7 @@ describe("Action", () => {
           broadcast: broadcastMock,
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
+          getRequest: getRequestMock,
           getData: getDataMock,
           setData: setDataMock,
           join: joinMock,
@@ -112,6 +114,7 @@ describe("Action", () => {
           emit: emitMock,
           broadcast: broadcastMock,
           isConnected: isConnectedMock,
+          getRequest: getRequestMock,
           getRooms: getRoomsMock,
           getData: getDataMock,
           setData: setDataMock,
@@ -140,6 +143,7 @@ describe("Action", () => {
           broadcast: broadcastMock,
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
+          getRequest: getRequestMock,
           getData: getDataMock,
           setData: setDataMock,
           join: joinMock,
@@ -153,6 +157,7 @@ describe("Action", () => {
           handshake: { auth: {} },
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
+          getRequest: getRequestMock,
           emit: emitMock,
           broadcast: broadcastMock,
           getData: getDataMock,
@@ -188,6 +193,7 @@ describe("Action", () => {
           handshake: { auth: {} } as Socket["handshake"],
           getRooms: getRoomsMock,
           isConnected: isConnectedMock,
+          getRequest: getRequestMock,
           emit: emitMock,
           broadcast: broadcastMock,
           getData: getDataMock,

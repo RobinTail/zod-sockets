@@ -2,6 +2,10 @@
 
 ## Version 0
 
+### v0.19.0
+
+- Added `client.getRequest()` method (proxy for `Socket::request`).
+
 ### v0.18.0
 
 - Fixed possibly invalid values of `type` property when depicting `z.literal()`, `z.enum()` and `z.nativeEnum()`;

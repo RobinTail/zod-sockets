@@ -17,6 +17,8 @@ describe("Attach", () => {
       onAnyOutgoing: vi.fn(),
       join: vi.fn(),
       leave: vi.fn(),
+      handshake: {},
+      request: {},
     };
     const adapterMock = {
       rooms: new Map([
@@ -119,6 +121,8 @@ describe("Attach", () => {
         client: {
           id: "ID",
           isConnected: expect.any(Function),
+          getRequest: expect.any(Function),
+          handshake: {},
           getRooms: expect.any(Function),
           emit: expect.any(Function),
           broadcast: expect.any(Function),
@@ -188,6 +192,16 @@ describe("Attach", () => {
       expect(actionsMock[0].execute.mock.lastCall[0].client.getData()).toEqual({
         name: "user",
       });
+
+      // client.handshake
+      expect(actionsMock[0].execute.mock.lastCall[0].client.handshake).toEqual(
+        socketMock.handshake,
+      );
+
+      // client.getRequest
+      expect(
+        actionsMock[0].execute.mock.lastCall[0].client.getRequest(),
+      ).toEqual(socketMock.request);
 
       // join/leave:
       for (const rooms of ["room1", ["room2", "room3"]]) {

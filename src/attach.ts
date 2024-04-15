@@ -70,7 +70,7 @@ export const attachSockets = async <NS extends Namespaces>({
         broadcast,
         id: socket.id,
         handshake: socket.handshake,
-        getRequest: () => socket.request,
+        getRequest: <T extends http.IncomingMessage>() => socket.request as T,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
         getData: () => socket.data || {},

@@ -1,3 +1,4 @@
+import type { IncomingMessage } from "node:http";
 import type { Socket } from "socket.io";
 import { z } from "zod";
 import { Distribution } from "./distribution";
@@ -10,7 +11,11 @@ export interface Client<E extends EmissionMap, D extends z.SomeZodObject>
   /** @alias Socket.id */
   id: Socket["id"];
   handshake: Socket["handshake"];
-  getRequest: () => Socket["request"];
+  /**
+   * @desc When using express-session:
+   * @example getRequest<express.Request>().session
+   **/
+  getRequest: <T extends IncomingMessage = Socket["request"]>() => T;
   /** @desc Returns the list of the rooms the client in */
   getRooms: () => string[];
   /**

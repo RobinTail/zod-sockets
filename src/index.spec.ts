@@ -1,3 +1,4 @@
+import type { IncomingMessage } from "node:http";
 import { expectNotType, expectType } from "tsd";
 import { z } from "zod";
 import {
@@ -42,6 +43,7 @@ describe("Entrypoint", () => {
     >({
       client: {
         isConnected: () => true,
+        getRequest: <T>() => ({}) as IncomingMessage as T,
         id: "",
         handshake: {
           headers: {},

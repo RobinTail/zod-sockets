@@ -21,6 +21,7 @@ interface ConstructorOptions<NS extends Namespaces> {
   namespaces?: NS;
 }
 
+/** @todo consider using it for namespaces declaration only */
 export class Config<T extends Namespaces = {}> {
   public readonly timeout: number;
   public readonly startupLogo: boolean;

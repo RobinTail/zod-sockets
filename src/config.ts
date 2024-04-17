@@ -1,14 +1,8 @@
 import { z } from "zod";
 import { EmissionMap } from "./emission";
-import { AbstractLogger } from "./logger";
 import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
 
 interface ConstructorOptions<NS extends Namespaces> {
-  /**
-   * @desc The instance of a logger
-   * @default console
-   * */
-  logger?: AbstractLogger;
   /**
    * @desc The acknowledgment awaiting timeout
    * @default 2000
@@ -28,18 +22,15 @@ interface ConstructorOptions<NS extends Namespaces> {
 }
 
 export class Config<T extends Namespaces = {}> {
-  public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
   public readonly namespaces: T;
 
   public constructor({
-    logger = console,
     timeout = 2000,
     startupLogo = true,
     namespaces = {} as T,
   }: ConstructorOptions<T> = {}) {
-    this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;
     this.namespaces = namespaces;
@@ -72,14 +63,13 @@ export const createSimpleConfig = <
 >({
   startupLogo,
   timeout,
-  logger,
   emission,
   examples,
   hooks,
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
-  new Config({ startupLogo, timeout, logger }).addNamespace({
+  new Config({ startupLogo, timeout }).addNamespace({
     emission,
     examples,
     metadata,

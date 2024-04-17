@@ -7,6 +7,7 @@ import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
 import { ClientContext, IndependentContext } from "./handler";
 import { defaultHooks } from "./hooks";
+import { AbstractLogger } from "./logger";
 import { Namespaces, normalizeNS } from "./namespace";
 import { makeRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
@@ -15,7 +16,8 @@ export const attachSockets = async <NS extends Namespaces>({
   io,
   actions,
   target,
-  config: { logger: rootLogger, namespaces, timeout, startupLogo = true },
+  config: { namespaces, timeout, startupLogo = true },
+  logger: rootLogger = console,
 }: {
   /**
    * @desc The Socket.IO server
@@ -34,6 +36,11 @@ export const attachSockets = async <NS extends Namespaces>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS>;
+  /**
+   * @desc The instance of a logger
+   * @default console
+   * */
+  logger?: AbstractLogger;
 }): Promise<Server> => {
   for (const name in namespaces) {
     type NSEmissions = NS[typeof name]["emission"];

@@ -69,11 +69,11 @@ describe("Attach", () => {
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
         actions: actionsMock,
+        logger: loggerMock as unknown as AbstractLogger,
         config: createSimpleConfig({
           startupLogo: false,
           timeout: 100,
           metadata: z.object({ name: z.string() }),
-          logger: loggerMock as unknown as AbstractLogger,
         }),
       });
       expect(ioMock.of).toHaveBeenLastCalledWith("/");

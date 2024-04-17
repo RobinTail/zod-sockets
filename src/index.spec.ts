@@ -2,6 +2,7 @@ import type { IncomingMessage } from "node:http";
 import { expectNotType, expectType } from "tsd";
 import { z } from "zod";
 import {
+  AbstractLogger,
   ClientContext,
   EmissionMap,
   LoggerOverrides,
@@ -16,6 +17,7 @@ describe("Entrypoint", () => {
   });
 
   test("should expose certain types and interfaces", () => {
+    expectType<AbstractLogger>(console);
     expectType<EmissionMap>({});
     expectType<EmissionMap>({ event: { schema: z.tuple([]) } });
     expectType<EmissionMap>({

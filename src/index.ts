@@ -7,6 +7,6 @@ export { Documentation } from "./documentation";
 
 // issue 952
 export type { EmissionMap } from "./emission";
-export type { LoggerOverrides } from "./logger";
+export type { AbstractLogger, LoggerOverrides } from "./logger";
 export type { ClientContext } from "./handler";
 export type { Namespace } from "./namespace";

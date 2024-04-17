@@ -45,8 +45,7 @@ yarn add zod-sockets zod socket.io typescript
 ```typescript
 import { createSimpleConfig } from "zod-sockets";
 
-// shorthand for root namespace only, defaults: console logger, timeout 2s
-const config = createSimpleConfig();
+const config = createSimpleConfig(); // shorthand for root namespace only
 ```
 
 ## Create a factory
@@ -191,7 +190,7 @@ The library supports any logger having `info()`, `debug()`, `error()` and
 
 ```typescript
 import pino, { Logger } from "pino";
-import { createSimpleConfig } from "zod-sockets";
+import { attachSockets } from "zod-sockets";
 
 const logger = pino({
   transport: {
@@ -199,7 +198,7 @@ const logger = pino({
     options: { colorize: true },
   },
 });
-const config = createSimpleConfig({ logger });
+attachSockets({ logger });
 
 // Setting the type of logger used
 declare module "zod-sockets" {
@@ -209,17 +208,15 @@ declare module "zod-sockets" {
 
 ### With Express Zod API
 
-If you're using `express-zod-api`, you can reuse the same logger. If it's a custom logger — supply the same instance to
-configs of both libraries. In case you're using the default `winston` logger provided by
-`express-zod-api`, you can obtain its instance from the returns of the `createServer()` method.
+If you're using `express-zod-api`, you can reuse the same logger from the returns of the `createServer()` method.
 
 ```typescript
 import { createServer } from "express-zod-api";
-import { createSimpleConfig } from "zod-sockets";
+import { attachSockets } from "zod-sockets";
 import type { Logger } from "winston";
 
 const { logger } = await createServer();
-const config = createSimpleConfig({ logger });
+attachSockets({ logger });
 
 // Setting the type of logger used
 declare module "zod-sockets" {
@@ -465,10 +462,7 @@ different essence, payload and handlers. For using namespaces replace the `creat
 ```typescript
 import { Config } from "zod-sockets";
 
-const config = new Config({
-  logger,
-  timeout: 2000,
-})
+const config = new Config()
   .addNamespace({
     // The namespace "/public"
     emission: { chat: { schema } },

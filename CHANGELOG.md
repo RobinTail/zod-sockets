@@ -8,6 +8,23 @@
 
 ## Version 0
 
+### v0.20.0
+
+- Moved `logger` from configuration to `attachRouting()`:
+  - This simplifies reusing logger instance when running along with `express-zod-api`.
+
+```ts
+// before:
+import { createSimpleConfig, Config } from "zod-sockets";
+createSimpleConfig({ logger });
+// or
+new Config({ logger });
+
+// after:
+import { attachSockets } from "zod-sockets";
+attachSockets({ config });
+```
+
 ### v0.19.0
 
 - Added `client.getRequest()` method (proxy for `Socket::request`).

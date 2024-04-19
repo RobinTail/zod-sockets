@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1
+
+### v1.0.0
+
+- First production-ready release having stable public API.
+
 ## Version 0
 
 ### v0.20.0

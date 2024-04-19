@@ -1,5 +1,8 @@
-import { hex } from "ansis";
+import { hex, italic } from "ansis";
 import { T, always, cond, gt } from "ramda";
+
+const dedication = italic("for Nex".padEnd(20));
+const proud = "Proudly supports non-binary community.".padStart(77);
 
 const georgia11 = `
                            ,,
@@ -10,6 +13,8 @@ M’   AMV                   MM      ,MI    "Y                     MM           
   AMV   , 8M     M8 8MI    MM      .     `MM 8M     M8 8M        MM;Mm   8M""""""   MM    `YMMMa.
  AMV   ,M YA.   ,A9 `Mb    MM      Mb     dM YA.   ,A9 YM.    ,  MM `Mb. YM.    ,   MM    L.   I8
 AMVmmmmMM  `Ybmd9’   `Wbmd"MML.    P"Ybmmd"   `Ybmd9’   YMbmd’ .JMML. YA. `Mbmmd’   `Mbmo M9mmmP’
+
+${dedication}${proud}
 `;
 
 export const getStartupLogo = () =>

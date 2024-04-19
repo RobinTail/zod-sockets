@@ -5,8 +5,6 @@
 
 **Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers.**
 
-Version 0 is unstable — public API may be changed at any time.
-
 # How it works
 
 ## Technologies
@@ -569,8 +567,3 @@ const action = factory
   .example("input", ["example payload"])
   .example("output", ["example acknowledgement"]);
 ```
-
-# Next
-
-More information is coming soon when the public API becomes stable (v1).
-Meanwhile, use the JSDoc annotations, IDE type assistance and explore the sources of the repo for informing yourself.

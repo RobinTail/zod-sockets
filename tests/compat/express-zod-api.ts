@@ -10,7 +10,7 @@ const serverConfig = createConfig({
 
 const { httpServer, logger } = await createServer(serverConfig, {});
 
-const socketsConfig = createSimpleConfig({ logger });
+const socketsConfig = createSimpleConfig();
 
 const io = new Server();
 await attachSockets({
@@ -18,4 +18,5 @@ await attachSockets({
   config: socketsConfig,
   actions: [],
   io,
+  logger,
 });

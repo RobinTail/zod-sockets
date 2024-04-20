@@ -2,6 +2,8 @@
 
 [![coverage](https://coveralls.io/repos/github/RobinTail/zod-sockets/badge.svg)](https://coveralls.io/github/RobinTail/zod-sockets)
 [![AsyncAPI Validation](https://github.com/RobinTail/zod-sockets/actions/workflows/async-api-validation.yml/badge.svg)](https://github.com/RobinTail/zod-sockets/actions/workflows/async-api-validation.yml)
+![NPM Downloads](https://img.shields.io/npm/dw/zod-sockets)
+![NPM License](https://img.shields.io/npm/l/zod-sockets)
 
 **Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers.**
 

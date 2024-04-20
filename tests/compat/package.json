@@ -6,7 +6,7 @@
   "dependencies": {
     "zod-sockets": "link:../..",
     "express": "^4.18.2",
-    "express-zod-api": "^18.0.0-beta3",
+    "express-zod-api": "^18.0.0",
     "http-errors": "^2.0.0"
   }
 }

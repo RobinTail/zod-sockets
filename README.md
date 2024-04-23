@@ -403,7 +403,49 @@ In order to implement a subscription service you can utilize the rooms feature a
 [subscribing](example/actions/subscribe.ts) and [unsubscribing](example/actions/unsubscribe.ts). Handlers of those
 Actions can simply do `client.join()` and `client.leave()` in order to address the client to/from a certain room. A
 simple `setInterval()` function within an [Independent Context](#independent-context) (`onStartup` hook) can broadcast
-to those who are in that room. See the [example implementation](example/config.ts).
+to those who are in that room. Here is a simplified example:
+
+```ts
+import { createServer } from "express-zod-api";
+import { attachSockets, createSimpleConfig, ActionsFactory } from "zod-sockets";
+import { Server } from "socket.io";
+import { z } from "zod";
+
+const { logger, httpsServer, httpServer } = await createServer();
+
+const config = createSimpleConfig({
+  emission: {
+    time: { schema: z.tuple([z.date()]) }, // constraints
+  },
+  hooks: {
+    onStartup: async ({ withRooms }) => {
+      setInterval(() => {
+        withRooms("subscribers").broadcast("time", new Date());
+      }, 1000);
+    },
+  },
+});
+
+const factory = new ActionsFactory(config);
+await attachSockets({
+  config,
+  logger,
+  io: new Server(),
+  target: httpsServer || httpServer,
+  actions: [
+    factory.build({
+      event: "subscribe",
+      input: z.tuple([]),
+      handler: async ({ client }) => client.join("subscribers"),
+    }),
+    factory.build({
+      event: "unsubscribe",
+      input: z.tuple([]),
+      handler: async ({ client }) => client.leave("subscribers"),
+    }),
+  ],
+});
+```
 
 ## Metadata
 

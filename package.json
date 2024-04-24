@@ -1,6 +1,6 @@
 {
   "name": "zod-sockets",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers",
   "type": "module",
   "main": "dist/index.cjs",

@@ -2,6 +2,10 @@
 
 ## Version 1
 
+### v1.1.0
+
+- Supporting Node 22.
+
 ### v1.0.0
 
 - First production-ready release having stable public API.

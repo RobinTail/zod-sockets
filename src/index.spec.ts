@@ -35,6 +35,7 @@ describe("Entrypoint", () => {
       emission: { event: { schema: z.tuple([]) } },
       hooks: {},
       examples: {},
+      security: [],
       metadata: z.object({ count: z.number() }),
     });
     expectType<

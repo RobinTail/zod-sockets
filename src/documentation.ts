@@ -115,7 +115,7 @@ export class Documentation extends AsyncApiBuilder {
       }
     }
     const channelBinding = this.#makeChannelBinding();
-    for (const [dirty, { emission, examples, security = [] }] of Object.entries(
+    for (const [dirty, { emission, examples, security }] of Object.entries(
       namespaces,
     )) {
       const ns = normalizeNS(dirty);

@@ -42,7 +42,7 @@ export class Config<T extends Namespaces = {}> {
     this.security = security;
   }
 
-  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {} } */
+  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {}, security: [] } */
   public addNamespace<
     E extends EmissionMap = {},
     D extends z.SomeZodObject = z.ZodObject<{}>,
@@ -53,7 +53,7 @@ export class Config<T extends Namespaces = {}> {
     metadata = z.object({}) as D,
     hooks = {},
     examples = {},
-    security,
+    security = [],
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
   > {

@@ -1,13 +1,15 @@
-# zod-sockets
+# Zod Sockets
 
 [![coverage](https://coveralls.io/repos/github/RobinTail/zod-sockets/badge.svg)](https://coveralls.io/github/RobinTail/zod-sockets)
 [![AsyncAPI Validation](https://github.com/RobinTail/zod-sockets/actions/workflows/async-api-validation.yml/badge.svg)](https://github.com/RobinTail/zod-sockets/actions/workflows/async-api-validation.yml)
+![NPM Downloads](https://img.shields.io/npm/dw/zod-sockets)
+![NPM License](https://img.shields.io/npm/l/zod-sockets)
 
 **Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers.**
 
-Version 0 is unstable — public API may be changed at any time.
-
 # How it works
+
+[Demo Chat](https://github.com/RobinTail/chat)
 
 ## Technologies
 
@@ -45,8 +47,7 @@ yarn add zod-sockets zod socket.io typescript
 ```typescript
 import { createSimpleConfig } from "zod-sockets";
 
-// shorthand for root namespace only, defaults: console logger, timeout 2s
-const config = createSimpleConfig();
+const config = createSimpleConfig(); // shorthand for root namespace only
 ```
 
 ## Create a factory
@@ -191,7 +192,7 @@ The library supports any logger having `info()`, `debug()`, `error()` and
 
 ```typescript
 import pino, { Logger } from "pino";
-import { createSimpleConfig } from "zod-sockets";
+import { attachSockets } from "zod-sockets";
 
 const logger = pino({
   transport: {
@@ -199,7 +200,7 @@ const logger = pino({
     options: { colorize: true },
   },
 });
-const config = createSimpleConfig({ logger });
+attachSockets({ logger });
 
 // Setting the type of logger used
 declare module "zod-sockets" {
@@ -209,17 +210,15 @@ declare module "zod-sockets" {
 
 ### With Express Zod API
 
-If you're using `express-zod-api`, you can reuse the same logger. If it's a custom logger — supply the same instance to
-configs of both libraries. In case you're using the default `winston` logger provided by
-`express-zod-api`, you can obtain its instance from the returns of the `createServer()` method.
+If you're using `express-zod-api`, you can reuse the same logger from the returns of the `createServer()` method.
 
 ```typescript
 import { createServer } from "express-zod-api";
-import { createSimpleConfig } from "zod-sockets";
+import { attachSockets } from "zod-sockets";
 import type { Logger } from "winston";
 
 const { logger } = await createServer();
-const config = createSimpleConfig({ logger });
+attachSockets({ logger });
 
 // Setting the type of logger used
 declare module "zod-sockets" {
@@ -406,7 +405,49 @@ In order to implement a subscription service you can utilize the rooms feature a
 [subscribing](example/actions/subscribe.ts) and [unsubscribing](example/actions/unsubscribe.ts). Handlers of those
 Actions can simply do `client.join()` and `client.leave()` in order to address the client to/from a certain room. A
 simple `setInterval()` function within an [Independent Context](#independent-context) (`onStartup` hook) can broadcast
-to those who are in that room. See the [example implementation](example/config.ts).
+to those who are in that room. Here is a simplified example:
+
+```ts
+import { createServer } from "express-zod-api";
+import { attachSockets, createSimpleConfig, ActionsFactory } from "zod-sockets";
+import { Server } from "socket.io";
+import { z } from "zod";
+
+const { logger, httpsServer, httpServer } = await createServer();
+
+const config = createSimpleConfig({
+  emission: {
+    time: { schema: z.tuple([z.date()]) }, // constraints
+  },
+  hooks: {
+    onStartup: async ({ withRooms }) => {
+      setInterval(() => {
+        withRooms("subscribers").broadcast("time", new Date());
+      }, 1000);
+    },
+  },
+});
+
+const factory = new ActionsFactory(config);
+await attachSockets({
+  config,
+  logger,
+  io: new Server(),
+  target: httpsServer || httpServer,
+  actions: [
+    factory.build({
+      event: "subscribe",
+      input: z.tuple([]),
+      handler: async ({ client }) => client.join("subscribers"),
+    }),
+    factory.build({
+      event: "unsubscribe",
+      input: z.tuple([]),
+      handler: async ({ client }) => client.leave("subscribers"),
+    }),
+  ],
+});
+```
 
 ## Metadata
 
@@ -465,10 +506,7 @@ different essence, payload and handlers. For using namespaces replace the `creat
 ```typescript
 import { Config } from "zod-sockets";
 
-const config = new Config({
-  logger,
-  timeout: 2000,
-})
+const config = new Config()
   .addNamespace({
     // The namespace "/public"
     emission: { chat: { schema } },
@@ -575,8 +613,3 @@ const action = factory
   .example("input", ["example payload"])
   .example("output", ["example acknowledgement"]);
 ```
-
-# Next
-
-More information is coming soon when the public API becomes stable (v1).
-Meanwhile, use the JSDoc annotations, IDE type assistance and explore the sources of the repo for informing yourself.

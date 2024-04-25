@@ -6,6 +6,8 @@ import { Config } from "./config";
 import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
 import { ClientContext, IndependentContext } from "./handler";
+import { defaultHooks } from "./hooks";
+import { AbstractLogger } from "./logger";
 import { Namespaces, normalizeNS } from "./namespace";
 import { makeRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
@@ -14,7 +16,8 @@ export const attachSockets = async <NS extends Namespaces>({
   io,
   actions,
   target,
-  config: { logger: rootLogger, namespaces, timeout, startupLogo = true },
+  config: { namespaces, timeout, startupLogo = true },
+  logger: rootLogger = console,
 }: {
   /**
    * @desc The Socket.IO server
@@ -33,6 +36,11 @@ export const attachSockets = async <NS extends Namespaces>({
   target: http.Server;
   /** @desc The configuration describing the emission (outgoing events) */
   config: Config<NS>;
+  /**
+   * @desc The instance of a logger
+   * @default console
+   * */
+  logger?: AbstractLogger;
 }): Promise<Server> => {
   for (const name in namespaces) {
     type NSEmissions = NS[typeof name]["emission"];
@@ -40,16 +48,12 @@ export const attachSockets = async <NS extends Namespaces>({
     const ns = io.of(normalizeNS(name));
     const { emission, hooks, metadata } = namespaces[name];
     const {
-      onConnection = ({ client: { id, getData }, logger }) =>
-        logger.debug("Client connected", { ...getData(), id }),
-      onDisconnect = ({ client: { id, getData }, logger }) =>
-        logger.debug("Client disconnected", { ...getData(), id }),
-      onAnyIncoming = ({ event, client: { id, getData }, logger }) =>
-        logger.debug(`${event} from ${id}`, getData()),
-      onAnyOutgoing = ({ event, logger, payload }) =>
-        logger.debug(`Sending ${event}`, payload),
-      onStartup = ({ logger }) => logger.debug("Ready"),
-    } = hooks;
+      onConnection,
+      onDisconnect,
+      onAnyIncoming,
+      onAnyOutgoing,
+      onStartup,
+    } = { ...defaultHooks, ...hooks };
     const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
     const nsCtx: IndependentContext<NSEmissions, NSMeta> = {
       logger: rootLogger,
@@ -73,6 +77,7 @@ export const attachSockets = async <NS extends Namespaces>({
         broadcast,
         id: socket.id,
         handshake: socket.handshake,
+        getRequest: <T extends http.IncomingMessage>() => socket.request as T,
         isConnected: () => socket.connected,
         getRooms: () => Array.from(socket.rooms),
         getData: () => socket.data || {},
@@ -107,6 +112,7 @@ export const attachSockets = async <NS extends Namespaces>({
     await onStartup(nsCtx);
   }
   (startupLogo ? console.log : () => {})(getStartupLogo());
+  rootLogger.debug("Running", process.env.TSUP_BUILD || "from sources");
   rootLogger.info("Listening", target.address());
   return io.attach(target);
 };

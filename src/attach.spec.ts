@@ -17,6 +17,8 @@ describe("Attach", () => {
       onAnyOutgoing: vi.fn(),
       join: vi.fn(),
       leave: vi.fn(),
+      handshake: {},
+      request: {},
     };
     const adapterMock = {
       rooms: new Map([
@@ -63,19 +65,15 @@ describe("Attach", () => {
     ];
 
     test("should set the listeners", async () => {
-      const hooks = {};
-      (hooks as any).stub = vi.fn(); // for ensureNamespaces without setting actual hooks
       await attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
         actions: actionsMock,
+        logger: loggerMock as unknown as AbstractLogger,
         config: createSimpleConfig({
           startupLogo: false,
           timeout: 100,
-          emission: {},
-          hooks,
           metadata: z.object({ name: z.string() }),
-          logger: loggerMock as unknown as AbstractLogger,
         }),
       });
       expect(ioMock.of).toHaveBeenLastCalledWith("/");
@@ -123,6 +121,8 @@ describe("Attach", () => {
         client: {
           id: "ID",
           isConnected: expect.any(Function),
+          getRequest: expect.any(Function),
+          handshake: {},
           getRooms: expect.any(Function),
           emit: expect.any(Function),
           broadcast: expect.any(Function),
@@ -192,6 +192,16 @@ describe("Attach", () => {
       expect(actionsMock[0].execute.mock.lastCall[0].client.getData()).toEqual({
         name: "user",
       });
+
+      // client.handshake
+      expect(actionsMock[0].execute.mock.lastCall[0].client.handshake).toEqual(
+        socketMock.handshake,
+      );
+
+      // client.getRequest
+      expect(
+        actionsMock[0].execute.mock.lastCall[0].client.getRequest(),
+      ).toEqual(socketMock.request);
 
       // join/leave:
       for (const rooms of ["room1", ["room2", "room3"]]) {

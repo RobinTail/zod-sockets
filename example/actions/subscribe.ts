@@ -8,6 +8,6 @@ export const onSubscribe = actionsFactory.build({
   input: z.tuple([]).rest(z.unknown().describe("Does not matter")),
   handler: async ({ logger, client }) => {
     logger.info(`Subscribed ${client.id}`);
-    client.join(subscribersRoom);
+    await client.join(subscribersRoom);
   },
 });

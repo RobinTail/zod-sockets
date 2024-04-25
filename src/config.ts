@@ -1,15 +1,9 @@
 import { z } from "zod";
 import { SecuritySchemeObject } from "./async-api/security";
 import { EmissionMap } from "./emission";
-import { AbstractLogger } from "./logger";
 import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
 
 interface ConstructorOptions<NS extends Namespaces> {
-  /**
-   * @desc The instance of a logger
-   * @default console
-   * */
-  logger?: AbstractLogger;
   /**
    * @desc The acknowledgment awaiting timeout
    * @default 2000
@@ -29,27 +23,26 @@ interface ConstructorOptions<NS extends Namespaces> {
   globalSecurity?: SecuritySchemeObject[];
 }
 
+/** @todo consider using it for namespaces declaration only */
 export class Config<T extends Namespaces = {}> {
-  public readonly logger: AbstractLogger;
   public readonly timeout: number;
   public readonly startupLogo: boolean;
   public readonly globalSecurity: SecuritySchemeObject[];
   public readonly namespaces: T;
 
   public constructor({
-    logger = console,
     timeout = 2000,
     startupLogo = true,
     namespaces = {} as T,
     globalSecurity = [],
   }: ConstructorOptions<T> = {}) {
-    this.logger = logger;
     this.timeout = timeout;
     this.startupLogo = startupLogo;
     this.namespaces = namespaces;
     this.globalSecurity = globalSecurity;
   }
 
+  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {} } */
   public addNamespace<
     E extends EmissionMap = {},
     D extends z.SomeZodObject = z.ZodObject<{}>,
@@ -59,22 +52,20 @@ export class Config<T extends Namespaces = {}> {
     emission = {} as E,
     metadata = z.object({}) as D,
     hooks = {},
+    examples = {},
     security,
-    examples,
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
   > {
-    const { logger, timeout, startupLogo, namespaces, globalSecurity } = this;
-    return new Config({
-      logger,
-      timeout,
-      startupLogo,
-      globalSecurity,
-      namespaces: {
-        ...namespaces,
-        [path]: { emission, examples, hooks, metadata, security },
-      },
-    });
+    const { namespaces, ...rest } = this;
+    const ns: Namespace<E, D> = {
+      emission,
+      examples,
+      hooks,
+      metadata,
+      security,
+    };
+    return new Config({ ...rest, namespaces: { ...namespaces, [path]: ns } });
   }
 }
 
@@ -85,7 +76,6 @@ export const createSimpleConfig = <
 >({
   startupLogo,
   timeout,
-  logger,
   globalSecurity,
   security,
   emission,
@@ -94,7 +84,7 @@ export const createSimpleConfig = <
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
-  new Config({ startupLogo, timeout, logger, globalSecurity }).addNamespace({
+  new Config({ startupLogo, timeout, globalSecurity }).addNamespace({
     emission,
     examples,
     metadata,

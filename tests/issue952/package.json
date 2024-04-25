@@ -7,9 +7,6 @@
     "posttest": "rm quick-start.d.ts"
   },
   "dependencies": {
-    "zod-sockets": "link:../..",
-    "typescript": "^5",
-    "zod": "^3",
-    "socket.io": "^4"
+    "zod-sockets": "link:../.."
   }
 }

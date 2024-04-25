@@ -1,6 +1,45 @@
 # Changelog
 
+## Version 1
+
+### v1.1.0
+
+- Supporting Node 22.
+
+### v1.0.0
+
+- First production-ready release having stable public API.
+
 ## Version 0
+
+### v0.20.0
+
+- Moved `logger` from configuration to `attachRouting()`:
+  - This simplifies reusing logger instance when running along with `express-zod-api`.
+
+```ts
+// before:
+import { createSimpleConfig, Config } from "zod-sockets";
+createSimpleConfig({ logger });
+// or
+new Config({ logger });
+
+// after:
+import { attachSockets } from "zod-sockets";
+attachSockets({ config });
+```
+
+### v0.19.0
+
+- Added `client.getRequest()` method (proxy for `Socket::request`).
+
+### v0.18.0
+
+- Fixed possibly invalid values of `type` property when depicting `z.literal()`, `z.enum()` and `z.nativeEnum()`;
+- Added depicting of `z.tuple().rest()` when used in a nested level of the schemas;
+- Upgraded all dependencies;
+- Consistent typing of the `Namespace` properties;
+- Client distribution methods `join()` and `leave()` made async (always return `Promise<void>`).
 
 ### v0.17.0
 

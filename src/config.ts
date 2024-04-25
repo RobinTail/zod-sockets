@@ -20,26 +20,26 @@ interface ConstructorOptions<NS extends Namespaces> {
    * @see Namespace
    * */
   namespaces?: NS;
-  globalSecurity?: SecuritySchemeObject[];
+  security?: SecuritySchemeObject[];
 }
 
 /** @todo consider using it for namespaces declaration only */
 export class Config<T extends Namespaces = {}> {
   public readonly timeout: number;
   public readonly startupLogo: boolean;
-  public readonly globalSecurity: SecuritySchemeObject[];
+  public readonly security: SecuritySchemeObject[];
   public readonly namespaces: T;
 
   public constructor({
     timeout = 2000,
     startupLogo = true,
     namespaces = {} as T,
-    globalSecurity = [],
+    security = [],
   }: ConstructorOptions<T> = {}) {
     this.timeout = timeout;
     this.startupLogo = startupLogo;
     this.namespaces = namespaces;
-    this.globalSecurity = globalSecurity;
+    this.security = security;
   }
 
   /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {} } */
@@ -76,7 +76,6 @@ export const createSimpleConfig = <
 >({
   startupLogo,
   timeout,
-  globalSecurity,
   security,
   emission,
   examples,
@@ -84,10 +83,9 @@ export const createSimpleConfig = <
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
-  new Config({ startupLogo, timeout, globalSecurity }).addNamespace({
+  new Config({ startupLogo, timeout, security }).addNamespace({
     emission,
     examples,
     metadata,
     hooks,
-    security,
   });

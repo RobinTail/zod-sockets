@@ -77,7 +77,7 @@ export class Documentation extends AsyncApiBuilder {
 
   public constructor({
     actions,
-    config: { namespaces, globalSecurity },
+    config: { namespaces, security: globalSecurity },
     title,
     version,
     documentId,

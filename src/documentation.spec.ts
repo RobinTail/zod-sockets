@@ -447,7 +447,7 @@ describe("Documentation", () => {
 
   describe("Security", () => {
     const secureConfig = new Config({
-      globalSecurity: [
+      security: [
         {
           type: "httpApiKey",
           description: "Sample security schema",
@@ -463,6 +463,7 @@ describe("Documentation", () => {
         },
       ],
     });
+    console.log(secureConfig);
     const secureFactory = new ActionsFactory(secureConfig);
 
     test("should depict server and channel security", () => {

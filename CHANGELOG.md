@@ -2,6 +2,50 @@
 
 ## Version 1
 
+### v1.2.0
+
+- Ability to describe security schemas on the server and namespace level:
+  - These security schemas go directly to the generated documentation.
+
+```ts
+// Single namespace
+import { createSimpleConfig } from "zod-sockets";
+
+const config = createSimpleConfig({
+  security: [
+    {
+      type: "httpApiKey",
+      description: "Server security schema",
+      in: "header",
+      name: "X-Api-Key",
+    },
+  ],
+});
+```
+
+```ts
+// Multiple namespaces
+import { Config } from "zod-sockets";
+
+const config = new Config({
+  security: [
+    {
+      type: "httpApiKey",
+      description: "Server security schema",
+      in: "header",
+      name: "X-Api-Key",
+    },
+  ],
+}).addNamespace({
+  security: [
+    {
+      type: "userPassword",
+      description: "Namespace security schema",
+    },
+  ],
+});
+```
+
 ### v1.1.0
 
 - Supporting Node 22.

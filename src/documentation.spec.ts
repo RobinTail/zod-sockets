@@ -463,7 +463,6 @@ describe("Documentation", () => {
         },
       ],
     });
-    console.log(secureConfig);
     const secureFactory = new ActionsFactory(secureConfig);
 
     test("should depict server and channel security", () => {

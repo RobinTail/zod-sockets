@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SecuritySchemeObject } from "./async-api/security";
 import { EmissionMap } from "./emission";
 import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
 
@@ -19,25 +20,29 @@ interface ConstructorOptions<NS extends Namespaces> {
    * @see Namespace
    * */
   namespaces?: NS;
+  security?: SecuritySchemeObject[];
 }
 
 /** @todo consider using it for namespaces declaration only */
 export class Config<T extends Namespaces = {}> {
   public readonly timeout: number;
   public readonly startupLogo: boolean;
+  public readonly security: SecuritySchemeObject[];
   public readonly namespaces: T;
 
   public constructor({
     timeout = 2000,
     startupLogo = true,
     namespaces = {} as T,
+    security = [],
   }: ConstructorOptions<T> = {}) {
     this.timeout = timeout;
     this.startupLogo = startupLogo;
     this.namespaces = namespaces;
+    this.security = security;
   }
 
-  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {} } */
+  /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {}, security: [] } */
   public addNamespace<
     E extends EmissionMap = {},
     D extends z.SomeZodObject = z.ZodObject<{}>,
@@ -48,11 +53,18 @@ export class Config<T extends Namespaces = {}> {
     metadata = z.object({}) as D,
     hooks = {},
     examples = {},
+    security = [],
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
   > {
     const { namespaces, ...rest } = this;
-    const ns: Namespace<E, D> = { emission, examples, hooks, metadata };
+    const ns: Namespace<E, D> = {
+      emission,
+      examples,
+      hooks,
+      metadata,
+      security,
+    };
     return new Config({ ...rest, namespaces: { ...namespaces, [path]: ns } });
   }
 }
@@ -64,13 +76,14 @@ export const createSimpleConfig = <
 >({
   startupLogo,
   timeout,
+  security,
   emission,
   examples,
   hooks,
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
-  new Config({ startupLogo, timeout }).addNamespace({
+  new Config({ startupLogo, timeout, security }).addNamespace({
     emission,
     examples,
     metadata,

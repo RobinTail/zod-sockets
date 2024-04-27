@@ -5,6 +5,7 @@ import {
   ServerObject,
 } from "./model";
 import yaml from "yaml";
+import { SecuritySchemeObject } from "./security";
 
 export class AsyncApiBuilder {
   protected readonly document: AsyncApiObject;
@@ -35,6 +36,17 @@ export class AsyncApiBuilder {
     this.document.operations = {
       ...this.document.operations,
       [name]: operation,
+    };
+    return this;
+  }
+
+  public addSecurityScheme(name: string, scheme: SecuritySchemeObject): this {
+    this.document.components = {
+      ...this.document.components,
+      securitySchemes: {
+        ...this.document.components?.securitySchemes,
+        [name]: scheme,
+      },
     };
     return this;
   }

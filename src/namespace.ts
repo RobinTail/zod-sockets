@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SecuritySchemeObject } from "./async-api/security";
 import { Emission, EmissionMap } from "./emission";
 import { Hooks } from "./hooks";
 
@@ -26,6 +27,7 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
   hooks: Partial<Hooks<E, D>>;
   /** @desc Schema of the client metadata in this namespace */
   metadata: D;
+  security: SecuritySchemeObject[];
 }
 
 export type Namespaces = Record<

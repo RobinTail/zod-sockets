@@ -1,3 +1,4 @@
+import { SecuritySchemeObject } from "./security";
 import { WS } from "./websockets";
 
 /**
@@ -18,7 +19,7 @@ export interface ServerObject {
   title?: string;
   description?: string;
   variables?: Record<string, ServerVariableObject>;
-  security?: SecuritySchemeObject[];
+  security?: Array<SecuritySchemeObject | ReferenceObject>;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<WS.Server>;
@@ -264,7 +265,7 @@ export interface OperationTraitObject {
   title?: string;
   summary?: string;
   description?: string;
-  security?: SecuritySchemeObject[];
+  security?: Array<SecuritySchemeObject | ReferenceObject>;
   tags?: TagObject[];
   externalDocs?: ExternalDocumentationObject;
   bindings?: Bindings<WS.Operation>;
@@ -322,48 +323,6 @@ export interface TagObject {
   name: string;
   description?: string;
   externalDocs?: ExternalDocumentationObject;
-}
-
-export interface SecuritySchemeObject {
-  type:
-    | "userPassword"
-    | "apiKey"
-    | "X509"
-    | "symmetricEncryption"
-    | "asymmetricEncryption"
-    | "http"
-    | "oauth2"
-    | "openIdConnect";
-  description?: string;
-  /** @desc for httpApiKey */
-  name?: string;
-  /** @desc Valid values are "user" and "password" for apiKey and "query", "header" or "cookie" for httpApiKey. */
-  in?: "user" | "password" | "query" | "header" | "cookie";
-  /** @desc for http */
-  scheme?: string;
-  /** @desc for http */
-  bearerFormat?: string;
-  /** @desc for oauth2 */
-  flows?: OAuthFlowsObject;
-  /** @desc for openIdConnect */
-  openIdConnectUrl?: string;
-}
-
-export interface OAuthFlowsObject {
-  implicit?: OAuthFlowObject;
-  password?: OAuthFlowObject;
-  clientCredentials?: OAuthFlowObject;
-  authorizationCode?: OAuthFlowObject;
-}
-
-export interface OAuthFlowObject {
-  /** @desc for implicit and authorizationCode */
-  authorizationUrl?: string;
-  /** @desc for password, clientCredentials and authorizationCode */
-  tokenUrl?: string;
-  refreshUrl?: string;
-  /** @desc A map between the scope name and a short description for it. */
-  scopes: Record<string, string>;
 }
 
 /** @since 3.0.0 partially extends SchemaObject; schema prop removed */

@@ -613,3 +613,47 @@ const action = factory
   .example("input", ["example payload"])
   .example("output", ["example acknowledgement"]);
 ```
+
+### Adding security schemas to the documentation
+
+You can describe the security schemas for the generated documentation both on
+server and namespace levels.
+
+```ts
+// Single namespace
+import { createSimpleConfig } from "zod-sockets";
+
+const config = createSimpleConfig({
+  security: [
+    {
+      type: "httpApiKey",
+      description: "Server security schema",
+      in: "header",
+      name: "X-Api-Key",
+    },
+  ],
+});
+```
+
+```ts
+// Multiple namespaces
+import { Config } from "zod-sockets";
+
+const config = new Config({
+  security: [
+    {
+      type: "httpApiKey",
+      description: "Server security schema",
+      in: "header",
+      name: "X-Api-Key",
+    },
+  ],
+}).addNamespace({
+  security: [
+    {
+      type: "userPassword",
+      description: "Namespace security schema",
+    },
+  ],
+});
+```

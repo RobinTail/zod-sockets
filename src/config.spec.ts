@@ -19,12 +19,14 @@ describe("Config", () => {
             hooks: {},
             metadata: z.object({}),
             examples: {},
+            security: [],
           },
           test: {
             emission: {},
             hooks: {},
             metadata: z.object({}),
             examples: {},
+            security: [],
           },
         },
         timeout: 3000,
@@ -37,12 +39,14 @@ describe("Config", () => {
           hooks: {},
           metadata: expect.any(z.ZodObject),
           examples: {},
+          security: [],
         },
         test: {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
           examples: {},
+          security: [],
         },
       });
     });
@@ -66,6 +70,7 @@ describe("Config", () => {
           hooks: {},
           metadata: expect.any(z.ZodObject),
           examples: {},
+          security: [],
         },
       });
     });
@@ -82,6 +87,7 @@ describe("Config", () => {
           hooks: {},
           metadata: expect.any(z.ZodObject),
           examples: {},
+          security: [],
         },
       });
     });
@@ -101,6 +107,7 @@ describe("Config", () => {
           hooks: {},
           metadata: expect.any(z.ZodObject),
           examples: {},
+          security: [],
         },
       });
     });

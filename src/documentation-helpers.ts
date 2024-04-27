@@ -569,12 +569,14 @@ export const depictOperation = ({
   ackId,
   event,
   ns,
+  securityIds,
 }: {
   channelId: string;
   messageId: string;
   ackId?: string;
   event: string;
   ns: string;
+  securityIds?: string[];
 } & AsyncAPIContext): OperationObject => ({
   action: direction === "out" ? "send" : "receive",
   channel: { $ref: `#/channels/${channelId}` },
@@ -584,6 +586,12 @@ export const depictOperation = ({
   description:
     `The message ${direction === "out" ? "produced" : "consumed"} by ` +
     `the application within the ${ns} namespace`,
+  security:
+    securityIds && securityIds.length
+      ? securityIds.map((id) => ({
+          $ref: `#/components/securitySchemes/${id}`,
+        }))
+      : undefined,
   reply: ackId
     ? {
         address: {

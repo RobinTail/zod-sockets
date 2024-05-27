@@ -1,12 +1,14 @@
 import { z } from "zod";
 
+export type EmptyObject = Record<string, never>;
+
 export const tryToTransform = <T>(
   schema: z.ZodEffects<z.ZodTypeAny, T>,
   sample: T,
 ) => {
   try {
     return typeof schema.parse(sample);
-  } catch (e) {
+  } catch {
     return undefined;
   }
 };

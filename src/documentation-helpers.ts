@@ -26,8 +26,6 @@ import {
   walkSchema,
 } from "./schema-walker";
 
-/* eslint-disable @typescript-eslint/no-use-before-define */
-
 export interface AsyncAPIContext {
   direction: "in" | "out";
 }

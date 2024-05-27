@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SecuritySchemeObject } from "./async-api/security";
+import { EmptyObject } from "./common-helpers";
 import { EmissionMap } from "./emission";
 import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
 
@@ -24,7 +25,7 @@ interface ConstructorOptions<NS extends Namespaces> {
 }
 
 /** @todo consider using it for namespaces declaration only */
-export class Config<T extends Namespaces = {}> {
+export class Config<T extends Namespaces = EmptyObject> {
   public readonly timeout: number;
   public readonly startupLogo: boolean;
   public readonly security: SecuritySchemeObject[];
@@ -44,8 +45,8 @@ export class Config<T extends Namespaces = {}> {
 
   /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {}, security: [] } */
   public addNamespace<
-    E extends EmissionMap = {},
-    D extends z.SomeZodObject = z.ZodObject<{}>,
+    E extends EmissionMap = EmptyObject,
+    D extends z.SomeZodObject = z.ZodObject<EmptyObject>,
     K extends string = RootNS,
   >({
     path = rootNS as K,

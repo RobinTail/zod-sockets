@@ -8,6 +8,7 @@ export interface LoggerOverrides {}
 /** @desc You can use any logger compatible with this type. */
 export type AbstractLogger = Record<
   "info" | "debug" | "warn" | "error",
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ment to be any for assignment compatibility
   (message: string, meta?: any) => any
 > &
   LoggerOverrides;

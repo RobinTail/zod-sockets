@@ -5,16 +5,16 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, v1, prep-v2 ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, v1, prep-v2 ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.0.0, 18.x, 20.0.0, 20.x, 22.0.0, 22.x]
+        node-version: [18.18.0, 18.x, 20.9.0, 20.x, 22.0.0, 22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - name: Get yarn cache dir
@@ -34,13 +34,7 @@ jobs:
         path: ${{ steps.yarnCache.outputs.dir }}
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
     - name: Install dependencies
-      # todo use regular "yarn install" when min Node version increased to 18.18
-      # @typescript/eslint group compatibility issue fixed by ignoring engines for dev dependencies only:
-      run: |
-        npm pkg delete devDependencies
-        yarn install
-        git checkout -- .
-        yarn install --ignore-engines
+      run: yarn install
     - name: Lint
       run: yarn lint
     - name: Unit test

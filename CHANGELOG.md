@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 2
+
+### v2.0.0
+
+- Minimum Node versions supported: 18.18.0, 20.9.0, 22.0.0.
+
 ## Version 1
 
 ### v1.2.0

@@ -4,8 +4,10 @@
 
 ### v2.0.0
 
-- Minimum Node versions supported: 18.18.0, 20.9.0, 22.0.0.
-- Minimum `zod` version: 3.23.0.
+- **Breaking changes**:
+  - Minimum supported versions:
+    - For Node.js: 18.18.0, 20.9.0, 22.0.0;
+    - For `zod`: 3.23.0.
 
 ## Version 1
 

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export type EmptyObject = Record<string, never>;
+export type FlatObject = Record<string, unknown>;
 
 export const tryToTransform = <T>(
   schema: z.ZodEffects<z.ZodTypeAny, T>,

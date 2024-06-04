@@ -47,26 +47,30 @@ export class Documentation extends AsyncApiBuilder {
     return {
       bindingVersion: "0.1.0",
       method: "GET",
-      headers: walkSchema({
-        direction: "in",
-        schema: z.object({
+      headers: walkSchema(
+        z.object({
           connection: z.literal("Upgrade").optional(),
           upgrade: z.literal("websocket").optional(),
         }),
-        ...commons,
-      }),
+        {
+          ctx: { direction: "in" },
+          ...commons,
+        },
+      ),
       query: {
-        ...walkSchema({
-          direction: "in",
-          schema: z.object({
+        ...walkSchema(
+          z.object({
             EIO: z.literal("4").describe("The version of the protocol"),
             transport: z
               .enum(["polling", "websocket"])
               .describe("The name of the transport"),
             sid: z.string().optional().describe("The session identifier"),
           }),
-          ...commons,
-        }),
+          {
+            ctx: { direction: "in" },
+            ...commons,
+          },
+        ),
         externalDocs: {
           description: "Engine.IO Protocol",
           url: "https://socket.io/docs/v4/engine-io-protocol/",

@@ -1,56 +1,58 @@
 import { z } from "zod";
+import { EmptyObject, FlatObject } from "./common-helpers";
 
-interface VariantDependingProps<U> {
-  regular: { next: (schema: z.ZodTypeAny) => U };
-  each: { prev: U };
-  last: {};
+export interface NextHandlerInc<U> {
+  next: (schema: z.ZodTypeAny) => U;
 }
 
-export type HandlingVariant = keyof VariantDependingProps<unknown>;
-
-type SchemaHandlingProps<
-  T extends z.ZodTypeAny,
-  U,
-  Context extends object,
-  Variant extends HandlingVariant,
-> = Context &
-  VariantDependingProps<U>[Variant] & {
-    schema: T;
-  };
+interface PrevInc<U> {
+  prev: U;
+}
 
 export type SchemaHandler<
-  T extends z.ZodTypeAny,
   U,
-  Context extends object = {},
-  Variant extends HandlingVariant = "regular",
-> = (params: SchemaHandlingProps<T, U, Context, Variant>) => U;
+  Context extends FlatObject = EmptyObject,
+  Variant extends "regular" | "each" | "last" = "regular",
+> = (
+  schema: any, // eslint-disable-line @typescript-eslint/no-explicit-any -- for assignment compatibility
+  ctx: Context &
+    (Variant extends "regular"
+      ? NextHandlerInc<U>
+      : Variant extends "each"
+        ? PrevInc<U>
+        : Context),
+) => U;
 
-export type HandlingRules<U, Context extends object = {}> = Partial<
-  Record<
-    z.ZodFirstPartyTypeKind,
-    SchemaHandler<any, U, Context> // keeping "any" here in order to avoid excessive complexity
-  >
->;
+export type HandlingRules<
+  U,
+  Context extends FlatObject = EmptyObject,
+  K extends string | symbol = string | symbol,
+> = Partial<Record<K, SchemaHandler<U, Context>>>;
 
 /** @since 10.1.1 calling onEach _after_ handler and giving it the previously achieved result */
-export const walkSchema = <U extends object, Context extends object = {}>({
-  schema,
-  onEach,
-  rules,
-  onMissing,
-  ...rest
-}: SchemaHandlingProps<z.ZodTypeAny, U, Context, "last"> & {
-  onEach?: SchemaHandler<z.ZodTypeAny, U, Context, "each">;
-  rules: HandlingRules<U, Context>;
-  onMissing: SchemaHandler<z.ZodTypeAny, U, Context, "last">;
-}): U => {
+export const walkSchema = <
+  U extends object,
+  Context extends FlatObject = EmptyObject,
+>(
+  schema: z.ZodTypeAny,
+  {
+    onEach,
+    rules,
+    onMissing,
+    ctx = {} as Context,
+  }: {
+    ctx?: Context;
+    onEach?: SchemaHandler<U, Context, "each">;
+    rules: HandlingRules<U, Context>;
+    onMissing: SchemaHandler<U, Context, "last">;
+  },
+): U => {
   const handler = rules[schema._def.typeName as keyof typeof rules];
-  const ctx = rest as unknown as Context;
   const next = (subject: z.ZodTypeAny) =>
-    walkSchema({ schema: subject, ...ctx, onEach, rules, onMissing });
+    walkSchema(subject, { ctx, onEach, rules, onMissing });
   const result = handler
-    ? handler({ schema, ...ctx, next })
-    : onMissing({ schema, ...ctx });
-  const overrides = onEach && onEach({ schema, prev: result, ...ctx });
+    ? handler(schema, { ...ctx, next })
+    : onMissing(schema, ctx);
+  const overrides = onEach && onEach(schema, { prev: result, ...ctx });
   return overrides ? { ...result, ...overrides } : result;
 };

@@ -28,9 +28,7 @@ const samples = {
   [ts.SyntaxKind.UnknownKeyword]: undefined,
 } satisfies Partial<Record<ts.KeywordTypeSyntaxKind, unknown>>;
 
-const onLiteral: Producer<z.ZodLiteral<LiteralType>> = ({
-  schema: { value },
-}) =>
+const onLiteral: Producer = ({ value }: z.ZodLiteral<LiteralType>) =>
   f.createLiteralTypeNode(
     typeof value === "number"
       ? f.createNumericLiteral(value)
@@ -41,12 +39,10 @@ const onLiteral: Producer<z.ZodLiteral<LiteralType>> = ({
         : f.createStringLiteral(value),
   );
 
-const onObject: Producer<z.ZodObject<z.ZodRawShape>> = ({
-  schema: { shape },
-  direction,
-  next,
-  optionalPropStyle: { withQuestionMark: hasQuestionMark },
-}) => {
+const onObject: Producer = (
+  { shape }: z.ZodObject<z.ZodRawShape>,
+  { direction, next, optionalPropStyle: { withQuestionMark: hasQuestionMark } },
+) => {
   const members = Object.entries(shape).map<ts.TypeElement>(([key, value]) => {
     const isOptional =
       direction === "out" && hasCoercion(value)
@@ -68,35 +64,32 @@ const onObject: Producer<z.ZodObject<z.ZodRawShape>> = ({
   return f.createTypeLiteralNode(members);
 };
 
-const onArray: Producer<z.ZodArray<z.ZodTypeAny>> = ({
-  schema: { element },
-  next,
-}) => f.createArrayTypeNode(next(element));
+const onArray: Producer = ({ element }: z.ZodArray<z.ZodTypeAny>, { next }) =>
+  f.createArrayTypeNode(next(element));
 
-const onEnum: Producer<z.ZodEnum<[string, ...string[]]>> = ({
-  schema: { options },
-}) =>
+const onEnum: Producer = ({ options }: z.ZodEnum<[string, ...string[]]>) =>
   f.createUnionTypeNode(
     options.map((option) =>
       f.createLiteralTypeNode(f.createStringLiteral(option)),
     ),
   );
 
-const onSomeUnion: Producer<
-  | z.ZodUnion<z.ZodUnionOptions>
-  | z.ZodDiscriminatedUnion<string, z.ZodDiscriminatedUnionOption<string>[]>
-> = ({ schema: { options }, next }) => f.createUnionTypeNode(options.map(next));
+const onSomeUnion: Producer = (
+  schema:
+    | z.ZodUnion<z.ZodUnionOptions>
+    | z.ZodDiscriminatedUnion<string, z.ZodDiscriminatedUnionOption<string>[]>,
+  { next },
+) => f.createUnionTypeNode(schema.options.map(next));
 
 const makeSample = (produced: ts.TypeNode, src: z.ZodTypeAny) =>
   src instanceof z.ZodDate
     ? new Date()
     : samples?.[produced.kind as keyof typeof samples];
 
-const onEffects: Producer<z.ZodEffects<z.ZodTypeAny>> = ({
-  schema,
-  next,
-  direction,
-}) => {
+const onEffects: Producer = (
+  schema: z.ZodEffects<z.ZodTypeAny>,
+  { next, direction },
+) => {
   const src = schema.innerType();
   const input = next(src);
   const effect = schema._def.effect;
@@ -119,7 +112,7 @@ const onEffects: Producer<z.ZodEffects<z.ZodTypeAny>> = ({
   return input;
 };
 
-const onNativeEnum: Producer<z.ZodNativeEnum<z.EnumLike>> = ({ schema }) =>
+const onNativeEnum: Producer = (schema: z.ZodNativeEnum<z.EnumLike>) =>
   f.createUnionTypeNode(
     Object.values(schema.enum).map((value) =>
       f.createLiteralTypeNode(
@@ -130,11 +123,10 @@ const onNativeEnum: Producer<z.ZodNativeEnum<z.EnumLike>> = ({ schema }) =>
     ),
   );
 
-const onOptional: Producer<z.ZodOptional<z.ZodTypeAny>> = ({
-  next,
-  schema,
-  optionalPropStyle: { withUndefined: hasUndefined },
-}) => {
+const onOptional: Producer = (
+  schema: z.ZodOptional<z.ZodTypeAny>,
+  { next, optionalPropStyle: { withUndefined: hasUndefined } },
+) => {
   const actualTypeNode = next(schema.unwrap());
   return hasUndefined
     ? f.createUnionTypeNode([
@@ -144,76 +136,70 @@ const onOptional: Producer<z.ZodOptional<z.ZodTypeAny>> = ({
     : actualTypeNode;
 };
 
-const onNullable: Producer<z.ZodNullable<z.ZodTypeAny>> = ({ next, schema }) =>
+const onNullable: Producer = (schema: z.ZodNullable<z.ZodTypeAny>, { next }) =>
   f.createUnionTypeNode([
     next(schema.unwrap()),
     f.createLiteralTypeNode(f.createNull()),
   ]);
 
-const onTuple: Producer<z.ZodTuple> = ({
-  next,
-  schema: {
-    items,
-    _def: { rest },
-  },
-}) =>
+const onTuple: Producer = (
+  { items, _def: { rest } }: z.AnyZodTuple,
+  { next },
+) =>
   f.createTupleTypeNode(
     items
       .map(next)
       .concat(rest === null ? [] : f.createRestTypeNode(next(rest))),
   );
 
-const onRecord: Producer<z.ZodRecord> = ({
-  next,
-  schema: { keySchema, valueSchema },
-}) =>
+const onRecord: Producer = (
+  { keySchema, valueSchema }: z.ZodRecord,
+  { next },
+) =>
   f.createExpressionWithTypeArguments(
     f.createIdentifier("Record"),
     [keySchema, valueSchema].map(next),
   );
 
-const onIntersection: Producer<
-  z.ZodIntersection<z.ZodTypeAny, z.ZodTypeAny>
-> = ({ next, schema }) =>
+const onIntersection: Producer = (
+  schema: z.ZodIntersection<z.ZodTypeAny, z.ZodTypeAny>,
+  { next },
+) =>
   f.createIntersectionTypeNode([schema._def.left, schema._def.right].map(next));
 
-const onDefault: Producer<z.ZodDefault<z.ZodTypeAny>> = ({ next, schema }) =>
+const onDefault: Producer = (schema: z.ZodDefault<z.ZodTypeAny>, { next }) =>
   next(schema._def.innerType);
 
 const onPrimitive =
-  (syntaxKind: ts.KeywordTypeSyntaxKind): Producer<z.ZodTypeAny> =>
+  (syntaxKind: ts.KeywordTypeSyntaxKind): Producer =>
   () =>
     f.createKeywordTypeNode(syntaxKind);
 
-const onBranded: Producer<
-  z.ZodBranded<z.ZodTypeAny, string | number | symbol>
-> = ({ next, schema }) => next(schema.unwrap());
+const onBranded: Producer = (
+  schema: z.ZodBranded<z.ZodTypeAny, string | number | symbol>,
+  { next },
+) => next(schema.unwrap());
 
-const onReadonly: Producer<z.ZodReadonly<z.ZodTypeAny>> = ({ next, schema }) =>
+const onReadonly: Producer = (schema: z.ZodReadonly<z.ZodTypeAny>, { next }) =>
   next(schema._def.innerType);
 
-const onCatch: Producer<z.ZodCatch<z.ZodTypeAny>> = ({ next, schema }) =>
+const onCatch: Producer = (schema: z.ZodCatch<z.ZodTypeAny>, { next }) =>
   next(schema._def.innerType);
 
-const onPipeline: Producer<z.ZodPipeline<z.ZodTypeAny, z.ZodTypeAny>> = ({
-  schema,
-  next,
-  direction,
-}) => next(schema._def[direction]);
+const onPipeline: Producer = (
+  schema: z.ZodPipeline<z.ZodTypeAny, z.ZodTypeAny>,
+  { next, direction },
+) => next(schema._def[direction]);
 
-const onNull: Producer<z.ZodNull> = () =>
-  f.createLiteralTypeNode(f.createNull());
+const onNull: Producer = () => f.createLiteralTypeNode(f.createNull());
 
-const onDate: Producer<z.ZodDate> = () =>
+const onDate: Producer = () =>
   f.createTypeReferenceNode(f.createIdentifier("Date"));
 
-const onLazy: Producer<z.ZodLazy<z.ZodTypeAny>> = ({
-  getAlias,
-  makeAlias,
-  next,
-  serializer: serialize,
-  schema: lazy,
-}) => {
+const onLazy: Producer = (
+  lazy: z.ZodLazy<z.ZodTypeAny>,
+  { getAlias, makeAlias, next, serializer: serialize },
+) => {
   const name = `Type${serialize(lazy.schema)}`;
   return (
     getAlias(name) ||
@@ -224,10 +210,10 @@ const onLazy: Producer<z.ZodLazy<z.ZodTypeAny>> = ({
   );
 };
 
-const onFunction: Producer<z.ZodFunction<z.AnyZodTuple, z.ZodTypeAny>> = ({
-  schema,
-  next,
-}) => {
+const onFunction: Producer = (
+  schema: z.ZodFunction<z.AnyZodTuple, z.ZodTypeAny>,
+  { next },
+) => {
   const params = schema
     .parameters()
     .items.map((subject, index) =>
@@ -292,15 +278,9 @@ const producers: HandlingRules<ts.TypeNode, ZTSContext> = {
   ZodFunction: onFunction,
 };
 
-export const zodToTs = ({
-  schema,
-  ...ctx
-}: {
-  schema: z.ZodTypeAny;
-} & ZTSContext) =>
-  walkSchema<ts.TypeNode, ZTSContext>({
-    schema,
+export const zodToTs = (schema: z.ZodTypeAny, ctx: ZTSContext) =>
+  walkSchema(schema, {
     rules: producers,
     onMissing: () => f.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
-    ...ctx,
+    ctx,
   });

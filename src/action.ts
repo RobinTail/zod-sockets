@@ -7,7 +7,7 @@ import { Namespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
   public abstract getEvent(): string;
-  public abstract getNamespace(): keyof any;
+  public abstract getNamespace(): PropertyKey;
   public abstract execute(
     params: {
       event: string;

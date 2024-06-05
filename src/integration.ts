@@ -124,8 +124,7 @@ export class Integration {
         optionalPropStyle,
       };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
-        const node = zodToTs({
-          schema: makeEventFnSchema(schema, ack, maxOverloads),
+        const node = zodToTs(makeEventFnSchema(schema, ack, maxOverloads), {
           direction: "out",
           ...commons,
         });
@@ -136,8 +135,7 @@ export class Integration {
           const event = action.getEvent();
           const input = action.getSchema("input");
           const output = action.getSchema("output");
-          const node = zodToTs({
-            schema: makeEventFnSchema(input, output, maxOverloads),
+          const node = zodToTs(makeEventFnSchema(input, output, maxOverloads), {
             direction: "in",
             ...commons,
           });

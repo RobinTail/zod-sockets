@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 2
+
+### v2.0.0
+
+- **Breaking changes**:
+  - Minimum supported versions:
+    - For Node.js: 18.18.0, 20.9.0, 22.0.0;
+    - For `zod`: 3.23.0.
+
 ## Version 1
 
 ### v1.2.0

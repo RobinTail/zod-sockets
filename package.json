@@ -58,7 +58,6 @@
     "hooks": "husky"
   },
   "dependencies": {
-    "@typescript-eslint/utils": "^8.0.0-alpha.26",
     "ansis": "^3.1.0",
     "ramda": "^0.30.0",
     "yaml": "^2.4.1"
@@ -88,12 +87,12 @@
     "tsup": "^8.0.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.0.0-alpha.26",
+    "typescript-eslint": "^8.0.0-alpha.30",
     "vitest": "^1.2.2",
     "zod": "^3.22.4"
   },
   "resolutions": {
-    "**/@typescript-eslint/utils": "^8.0.0-alpha.26"
+    "**/@typescript-eslint/utils": "^8.0.0-alpha.30"
   },
   "keywords": [
     "nodejs",

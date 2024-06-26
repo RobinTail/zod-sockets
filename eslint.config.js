@@ -4,14 +4,19 @@ import tsPlugin from "typescript-eslint";
 import prettierOverrides from "eslint-config-prettier";
 import prettierRules from "eslint-plugin-prettier/recommended";
 import unicornPlugin from "eslint-plugin-unicorn";
-import importPlugin from "eslint-plugin-import-x";
+import importPlugin from "eslint-plugin-import";
 
 export default [
   {
     languageOptions: { globals: globals.node },
     plugins: {
       unicorn: unicornPlugin,
-      "import-x": importPlugin,
+      import: importPlugin,
+    },
+    settings: {
+      // "import-x" plugin installed as "import", in order to suppress the warning from the typescript resolver
+      // @link https://github.com/import-js/eslint-import-resolver-typescript/issues/293
+      "import-x/resolver": { typescript: true, node: true },
     },
   },
   jsPlugin.configs.recommended,
@@ -30,16 +35,16 @@ export default [
   {
     rules: {
       "unicorn/prefer-node-protocol": "error",
-      "import-x/named": "error",
-      "import-x/export": "error",
-      "import-x/no-duplicates": "warn",
+      "import/named": "error",
+      "import/export": "error",
+      "import/no-duplicates": "warn",
     },
   },
   // For the sources
   {
     files: ["src/*.ts"],
     rules: {
-      "import-x/no-extraneous-dependencies": "error",
+      "import/no-extraneous-dependencies": "error",
       "@typescript-eslint/no-empty-object-type": [
         "error",
         { allowWithName: "LoggerOverrides" },
@@ -52,7 +57,7 @@ export default [
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "warn",
-      "import-x/no-extraneous-dependencies": "off",
+      "import/no-extraneous-dependencies": "off",
     },
   },
   // For Async API
@@ -69,7 +74,7 @@ export default [
     files: ["example/example-client.ts", "tests/**/quick-start.ts"],
     rules: {
       "@typescript-eslint/no-namespace": "off",
-      "import-x/no-duplicates": "off",
+      "import/no-duplicates": "off",
       "prettier/prettier": "off",
     },
   },

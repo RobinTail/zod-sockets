@@ -88,12 +88,12 @@
     "tsup": "^8.0.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.0.0-alpha.34",
+    "typescript-eslint": "8.0.0-alpha.39",
     "vitest": "^1.2.2",
     "zod": "^3.22.4"
   },
   "resolutions": {
-    "**/@typescript-eslint/utils": "^8.0.0-alpha.34"
+    "**/@typescript-eslint/utils": "8.0.0-alpha.39"
   },
   "keywords": [
     "nodejs",

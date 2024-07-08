@@ -112,7 +112,7 @@ describe("Attach", () => {
       // on the listened event:
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");
       expect(call).toBeTruthy();
-      await call[1]([123, 456]);
+      await call![1]([123, 456]);
       expect(actionsMock[0].execute).toHaveBeenLastCalledWith({
         withRooms: expect.any(Function),
         event: "test",
@@ -139,17 +139,17 @@ describe("Attach", () => {
       });
 
       // client.getRooms:
-      expect(actionsMock[0].execute.mock.lastCall[0].client.getRooms()).toEqual(
-        ["room1", "room2"],
-      );
+      expect(
+        actionsMock[0].execute.mock.lastCall![0].client.getRooms(),
+      ).toEqual(["room1", "room2"]);
 
       // client.isConnected:
       expect(
-        actionsMock[0].execute.mock.lastCall[0].client.isConnected(),
+        actionsMock[0].execute.mock.lastCall![0].client.isConnected(),
       ).toBeFalsy();
 
       // all.getRooms:
-      expect(actionsMock[0].execute.mock.lastCall[0].all.getRooms()).toEqual([
+      expect(actionsMock[0].execute.mock.lastCall![0].all.getRooms()).toEqual([
         "room1",
         "room2",
         "room3",
@@ -158,7 +158,7 @@ describe("Attach", () => {
 
       // all.getClients:
       await expect(
-        actionsMock[0].execute.mock.lastCall[0].all.getClients(),
+        actionsMock[0].execute.mock.lastCall![0].all.getClients(),
       ).resolves.toEqual([
         {
           id: "ID",
@@ -179,39 +179,35 @@ describe("Attach", () => {
       ]);
 
       // client.setData:
-      actionsMock[0].execute.mock.lastCall[0].client.setData({
-        name: "user",
-      });
+      actionsMock[0].execute.mock.lastCall![0].client.setData({ name: "user" });
       expect(() =>
-        actionsMock[0].execute.mock.lastCall[0].client.setData({
-          name: 123,
-        }),
+        actionsMock[0].execute.mock.lastCall![0].client.setData({ name: 123 }),
       ).toThrow(z.ZodError);
 
       // client.getData:
-      expect(actionsMock[0].execute.mock.lastCall[0].client.getData()).toEqual({
-        name: "user",
-      });
+      expect(actionsMock[0].execute.mock.lastCall![0].client.getData()).toEqual(
+        { name: "user" },
+      );
 
       // client.handshake
-      expect(actionsMock[0].execute.mock.lastCall[0].client.handshake).toEqual(
+      expect(actionsMock[0].execute.mock.lastCall![0].client.handshake).toEqual(
         socketMock.handshake,
       );
 
       // client.getRequest
       expect(
-        actionsMock[0].execute.mock.lastCall[0].client.getRequest(),
+        actionsMock[0].execute.mock.lastCall![0].client.getRequest(),
       ).toEqual(socketMock.request);
 
       // join/leave:
       for (const rooms of ["room1", ["room2", "room3"]]) {
-        actionsMock[0].execute.mock.lastCall[0].client.join(rooms);
+        actionsMock[0].execute.mock.lastCall![0].client.join(rooms);
         expect(socketMock.join).toHaveBeenLastCalledWith(rooms);
         if (typeof rooms === "string") {
-          actionsMock[0].execute.mock.lastCall[0].client.leave(rooms);
+          actionsMock[0].execute.mock.lastCall![0].client.leave(rooms);
           expect(socketMock.leave).toHaveBeenLastCalledWith(rooms);
         } else {
-          await actionsMock[0].execute.mock.lastCall[0].client.leave(rooms);
+          await actionsMock[0].execute.mock.lastCall![0].client.leave(rooms);
           for (const room of rooms) {
             expect(socketMock.leave).toHaveBeenCalledWith(room);
           }

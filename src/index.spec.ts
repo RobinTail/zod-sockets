@@ -1,6 +1,7 @@
-import type { IncomingMessage } from "node:http";
-import { expectNotType, expectType } from "tsd";
 import { z } from "zod";
+import { Client } from "./client";
+import { RoomService } from "./emission";
+import { RemoteClient } from "./remote-client";
 import {
   AbstractLogger,
   ClientContext,
@@ -9,7 +10,7 @@ import {
   Namespace,
 } from "./index";
 import * as entrypoint from "./index";
-import { describe, expect, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 
 describe("Entrypoint", () => {
   test("should expose certain entities", () => {
@@ -17,86 +18,43 @@ describe("Entrypoint", () => {
   });
 
   test("should expose certain types and interfaces", () => {
-    expectType<AbstractLogger>(console);
-    expectType<EmissionMap>({});
-    expectType<EmissionMap>({ event: { schema: z.tuple([]) } });
-    expectType<EmissionMap>({
+    expectTypeOf(console).toMatchTypeOf<AbstractLogger>();
+    expectTypeOf({}).toMatchTypeOf<EmissionMap>();
+    expectTypeOf({
+      event: { schema: z.tuple([]) },
+    }).toMatchTypeOf<EmissionMap>();
+    expectTypeOf({
       event: { schema: z.tuple([]), ack: z.tuple([]) },
-    });
-    expectNotType<EmissionMap>({ event: { schema: z.object({}) } });
-    expectType<LoggerOverrides>({});
-    expectNotType<LoggerOverrides>(null);
-    expectType<
-      Namespace<
-        { event: { schema: z.ZodTuple<[]> } },
-        z.ZodObject<{ count: z.ZodNumber }>
-      >
-    >({
+    }).toMatchTypeOf<EmissionMap>();
+    expectTypeOf({
+      event: { schema: z.object({}) },
+    }).not.toMatchTypeOf<EmissionMap>();
+    expectTypeOf({}).toEqualTypeOf<LoggerOverrides>();
+    expectTypeOf(null).not.toMatchTypeOf<LoggerOverrides>();
+    expectTypeOf({
       emission: { event: { schema: z.tuple([]) } },
       hooks: {},
       examples: {},
       security: [],
       metadata: z.object({ count: z.number() }),
-    });
-    expectType<
-      ClientContext<
+    }).toMatchTypeOf<
+      Namespace<
         { event: { schema: z.ZodTuple<[]> } },
         z.ZodObject<{ count: z.ZodNumber }>
       >
-    >({
-      client: {
-        isConnected: () => true,
-        getRequest: <T>() => ({}) as IncomingMessage as T,
-        id: "",
-        handshake: {
-          headers: {},
-          time: "",
-          auth: {},
-          url: "",
-          address: "",
-          issued: 0,
-          secure: true,
-          xdomain: false,
-          query: {},
-        },
-        getData: () => ({ count: 1 }),
-        setData: () => {},
-        join: async () => {},
-        leave: async () => {},
-        getRooms: () => [""],
-        emit: async () => true,
-        broadcast: async () => true,
-      },
-      logger: console,
+    >();
+
+    type SampleEmission = { event: { schema: z.ZodTuple<[]> } };
+    type SampleData = z.ZodObject<{ count: z.ZodNumber }>;
+    expectTypeOf<{
+      client: Client<SampleEmission, SampleData>;
       all: {
-        getRooms: () => [""],
-        getClients: async () => [
-          {
-            id: "",
-            handshake: {
-              headers: {},
-              time: "",
-              auth: {},
-              url: "",
-              address: "",
-              issued: 0,
-              secure: false,
-              xdomain: false,
-              query: {},
-            },
-            rooms: [""],
-            getData: () => ({ count: 1 }),
-            emit: async () => true,
-            join: async () => {},
-            leave: async () => {},
-          },
-        ],
-        broadcast: async () => true,
-      },
-      withRooms: () => ({
-        broadcast: async () => true,
-        getClients: async () => [],
-      }),
-    });
+        getRooms: () => string[];
+        getClients: () => Promise<RemoteClient<SampleEmission, SampleData>[]>;
+        broadcast: () => Promise<true>;
+      };
+      logger: Console;
+      withRooms: RoomService<SampleEmission, SampleData>;
+    }>().toMatchTypeOf<ClientContext<SampleEmission, SampleData>>();
   });
 });

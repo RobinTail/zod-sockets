@@ -13,4 +13,9 @@ updates:
     groups:
       typescript-eslint:
         patterns:
-          - "@typescript-eslint/*"
+          - "typescript-eslint"
+          - "@typescript-eslint/utils"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/coverage-istanbul"

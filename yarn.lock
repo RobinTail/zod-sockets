@@ -696,10 +696,10 @@
     "@typescript-eslint/types" "8.0.0-alpha.47"
     eslint-visitor-keys "^3.4.3"
 
-"@vitest/coverage-istanbul@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@vitest/coverage-istanbul/-/coverage-istanbul-2.0.3.tgz#bf1ed5982a2c716112939438ea0f7cd92c04df48"
-  integrity sha512-ewO7lSXDc/hG7vrVUh3lrpRpNZslivE92b07lW05GE+o7dkmvSheCl6oyMqa3EVU1rjbbM8dlWsfNOY4PAqasQ==
+"@vitest/coverage-istanbul@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@vitest/coverage-istanbul/-/coverage-istanbul-2.0.4.tgz#61a6db9a70f70813812b260878766dce4c93317d"
+  integrity sha512-6VibYMkXh8cJm5Bg8JYeOoR4oURlPf4YKP9kuVRE/NKasfYrXPnzSwuxrpgMbgOfPj13KUJXgMB3VAGukECtlQ==
   dependencies:
     "@istanbuljs/schema" "^0.1.3"
     debug "^4.3.5"
@@ -2998,7 +2998,7 @@ vite@^5.0.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vitest@^2.0.3:
+vitest@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-2.0.4.tgz#ac6bfbaee53e502cee864b07a5b2edf1fcba793e"
   integrity sha512-luNLDpfsnxw5QSW4bISPe6tkxVvv5wn2BBs/PuDRkhXZ319doZyLOBr1sjfB5yCEpTiU7xCAdViM8TNVGPwoog==

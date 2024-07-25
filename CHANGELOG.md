@@ -2,6 +2,11 @@
 
 ## Version 2
 
+### v2.0.1
+
+- Technical update due to improved builder configuration:
+  - Fixed missing `node:` protocol in the imports of core modules in the distributed javascript files.
+
 ### v2.0.0
 
 - **Breaking changes**:

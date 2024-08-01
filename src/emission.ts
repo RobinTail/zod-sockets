@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import type { RemoteSocket, Server, Socket } from "socket.io";
 import { z } from "zod";
+import { AckError, EmissionError } from "./errors";
 import {
   RemoteClient,
   SomeRemoteSocket,
@@ -68,21 +69,36 @@ export function makeEmitter({
   subject: Socket | SomeRemoteSocket | Socket["broadcast"] | Server;
 } & EmitterConfig<EmissionMap>) {
   /**
-   * @throws z.ZodError on validation
-   * @throws Error on ack timeout
+   * @throws EmissionError on output validation
+   * @throws AckError on response validation
+   * @throws Error on ack timeout or unknown events
    * */
   return async (event: string, ...args: unknown[]) => {
-    const isSocket = "id" in subject;
     assert(event in emission, new Error(`Unsupported event ${event}`));
     const { schema, ack } = emission[event];
-    const payload = schema.parse(args);
-    if (!ack) {
-      return subject.emit(String(event), ...payload) || true;
-    }
-    const response = await subject
-      .timeout(timeout)
-      .emitWithAck(String(event), ...payload);
-    return (isSocket ? ack : ack.array()).parse(response);
+    const parseOutput = () => {
+      try {
+        return schema.parse(args);
+      } catch (e) {
+        throw e instanceof z.ZodError ? new EmissionError(e) : e;
+      }
+    };
+    const payload = parseOutput();
+    const doEmit = async () => {
+      if (!ack) {
+        return subject.emit(String(event), ...payload) || true;
+      }
+      const response = await subject
+        .timeout(timeout)
+        .emitWithAck(String(event), ...payload);
+      const isSocket = "id" in subject;
+      try {
+        return (isSocket ? ack : ack.array()).parse(response);
+      } catch (e) {
+        throw e instanceof z.ZodError ? new AckError("emission", e) : e;
+      }
+    };
+    return doEmit();
   };
 }
 

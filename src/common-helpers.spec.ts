@@ -1,6 +1,12 @@
-import { describe, expect, test } from "vitest";
+import { AssertionError } from "node:assert";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import { z } from "zod";
-import { hasCoercion, lcFirst, makeCleanId } from "./common-helpers";
+import {
+  hasCoercion,
+  lcFirst,
+  makeCleanId,
+  makeErrorFromAnything,
+} from "./common-helpers";
 
 describe("Common helpers", () => {
   describe("hasCoercion()", () => {
@@ -37,6 +43,55 @@ describe("Common helpers", () => {
   describe("lcFirst()", () => {
     test("should make the first letter lower case", () => {
       expect(lcFirst("HereIsSomeText")).toBe("hereIsSomeText");
+    });
+  });
+
+  describe("makeErrorFromAnything()", () => {
+    test.each([
+      [new Error("error"), "error"],
+      [
+        new z.ZodError([
+          {
+            code: "invalid_type",
+            expected: "string",
+            received: "number",
+            path: [""],
+            message: "invalid type",
+          },
+        ]),
+        `[\n  {\n    "code": "invalid_type",\n    "expected": "string",\n` +
+          `    "received": "number",\n    "path": [\n      ""\n` +
+          `    ],\n    "message": "invalid type"\n  }\n]`,
+      ],
+      [
+        new AssertionError({ message: "Internal Server Error" }),
+        "Internal Server Error",
+      ],
+      [undefined, "undefined"],
+      [null, "null"],
+      ["string", "string"],
+      [123, "123"],
+      [{}, "[object Object]"],
+      [{ test: "object" }, "[object Object]"],
+      [NaN, "NaN"],
+      [0, "0"],
+      ["", ""],
+      [-1, "-1"],
+      [Infinity, "Infinity"],
+      [BigInt(123), "123"],
+      [Symbol("symbol"), "Symbol(symbol)"],
+      [true, "true"],
+      [false, "false"],
+      [() => {}, "() => {\n      }"],
+      [/regexp/is, "/regexp/is"],
+      [[1, 2, 3], "1,2,3"],
+    ])("should accept %#", (argument, expected) => {
+      const result = makeErrorFromAnything(argument);
+      expectTypeOf(result).toEqualTypeOf<Error>();
+      expect(result).toBeInstanceOf(Error);
+      expect(result).toHaveProperty("message");
+      expect(typeof result.message).toBe("string");
+      expect(result.message).toBe(expected);
     });
   });
 });

@@ -2,6 +2,7 @@ import http from "node:http";
 import type { Server } from "socket.io";
 import { AbstractAction } from "./action";
 import { Client } from "./client";
+import { makeErrorFromAnything } from "./common-helpers";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
@@ -111,8 +112,7 @@ export const attachSockets = async <NS extends Namespaces>({
                 ...ctx,
                 event,
                 payload: params,
-                error:
-                  error instanceof Error ? error : new Error(String(error)),
+                error: makeErrorFromAnything(error),
               });
             }
           });

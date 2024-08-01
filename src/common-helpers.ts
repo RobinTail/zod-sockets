@@ -38,3 +38,6 @@ export const makeCleanId = (...args: string[]) =>
     )
     .map(ucFirst)
     .join("");
+
+export const makeErrorFromAnything = (subject: unknown): Error =>
+  subject instanceof Error ? subject : new Error(String(subject));

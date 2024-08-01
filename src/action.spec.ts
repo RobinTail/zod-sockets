@@ -2,6 +2,7 @@ import { Socket } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { AbstractAction, Action } from "./action";
+import { ActionError } from "./errors";
 import { AbstractLogger } from "./logger";
 
 describe("Action", () => {
@@ -204,17 +205,19 @@ describe("Action", () => {
           },
         }),
       ).rejects.toThrowError(
-        new z.ZodError([
-          {
-            code: "too_small",
-            minimum: 1,
-            inclusive: true,
-            exact: false,
-            type: "array",
-            path: [],
-            message: "Array must contain at least 1 element(s)",
-          },
-        ]),
+        new ActionError(
+          new z.ZodError([
+            {
+              code: "too_small",
+              minimum: 1,
+              inclusive: true,
+              exact: false,
+              type: "array",
+              path: [],
+              message: "Array must contain at least 1 element(s)",
+            },
+          ]),
+        ),
       );
     });
   });

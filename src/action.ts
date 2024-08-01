@@ -2,6 +2,7 @@ import { init, last } from "ramda";
 import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
+import { AckError, ActionError } from "./errors";
 import { ActionContext, ClientContext, Handler } from "./handler";
 import { Namespaces, rootNS } from "./namespace";
 
@@ -74,26 +75,39 @@ export class Action<
     return variant === "input" ? this.#inputSchema : this.#outputSchema;
   }
 
-  /** @throws z.ZodError */
+  /** @throws ActionError */
   #parseInput(params: unknown[]) {
     const payload = this.#outputSchema ? init(params) : params;
-    return this.#inputSchema.parse(payload);
+    try {
+      return this.#inputSchema.parse(payload);
+    } catch (e) {
+      throw e instanceof z.ZodError ? new ActionError(e) : e;
+    }
   }
 
-  /** @throws z.ZodError */
+  /** @throws ActionError */
   #parseAckCb(params: unknown[]) {
     if (!this.#outputSchema) {
       return undefined;
     }
-    return z.function(this.#outputSchema, z.void()).parse(last(params));
+    try {
+      return z.function(this.#outputSchema, z.void()).parse(last(params));
+    } catch (e) {
+      // @todo maybe should give it a better description somehow
+      throw e instanceof z.ZodError ? new ActionError(e) : e; // last param is not a valid callback
+    }
   }
 
-  /** @throws z.ZodError */
+  /** @throws AckError */
   #parseOutput(output: z.input<NonNullable<OUT>> | void) {
     if (!this.#outputSchema) {
       return;
     }
-    return this.#outputSchema.parse(output) as z.output<NonNullable<OUT>>;
+    try {
+      return this.#outputSchema.parse(output) as z.output<NonNullable<OUT>>;
+    } catch (e) {
+      throw e instanceof z.ZodError ? new AckError("action", e) : e;
+    }
   }
 
   public override async execute({

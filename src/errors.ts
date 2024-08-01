@@ -6,20 +6,32 @@ export class IOSchemaError extends Error {
   public override name = "IOSchemaError";
 }
 
-/** @desc An error of validating the outgoing data */
-export class OutputValidationError extends IOSchemaError {
-  public override name = "OutputValidationError";
+/** @desc An error of validating the data against the Action schema */
+export class EmissionError extends IOSchemaError {
+  public override name = "EmissionError";
 
   constructor(public readonly originalError: ZodError) {
     super(getMessageFromError(originalError));
   }
 }
 
-/** @desc An error of validating the incoming data */
-export class InputValidationError extends IOSchemaError {
-  public override name = "InputValidationError";
+/** @desc An error of validating the data against the Emission schema */
+export class ActionError extends IOSchemaError {
+  public override name = "ActionError";
 
   constructor(public readonly originalError: ZodError) {
+    super(getMessageFromError(originalError));
+  }
+}
+
+/** @desc An error of validating the data against an acknowledgement schema either of Action or Emission */
+export class AckError extends IOSchemaError {
+  public override name = "AckError";
+
+  constructor(
+    public readonly kind: "action" | "emission",
+    public readonly originalError: ZodError,
+  ) {
     super(getMessageFromError(originalError));
   }
 }

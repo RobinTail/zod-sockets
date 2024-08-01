@@ -1,5 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Common helpers > getMessageFromError() > should compile a string from ZodError 1`] = `"user/id: expected number, got string; user/name: expected string, got number"`;
+
+exports[`Common helpers > getMessageFromError() > should handle empty path in ZodIssue 1`] = `"Top level refinement issue"`;
+
+exports[`Common helpers > getMessageFromError() > should pass message from other error types 1`] = `"something went wrong"`;
+
+exports[`Common helpers > getMessageFromError() > should pass message from other error types 2`] = `"something went wrong"`;
+
 exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 0 1`] = `"Get"`;
 
 exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 1 1`] = `"PostSomething"`;

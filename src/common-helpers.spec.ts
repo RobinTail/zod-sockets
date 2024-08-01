@@ -2,6 +2,7 @@ import { AssertionError } from "node:assert";
 import { describe, expect, expectTypeOf, test } from "vitest";
 import { z } from "zod";
 import {
+  getMessageFromError,
   hasCoercion,
   lcFirst,
   makeCleanId,
@@ -92,6 +93,46 @@ describe("Common helpers", () => {
       expect(result).toHaveProperty("message");
       expect(typeof result.message).toBe("string");
       expect(result.message).toBe(expected);
+    });
+  });
+
+  describe("getMessageFromError()", () => {
+    test("should compile a string from ZodError", () => {
+      const error = new z.ZodError([
+        {
+          code: "invalid_type",
+          path: ["user", "id"],
+          message: "expected number, got string",
+          expected: "number",
+          received: "string",
+        },
+        {
+          code: "invalid_type",
+          path: ["user", "name"],
+          message: "expected string, got number",
+          expected: "string",
+          received: "number",
+        },
+      ]);
+      expect(getMessageFromError(error)).toMatchSnapshot();
+    });
+
+    test("should handle empty path in ZodIssue", () => {
+      const error = new z.ZodError([
+        { code: "custom", path: [], message: "Top level refinement issue" },
+      ]);
+      expect(getMessageFromError(error)).toMatchSnapshot();
+    });
+
+    test("should pass message from other error types", () => {
+      expect(
+        getMessageFromError(
+          new AssertionError({ message: "something went wrong" }),
+        ),
+      ).toMatchSnapshot();
+      expect(
+        getMessageFromError(new Error("something went wrong")),
+      ).toMatchSnapshot();
     });
   });
 });

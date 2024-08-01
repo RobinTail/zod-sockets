@@ -17,16 +17,15 @@ AMVmmmmMM  `Ybmd9’   `Wbmd"MML.    P"Ybmmd"   `Ybmd9’   YMbmd’ .JMML
 ${dedication}${proud}
 `;
 
+const getColorFn = cond([
+  [gt(4), always(hex("#FCF434"))],
+  [gt(5), always(hex("#FFF"))],
+  [gt(8), always(hex("#9C59D1"))],
+  [T, always(hex("#2C2C2C"))],
+]);
+
 export const getStartupLogo = () =>
   georgia11
     .split("\n")
-    .map((line, index) => {
-      const color = cond([
-        [gt(4), always(hex("#FCF434"))],
-        [gt(5), always(hex("#FFF"))],
-        [gt(8), always(hex("#9C59D1"))],
-        [T, always(hex("#2C2C2C"))],
-      ])(index);
-      return color(line);
-    })
+    .map((line, index) => getColorFn(index)(line))
     .join("\n");

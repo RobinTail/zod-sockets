@@ -177,32 +177,45 @@ describe("Action", () => {
       expect(ackMock).toHaveBeenLastCalledWith(123); // from ackHandler
     });
 
-    test("should catch errors", async () => {
-      await simpleAction.execute({
-        event: "test",
-        logger: loggerMock as unknown as AbstractLogger,
-        params: [], // too short
-        withRooms: withRoomsMock,
-        all: {
-          getClients: getAllClientsMock,
-          getRooms: getAllRoomsMock,
-          broadcast: allBroadcastMock,
-        },
-        client: {
-          id: "ID",
-          handshake: { auth: {} } as Socket["handshake"],
-          getRooms: getRoomsMock,
-          isConnected: isConnectedMock,
-          getRequest: getRequestMock,
-          emit: emitMock,
-          broadcast: broadcastMock,
-          getData: getDataMock,
-          setData: setDataMock,
-          join: joinMock,
-          leave: leaveMock,
-        },
-      });
-      expect(loggerMock.error).toHaveBeenCalled();
+    test("should throw errors", async () => {
+      await expect(
+        simpleAction.execute({
+          event: "test",
+          logger: loggerMock as unknown as AbstractLogger,
+          params: [], // too short
+          withRooms: withRoomsMock,
+          all: {
+            getClients: getAllClientsMock,
+            getRooms: getAllRoomsMock,
+            broadcast: allBroadcastMock,
+          },
+          client: {
+            id: "ID",
+            handshake: { auth: {} } as Socket["handshake"],
+            getRooms: getRoomsMock,
+            isConnected: isConnectedMock,
+            getRequest: getRequestMock,
+            emit: emitMock,
+            broadcast: broadcastMock,
+            getData: getDataMock,
+            setData: setDataMock,
+            join: joinMock,
+            leave: leaveMock,
+          },
+        }),
+      ).rejects.toThrowError(
+        new z.ZodError([
+          {
+            code: "too_small",
+            minimum: 1,
+            inclusive: true,
+            exact: false,
+            type: "array",
+            path: [],
+            message: "Array must contain at least 1 element(s)",
+          },
+        ]),
+      );
     });
   });
 });

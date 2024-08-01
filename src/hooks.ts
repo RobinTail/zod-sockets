@@ -2,6 +2,7 @@ import { z } from "zod";
 import { EmissionMap } from "./emission";
 import {
   ClientContext,
+  ErrorContext,
   Handler,
   IndependentContext,
   TracingContext,
@@ -15,6 +16,7 @@ export interface Hooks<E extends EmissionMap, D extends z.SomeZodObject> {
   onAnyOutgoing: Handler<TracingContext<E, D>, void>;
   /** @desc A place for emitting events regardless clients activity */
   onStartup: Handler<IndependentContext<E, D>, void>;
+  onError: Handler<ErrorContext<E, D>, void>;
 }
 
 export const defaultHooks: Hooks<EmissionMap, z.SomeZodObject> = {
@@ -27,4 +29,6 @@ export const defaultHooks: Hooks<EmissionMap, z.SomeZodObject> = {
   onAnyOutgoing: ({ event, logger, payload }) =>
     logger.debug(`Sending ${event}`, payload),
   onStartup: ({ logger }) => logger.debug("Ready"),
+  onError: ({ logger, event, error }) =>
+    logger.error(`${event} handling error`, error),
 };

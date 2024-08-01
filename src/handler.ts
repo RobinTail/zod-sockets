@@ -35,6 +35,11 @@ export interface TracingContext<
   payload: unknown[];
 }
 
+export interface ErrorContext<E extends EmissionMap, D extends z.SomeZodObject>
+  extends TracingContext<E, D> {
+  error: Error;
+}
+
 export interface ActionContext<
   IN,
   E extends EmissionMap,

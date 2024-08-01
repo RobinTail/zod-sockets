@@ -105,21 +105,17 @@ export class Action<
     event: string;
     params: unknown[];
   } & ClientContext<EmissionMap, z.SomeZodObject>): Promise<void> {
-    try {
-      const input = this.#parseInput(params);
-      logger.debug(
-        `parsed input (${this.#outputSchema ? "excl." : "no"} ack)`,
-        input,
-      );
-      const ack = this.#parseAckCb(params);
-      const output = await this.#handler({ input, logger, ...rest });
-      const response = this.#parseOutput(output);
-      if (ack && response) {
-        logger.debug("parsed output", response);
-        ack(...response);
-      }
-    } catch (error) {
-      logger.error(`${event} handling error`, error);
+    const input = this.#parseInput(params);
+    logger.debug(
+      `${event}: parsed input (${this.#outputSchema ? "excl." : "no"} ack)`,
+      input,
+    );
+    const ack = this.#parseAckCb(params);
+    const output = await this.#handler({ input, logger, ...rest });
+    const response = this.#parseOutput(output);
+    if (ack && response) {
+      logger.debug(`${event}: parsed output`, response);
+      ack(...response);
     }
   }
 

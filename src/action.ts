@@ -125,7 +125,7 @@ export class Action<
       `${event}: parsed input (${this.#outputSchema ? "excl." : "no"} ack)`,
       input,
     );
-    const ack = this.#parseAckCb(params); // @todo maybe should parse them all together?
+    const ack = this.#parseAckCb(params);
     const output = await this.#handler({ input, logger, ...rest });
     const response = this.#parseOutput(output);
     if (ack && response) {

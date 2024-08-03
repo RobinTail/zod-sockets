@@ -60,118 +60,55 @@ describe("Action", () => {
       error: vi.fn(),
       debug: vi.fn(),
     };
-    const emitMock = vi.fn();
-    const broadcastMock = vi.fn();
-    const isConnectedMock = vi.fn();
-    const getRequestMock = vi.fn();
-    const withRoomsMock = vi.fn();
-    const getRoomsMock = vi.fn();
-    const getAllRoomsMock = vi.fn();
-    const getAllClientsMock = vi.fn();
-    const allBroadcastMock = vi.fn();
-    const getDataMock = vi.fn();
-    const setDataMock = vi.fn();
-    const joinMock = vi.fn();
-    const leaveMock = vi.fn();
+
+    const commons = {
+      withRooms: vi.fn(),
+      all: {
+        getClients: vi.fn(),
+        getRooms: vi.fn(),
+        broadcast: vi.fn(),
+      },
+      client: {
+        id: "ID",
+        handshake: { auth: {} } as Socket["handshake"],
+        emit: vi.fn(),
+        broadcast: vi.fn(),
+        getRooms: vi.fn(),
+        isConnected: vi.fn(),
+        getRequest: vi.fn(),
+        getData: vi.fn(),
+        setData: vi.fn(),
+        join: vi.fn(),
+        leave: vi.fn(),
+      },
+    };
 
     test("should handle simple action", async () => {
       await simpleAction.execute({
+        ...commons,
         event: "test",
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some"],
-        withRooms: withRoomsMock,
-        all: {
-          getClients: getAllClientsMock,
-          getRooms: getAllRoomsMock,
-          broadcast: allBroadcastMock,
-        },
-        client: {
-          id: "ID",
-          handshake: { auth: {} } as Socket["handshake"],
-          emit: emitMock,
-          broadcast: broadcastMock,
-          getRooms: getRoomsMock,
-          isConnected: isConnectedMock,
-          getRequest: getRequestMock,
-          getData: getDataMock,
-          setData: setDataMock,
-          join: joinMock,
-          leave: leaveMock,
-        },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(simpleHandler).toHaveBeenLastCalledWith({
+        ...commons,
         input: ["some"],
         logger: loggerMock,
-        withRooms: withRoomsMock,
-        all: {
-          getClients: getAllClientsMock,
-          getRooms: getAllRoomsMock,
-          broadcast: allBroadcastMock,
-        },
-        client: {
-          id: "ID",
-          handshake: { auth: {} },
-          emit: emitMock,
-          broadcast: broadcastMock,
-          isConnected: isConnectedMock,
-          getRequest: getRequestMock,
-          getRooms: getRoomsMock,
-          getData: getDataMock,
-          setData: setDataMock,
-          join: joinMock,
-          leave: leaveMock,
-        },
       });
     });
 
     test("should handle action with ack", async () => {
       const ackMock = vi.fn();
       await ackAction.execute({
+        ...commons,
         event: "test",
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some", ackMock],
-        withRooms: withRoomsMock,
-        all: {
-          getClients: getAllClientsMock,
-          getRooms: getAllRoomsMock,
-          broadcast: allBroadcastMock,
-        },
-        client: {
-          id: "ID",
-          handshake: { auth: {} } as Socket["handshake"],
-          emit: emitMock,
-          broadcast: broadcastMock,
-          getRooms: getRoomsMock,
-          isConnected: isConnectedMock,
-          getRequest: getRequestMock,
-          getData: getDataMock,
-          setData: setDataMock,
-          join: joinMock,
-          leave: leaveMock,
-        },
       });
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(ackHandler).toHaveBeenLastCalledWith({
-        client: {
-          id: "ID",
-          handshake: { auth: {} },
-          getRooms: getRoomsMock,
-          isConnected: isConnectedMock,
-          getRequest: getRequestMock,
-          emit: emitMock,
-          broadcast: broadcastMock,
-          getData: getDataMock,
-          setData: setDataMock,
-          join: joinMock,
-          leave: leaveMock,
-        },
-        all: {
-          getClients: getAllClientsMock,
-          getRooms: getAllRoomsMock,
-          broadcast: allBroadcastMock,
-        },
-        withRooms: withRoomsMock,
+        ...commons,
         input: ["some"],
         logger: loggerMock,
       });
@@ -181,28 +118,10 @@ describe("Action", () => {
     test("should throw input parsing error", async () => {
       await expect(
         simpleAction.execute({
+          ...commons,
           event: "test",
           logger: loggerMock as unknown as AbstractLogger,
           params: [], // too short
-          withRooms: withRoomsMock,
-          all: {
-            getClients: getAllClientsMock,
-            getRooms: getAllRoomsMock,
-            broadcast: allBroadcastMock,
-          },
-          client: {
-            id: "ID",
-            handshake: { auth: {} } as Socket["handshake"],
-            getRooms: getRoomsMock,
-            isConnected: isConnectedMock,
-            getRequest: getRequestMock,
-            emit: emitMock,
-            broadcast: broadcastMock,
-            getData: getDataMock,
-            setData: setDataMock,
-            join: joinMock,
-            leave: leaveMock,
-          },
         }),
       ).rejects.toThrowError(
         new InputValidationError(
@@ -231,28 +150,10 @@ describe("Action", () => {
         }
         await expect(
           ackAction.execute({
+            ...commons,
             event: "test",
             logger: loggerMock as unknown as AbstractLogger,
             params: ["test", ack],
-            withRooms: withRoomsMock,
-            all: {
-              getClients: getAllClientsMock,
-              getRooms: getAllRoomsMock,
-              broadcast: allBroadcastMock,
-            },
-            client: {
-              id: "ID",
-              handshake: { auth: {} } as Socket["handshake"],
-              getRooms: getRoomsMock,
-              isConnected: isConnectedMock,
-              getRequest: getRequestMock,
-              emit: emitMock,
-              broadcast: broadcastMock,
-              getData: getDataMock,
-              setData: setDataMock,
-              join: joinMock,
-              leave: leaveMock,
-            },
           }),
         ).rejects.toThrowError(
           typeof ack === "function"

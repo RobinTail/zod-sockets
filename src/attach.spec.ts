@@ -52,7 +52,7 @@ describe("Attach", () => {
     const targetMock = {
       address: vi.fn(),
     };
-    const loggerMock = { info: vi.fn(), debug: vi.fn() };
+    const loggerMock = { info: vi.fn(), debug: vi.fn(), error: vi.fn() };
     const actionsMock = [
       {
         execute: vi.fn(),
@@ -109,10 +109,20 @@ describe("Attach", () => {
       socketMock.onAnyOutgoing.mock.lastCall![0]("test");
       expect(loggerMock.debug).toHaveBeenLastCalledWith("Sending test", []);
 
-      // on the listened event:
+      // on the listened event (and on error):
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");
       expect(call).toBeTruthy();
+      const execError = new z.ZodError([
+        { code: "custom", path: [], message: "sample error" },
+      ]);
+      actionsMock[0].execute.mockImplementationOnce(() => {
+        throw execError;
+      });
       await call![1]([123, 456]);
+      expect(loggerMock.error).toHaveBeenLastCalledWith(
+        "test handling error",
+        execError,
+      );
       expect(actionsMock[0].execute).toHaveBeenLastCalledWith({
         withRooms: expect.any(Function),
         event: "test",

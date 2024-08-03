@@ -117,12 +117,15 @@ describe("Common helpers", () => {
       expect(getMessageFromError(error)).toMatchSnapshot();
     });
 
-    test("should handle empty path in ZodIssue", () => {
-      const error = new z.ZodError([
-        { code: "custom", path: [], message: "Top level refinement issue" },
-      ]);
-      expect(getMessageFromError(error)).toMatchSnapshot();
-    });
+    test.each([[[]], [[0]], [[1, "some"]]])(
+      "should handle %s path in ZodIssue",
+      (path) => {
+        const error = new z.ZodError([
+          { code: "custom", path, message: "Custom error" },
+        ]);
+        expect(getMessageFromError(error)).toMatchSnapshot();
+      },
+    );
 
     test("should pass message from other error types", () => {
       expect(

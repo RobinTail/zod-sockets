@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 import { ZodError } from "zod";
-import { ActionError, AckError, IOSchemaError } from "./errors";
+import {
+  InputValidationError,
+  OutputValidationError,
+  IOSchemaError,
+} from "./errors";
 
 describe("Errors", () => {
   describe("IOSchemaError", () => {
@@ -13,37 +17,45 @@ describe("Errors", () => {
     });
   });
 
-  describe("ActionError", () => {
+  describe("InputValidationError", () => {
     const zodError = new ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
-      expect(new ActionError(zodError)).toBeInstanceOf(IOSchemaError);
-      expect(new ActionError(zodError)).toBeInstanceOf(Error);
+      expect(new InputValidationError(zodError)).toBeInstanceOf(IOSchemaError);
+      expect(new InputValidationError(zodError)).toBeInstanceOf(Error);
     });
 
     test("should have the name matching its class", () => {
-      expect(new ActionError(zodError).name).toBe("ActionError");
+      expect(new InputValidationError(zodError).name).toBe(
+        "InputValidationError",
+      );
     });
 
     test("should have .originalError property matching the one used for constructing", () => {
-      expect(new ActionError(zodError).originalError).toEqual(zodError);
+      expect(new InputValidationError(zodError).originalError).toEqual(
+        zodError,
+      );
     });
   });
 
-  describe("AckError", () => {
+  describe("OutputValidationError", () => {
     const zodError = new ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
-      expect(new AckError(zodError)).toBeInstanceOf(IOSchemaError);
-      expect(new AckError(zodError)).toBeInstanceOf(Error);
+      expect(new OutputValidationError(zodError)).toBeInstanceOf(IOSchemaError);
+      expect(new OutputValidationError(zodError)).toBeInstanceOf(Error);
     });
 
     test("should have the name matching its class", () => {
-      expect(new AckError(zodError).name).toBe("AckError");
+      expect(new OutputValidationError(zodError).name).toBe(
+        "OutputValidationError",
+      );
     });
 
     test("should have .originalError property matching th ones used for constructing", () => {
-      expect(new AckError(zodError).originalError).toEqual(zodError);
+      expect(new OutputValidationError(zodError).originalError).toEqual(
+        zodError,
+      );
     });
   });
 });

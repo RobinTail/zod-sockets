@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { AbstractAction, Action } from "./action";
-import { AckError, ActionError } from "./errors";
+import { OutputValidationError, InputValidationError } from "./errors";
 import { AbstractLogger } from "./logger";
 
 describe("Action", () => {
@@ -205,7 +205,7 @@ describe("Action", () => {
           },
         }),
       ).rejects.toThrowError(
-        new ActionError(
+        new InputValidationError(
           new z.ZodError([
             {
               code: "too_small",
@@ -256,7 +256,7 @@ describe("Action", () => {
           }),
         ).rejects.toThrowError(
           typeof ack === "function"
-            ? new AckError(
+            ? new OutputValidationError(
                 new z.ZodError([
                   {
                     code: "invalid_type",
@@ -267,13 +267,13 @@ describe("Action", () => {
                   },
                 ]),
               )
-            : new ActionError(
+            : new InputValidationError(
                 new z.ZodError([
                   {
                     code: "invalid_type",
                     expected: "function",
                     received: "string",
-                    path: [],
+                    path: [1],
                     message: "Expected function, received string",
                   },
                 ]),

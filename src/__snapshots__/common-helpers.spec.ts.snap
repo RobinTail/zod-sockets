@@ -8,9 +8,9 @@ exports[`Common helpers > getMessageFromError() > should handle [ 1, 'some' ] pa
 
 exports[`Common helpers > getMessageFromError() > should handle [] path in ZodIssue 1`] = `"Custom error"`;
 
-exports[`Common helpers > getMessageFromError() > should pass message from other error types 1`] = `"something went wrong"`;
+exports[`Common helpers > getMessageFromError() > should pass message from other error types 0 1`] = `"something went wrong"`;
 
-exports[`Common helpers > getMessageFromError() > should pass message from other error types 2`] = `"something went wrong"`;
+exports[`Common helpers > getMessageFromError() > should pass message from other error types 1 1`] = `"something went wrong"`;
 
 exports[`Common helpers > makeCleanId() > should generate valid identifier from the supplied strings 0 1`] = `"Get"`;
 

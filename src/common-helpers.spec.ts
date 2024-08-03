@@ -127,15 +127,11 @@ describe("Common helpers", () => {
       },
     );
 
-    test("should pass message from other error types", () => {
-      expect(
-        getMessageFromError(
-          new AssertionError({ message: "something went wrong" }),
-        ),
-      ).toMatchSnapshot();
-      expect(
-        getMessageFromError(new Error("something went wrong")),
-      ).toMatchSnapshot();
+    test.each([
+      new Error("something went wrong"),
+      new AssertionError({ message: "something went wrong" }),
+    ])("should pass message from other error types %#", (error) => {
+      expect(getMessageFromError(error)).toMatchSnapshot();
     });
   });
 });

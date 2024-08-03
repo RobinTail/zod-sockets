@@ -93,7 +93,7 @@ export class Action<
     try {
       return z
         .function(this.#outputSchema, z.void())
-        .parse(last(params), { path: [params.length - 1] });
+        .parse(last(params), { path: [Math.max(0, params.length - 1)] });
     } catch (e) {
       throw e instanceof z.ZodError ? new InputValidationError(e) : e;
     }

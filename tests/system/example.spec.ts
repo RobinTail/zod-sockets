@@ -35,6 +35,19 @@ describe("System test on Example", async () => {
     });
   });
 
+  describe("error", () => {
+    test("should emit error event when receiving ping with ack", async () => {
+      const onError = vi.fn();
+      client.on("error", onError);
+      client.emit("ping");
+      await waitFor(() => onError.mock.calls.length > 0);
+      expect(onError).toHaveBeenLastCalledWith(
+        "InputValidationError",
+        "0: Required",
+      );
+    });
+  });
+
   describe("subscribe", () => {
     test("should receive time events every second", async () => {
       const onTime = vi.fn((...response) => {

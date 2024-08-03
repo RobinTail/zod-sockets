@@ -33,10 +33,8 @@ describe("System test on Example", async () => {
       client.emit("ping", "test", ack);
       await waitFor(() => ack.mock.calls.length === 1);
     });
-  });
 
-  describe("error", () => {
-    test("should emit error event when receiving ping with ack", async () => {
+    test("should emit error event when pinging without ack", async () => {
       const onError = vi.fn();
       client.on("error", onError);
       client.emit("ping");

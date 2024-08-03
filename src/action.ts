@@ -11,7 +11,7 @@ export abstract class AbstractAction {
   public abstract getNamespace(): PropertyKey;
   public abstract execute(
     params: {
-      event: string;
+      event: string; // @todo this might be redundant
       params: unknown[];
     } & ClientContext<EmissionMap, z.SomeZodObject>,
   ): Promise<void>;

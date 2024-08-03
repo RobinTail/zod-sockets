@@ -74,5 +74,16 @@ describe("System test on Example", async () => {
       await waitFor(() => onChat.mock.calls.length === 1);
       partner.off("chat", onChat);
     });
+
+    test("should emit error event when sending invalid data", async () => {
+      const onError = vi.fn();
+      client.on("error", onError);
+      client.emit("chat", 123);
+      await waitFor(() => onError.mock.calls.length > 0);
+      expect(onError).toHaveBeenLastCalledWith(
+        "InputValidationError",
+        "0: Expected string, received number",
+      );
+    });
   });
 });

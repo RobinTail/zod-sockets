@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createSimpleConfig } from "../src";
+import { createSimpleConfig, InputValidationError } from "../src";
 
 /**
  * @see onSubscribe
@@ -59,10 +59,10 @@ export const config = createSimpleConfig({
     },
     onError: async ({ error, client, logger, event }) => {
       logger.error(`${event} handling error`, error);
-      try {
-        await client.emit("error", error.name, error.message);
-      } catch {
-        /* no errors inside this hook */
+      if (error instanceof InputValidationError) {
+        try {
+          await client.emit("error", error.name, error.message);
+        } catch {} // no errors inside this hook
       }
     },
   },

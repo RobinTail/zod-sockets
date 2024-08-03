@@ -30,5 +30,5 @@ export const defaultHooks: Hooks<EmissionMap, z.SomeZodObject> = {
     logger.debug(`Sending ${event}`, payload),
   onStartup: ({ logger }) => logger.debug("Ready"),
   onError: ({ logger, event, error }) =>
-    logger.error(`${event} handling error`, error),
+    logger.error(event ? `${event} handling error` : "Error", error),
 };

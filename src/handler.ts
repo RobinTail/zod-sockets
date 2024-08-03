@@ -36,7 +36,8 @@ export interface TracingContext<
 }
 
 export interface ErrorContext<E extends EmissionMap, D extends z.SomeZodObject>
-  extends TracingContext<E, D> {
+  extends IndependentContext<E, D>,
+    Partial<Pick<TracingContext<E, D>, "event" | "payload" | "client">> {
   error: Error;
 }
 

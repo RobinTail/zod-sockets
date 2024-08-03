@@ -59,10 +59,10 @@ export const config = createSimpleConfig({
       }, 1000);
     },
     onError: async ({ error, client, logger, event }) => {
-      logger.error(`${event} handling error`, error);
-      if (error instanceof InputValidationError) {
+      logger.error(event ? `${event} handling error` : "Error", error);
+      if (error instanceof InputValidationError && client) {
         try {
-          await client.emit("error", error.name, error.message);
+          await client?.emit("error", error.name, error.message);
         } catch {} // no errors inside this hook
       }
     },

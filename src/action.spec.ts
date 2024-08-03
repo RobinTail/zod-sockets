@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { AbstractAction, Action } from "./action";
-import { ActionError } from "./errors";
+import { AckError, ActionError } from "./errors";
 import { AbstractLogger } from "./logger";
 
 describe("Action", () => {
@@ -178,7 +178,7 @@ describe("Action", () => {
       expect(ackMock).toHaveBeenLastCalledWith(123); // from ackHandler
     });
 
-    test("should throw errors", async () => {
+    test("should throw input parsing error", async () => {
       await expect(
         simpleAction.execute({
           event: "test",
@@ -220,5 +220,67 @@ describe("Action", () => {
         ),
       );
     });
+
+    test.each(["not cb", vi.fn()])(
+      "should throw acknowledgment related errors %#",
+      async (ack) => {
+        if (typeof ack === "function") {
+          ackHandler.mockImplementationOnce(async () => [
+            "not number" as unknown as number,
+          ]);
+        }
+        await expect(
+          ackAction.execute({
+            event: "test",
+            logger: loggerMock as unknown as AbstractLogger,
+            params: ["test", ack],
+            withRooms: withRoomsMock,
+            all: {
+              getClients: getAllClientsMock,
+              getRooms: getAllRoomsMock,
+              broadcast: allBroadcastMock,
+            },
+            client: {
+              id: "ID",
+              handshake: { auth: {} } as Socket["handshake"],
+              getRooms: getRoomsMock,
+              isConnected: isConnectedMock,
+              getRequest: getRequestMock,
+              emit: emitMock,
+              broadcast: broadcastMock,
+              getData: getDataMock,
+              setData: setDataMock,
+              join: joinMock,
+              leave: leaveMock,
+            },
+          }),
+        ).rejects.toThrowError(
+          typeof ack === "function"
+            ? new AckError(
+                "action",
+                new z.ZodError([
+                  {
+                    code: "invalid_type",
+                    expected: "number",
+                    received: "string",
+                    path: [0],
+                    message: "Expected number, received string",
+                  },
+                ]),
+              )
+            : new ActionError(
+                new z.ZodError([
+                  {
+                    code: "invalid_type",
+                    expected: "function",
+                    received: "string",
+                    path: [],
+                    message: "Expected function, received string",
+                  },
+                ]),
+              ),
+        );
+      },
+    );
   });
 });

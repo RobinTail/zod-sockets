@@ -28,6 +28,12 @@ export const config = createSimpleConfig({
     rooms: {
       schema: z.tuple([z.string().array().describe("room IDs")]),
     },
+    error: {
+      schema: z.tuple([
+        z.string().describe("name"),
+        z.string().describe("message"),
+      ]),
+    },
   },
   examples: {
     time: { payload: ["2024-03-28T21:13:15.084Z"] },
@@ -50,6 +56,14 @@ export const config = createSimpleConfig({
       setInterval(() => {
         withRooms(subscribersRoom).broadcast("time", new Date()); // <— payload type constraints
       }, 1000);
+    },
+    onError: async ({ error, client, logger, event }) => {
+      logger.error(`${event} handling error`, error);
+      try {
+        await client.emit("error", error.name, error.message);
+      } catch {
+        /* no errors inside this hook */
+      }
     },
   },
   metadata: z.object({

@@ -13,6 +13,7 @@ export namespace Root {
       },
     ) => void;
     rooms: (roomIds: string[]) => void;
+    error: (name: string, message: string) => void;
   }
   export interface Actions {
     chat: (message: string) => void;

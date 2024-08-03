@@ -140,47 +140,49 @@ describe("Action", () => {
       );
     });
 
-    test.each(["not cb", vi.fn()])(
-      "should throw acknowledgment related errors %#",
-      async (ack) => {
-        if (typeof ack === "function") {
-          ackHandler.mockImplementationOnce(async () => [
-            "not number" as unknown as number,
-          ]);
-        }
-        await expect(
-          ackAction.execute({
-            ...commons,
-            event: "test",
-            logger: loggerMock as unknown as AbstractLogger,
-            params: ["test", ack],
-          }),
-        ).rejects.toThrowError(
-          typeof ack === "function"
-            ? new OutputValidationError(
-                new z.ZodError([
-                  {
-                    code: "invalid_type",
-                    expected: "number",
-                    received: "string",
-                    path: [0],
-                    message: "Expected number, received string",
-                  },
-                ]),
-              )
-            : new InputValidationError(
-                new z.ZodError([
-                  {
-                    code: "invalid_type",
-                    expected: "function",
-                    received: "string",
-                    path: [1],
-                    message: "Expected function, received string",
-                  },
-                ]),
-              ),
-        );
-      },
-    );
+    test.each([
+      [
+        "not cb",
+        new InputValidationError(
+          new z.ZodError([
+            {
+              code: "invalid_type",
+              expected: "function",
+              received: "string",
+              path: [1],
+              message: "Expected function, received string",
+            },
+          ]),
+        ),
+      ],
+      [
+        vi.fn(),
+        new OutputValidationError(
+          new z.ZodError([
+            {
+              code: "invalid_type",
+              expected: "number",
+              received: "string",
+              path: [0],
+              message: "Expected number, received string",
+            },
+          ]),
+        ),
+      ],
+    ])("should throw acknowledgment related errors %#", async (ack, error) => {
+      if (typeof ack === "function") {
+        ackHandler.mockImplementationOnce(async () => [
+          "not number" as unknown as number,
+        ]);
+      }
+      await expect(
+        ackAction.execute({
+          ...commons,
+          event: "test",
+          logger: loggerMock as unknown as AbstractLogger,
+          params: ["test", ack],
+        }),
+      ).rejects.toThrowError(error);
+    });
   });
 });

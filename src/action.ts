@@ -106,7 +106,7 @@ export class Action<
     try {
       return this.#outputSchema.parse(output) as z.output<NonNullable<OUT>>;
     } catch (e) {
-      throw e instanceof z.ZodError ? new AckError("action", e) : e;
+      throw e instanceof z.ZodError ? new AckError(e) : e;
     }
   }
 

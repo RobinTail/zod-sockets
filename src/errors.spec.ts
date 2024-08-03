@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { ZodError } from "zod";
-import { ActionError, AckError, IOSchemaError, EmissionError } from "./errors";
+import { ActionError, AckError, IOSchemaError } from "./errors";
 
 describe("Errors", () => {
   describe("IOSchemaError", () => {
@@ -13,38 +13,37 @@ describe("Errors", () => {
     });
   });
 
-  describe.each([ActionError, EmissionError])("EmissionError", (Subject) => {
+  describe("ActionError", () => {
     const zodError = new ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
-      expect(new Subject(zodError)).toBeInstanceOf(IOSchemaError);
-      expect(new Subject(zodError)).toBeInstanceOf(Error);
+      expect(new ActionError(zodError)).toBeInstanceOf(IOSchemaError);
+      expect(new ActionError(zodError)).toBeInstanceOf(Error);
     });
 
     test("should have the name matching its class", () => {
-      expect(new Subject(zodError).name).toBe(Subject.name);
+      expect(new ActionError(zodError).name).toBe("ActionError");
     });
 
     test("should have .originalError property matching the one used for constructing", () => {
-      expect(new Subject(zodError).originalError).toEqual(zodError);
+      expect(new ActionError(zodError).originalError).toEqual(zodError);
     });
   });
 
-  describe.each(["action", "emission"] as const)("AckError", (kind) => {
+  describe("AckError", () => {
     const zodError = new ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
-      expect(new AckError(kind, zodError)).toBeInstanceOf(IOSchemaError);
-      expect(new AckError(kind, zodError)).toBeInstanceOf(Error);
+      expect(new AckError(zodError)).toBeInstanceOf(IOSchemaError);
+      expect(new AckError(zodError)).toBeInstanceOf(Error);
     });
 
     test("should have the name matching its class", () => {
-      expect(new AckError(kind, zodError).name).toBe("AckError");
+      expect(new AckError(zodError).name).toBe("AckError");
     });
 
-    test("should have public properties matching the ones used for constructing", () => {
-      expect(new AckError(kind, zodError).originalError).toEqual(zodError);
-      expect(new AckError(kind, zodError).kind).toEqual(kind);
+    test("should have .originalError property matching th ones used for constructing", () => {
+      expect(new AckError(zodError).originalError).toEqual(zodError);
     });
   });
 });

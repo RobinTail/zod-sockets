@@ -257,7 +257,6 @@ describe("Action", () => {
         ).rejects.toThrowError(
           typeof ack === "function"
             ? new AckError(
-                "action",
                 new z.ZodError([
                   {
                     code: "invalid_type",

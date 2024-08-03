@@ -2,7 +2,6 @@ import { Socket } from "socket.io";
 import { MockedFunction, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { makeEmitter, makeRoomService } from "./emission";
-import { AckError, EmissionError } from "./errors";
 
 describe("Emission", () => {
   const broadcastMock: Record<
@@ -73,45 +72,9 @@ describe("Emission", () => {
         expect(subject.emit).toHaveBeenLastCalledWith("one", "test");
       });
 
-      test("should throw from emission schema", async () => {
-        await expect(
-          emitter("one", 123 as unknown as string),
-        ).rejects.toThrowError(
-          new EmissionError(
-            new z.ZodError([
-              {
-                code: "invalid_type",
-                message: "Expected string, received number",
-                expected: "string",
-                received: "number",
-                path: [0],
-              },
-            ]),
-          ),
-        );
-      });
-
       test("should emit events with ack", async () => {
         subject.emitWithAck.mockImplementationOnce(async () => ack);
         expect(await emitter("two", 123)).toEqual(ack);
-      });
-
-      test("should throw from ack schema", async () => {
-        subject.emitWithAck.mockImplementationOnce(async () => 123);
-        await expect(emitter("two", 123)).rejects.toThrowError(
-          new AckError(
-            "emission",
-            new z.ZodError([
-              {
-                code: "invalid_type",
-                message: "Expected array, received number",
-                expected: "array",
-                received: "number",
-                path: [],
-              },
-            ]),
-          ),
-        );
       });
     });
   });

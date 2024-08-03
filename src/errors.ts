@@ -6,15 +6,6 @@ export class IOSchemaError extends Error {
   public override name = "IOSchemaError";
 }
 
-/** @desc An error of validating the data against the Action schema */
-export class EmissionError extends IOSchemaError {
-  public override name = "EmissionError";
-
-  constructor(public readonly originalError: ZodError) {
-    super(getMessageFromError(originalError));
-  }
-}
-
 /** @desc An error of validating the data against the Emission schema */
 export class ActionError extends IOSchemaError {
   public override name = "ActionError";
@@ -28,10 +19,7 @@ export class ActionError extends IOSchemaError {
 export class AckError extends IOSchemaError {
   public override name = "AckError";
 
-  constructor(
-    public readonly kind: "action" | "emission",
-    public readonly originalError: ZodError,
-  ) {
+  constructor(public readonly originalError: ZodError) {
     super(getMessageFromError(originalError));
   }
 }

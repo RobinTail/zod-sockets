@@ -128,9 +128,17 @@ channels:
           items:
             - type: string
               description: name
+              examples:
+                - InputValidationError
             - type: string
               description: message
+              examples:
+                - "1: Required"
           additionalItems: false
+        examples:
+          - payload:
+              - InputValidationError
+              - "1: Required"
       rootIncomingChat:
         name: chat
         title: chat

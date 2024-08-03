@@ -38,6 +38,7 @@ export const config = createSimpleConfig({
   examples: {
     time: { payload: ["2024-03-28T21:13:15.084Z"] },
     chat: { payload: ["Hello there!", { from: "123abc" }] },
+    error: { payload: ["InputValidationError", "1: Required"] },
     rooms: [
       { payload: [["room1", "room2"]] },
       { payload: [["room3", "room4", "room5"]] },

@@ -2,6 +2,7 @@ import http from "node:http";
 import type { Server } from "socket.io";
 import { AbstractAction } from "./action";
 import { Client } from "./client";
+import { makeErrorFromAnything } from "./common-helpers";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
 import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
@@ -53,6 +54,7 @@ export const attachSockets = async <NS extends Namespaces>({
       onAnyIncoming,
       onAnyOutgoing,
       onStartup,
+      onError,
     } = { ...defaultHooks, ...hooks };
     const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
     const nsCtx: IndependentContext<NSEmissions, NSMeta> = {
@@ -102,9 +104,18 @@ export const attachSockets = async <NS extends Namespaces>({
       for (const action of actions) {
         if (action.getNamespace() === name) {
           const event = action.getEvent();
-          socket.on(event, async (...params) =>
-            action.execute({ event, params, ...ctx }),
-          );
+          socket.on(event, async (...params) => {
+            try {
+              return await action.execute({ event, params, ...ctx }); // await required
+            } catch (error) {
+              return onError({
+                ...ctx,
+                event,
+                payload: params,
+                error: makeErrorFromAnything(error),
+              });
+            }
+          });
         }
       }
       socket.on("disconnect", () => onDisconnect(ctx));

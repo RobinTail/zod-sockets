@@ -347,6 +347,49 @@ const config = createSimpleConfig({
 });
 ```
 
+## Handling errors
+
+### Error context
+
+You can configure the `onError` hook for handling errors of various natures.
+The library currently provides two classes of proprietary errors:
+`InputValidationError` and `OutputValidationError` (for Action acknowledgments).
+The hook is intended to be generic, so some of its arguments are optional.
+The following example shows how to emit an outgoing `error` event when the
+incoming event data is invalid.
+
+```typescript
+import { createSimpleConfig, InputValidationError } from "zod-sockets";
+
+const config = createSimpleConfig({
+  emission: {
+    error: {
+      schema: z.tuple([
+        z.string().describe("name"),
+        z.string().describe("message"),
+      ]),
+    },
+  },
+  hooks: {
+    onError: async ({ error, event, payload, client, logger }) => {
+      logger.error(event ? `${event} handling error` : "Error", error);
+      if (error instanceof InputValidationError && client) {
+        try {
+          await client.emit("error", error.name, error.message);
+        } catch {} // no errors inside this hook
+      }
+    },
+  },
+});
+```
+
+### Emission errors
+
+Every usage of `.emit()` and `.broadcast()` methods can potentially throw
+a `ZodError` on validation or an `Error` on timeout. Those errors are not
+handled by the library yet, not wrapped and not delegated to the `onError` hook,
+so they have to be handled in place using `try..catch` approach.
+
 ## Rooms
 
 ### Available rooms
@@ -517,6 +560,7 @@ const config = new Config()
       onDisconnect: () => {},
       onAnyIncoming: () => {},
       onAnyOutgoing: () => {},
+      onError: () => {},
     },
     metadata: z.object({ msgCount: z.number().int() }),
   })

@@ -2,6 +2,7 @@ import { init, last } from "ramda";
 import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
+import { OutputValidationError, InputValidationError } from "./errors";
 import { ActionContext, ClientContext, Handler } from "./handler";
 import { Namespaces, rootNS } from "./namespace";
 
@@ -10,7 +11,7 @@ export abstract class AbstractAction {
   public abstract getNamespace(): PropertyKey;
   public abstract execute(
     params: {
-      event: string;
+      event: string; // @todo this might be redundant
       params: unknown[];
     } & ClientContext<EmissionMap, z.SomeZodObject>,
   ): Promise<void>;
@@ -74,26 +75,40 @@ export class Action<
     return variant === "input" ? this.#inputSchema : this.#outputSchema;
   }
 
-  /** @throws z.ZodError */
+  /** @throws InputValidationError */
   #parseInput(params: unknown[]) {
     const payload = this.#outputSchema ? init(params) : params;
-    return this.#inputSchema.parse(payload);
+    try {
+      return this.#inputSchema.parse(payload);
+    } catch (e) {
+      throw e instanceof z.ZodError ? new InputValidationError(e) : e;
+    }
   }
 
-  /** @throws z.ZodError */
+  /** @throws InputValidationError */
   #parseAckCb(params: unknown[]) {
     if (!this.#outputSchema) {
       return undefined;
     }
-    return z.function(this.#outputSchema, z.void()).parse(last(params));
+    try {
+      return z
+        .function(this.#outputSchema, z.void())
+        .parse(last(params), { path: [Math.max(0, params.length - 1)] });
+    } catch (e) {
+      throw e instanceof z.ZodError ? new InputValidationError(e) : e;
+    }
   }
 
-  /** @throws z.ZodError */
+  /** @throws OutputValidationError */
   #parseOutput(output: z.input<NonNullable<OUT>> | void) {
     if (!this.#outputSchema) {
       return;
     }
-    return this.#outputSchema.parse(output) as z.output<NonNullable<OUT>>;
+    try {
+      return this.#outputSchema.parse(output) as z.output<NonNullable<OUT>>;
+    } catch (e) {
+      throw e instanceof z.ZodError ? new OutputValidationError(e) : e;
+    }
   }
 
   public override async execute({
@@ -105,21 +120,17 @@ export class Action<
     event: string;
     params: unknown[];
   } & ClientContext<EmissionMap, z.SomeZodObject>): Promise<void> {
-    try {
-      const input = this.#parseInput(params);
-      logger.debug(
-        `parsed input (${this.#outputSchema ? "excl." : "no"} ack)`,
-        input,
-      );
-      const ack = this.#parseAckCb(params);
-      const output = await this.#handler({ input, logger, ...rest });
-      const response = this.#parseOutput(output);
-      if (ack && response) {
-        logger.debug("parsed output", response);
-        ack(...response);
-      }
-    } catch (error) {
-      logger.error(`${event} handling error`, error);
+    const input = this.#parseInput(params);
+    logger.debug(
+      `${event}: parsed input (${this.#outputSchema ? "excl." : "no"} ack)`,
+      input,
+    );
+    const ack = this.#parseAckCb(params);
+    const output = await this.#handler({ input, logger, ...rest });
+    const response = this.#parseOutput(output);
+    if (ack && response) {
+      logger.debug(`${event}: parsed output`, response);
+      ack(...response);
     }
   }
 

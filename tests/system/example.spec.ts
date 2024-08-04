@@ -33,6 +33,17 @@ describe("System test on Example", async () => {
       client.emit("ping", "test", ack);
       await waitFor(() => ack.mock.calls.length === 1);
     });
+
+    test("should emit error event when pinging without ack", async () => {
+      const onError = vi.fn();
+      client.on("error", onError);
+      client.emit("ping");
+      await waitFor(() => onError.mock.calls.length > 0);
+      expect(onError).toHaveBeenLastCalledWith(
+        "InputValidationError",
+        "0: Required",
+      );
+    });
   });
 
   describe("subscribe", () => {
@@ -62,6 +73,17 @@ describe("System test on Example", async () => {
       client.emit("chat", "Glory to Science!");
       await waitFor(() => onChat.mock.calls.length === 1);
       partner.off("chat", onChat);
+    });
+
+    test("should emit error event when sending invalid data", async () => {
+      const onError = vi.fn();
+      client.on("error", onError);
+      client.emit("chat", 123);
+      await waitFor(() => onError.mock.calls.length > 0);
+      expect(onError).toHaveBeenLastCalledWith(
+        "InputValidationError",
+        "0: Expected string, received number",
+      );
     });
   });
 });

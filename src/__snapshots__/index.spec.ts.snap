@@ -6,7 +6,9 @@ exports[`Entrypoint > should expose certain entities 1`] = `
   "ActionsFactory": [Function],
   "Config": [Function],
   "Documentation": [Function],
+  "InputValidationError": [Function],
   "Integration": [Function],
+  "OutputValidationError": [Function],
   "attachSockets": [Function],
   "createSimpleConfig": [Function],
 }

@@ -660,6 +660,25 @@ channels:
               - *a2
           - payload:
               - *a3
+      rootOutgoingError:
+        name: error
+        title: error
+        payload:
+          type: array
+          items:
+            - type: string
+              description: name
+              examples:
+                - InputValidationError
+            - type: string
+              description: message
+              examples:
+                - "1: Required"
+          additionalItems: false
+        examples:
+          - payload:
+              - InputValidationError
+              - "1: Required"
       rootIncomingChat:
         name: chat
         title: chat
@@ -746,6 +765,15 @@ operations:
       - $ref: "#/channels/Root/messages/rootOutgoingRooms"
     title: rooms
     summary: Outgoing event rooms
+    description: The message produced by the application within the / namespace
+  RootSendOperationError:
+    action: send
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootOutgoingError"
+    title: error
+    summary: Outgoing event error
     description: The message produced by the application within the / namespace
   RootRecvOperationChat:
     action: receive

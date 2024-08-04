@@ -353,7 +353,7 @@ const config = createSimpleConfig({
 
 You can configure the `onError` hook for handling errors of various natures.
 The library currently provides two classes of proprietary errors:
-`InputValidationError` and `OutputValidationError` (Action acknowledgments).
+`InputValidationError` and `OutputValidationError` (for Action acknowledgments).
 The hook is intended to be generic, so some of its arguments are optional.
 The following example shows how to emit an outgoing `error` event when the
 incoming event data is invalid.

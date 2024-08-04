@@ -2,7 +2,11 @@ import { init, last } from "ramda";
 import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
-import { OutputValidationError, InputValidationError } from "./errors";
+import {
+  OutputValidationError,
+  InputValidationError,
+  parseWrapped,
+} from "./errors";
 import { ActionContext, ClientContext, Handler } from "./handler";
 import { Namespaces, rootNS } from "./namespace";
 
@@ -77,11 +81,7 @@ export class Action<
   /** @throws InputValidationError */
   #parseInput(params: unknown[]) {
     const payload = this.#outputSchema ? init(params) : params;
-    try {
-      return this.#inputSchema.parse(payload);
-    } catch (e) {
-      throw e instanceof z.ZodError ? new InputValidationError(e) : e;
-    }
+    return parseWrapped(this.#inputSchema, payload, InputValidationError);
   }
 
   /** @throws InputValidationError */
@@ -89,13 +89,12 @@ export class Action<
     if (!this.#outputSchema) {
       return undefined;
     }
-    try {
-      return z
-        .function(this.#outputSchema, z.void())
-        .parse(last(params), { path: [Math.max(0, params.length - 1)] });
-    } catch (e) {
-      throw e instanceof z.ZodError ? new InputValidationError(e) : e;
-    }
+    return parseWrapped(
+      z.function(this.#outputSchema, z.void()),
+      last(params),
+      InputValidationError,
+      { path: [Math.max(0, params.length - 1)] },
+    );
   }
 
   /** @throws OutputValidationError */
@@ -103,11 +102,11 @@ export class Action<
     if (!this.#outputSchema) {
       return;
     }
-    try {
-      return this.#outputSchema.parse(output) as z.output<NonNullable<OUT>>;
-    } catch (e) {
-      throw e instanceof z.ZodError ? new OutputValidationError(e) : e;
-    }
+    return parseWrapped(
+      this.#outputSchema,
+      output,
+      OutputValidationError,
+    ) as z.output<NonNullable<OUT>>;
   }
 
   public override async execute({

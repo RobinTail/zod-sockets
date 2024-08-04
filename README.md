@@ -347,6 +347,8 @@ const config = createSimpleConfig({
 });
 ```
 
+## Handling errors
+
 ### Error context
 
 You can configure the `onError` hook for handling errors of various natures.
@@ -380,6 +382,13 @@ const config = createSimpleConfig({
   },
 });
 ```
+
+### Emission errors
+
+Every usage of `.emit()` and `.broadcast()` methods can potentially throw
+a `ZodError` on validation or an `Error` on timeout. Those errors are not
+handled by the library yet, not wrapped and not delegated to the `onError` hook,
+so they have to be handles in place using `try..catch` approach.
 
 ## Rooms
 

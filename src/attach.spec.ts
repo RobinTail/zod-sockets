@@ -125,7 +125,6 @@ describe("Attach", () => {
       );
       expect(actionsMock[0].execute).toHaveBeenLastCalledWith({
         withRooms: expect.any(Function),
-        event: "test",
         logger: loggerMock,
         params: [[123, 456]],
         client: {

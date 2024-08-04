@@ -11,7 +11,6 @@ export abstract class AbstractAction {
   public abstract getNamespace(): PropertyKey;
   public abstract execute(
     params: {
-      event: string; // @todo this might be redundant
       params: unknown[];
     } & ClientContext<EmissionMap, z.SomeZodObject>,
   ): Promise<void>;
@@ -112,24 +111,23 @@ export class Action<
   }
 
   public override async execute({
-    event,
     params,
     logger,
     ...rest
-  }: {
-    event: string;
-    params: unknown[];
-  } & ClientContext<EmissionMap, z.SomeZodObject>): Promise<void> {
+  }: { params: unknown[] } & ClientContext<
+    EmissionMap,
+    z.SomeZodObject
+  >): Promise<void> {
     const input = this.#parseInput(params);
     logger.debug(
-      `${event}: parsed input (${this.#outputSchema ? "excl." : "no"} ack)`,
+      `${this.#event}: parsed input (${this.#outputSchema ? "excl." : "no"} ack)`,
       input,
     );
     const ack = this.#parseAckCb(params);
     const output = await this.#handler({ input, logger, ...rest });
     const response = this.#parseOutput(output);
     if (ack && response) {
-      logger.debug(`${event}: parsed output`, response);
+      logger.debug(`${this.#event}: parsed output`, response);
       ack(...response);
     }
   }

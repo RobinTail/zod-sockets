@@ -106,7 +106,7 @@ export const attachSockets = async <NS extends Namespaces>({
           const event = action.getEvent();
           socket.on(event, async (...params) => {
             try {
-              return await action.execute({ event, params, ...ctx }); // await required
+              return await action.execute({ params, ...ctx }); // await required
             } catch (error) {
               return onError({
                 ...ctx,

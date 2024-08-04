@@ -86,7 +86,6 @@ describe("Action", () => {
     test("should handle simple action", async () => {
       await simpleAction.execute({
         ...commons,
-        event: "test",
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some"],
       });
@@ -102,7 +101,6 @@ describe("Action", () => {
       const ackMock = vi.fn();
       await ackAction.execute({
         ...commons,
-        event: "test",
         logger: loggerMock as unknown as AbstractLogger,
         params: ["some", ackMock],
       });
@@ -119,7 +117,6 @@ describe("Action", () => {
       await expect(
         simpleAction.execute({
           ...commons,
-          event: "test",
           logger: loggerMock as unknown as AbstractLogger,
           params: [], // too short
         }),
@@ -178,7 +175,6 @@ describe("Action", () => {
       await expect(
         ackAction.execute({
           ...commons,
-          event: "test",
           logger: loggerMock as unknown as AbstractLogger,
           params: ["test", ack],
         }),

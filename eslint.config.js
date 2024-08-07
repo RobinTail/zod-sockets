@@ -1,22 +1,18 @@
 import globals from "globals";
 import jsPlugin from "@eslint/js";
+import { readFileSync } from "node:fs";
 import tsPlugin from "typescript-eslint";
 import prettierOverrides from "eslint-config-prettier";
 import prettierRules from "eslint-plugin-prettier/recommended";
 import unicornPlugin from "eslint-plugin-unicorn";
-import importPlugin from "eslint-plugin-import";
+import allowedDepsPlugin from "eslint-plugin-allowed-dependencies";
 
 export default [
   {
     languageOptions: { globals: globals.node },
     plugins: {
       unicorn: unicornPlugin,
-      import: importPlugin,
-    },
-    settings: {
-      // "import-x" plugin installed as "import", in order to suppress the warning from the typescript resolver
-      // @link https://github.com/import-js/eslint-import-resolver-typescript/issues/293
-      "import-x/resolver": { typescript: true, node: true },
+      allowed: allowedDepsPlugin,
     },
   },
   jsPlugin.configs.recommended,
@@ -35,16 +31,16 @@ export default [
   {
     rules: {
       "unicorn/prefer-node-protocol": "error",
-      "import/named": "error",
-      "import/export": "error",
-      "import/no-duplicates": "warn",
     },
   },
   // For the sources
   {
     files: ["src/*.ts"],
     rules: {
-      "import/no-extraneous-dependencies": "error",
+      "allowed/dependencies": [
+        "error",
+        { manifest: JSON.parse(readFileSync("./package.json", "utf8")) },
+      ],
       "@typescript-eslint/no-empty-object-type": [
         "error",
         { allowWithName: "LoggerOverrides" },
@@ -57,7 +53,7 @@ export default [
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "warn",
-      "import/no-extraneous-dependencies": "off",
+      "allowed/dependencies": "off",
     },
   },
   // For Async API
@@ -74,7 +70,6 @@ export default [
     files: ["example/example-client.ts", "tests/**/quick-start.ts"],
     rules: {
       "@typescript-eslint/no-namespace": "off",
-      "import/no-duplicates": "off",
       "prettier/prettier": "off",
     },
   },

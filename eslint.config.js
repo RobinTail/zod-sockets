@@ -1,6 +1,5 @@
 import globals from "globals";
 import jsPlugin from "@eslint/js";
-import { readFileSync } from "node:fs";
 import tsPlugin from "typescript-eslint";
 import prettierOverrides from "eslint-config-prettier";
 import prettierRules from "eslint-plugin-prettier/recommended";
@@ -37,10 +36,7 @@ export default [
   {
     files: ["src/*.ts"],
     rules: {
-      "allowed/dependencies": [
-        "error",
-        { manifest: JSON.parse(readFileSync("./package.json", "utf8")) },
-      ],
+      "allowed/dependencies": "error",
       "@typescript-eslint/no-empty-object-type": [
         "error",
         { allowWithName: "LoggerOverrides" },

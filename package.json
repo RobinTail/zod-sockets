@@ -92,6 +92,9 @@
     "vitest": "^2.0.4",
     "zod": "^3.22.4"
   },
+  "resolutions": {
+    "@arethetypeswrong/**/lru-cache": "^10.4.3"
+  },
   "keywords": [
     "nodejs",
     "socket",

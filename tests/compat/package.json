@@ -5,8 +5,8 @@
   "type": "module",
   "dependencies": {
     "zod-sockets": "link:../..",
-    "express": "^4.18.2",
-    "express-zod-api": "^20.0.0-beta.1",
+    "express": "^5.0.0",
+    "express-zod-api": "^20.14.0",
     "http-errors": "^2.0.0"
   }
 }

@@ -42,7 +42,7 @@
     "posttest": "make-coverage-badge --output-path coverage.svg",
     "test:cjs": "yarn --cwd tests/cjs && vitest run -r tests/cjs",
     "test:esm": "yarn --cwd tests/esm && vitest run -r tests/esm",
-    "test:compat": "yarn --cwd --ignore-engines tests/compat && vitest run -r tests/compat",
+    "test:compat": "yarn --cwd tests/compat --ignore-engines && vitest run -r tests/compat",
     "test:952": "yarn --cwd tests/issue952 && yarn --cwd tests/issue952 test",
     "test:system": "yarn --cwd tests/system && vitest run -r tests/system",
     "mdfix": "prettier *.md --write",

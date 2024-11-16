@@ -179,8 +179,8 @@ assign it to the `target` property.
 import { createServer } from "express-zod-api";
 import { attachSockets } from "zod-sockets";
 
-const { httpServer, httpsServer } = await createServer();
-attachSockets({ target: httpsServer || httpServer });
+const { servers } = await createServer();
+attachSockets({ target: servers.pop()! });
 ```
 
 ## Logger compatibility
@@ -456,7 +456,7 @@ import { attachSockets, createSimpleConfig, ActionsFactory } from "zod-sockets";
 import { Server } from "socket.io";
 import { z } from "zod";
 
-const { logger, httpsServer, httpServer } = await createServer();
+const { logger, servers } = await createServer();
 
 const config = createSimpleConfig({
   emission: {
@@ -476,7 +476,7 @@ await attachSockets({
   config,
   logger,
   io: new Server(),
-  target: httpsServer || httpServer,
+  target: servers.pop()!,
   actions: [
     factory.build({
       event: "subscribe",

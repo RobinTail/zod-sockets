@@ -2,6 +2,12 @@
 
 ## Version 2
 
+### v2.1.1
+
+- Documentation update on compatibility with Express Zod API v21;
+- Tested compatibility with Express v5;
+- Removed redundant `event` argument for `Action::execute()`.
+
 ### v2.1.0
 
 - Featuring `onError` hook for handling errors of various natures:

@@ -2,19 +2,15 @@ import { createConfig, createServer } from "express-zod-api";
 import { Server } from "socket.io";
 import { attachSockets, createSimpleConfig } from "zod-sockets";
 
-const serverConfig = createConfig({
-  server: { listen: 8090 },
-  cors: false,
-  logger: { level: "debug", color: true },
-});
+const serverConfig = createConfig({ http: { listen: 8090 }, cors: false });
 
-const { httpServer, logger } = await createServer(serverConfig, {});
+const { servers, logger } = await createServer(serverConfig, {});
 
 const socketsConfig = createSimpleConfig();
 
 const io = new Server();
 await attachSockets({
-  target: httpServer,
+  target: servers.pop()!,
   config: socketsConfig,
   actions: [],
   io,

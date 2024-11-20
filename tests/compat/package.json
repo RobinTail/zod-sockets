@@ -9,7 +9,7 @@
   "dependencies": {
     "zod-sockets": "link:../..",
     "express": "^5.0.0",
-    "express-zod-api": "^20.14.0",
+    "express-zod-api": "^21.0.0",
     "http-errors": "^2.0.0"
   }
 }

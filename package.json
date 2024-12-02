@@ -92,6 +92,9 @@
     "vitest": "^2.1.5",
     "zod": "^3.22.4"
   },
+  "resolutions": {
+    "**/vite": "^6"
+  },
   "keywords": [
     "nodejs",
     "socket",

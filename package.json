@@ -81,7 +81,7 @@
     "eslint-plugin-unicorn": "^56.0.0",
     "husky": "^9.0.10",
     "make-coverage-badge": "^1.2.0",
-    "prettier": "3.4.1",
+    "prettier": "3.4.2",
     "semver": "^7.6.3",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",

@@ -11,8 +11,7 @@ describe("zod-to-ts", () => {
     printNode(node, { newLine: ts.NewLineKind.LineFeed });
   const defaultCtx: ZTSContext = {
     direction: "in",
-    getAlias: vi.fn((name: string) => f.createTypeReferenceNode(name)),
-    makeAlias: vi.fn(),
+    makeAlias: vi.fn(() => f.createTypeReferenceNode("SomeType")),
     optionalPropStyle: { withQuestionMark: true, withUndefined: true },
   };
 

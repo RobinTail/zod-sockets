@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { z } from "zod";
 import { FlatObject } from "./common-helpers";
 import { SchemaHandler } from "./schema-walker";
 
@@ -8,8 +9,10 @@ export type LiteralType = string | number | boolean;
 
 export interface ZTSContext extends FlatObject {
   direction: "in" | "out";
-  getAlias: (name: string) => ts.TypeReferenceNode | undefined;
-  makeAlias: (name: string, type: ts.TypeNode) => ts.TypeReferenceNode;
+  makeAlias: (
+    schema: z.ZodTypeAny,
+    produce: () => ts.TypeNode,
+  ) => ts.TypeReferenceNode;
   optionalPropStyle: { withQuestionMark?: boolean; withUndefined?: boolean };
 }
 
@@ -26,18 +29,16 @@ export const addJsDocComment = (node: ts.Node, text: string) => {
 
 export const createTypeAlias = (
   node: ts.TypeNode,
-  identifier: string,
+  name: string,
   comment?: string,
 ) => {
   const typeAlias = f.createTypeAliasDeclaration(
     undefined,
-    f.createIdentifier(identifier),
+    f.createIdentifier(name),
     undefined,
     node,
   );
-  if (comment) {
-    addJsDocComment(typeAlias, comment);
-  }
+  if (comment) addJsDocComment(typeAlias, comment);
   return typeAlias;
 };
 

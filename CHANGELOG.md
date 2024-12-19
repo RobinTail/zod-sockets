@@ -2,6 +2,20 @@
 
 ## Version 2
 
+### v2.2.0
+
+- Naming of circular types is now numeric:
+  - Deprecated `serializer` property on the `Integration` constructor argument (no longer used).
+
+```diff
+- type Type2048581c137c5b2130eb860e3ae37da196dfc25b = {
++ type Type1 = {
+      title: string;
+-     features: Type2048581c137c5b2130eb860e3ae37da196dfc25b;
++     features: Type1;
+  }[];
+```
+
 ### v2.1.1
 
 - Documentation update on compatibility with Express Zod API v21;

@@ -19,7 +19,7 @@ interface IntegrationProps {
    */
   maxOverloads?: number;
   /**
-   * @deprecated
+   * @deprecated unused
    * @todo remove in next major
    * */
   serializer?: (schema: z.ZodTypeAny) => string;

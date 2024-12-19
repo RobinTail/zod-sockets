@@ -3,12 +3,7 @@ import { z } from "zod";
 import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
 import { Config } from "./config";
-import {
-  defaultSerializer,
-  exportModifier,
-  f,
-  makeEventFnSchema,
-} from "./integration-helpers";
+import { exportModifier, f, makeEventFnSchema } from "./integration-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
 import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
@@ -24,8 +19,8 @@ interface IntegrationProps {
    */
   maxOverloads?: number;
   /**
-   * @desc Used for comparing schemas wrapped into z.lazy() to limit the recursion
-   * @default JSON.stringify() + SHA1 hash as a hex digest
+   * @deprecated
+   * @todo remove in next major
    * */
   serializer?: (schema: z.ZodTypeAny) => string;
   /**
@@ -92,7 +87,6 @@ export class Integration {
   constructor({
     config: { namespaces },
     actions,
-    serializer = defaultSerializer,
     optionalPropStyle = { withQuestionMark: true, withUndefined: true },
     maxOverloads = 3,
   }: IntegrationProps) {
@@ -120,7 +114,6 @@ export class Integration {
       const commons = {
         getAlias: this.getAlias.bind(this, ns),
         makeAlias: this.makeAlias.bind(this, ns),
-        serializer,
         optionalPropStyle,
       };
       for (const [event, { schema, ack }] of Object.entries(emission)) {

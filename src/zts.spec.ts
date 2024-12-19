@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
 import { z } from "zod";
-import { defaultSerializer, f } from "./integration-helpers";
+import { f } from "./integration-helpers";
 import { zodToTs } from "./zts";
 import { ZTSContext, createTypeAlias, printNode } from "./zts-helpers";
 import { describe, expect, test, vi } from "vitest";
@@ -13,7 +13,6 @@ describe("zod-to-ts", () => {
     direction: "in",
     getAlias: vi.fn((name: string) => f.createTypeReferenceNode(name)),
     makeAlias: vi.fn(),
-    serializer: defaultSerializer,
     optionalPropStyle: { withQuestionMark: true, withUndefined: true },
   };
 

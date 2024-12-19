@@ -1,13 +1,9 @@
-import { createHash } from "node:crypto";
 import { range } from "ramda";
 import ts from "typescript";
 import { z } from "zod";
 
 export const f = ts.factory;
 export const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
-
-export const defaultSerializer = (schema: z.ZodTypeAny): string =>
-  createHash("sha1").update(JSON.stringify(schema), "utf8").digest("hex");
 
 export const makeEventFnSchema = (
   base: z.AnyZodTuple,

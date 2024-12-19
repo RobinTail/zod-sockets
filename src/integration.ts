@@ -3,12 +3,7 @@ import { z } from "zod";
 import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
 import { Config } from "./config";
-import {
-  defaultSerializer,
-  exportModifier,
-  f,
-  makeEventFnSchema,
-} from "./integration-helpers";
+import { exportModifier, f, makeEventFnSchema } from "./integration-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
 import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
@@ -24,8 +19,8 @@ interface IntegrationProps {
    */
   maxOverloads?: number;
   /**
-   * @desc Used for comparing schemas wrapped into z.lazy() to limit the recursion
-   * @default JSON.stringify() + SHA1 hash as a hex digest
+   * @deprecated unused
+   * @todo remove in next major
    * */
   serializer?: (schema: z.ZodTypeAny) => string;
   /**
@@ -53,7 +48,7 @@ export class Integration {
   protected program: ts.Node[] = [];
   protected aliases: Record<
     string, // namespace
-    Record<string, ts.TypeAliasDeclaration>
+    Map<z.ZodTypeAny, ts.TypeAliasDeclaration>
   > = {};
   protected ids = {
     path: f.createIdentifier("path"),
@@ -71,28 +66,24 @@ export class Integration {
     >
   > = {};
 
-  protected getAlias(
-    ns: string,
-    name: string,
-  ): ts.TypeReferenceNode | undefined {
-    return name in this.aliases[ns]
-      ? f.createTypeReferenceNode(name)
-      : undefined;
-  }
-
   protected makeAlias(
     ns: string,
-    name: string,
-    type: ts.TypeNode,
+    schema: z.ZodTypeAny,
+    produce: () => ts.TypeNode,
   ): ts.TypeReferenceNode {
-    this.aliases[ns][name] = createTypeAlias(type, name);
-    return this.getAlias(ns, name)!;
+    let name = this.aliases[ns].get(schema)?.name?.text;
+    if (!name) {
+      name = `Type${this.aliases[ns].size + 1}`;
+      const temp = f.createLiteralTypeNode(f.createNull());
+      this.aliases[ns].set(schema, createTypeAlias(temp, name));
+      this.aliases[ns].set(schema, createTypeAlias(produce(), name));
+    }
+    return f.createTypeReferenceNode(name);
   }
 
   constructor({
     config: { namespaces },
     actions,
-    serializer = defaultSerializer,
     optionalPropStyle = { withQuestionMark: true, withUndefined: true },
     maxOverloads = 3,
   }: IntegrationProps) {
@@ -115,12 +106,10 @@ export class Integration {
     );
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      this.aliases[ns] = {};
+      this.aliases[ns] = new Map<z.ZodTypeAny, ts.TypeAliasDeclaration>();
       this.registry[ns] = { emission: [], actions: [] };
       const commons = {
-        getAlias: this.getAlias.bind(this, ns),
         makeAlias: this.makeAlias.bind(this, ns),
-        serializer,
         optionalPropStyle,
       };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
@@ -197,7 +186,7 @@ export class Integration {
           f.createIdentifier(publicName),
           f.createModuleBlock([
             nsNameNode,
-            ...Object.values(this.aliases[ns]),
+            ...this.aliases[ns].values(),
             ...interfaces,
             socketNode,
           ]),

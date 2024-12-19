@@ -196,19 +196,8 @@ const onNull: Producer = () => f.createLiteralTypeNode(f.createNull());
 const onDate: Producer = () =>
   f.createTypeReferenceNode(f.createIdentifier("Date"));
 
-const onLazy: Producer = (
-  lazy: z.ZodLazy<z.ZodTypeAny>,
-  { getAlias, makeAlias, next, serializer: serialize },
-) => {
-  const name = `Type${serialize(lazy.schema)}`;
-  return (
-    getAlias(name) ||
-    (() => {
-      makeAlias(name, f.createLiteralTypeNode(f.createNull())); // make empty type first
-      return makeAlias(name, next(lazy.schema)); // update
-    })()
-  );
-};
+const onLazy: Producer = (lazy: z.ZodLazy<z.ZodTypeAny>, { makeAlias, next }) =>
+  makeAlias(lazy, () => next(lazy.schema));
 
 const onFunction: Producer = (
   schema: z.ZodFunction<z.AnyZodTuple, z.ZodTypeAny>,

@@ -1,6 +1,6 @@
 {
   "name": "zod-sockets",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers",
   "type": "module",
   "main": "dist/index.cjs",
@@ -68,12 +68,12 @@
     "zod": "^3.23.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.16.2",
+    "@arethetypeswrong/cli": "^0.17.0",
     "@tsconfig/node18": "^18.2.4",
     "@types/node": "^22.0.0",
     "@types/ramda": "^0.30.0",
     "@types/semver": "^7.5.8",
-    "@vitest/coverage-istanbul": "^2.0.4",
+    "@vitest/coverage-istanbul": "^2.1.5",
     "eslint": "^9.4.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-allowed-dependencies": "^1.0.0",
@@ -81,7 +81,7 @@
     "eslint-plugin-unicorn": "^56.0.0",
     "husky": "^9.0.10",
     "make-coverage-badge": "^1.2.0",
-    "prettier": "3.3.3",
+    "prettier": "3.4.2",
     "semver": "^7.6.3",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
@@ -89,8 +89,11 @@
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.0.1",
-    "vitest": "^2.0.4",
+    "vitest": "^2.1.5",
     "zod": "^3.22.4"
+  },
+  "resolutions": {
+    "**/vite": "^6"
   },
   "keywords": [
     "nodejs",

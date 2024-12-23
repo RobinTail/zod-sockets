@@ -2,6 +2,9 @@
   "name": "zod-sockets-cjs-test",
   "private": true,
   "version": "0.0.0",
+  "scripts": {
+    "preinstall": "rm -rf node_modules"
+  },
   "dependencies": {
     "zod-sockets": "link:../.."
   }

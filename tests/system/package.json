@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "scripts": {
+    "preinstall": "rm -rf node_modules"
+  },
   "dependencies": {
     "socket.io-client": "^4.7.4"
   }

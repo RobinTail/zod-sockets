@@ -6,7 +6,7 @@ import prettierRules from "eslint-plugin-prettier/recommended";
 import unicornPlugin from "eslint-plugin-unicorn";
 import allowedDepsPlugin from "eslint-plugin-allowed-dependencies";
 
-export default [
+export default tsPlugin.config(
   {
     languageOptions: { globals: globals.node },
     plugins: {
@@ -15,7 +15,7 @@ export default [
     },
   },
   jsPlugin.configs.recommended,
-  ...tsPlugin.configs.recommended,
+  tsPlugin.configs.recommended,
   prettierOverrides,
   prettierRules,
   // Things to turn off globally
@@ -69,4 +69,4 @@ export default [
       "prettier/prettier": "off",
     },
   },
-];
+);

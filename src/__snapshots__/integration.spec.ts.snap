@@ -6,9 +6,9 @@ exports[`Integration > print() > should handle circular references 1`] = `
 export namespace Root {
     /** @desc The actual path of the Root namespace */
     export const path = "/";
-    type Type2048581c137c5b2130eb860e3ae37da196dfc25b = {
+    type Type1 = {
         title: string;
-        features: Type2048581c137c5b2130eb860e3ae37da196dfc25b;
+        features: Type1;
     }[];
     export interface Emission {
         time: (currentIsoTime: string) => void;
@@ -22,7 +22,7 @@ export namespace Root {
     export interface Actions {
         test: (p1: {
             title: string;
-            features: Type2048581c137c5b2130eb860e3ae37da196dfc25b;
+            features: Type1;
         }) => void;
     }
     /** @example const socket: Root.Socket = io(Root.path) */

@@ -122,7 +122,7 @@ describe("Action", () => {
       ).rejects.toThrowErrorMatchingSnapshot();
     });
 
-    test.each([["not cb"], [vi.fn()]])(
+    test.each(["not cb", vi.fn()])(
       "should throw acknowledgment related errors %#",
       async (ack) => {
         if (typeof ack === "function") {

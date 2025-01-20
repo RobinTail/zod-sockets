@@ -73,7 +73,7 @@
     "@types/node": "^22.0.0",
     "@types/ramda": "^0.30.0",
     "@types/semver": "^7.5.8",
-    "@vitest/coverage-istanbul": "^2.1.5",
+    "@vitest/coverage-istanbul": "^3.0.2",
     "eslint": "^9.4.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-allowed-dependencies": "^1.0.0",
@@ -89,7 +89,7 @@
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.0.1",
-    "vitest": "^2.1.5",
+    "vitest": "^3.0.2",
     "zod": "^3.22.4"
   },
   "resolutions": {

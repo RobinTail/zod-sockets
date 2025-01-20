@@ -2,7 +2,6 @@ import { Socket } from "socket.io";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { AbstractAction, Action } from "./action";
-import { OutputValidationError, InputValidationError } from "./errors";
 import { AbstractLogger } from "./logger";
 
 describe("Action", () => {
@@ -120,65 +119,25 @@ describe("Action", () => {
           logger: loggerMock as unknown as AbstractLogger,
           params: [], // too short
         }),
-      ).rejects.toThrowError(
-        new InputValidationError(
-          new z.ZodError([
-            {
-              code: "too_small",
-              minimum: 1,
-              inclusive: true,
-              exact: false,
-              type: "array",
-              path: [],
-              message: "Array must contain at least 1 element(s)",
-            },
-          ]),
-        ),
-      );
+      ).rejects.toThrowErrorMatchingSnapshot();
     });
 
-    test.each([
-      [
-        "not cb",
-        new InputValidationError(
-          new z.ZodError([
-            {
-              code: "invalid_type",
-              expected: "function",
-              received: "string",
-              path: [1],
-              message: "Expected function, received string",
-            },
-          ]),
-        ),
-      ],
-      [
-        vi.fn(),
-        new OutputValidationError(
-          new z.ZodError([
-            {
-              code: "invalid_type",
-              expected: "number",
-              received: "string",
-              path: [0],
-              message: "Expected number, received string",
-            },
-          ]),
-        ),
-      ],
-    ])("should throw acknowledgment related errors %#", async (ack, error) => {
-      if (typeof ack === "function") {
-        ackHandler.mockImplementationOnce(async () => [
-          "not number" as unknown as number,
-        ]);
-      }
-      await expect(
-        ackAction.execute({
-          ...commons,
-          logger: loggerMock as unknown as AbstractLogger,
-          params: ["test", ack],
-        }),
-      ).rejects.toThrowError(error);
-    });
+    test.each([["not cb"], [vi.fn()]])(
+      "should throw acknowledgment related errors %#",
+      async (ack) => {
+        if (typeof ack === "function") {
+          ackHandler.mockImplementationOnce(async () => [
+            "not number" as unknown as number,
+          ]);
+        }
+        await expect(
+          ackAction.execute({
+            ...commons,
+            logger: loggerMock as unknown as AbstractLogger,
+            params: ["test", ack],
+          }),
+        ).rejects.toThrowErrorMatchingSnapshot();
+      },
+    );
   });
 });

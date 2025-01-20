@@ -92,9 +92,6 @@
     "vitest": "^3.0.2",
     "zod": "^3.22.4"
   },
-  "resolutions": {
-    "**/vite": "^6"
-  },
   "keywords": [
     "nodejs",
     "socket",
@@ -110,5 +107,6 @@
     "async-api",
     "asyncapi-specification",
     "asyncapi-tools"
-  ]
+  ],
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

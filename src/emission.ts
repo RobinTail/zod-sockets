@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import type { RemoteSocket, Server, Socket } from "socket.io";
 import { z } from "zod";
 import {
+  InputValidationError,
+  OutputValidationError,
+  parseWrapped,
+} from "./errors";
+import {
   RemoteClient,
   SomeRemoteSocket,
   makeRemoteClients,
@@ -67,22 +72,26 @@ export function makeEmitter({
 }: {
   subject: Socket | SomeRemoteSocket | Socket["broadcast"] | Server;
 } & EmitterConfig<EmissionMap>) {
+  const getSchemas = (event: string) => {
+    const { schema, ack } = emission[event];
+    return { schema, ack: ack && ("id" in subject ? ack : ack.array()) };
+  };
   /**
-   * @throws z.ZodError on validation
-   * @throws Error on ack timeout
+   * @throws OutputValidationError on validating emission
+   * @throws InputValidationError on validating acknowledgment
+   * @throws Error on ack timeout or unsupported event
    * */
   return async (event: string, ...args: unknown[]) => {
-    const isSocket = "id" in subject;
     assert(event in emission, new Error(`Unsupported event ${event}`));
-    const { schema, ack } = emission[event];
-    const payload = schema.parse(args);
+    const { schema, ack } = getSchemas(event);
+    const payload = parseWrapped(schema, args, OutputValidationError);
     if (!ack) {
       return subject.emit(String(event), ...payload) || true;
     }
     const response = await subject
       .timeout(timeout)
       .emitWithAck(String(event), ...payload);
-    return (isSocket ? ack : ack.array()).parse(response);
+    return parseWrapped(ack, response, InputValidationError);
   };
 }
 

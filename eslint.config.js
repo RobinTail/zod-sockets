@@ -4,6 +4,12 @@ import tsPlugin from "typescript-eslint";
 import prettierOverrides from "eslint-config-prettier";
 import prettierRules from "eslint-plugin-prettier/recommended";
 import allowedDepsPlugin from "eslint-plugin-allowed-dependencies";
+import { builtinModules } from "node:module";
+
+const importConcerns = builtinModules.map((mod) => ({
+  selector: `ImportDeclaration[source.value='${mod}']`,
+  message: `use node:${mod} for the built-in module`,
+}));
 
 export default tsPlugin.config(
   {
@@ -26,7 +32,9 @@ export default tsPlugin.config(
   },
   // Things to turn on globally
   {
-    rules: {},
+    rules: {
+      "no-restricted-syntax": ["warn", ...importConcerns],
+    },
   },
   // For the sources
   {

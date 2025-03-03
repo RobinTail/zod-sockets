@@ -3,14 +3,18 @@ import jsPlugin from "@eslint/js";
 import tsPlugin from "typescript-eslint";
 import prettierOverrides from "eslint-config-prettier";
 import prettierRules from "eslint-plugin-prettier/recommended";
-import unicornPlugin from "eslint-plugin-unicorn";
 import allowedDepsPlugin from "eslint-plugin-allowed-dependencies";
+import { builtinModules } from "node:module";
+
+const importConcerns = builtinModules.map((mod) => ({
+  selector: `ImportDeclaration[source.value='${mod}']`,
+  message: `use node:${mod} for the built-in module`,
+}));
 
 export default tsPlugin.config(
   {
     languageOptions: { globals: globals.node },
     plugins: {
-      unicorn: unicornPlugin,
       allowed: allowedDepsPlugin,
     },
   },
@@ -29,7 +33,7 @@ export default tsPlugin.config(
   // Things to turn on globally
   {
     rules: {
-      "unicorn/prefer-node-protocol": "error",
+      "no-restricted-syntax": ["warn", ...importConcerns],
     },
   },
   // For the sources

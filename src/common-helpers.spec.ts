@@ -118,7 +118,7 @@ describe("Common helpers", () => {
     });
 
     test.each([[[]], [[0]], [[1, "some"]]])(
-      "should handle %s path in ZodIssue",
+      "should handle path in ZodIssue %#",
       (path) => {
         const error = new z.ZodError([
           { code: "custom", path, message: "Custom error" },

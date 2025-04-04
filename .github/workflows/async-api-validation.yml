@@ -27,6 +27,6 @@ jobs:
         path: ${{ steps.yarnCache.outputs.dir }}
         key: async-validation-${{ hashFiles('**/yarn.lock') }}
     - name: Installing unreasonably large package
-      run: yarn global add @asyncapi/cli
+      run: yarn global add @asyncapi/cli@^2
     - name: Validate
       run: asyncapi validate ./example/example-documentation.yaml

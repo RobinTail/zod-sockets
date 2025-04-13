@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "zod-sockets": "link:../..",
-    "express": "^5.0.0",
-    "express-zod-api": "^22.0.0",
+    "express": "^5.1.0",
+    "express-zod-api": "^23.0.0-beta.1",
     "http-errors": "^2.0.0"
   }
 }

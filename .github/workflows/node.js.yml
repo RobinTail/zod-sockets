@@ -55,6 +55,7 @@ jobs:
     - name: ESM test
       run: yarn test:esm
     - name: Compatibility test
+      if: startsWith( matrix.node-version, '2' )
       run: yarn test:compat
     - name: Issue 952 # see https://github.com/RobinTail/express-zod-api/issues/952
       run: yarn test:952

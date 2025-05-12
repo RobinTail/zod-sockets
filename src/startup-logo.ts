@@ -1,8 +1,8 @@
 import { hex, italic } from "ansis";
 import { T, always, cond, gt } from "ramda";
 
-const dedication = italic("for River".padEnd(20));
-const proud = "Proudly supports non-binary community.".padStart(77);
+const dedication = italic("for Whispering Wind Bear Spirit".padEnd(40));
+const proud = "Proudly supports non-binary community.".padStart(57);
 
 const georgia11 = `
                            ,,

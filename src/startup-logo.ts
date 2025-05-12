@@ -1,8 +1,8 @@
 import { hex, italic } from "ansis";
 import { T, always, cond, gt } from "ramda";
 
-const dedication = italic("for River".padEnd(20));
-const proud = "Proudly supports non-binary community.".padStart(77);
+const dedication = italic("for Whispering Wind Bear Spirit".padEnd(40));
+const proud = "Proudly supports non-binary community.".padStart(57);
 
 const georgia11 = `
                            ,,
@@ -21,7 +21,7 @@ const getColorFn = cond([
   [gt(4), always(hex("#FCF434"))],
   [gt(5), always(hex("#FFF"))],
   [gt(8), always(hex("#9C59D1"))],
-  [T, always(hex("#2C2C2C"))],
+  [T, always(hex("#383838"))],
 ]);
 
 export const getStartupLogo = () =>

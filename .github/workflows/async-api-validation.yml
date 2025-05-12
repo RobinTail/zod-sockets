@@ -15,10 +15,10 @@ jobs:
       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Install Node.js ${{ matrix.node-version }}
+    - name: Install Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 20
     - name: Cache node modules
       uses: actions/cache@v4
       env:

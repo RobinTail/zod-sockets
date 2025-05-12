@@ -21,7 +21,7 @@ const getColorFn = cond([
   [gt(4), always(hex("#FCF434"))],
   [gt(5), always(hex("#FFF"))],
   [gt(8), always(hex("#9C59D1"))],
-  [T, always(hex("#2C2C2C"))],
+  [T, always(hex("#383838"))],
 ]);
 
 export const getStartupLogo = () =>

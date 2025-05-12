@@ -722,10 +722,10 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz#821f8442f4175d8f0467b9daf26e3a18e2d02af2"
   integrity sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==
 
-"@tsconfig/node18@^18.2.4":
-  version "18.2.4"
-  resolved "https://registry.yarnpkg.com/@tsconfig/node18/-/node18-18.2.4.tgz#094efbdd70f697d37c09f34067bf41bc4a828ae3"
-  integrity sha512-5xxU8vVs9/FNcvm3gE07fPbn9tl6tqGGWA9tSlwsUEkBxtRnTsNmwrV8gasZ9F/EobaSv9+nu8AxUKccw77JpQ==
+"@tsconfig/node20@^20.1.5":
+  version "20.1.5"
+  resolved "https://registry.yarnpkg.com/@tsconfig/node20/-/node20-20.1.5.tgz#6e5dc3c90088865669c555a156252f75d1a84c0a"
+  integrity sha512-Vm8e3WxDTqMGPU4GATF9keQAIy1Drd7bPwlgzKJnZtoOsTm1tduUTbDjg0W5qERvGuxPI2h9RbMufH0YdfBylA==
 
 "@types/cookie@^0.4.1":
   version "0.4.1"

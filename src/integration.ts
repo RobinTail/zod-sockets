@@ -19,11 +19,6 @@ interface IntegrationProps {
    */
   maxOverloads?: number;
   /**
-   * @deprecated unused
-   * @todo remove in next major
-   * */
-  serializer?: (schema: z.ZodTypeAny) => string;
-  /**
    * @desc configures the style of object's optional properties
    * @default { withQuestionMark: true, withUndefined: true }
    */

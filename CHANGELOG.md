@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 3
+
+- Drop support for Node 18 (end of life);
+- The deprecated `serializer` property on the `Integration` constructor argument removed.
+
 ## Version 2
 
 ### v2.3.0

@@ -2,6 +2,10 @@
 
 ## Version 2
 
+### v2.3.0
+
+- Supporting Node 24.
+
 ### v2.2.0
 
 - Naming of circular types is now numeric:

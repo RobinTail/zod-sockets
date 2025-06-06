@@ -9,7 +9,7 @@ export type SomeRemoteSocket = RemoteSocket<
   unknown
 >;
 
-export interface RemoteClient<E extends EmissionMap, D extends z.SomeZodObject>
+export interface RemoteClient<E extends EmissionMap, D extends z.ZodObject>
   extends Distribution {
   id: string;
   handshake: SomeRemoteSocket["handshake"];
@@ -20,7 +20,7 @@ export interface RemoteClient<E extends EmissionMap, D extends z.SomeZodObject>
 
 export const makeRemoteClients = <
   E extends EmissionMap,
-  D extends z.SomeZodObject,
+  D extends z.ZodObject,
 >({
   sockets,
   ...rest

@@ -8,14 +8,14 @@ import {
 } from "./remote-client";
 
 export interface Emission {
-  schema: z.AnyZodTuple;
-  ack?: z.AnyZodTuple;
+  schema: z.ZodTuple;
+  ack?: z.ZodTuple;
 }
 
 export type EmissionMap = Record<string, Emission>;
 
-type TupleOrTrue<T> = T extends z.AnyZodTuple ? T : z.ZodLiteral<true>;
-type TuplesOrTrue<T> = T extends z.AnyZodTuple
+type TupleOrTrue<T> = T extends z.ZodTuple ? T : z.ZodLiteral<true>;
+type TuplesOrTrue<T> = T extends z.ZodTuple
   ? z.ZodArray<T>
   : z.ZodLiteral<true>;
 
@@ -29,7 +29,7 @@ export type Broadcaster<E extends EmissionMap> = <K extends keyof E>(
   ...args: z.input<E[K]["schema"]>
 ) => Promise<z.output<TuplesOrTrue<E[K]["ack"]>>>;
 
-export type RoomService<E extends EmissionMap, D extends z.SomeZodObject> = (
+export type RoomService<E extends EmissionMap, D extends z.ZodObject> = (
   rooms: string | string[],
 ) => {
   /**
@@ -87,7 +87,7 @@ export function makeEmitter({
 }
 
 export const makeRoomService =
-  <E extends EmissionMap, D extends z.SomeZodObject>({
+  <E extends EmissionMap, D extends z.ZodObject>({
     subject,
     ...rest
   }: {

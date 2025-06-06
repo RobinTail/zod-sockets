@@ -1,5 +1,5 @@
 import type { RemoteSocket } from "socket.io";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { Distribution, makeDistribution } from "./distribution";
 import { EmissionMap, Emitter, EmitterConfig, makeEmitter } from "./emission";
 

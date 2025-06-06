@@ -1,6 +1,6 @@
 import { expect } from "vitest";
 import type { NewPlugin } from "@vitest/pretty-format";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { InputValidationError, OutputValidationError } from "./src";
 
 /** Takes cause and certain props of custom errors into account */

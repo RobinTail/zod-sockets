@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { Action } from "./action";
 import { Config } from "./config";
 import { ActionContext, Handler } from "./handler";

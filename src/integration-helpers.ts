@@ -1,6 +1,6 @@
 import { range } from "ramda";
 import ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const f = ts.factory;
 export const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];

@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { MockedFunction, describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { makeEmitter, makeRoomService } from "./emission";
 
 describe("Emission", () => {

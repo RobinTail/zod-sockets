@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { f } from "./integration-helpers";
 import { zodToTs } from "./zts";
 import { ZTSContext, createTypeAlias, printNode } from "./zts-helpers";

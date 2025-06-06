@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { FlatObject } from "./common-helpers";
 import { SchemaHandler } from "./schema-walker";
 

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { z } from "zod";
+import { z } from "zod/v4";
 import {
   AsyncAPIContext,
   depictAny,

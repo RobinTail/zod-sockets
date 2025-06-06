@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { Client } from "./client";
 import { RoomService } from "./emission";
 import { RemoteClient } from "./remote-client";

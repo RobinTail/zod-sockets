@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export type EmptyObject = Record<string, never>;
 export type FlatObject = Record<string, unknown>;

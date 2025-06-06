@@ -1,6 +1,6 @@
 import { AssertionError } from "node:assert";
 import { describe, expect, expectTypeOf, test } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import {
   getMessageFromError,
   hasCoercion,

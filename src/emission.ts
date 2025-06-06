@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import type { RemoteSocket, Server, Socket } from "socket.io";
-import { z } from "zod";
+import { z } from "zod/v4";
 import {
   RemoteClient,
   SomeRemoteSocket,

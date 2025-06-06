@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { actionsFactory } from "../factories";
 
 export const onChat = actionsFactory

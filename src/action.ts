@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { OutputValidationError, InputValidationError } from "./errors";
+import { functionSchema } from "./function-schema";
 import { ActionContext, ClientContext, Handler } from "./handler";
 import { Namespaces, rootNS } from "./namespace";
 
@@ -90,9 +91,10 @@ export class Action<
       return undefined;
     }
     try {
-      return z
-        .function(this.#outputSchema, z.void())
-        .parse(R.last(params), { path: [Math.max(0, params.length - 1)] });
+      return functionSchema(
+        z.function({ input: this.#outputSchema, output: z.void() }),
+        { path: [Math.max(0, params.length - 1)] },
+      ).parse(R.last(params));
     } catch (e) {
       throw e instanceof z.ZodError ? new InputValidationError(e) : e;
     }

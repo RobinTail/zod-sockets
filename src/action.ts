@@ -1,4 +1,4 @@
-import { init, last } from "ramda";
+import * as R from "ramda";
 import { z } from "zod/v4";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
@@ -76,7 +76,7 @@ export class Action<
 
   /** @throws InputValidationError */
   #parseInput(params: unknown[]) {
-    const payload = this.#outputSchema ? init(params) : params;
+    const payload = this.#outputSchema ? R.init(params) : params;
     try {
       return this.#inputSchema.parse(payload);
     } catch (e) {
@@ -92,7 +92,7 @@ export class Action<
     try {
       return z
         .function(this.#outputSchema, z.void())
-        .parse(last(params), { path: [Math.max(0, params.length - 1)] });
+        .parse(R.last(params), { path: [Math.max(0, params.length - 1)] });
     } catch (e) {
       throw e instanceof z.ZodError ? new InputValidationError(e) : e;
     }

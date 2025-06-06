@@ -1,4 +1,4 @@
-import { range } from "ramda"; // @todo add eslint import concern
+import * as R from "ramda";
 import ts from "typescript";
 import { globalRegistry, z } from "zod/v4";
 
@@ -31,10 +31,10 @@ export const makeEventFnSchema = (
     });
   }
   const restDesc = globalRegistry.get(rest)?.description;
-  const variants = range(0, maxOverloads).map((count) => {
+  const variants = R.range(0, maxOverloads).map((count) => {
     const items = [...base._zod.def.items]
       .concat(
-        range(1, count + 1).map((index) => {
+        R.range(1, count + 1).map((index) => {
           const copy = z.clone(rest);
           globalRegistry.add(copy, {
             description: `${restDesc || "rest"}${index}`,

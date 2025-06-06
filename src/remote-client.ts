@@ -32,7 +32,7 @@ export const makeRemoteClients = <
     id: socket.id,
     handshake: socket.handshake,
     rooms: Array.from(socket.rooms),
-    getData: () => (socket.data || {}) as Partial<D>,
+    getData: () => (socket.data || {}) as Partial<z.infer<D>>,
     emit: makeEmitter({ subject: socket, ...rest }),
     ...makeDistribution(socket),
   }));

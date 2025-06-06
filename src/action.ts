@@ -132,6 +132,7 @@ export class Action<
     }
   }
 
+  /** @todo replace with native metadata */
   public override example(variant: "input", payload: z.input<IN>): this;
   public override example(
     variant: "output",

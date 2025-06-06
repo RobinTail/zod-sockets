@@ -5,7 +5,7 @@ import { ActionContext, Handler } from "./handler";
 import { Namespaces, RootNS } from "./namespace";
 
 interface Commons<
-  IN extends z.AnyZodTuple,
+  IN extends z.ZodTuple,
   NS extends Namespaces,
   K extends keyof NS,
 > {
@@ -21,7 +21,7 @@ interface Commons<
 }
 
 export interface ActionNoAckDef<
-  IN extends z.AnyZodTuple,
+  IN extends z.ZodTuple,
   NS extends Namespaces,
   K extends keyof NS,
 > extends Commons<IN, NS, K> {
@@ -33,8 +33,8 @@ export interface ActionNoAckDef<
 }
 
 export interface ActionWithAckDef<
-  IN extends z.AnyZodTuple,
-  OUT extends z.AnyZodTuple,
+  IN extends z.ZodTuple,
+  OUT extends z.ZodTuple,
   NS extends Namespaces,
   K extends keyof NS,
 > extends Commons<IN, NS, K> {
@@ -51,8 +51,8 @@ export class ActionsFactory<NS extends Namespaces> {
   constructor(protected config: Config<NS>) {}
 
   public build<
-    IN extends z.AnyZodTuple,
-    OUT extends z.AnyZodTuple | undefined = undefined,
+    IN extends z.ZodTuple,
+    OUT extends z.ZodTuple | undefined = undefined,
     K extends keyof NS = RootNS,
   >(
     def:

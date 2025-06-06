@@ -13,10 +13,10 @@ export const normalizeNS = (name: string): string => {
 
 export interface Example<T extends Emission> {
   payload?: z.output<T["schema"]>;
-  ack?: T["ack"] extends z.AnyZodTuple ? z.input<T["ack"]> : never;
+  ack?: T["ack"] extends z.ZodTuple ? z.input<T["ack"]> : never;
 }
 
-export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
+export interface Namespace<E extends EmissionMap, D extends z.ZodObject> {
   /** @desc The events that the server can emit */
   emission: E;
   /** @desc Examples for the emission per event */
@@ -30,7 +30,4 @@ export interface Namespace<E extends EmissionMap, D extends z.SomeZodObject> {
   security: SecuritySchemeObject[];
 }
 
-export type Namespaces = Record<
-  string,
-  Namespace<EmissionMap, z.SomeZodObject>
->;
+export type Namespaces = Record<string, Namespace<EmissionMap, z.ZodObject>>;

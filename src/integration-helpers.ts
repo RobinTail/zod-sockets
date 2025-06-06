@@ -1,18 +1,10 @@
 import * as R from "ramda";
 import ts from "typescript";
 import { globalRegistry, z } from "zod/v4";
+import { functionSchema } from "./function-schema";
 
 export const f = ts.factory;
 export const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
-
-/**
- * @link https://github.com/colinhacks/zod/issues/4143#issuecomment-2845134912
- * @todo consider moving
- * */
-const functionSchema = <T extends z.core.$ZodFunction>(schema: T) =>
-  z.custom<Parameters<T["implement"]>[0]>((fn) =>
-    schema.implement(fn as Parameters<T["implement"]>[0]),
-  );
 
 export const makeEventFnSchema = (
   base: z.ZodTuple,

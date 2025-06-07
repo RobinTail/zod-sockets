@@ -46,7 +46,7 @@ export class Config<T extends Namespaces = EmptyObject> {
   /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {}, security: [] } */
   public addNamespace<
     E extends EmissionMap = EmptyObject,
-    D extends z.SomeZodObject = z.ZodObject<EmptyObject>,
+    D extends z.ZodObject = z.ZodObject<EmptyObject>,
     K extends string = RootNS,
   >({
     path = rootNS as K,
@@ -73,7 +73,7 @@ export class Config<T extends Namespaces = EmptyObject> {
 /** @desc Shorthand for single namespace config (root namespace only) */
 export const createSimpleConfig = <
   E extends EmissionMap,
-  D extends z.SomeZodObject,
+  D extends z.ZodObject,
 >({
   startupLogo,
   timeout,

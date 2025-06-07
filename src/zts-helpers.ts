@@ -1,23 +1,17 @@
 import ts from "typescript";
-import { z } from "zod/v4";
 import { FlatObject } from "./common-helpers";
 import { SchemaHandler } from "./schema-walker";
 
 const { factory: f } = ts;
 
-export type LiteralType = string | number | boolean;
-
 export interface ZTSContext extends FlatObject {
-  direction: "in" | "out";
-  makeAlias: (
-    schema: z.ZodTypeAny,
-    produce: () => ts.TypeNode,
-  ) => ts.TypeReferenceNode;
-  optionalPropStyle: { withQuestionMark?: boolean; withUndefined?: boolean };
+  isResponse: boolean;
+  makeAlias: (key: object, produce: () => ts.TypeNode) => ts.TypeNode;
 }
 
 export type Producer = SchemaHandler<ts.TypeNode, ZTSContext>;
 
+// @todo move everything below to typescript-api.ts
 export const addJsDocComment = (node: ts.Node, text: string) => {
   ts.addSyntheticLeadingComment(
     node,
@@ -55,13 +49,4 @@ export const printNode = (
   );
   const printer = ts.createPrinter(printerOptions);
   return printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
-};
-
-const safePropRegex = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
-
-export const makePropertyIdentifier = (name: string) => {
-  if (safePropRegex.test(name)) {
-    return f.createIdentifier(name);
-  }
-  return f.createStringLiteral(name);
 };

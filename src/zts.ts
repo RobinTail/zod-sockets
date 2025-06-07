@@ -31,6 +31,12 @@ import {
 import { FirstPartyKind, HandlingRules, walkSchema } from "./schema-walker";
 import * as R from "ramda";
 import { Producer, ZTSContext } from "./zts-helpers";
+import {
+  ensureTypeNode,
+  isPrimitive,
+  makeInterfaceProp,
+  makeLiteralType,
+} from "./typescript-api";
 
 const { factory: f } = ts;
 

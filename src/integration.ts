@@ -6,7 +6,7 @@ import { Config } from "./config";
 import { exportModifier, f, makeEventFnSchema } from "./integration-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
-import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
+import { addJsDoc, makeType, printNode } from "./typescript-api";
 
 interface IntegrationProps {
   config: Config<Namespaces>;
@@ -43,7 +43,7 @@ export class Integration {
   protected program: ts.Node[] = [];
   protected aliases: Record<
     string, // namespace
-    Map<z.ZodTypeAny, ts.TypeAliasDeclaration>
+    Map<object, ts.TypeAliasDeclaration>
   > = {};
   protected ids = {
     path: f.createIdentifier("path"),
@@ -63,15 +63,15 @@ export class Integration {
 
   protected makeAlias(
     ns: string,
-    schema: z.ZodTypeAny,
+    key: object,
     produce: () => ts.TypeNode,
   ): ts.TypeReferenceNode {
-    let name = this.aliases[ns].get(schema)?.name?.text;
+    let name = this.aliases[ns].get(key)?.name?.text;
     if (!name) {
       name = `Type${this.aliases[ns].size + 1}`;
       const temp = f.createLiteralTypeNode(f.createNull());
-      this.aliases[ns].set(schema, createTypeAlias(temp, name));
-      this.aliases[ns].set(schema, createTypeAlias(produce(), name));
+      this.aliases[ns].set(key, makeType(name, temp));
+      this.aliases[ns].set(key, makeType(name, produce()));
     }
     return f.createTypeReferenceNode(name);
   }
@@ -145,7 +145,7 @@ export class Integration {
           ts.NodeFlags.Const,
         ),
       );
-      addJsDocComment(
+      addJsDoc(
         nsNameNode,
         `@desc The actual path of the ${publicName} namespace`,
       );
@@ -171,7 +171,7 @@ export class Integration {
           f.createTypeReferenceNode(this.ids.actions),
         ]),
       );
-      addJsDocComment(
+      addJsDoc(
         socketNode,
         `@example const socket: ${publicName}.${this.ids.socket.text} = io(${publicName}.${this.ids.path.text})`,
       );

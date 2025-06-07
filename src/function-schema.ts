@@ -6,7 +6,7 @@ export const functionSchema = <IN extends z.ZodTuple, OUT extends z.ZodType>(
   input: IN,
   output: OUT,
   params?: { path?: PropertyKey[] },
-): z.ZodType<(...args: z.output<IN>) => z.output<OUT>> => {
+) => {
   const schema = z.function({ input, output });
   return z.custom().transform((arg, ctx) => {
     if (typeof arg !== "function") {
@@ -14,5 +14,5 @@ export const functionSchema = <IN extends z.ZodTuple, OUT extends z.ZodType>(
       return z.NEVER;
     }
     return schema.implement(arg as $InferInnerFunctionType<IN, OUT>);
-  });
+  }) as z.ZodType<(...args: z.output<IN>) => z.output<OUT>>;
 };

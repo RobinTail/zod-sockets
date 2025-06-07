@@ -52,7 +52,7 @@ export function makeEmitter<E extends EmissionMap>(
 export function makeEmitter<E extends EmissionMap>(
   props: {
     subject: RemoteSocket<
-      { [K in keyof E]: z.infer<z.ZodFunction<E[K]["schema"], z.ZodVoid>> },
+      { [K in keyof E]: (...args: z.output<E[K]["schema"]>) => void },
       unknown
     >;
   } & EmitterConfig<E>,

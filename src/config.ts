@@ -53,19 +53,12 @@ export class Config<T extends Namespaces = EmptyObject> {
     emission = {} as E,
     metadata = z.object({}) as D,
     hooks = {},
-    examples = {},
     security = [],
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
   > {
     const { namespaces, ...rest } = this;
-    const ns: Namespace<E, D> = {
-      emission,
-      examples,
-      hooks,
-      metadata,
-      security,
-    };
+    const ns: Namespace<E, D> = { emission, hooks, metadata, security };
     return new Config({ ...rest, namespaces: { ...namespaces, [path]: ns } });
   }
 }
@@ -79,14 +72,12 @@ export const createSimpleConfig = <
   timeout,
   security,
   emission,
-  examples,
   hooks,
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
   new Config({ startupLogo, timeout, security }).addNamespace({
     emission,
-    examples,
     metadata,
     hooks,
   });

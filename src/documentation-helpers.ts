@@ -38,7 +38,7 @@ const samples = {
   object: {},
   null: null,
   array: [],
-} satisfies Record<Extract<SchemaObjectType, string>, unknown>;
+} satisfies Record<SchemaObjectType, unknown>;
 
 export const depictUnion: Depicter = ({ zodSchema, jsonSchema }) => {
   if (!isSchema<$ZodUnion | $ZodDiscriminatedUnion>(zodSchema, "union"))

@@ -1,6 +1,7 @@
 import * as R from "ramda";
 import { globalRegistry, z } from "zod/v4";
-import type { $ZodType } from "zod/v4/core";
+import type { $ZodType, JSONSchema } from "zod/v4/core";
+import { DeepCheckError } from "./errors";
 import { functionSchema } from "./function-schema";
 
 const squeeze = (...schemas: $ZodType[]) =>

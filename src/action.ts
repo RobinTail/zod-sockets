@@ -17,13 +17,6 @@ export abstract class AbstractAction {
   ): Promise<void>;
   public abstract getSchema(variant: "input"): z.ZodTuple;
   public abstract getSchema(variant: "output"): z.ZodTuple | undefined;
-  public abstract example(
-    variant: "input" | "output",
-    payload: z.infer<z.ZodTuple>,
-  ): this;
-  public abstract getExamples(
-    variant: "input" | "output",
-  ): z.infer<z.ZodTuple>[];
 }
 
 export class Action<
@@ -35,12 +28,6 @@ export class Action<
   readonly #namespace: keyof NS;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT;
-  readonly #examples: Array<{
-    variant: "input" | "output";
-    payload: Array<
-      z.input<IN> | (OUT extends z.ZodTuple ? z.output<OUT> : never)
-    >;
-  }>;
   readonly #handler: Handler<
     ActionContext<z.output<IN>, EmissionMap, z.ZodObject>,
     z.input<z.ZodTuple> | void // type compliance fix here
@@ -57,7 +44,6 @@ export class Action<
     this.#inputSchema = action.input;
     this.#outputSchema =
       "output" in action ? action.output : (undefined as OUT);
-    this.#examples = [];
     this.#handler = action.handler;
   }
 
@@ -131,29 +117,5 @@ export class Action<
       logger.debug(`${this.#event}: parsed output`, response);
       ack(...response);
     }
-  }
-
-  /** @todo replace with native metadata */
-  public override example(variant: "input", payload: z.input<IN>): this;
-  public override example(
-    variant: "output",
-    payload: OUT extends z.ZodTuple ? z.output<OUT> : never,
-  ): this;
-  public override example(
-    variant: "input" | "output",
-    payload: z.input<IN> | (OUT extends z.ZodTuple ? z.output<OUT> : never),
-  ): this {
-    this.#examples.push({ variant, payload });
-    return this;
-  }
-
-  public override getExamples(variant: "input"): z.input<IN>[];
-  public override getExamples(
-    variant: "output",
-  ): OUT extends z.ZodTuple ? z.output<OUT>[] : never;
-  public override getExamples(variant: "input" | "output") {
-    return this.#examples
-      .filter((entry) => entry.variant === variant)
-      .map(({ payload }) => payload);
   }
 }

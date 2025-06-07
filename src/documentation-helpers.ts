@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { z } from "zod/v4";
+import { globalRegistry, z } from "zod/v4";
 import type {
   $ZodDiscriminatedUnion,
   $ZodPipe,
@@ -190,53 +190,36 @@ const depict = (
   return fixReferences(properties["subject"], $defs, ctx);
 };
 
-/** @todo remove */
-export const withExamples = <T extends SchemaObject | ReferenceObject>(
-  subject: T,
-  examples?: unknown[][],
-): T => {
-  if (isReferenceObject(subject) || !examples) {
-    return subject;
+/**
+ * @since zod 3.25.44
+ * @link https://github.com/colinhacks/zod/pull/4586
+ * */
+export const getExamples = (subject: $ZodType): ReadonlyArray<unknown> => {
+  const { examples, example } = globalRegistry.get(subject) || {};
+  if (examples) {
+    return Array.isArray(examples)
+      ? examples
+      : Object.values(examples).map(({ value }) => value);
   }
-  if (
-    subject.type === "array" &&
-    subject.items &&
-    Array.isArray(subject.items)
-  ) {
-    for (const example of examples) {
-      for (let index = 0; index < example.length; index++) {
-        const item = subject.items[index];
-        if (item && !isReferenceObject(item)) {
-          item.examples = [...(item.examples || []), example[index]];
-        }
-      }
-    }
-  }
-  return subject;
+  return example === undefined ? [] : [example];
 };
 
 export const depictMessage = ({
   event,
   schema,
-  examples,
   direction,
   isAck,
 }: {
   event: string;
   schema: z.ZodTuple;
-  examples?: z.infer<z.ZodTuple>[];
   isAck?: boolean;
 } & AsyncAPIContext): MessageObject => ({
   name: isAck ? undefined : event,
   title: isAck ? `Acknowledgement for ${event}` : event,
-  payload: withExamples(
-    ensureCompliance(depict(schema, { ctx: { direction } })),
-    examples,
-  ),
-  examples:
-    examples && examples.length
-      ? examples.map((example) => ({ payload: example }))
-      : undefined,
+  payload: ensureCompliance(depict(schema, { ctx: { direction } })), // @todo add pulling examples
+  examples: getExamples(schema).map((example) => ({
+    payload: example as object, // @todo revisit
+  })),
 });
 
 export const depictOperation = ({

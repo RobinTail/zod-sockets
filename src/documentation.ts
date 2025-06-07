@@ -15,7 +15,7 @@ import {
   depictOperation,
 } from "./documentation-helpers";
 import { Emission } from "./emission";
-import { Example, Namespaces, normalizeNS } from "./namespace";
+import { Namespaces, normalizeNS } from "./namespace";
 
 interface DocumentationParams {
   title: string;
@@ -28,15 +28,6 @@ interface DocumentationParams {
   actions: AbstractAction[];
   config: Config<Namespaces>;
 }
-
-const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
-  variant: V,
-  eventExamples: T | T[] | undefined,
-): NonNullable<T[V]>[] | undefined =>
-  eventExamples &&
-  (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
-    .map((example) => example[variant])
-    .filter((value): value is NonNullable<typeof value> => !!value);
 
 export class Documentation extends AsyncApiBuilder {
   #makeChannelBinding(): WS.Channel {
@@ -105,9 +96,7 @@ export class Documentation extends AsyncApiBuilder {
       }
     }
     const channelBinding = this.#makeChannelBinding();
-    for (const [dirty, { emission, examples, security }] of Object.entries(
-      namespaces,
-    )) {
+    for (const [dirty, { emission, security }] of Object.entries(namespaces)) {
       const ns = normalizeNS(dirty);
       const channelId = makeCleanId(ns) || "Root";
       const messages: MessagesObject = {};
@@ -128,13 +117,11 @@ export class Documentation extends AsyncApiBuilder {
           event,
           schema,
           direction: "out",
-          examples: getEmissionExamples("payload", examples[event]),
         });
         if (ack) {
           messages[ackId] = depictMessage({
             event,
             schema: ack,
-            examples: getEmissionExamples("ack", examples[event]),
             direction: "in",
             isAck: true,
           });
@@ -164,14 +151,12 @@ export class Documentation extends AsyncApiBuilder {
           messages[messageId] = depictMessage({
             event,
             schema: action.getSchema("input"),
-            examples: action.getExamples("input"),
             direction: "in",
           });
           if (output) {
             messages[ackId] = depictMessage({
               event,
               schema: output,
-              examples: action.getExamples("output"),
               direction: "out",
               isAck: true,
             });

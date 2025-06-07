@@ -10,39 +10,35 @@ export const subscribersRoom = "subscribers";
 export const config = createSimpleConfig({
   emission: {
     time: {
-      schema: z.tuple([
-        z
-          .date()
-          .transform((date) => date.toISOString())
-          .describe("current ISO time"),
-      ]),
+      schema: z
+        .tuple([
+          z
+            .date()
+            .transform((date) => date.toISOString())
+            .describe("current ISO time"),
+        ])
+        .meta({ examples: [["2024-03-28T21:13:15.084Z"]] }),
     },
     chat: {
-      schema: z.tuple([
-        z.string().describe("message"),
-        z
-          .object({ from: z.string().describe("the ID of author") })
-          .describe("extra info"),
-      ]),
+      schema: z
+        .tuple([
+          z.string().describe("message"),
+          z
+            .object({ from: z.string().describe("the ID of author") })
+            .describe("extra info"),
+        ])
+        .meta({ examples: [["Hello there!", { from: "123abc" }]] }),
     },
     rooms: {
-      schema: z.tuple([z.string().array().describe("room IDs")]),
+      schema: z.tuple([z.string().array().describe("room IDs")]).meta({
+        examples: [[["room1", "room2"]], [["room3", "room4", "room5"]]],
+      }),
     },
     error: {
-      schema: z.tuple([
-        z.string().describe("name"),
-        z.string().describe("message"),
-      ]),
+      schema: z
+        .tuple([z.string().describe("name"), z.string().describe("message")])
+        .meta({ examples: [["InputValidationError", "1: Required"]] }),
     },
-  },
-  examples: {
-    time: { payload: ["2024-03-28T21:13:15.084Z"] },
-    chat: { payload: ["Hello there!", { from: "123abc" }] },
-    error: { payload: ["InputValidationError", "1: Required"] },
-    rooms: [
-      { payload: [["room1", "room2"]] },
-      { payload: [["room3", "room4", "room5"]] },
-    ],
   },
   hooks: {
     onConnection: async ({ client }) => {

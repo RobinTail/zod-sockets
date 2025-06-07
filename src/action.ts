@@ -30,7 +30,7 @@ export class Action<
   readonly #outputSchema: OUT;
   readonly #handler: Handler<
     ActionContext<z.output<IN>, EmissionMap, z.ZodObject>,
-    z.input<z.ZodTuple> | void // type compliance fix here
+    z.input<NonNullable<OUT>> | void
   >;
 
   public constructor(

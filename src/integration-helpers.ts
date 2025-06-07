@@ -14,11 +14,11 @@ export const makeEventFnSchema = (
   if (!ack) {
     return z.function({ input: base, output: z.void() });
   }
-  const fn = z.function({ input: ack, output: z.void() });
+  const fn = functionSchema(ack, z.void());
   const rest = base._zod.def.rest;
   if (!rest || maxOverloads <= 0) {
     return z.function({
-      input: [...base._zod.def.items, functionSchema(fn)],
+      input: [...base._zod.def.items, fn],
       output: z.void(),
     });
   }
@@ -34,7 +34,7 @@ export const makeEventFnSchema = (
           return copy;
         }),
       )
-      .concat(functionSchema(fn));
+      .concat(fn);
     return z.function({
       input: items,
       output: z.void(),

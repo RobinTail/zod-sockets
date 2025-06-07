@@ -91,10 +91,9 @@ export class Action<
       return undefined;
     }
     try {
-      return functionSchema(
-        z.function({ input: this.#outputSchema, output: z.void() }),
-        { path: [Math.max(0, params.length - 1)] },
-      ).parse(R.last(params));
+      return functionSchema(this.#outputSchema, z.void(), {
+        path: [Math.max(0, params.length - 1)],
+      }).parse(R.last(params));
     } catch (e) {
       throw e instanceof z.ZodError ? new InputValidationError(e) : e;
     }

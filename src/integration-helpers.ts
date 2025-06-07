@@ -1,10 +1,6 @@
 import * as R from "ramda";
-import ts from "typescript";
 import { globalRegistry, z } from "zod/v4";
 import { functionSchema } from "./function-schema";
-
-export const f = ts.factory;
-export const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
 
 export const makeEventFnSchema = (
   base: z.ZodTuple,

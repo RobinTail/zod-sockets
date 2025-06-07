@@ -13,7 +13,7 @@ type TypeParams =
 
 export const f = ts.factory;
 
-const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
+export const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
 
 export const addJsDoc = <T extends ts.Node>(node: T, text: string) =>
   ts.addSyntheticLeadingComment(

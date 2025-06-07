@@ -3,10 +3,16 @@ import { z } from "zod/v4";
 import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
 import { Config } from "./config";
-import { exportModifier, f, makeEventFnSchema } from "./integration-helpers";
+import { makeEventFnSchema } from "./integration-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
-import { addJsDoc, makeType, printNode } from "./typescript-api";
+import {
+  addJsDoc,
+  makeType,
+  printNode,
+  f,
+  exportModifier,
+} from "./typescript-api";
 
 interface IntegrationProps {
   config: Config<Namespaces>;

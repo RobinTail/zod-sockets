@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 import type {
   $ZodDiscriminatedUnion,
   $ZodPipe,
+  $ZodShape,
   $ZodTransform,
   $ZodTuple,
   $ZodType,
@@ -279,3 +280,12 @@ export const depictOperation = ({
       }
     : undefined,
 });
+
+export const depictProtocolFeatures = (
+  shape: $ZodShape,
+  extra?: SchemaObject,
+) =>
+  Object.assign(
+    ensureCompliance(depict(z.object(shape), { ctx: { direction: "in" } })),
+    extra,
+  );

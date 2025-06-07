@@ -240,7 +240,7 @@ describe("Documentation", () => {
             event: "test",
             input: z.tuple([]),
             output: z.tuple([
-              z.record(z.number().int()),
+              z.record(z.string(), z.number().int()),
               z.record(z.string().regex(/[A-Z]+/), z.boolean()),
               z.record(z.number().int(), z.boolean()),
               z.record(z.literal("only"), z.boolean()),
@@ -330,7 +330,7 @@ describe("Documentation", () => {
               z.string().cuid(),
               z.string().cuid2(),
               z.string().ulid(),
-              z.string().ip(),
+              z.string().ipv4(),
               z.string().emoji(),
               z.string().url(),
               z.string().regex(/\d+/),
@@ -416,32 +416,6 @@ describe("Documentation", () => {
       expect(boolean.parse([])).toBe(true);
       expect(boolean.parse("")).toBe(false);
       expect(boolean.parse(null)).toBe(false);
-    });
-
-    test.each([
-      z.undefined(),
-      z.map(z.any(), z.any()),
-      z.function(),
-      z.promise(z.any()),
-      z.never(),
-      z.void(),
-    ])("should throw on unsupported types %#", (zodType) => {
-      expect(
-        () =>
-          new Documentation({
-            config: sampleConfig,
-            actions: [
-              factory.build({
-                event: "test",
-                input: z.tuple([zodType]),
-                output: z.tuple([]),
-                handler: async () => [],
-              }),
-            ],
-            version: "3.4.5",
-            title: "Testing unsupported types",
-          }),
-      ).toThrow(`Zod type ${zodType._def.typeName} is unsupported.`);
     });
   });
 

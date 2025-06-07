@@ -11,15 +11,6 @@ export const getTransformedType = R.tryCatch(
   R.always(undefined),
 );
 
-/**
- * @desc isNullable() and isOptional() validate the schema's input
- * @desc They always return true in case of coercion, which should be taken into account when depicting response
- */
-export const hasCoercion = (schema: z.ZodTypeAny): boolean =>
-  "coerce" in schema._def && typeof schema._def.coerce === "boolean"
-    ? schema._def.coerce
-    : false;
-
 export const ucFirst = (subject: string) =>
   subject.charAt(0).toUpperCase() + subject.slice(1).toLowerCase();
 

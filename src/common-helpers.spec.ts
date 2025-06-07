@@ -3,27 +3,12 @@ import { describe, expect, expectTypeOf, test } from "vitest";
 import { z } from "zod/v4";
 import {
   getMessageFromError,
-  hasCoercion,
   lcFirst,
   makeCleanId,
   makeErrorFromAnything,
 } from "./common-helpers";
 
 describe("Common helpers", () => {
-  describe("hasCoercion()", () => {
-    test.each([
-      { schema: z.string(), coercion: false },
-      { schema: z.coerce.string(), coercion: true },
-      { schema: z.boolean({ coerce: true }), coercion: true },
-      { schema: z.custom(), coercion: false },
-    ])(
-      "should check the presence and value of coerce prop %#",
-      ({ schema, coercion }) => {
-        expect(hasCoercion(schema)).toBe(coercion);
-      },
-    );
-  });
-
   describe("makeCleanId()", () => {
     test.each([
       ["get"],

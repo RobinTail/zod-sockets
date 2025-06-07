@@ -18,7 +18,7 @@ import {
   SchemaObjectType,
 } from "./async-api/model";
 import { isReferenceObject } from "./async-api/helpers";
-import { FlatObject, hasCoercion, getTransformedType } from "./common-helpers";
+import { FlatObject, getTransformedType } from "./common-helpers";
 import { HandlingRules, SchemaHandler, walkSchema } from "./schema-walker";
 
 export interface AsyncAPIContext extends FlatObject {
@@ -166,9 +166,7 @@ export const depictObject: Depicter = (
 ) => {
   const keys = Object.keys(schema.shape);
   const isOptionalProp = (prop: z.ZodTypeAny) =>
-    direction === "out" && hasCoercion(prop)
-      ? prop instanceof z.ZodOptional
-      : prop.isOptional();
+    direction === "out" ? prop instanceof z.ZodOptional : prop.isOptional();
   const required = keys.filter((key) => !isOptionalProp(schema.shape[key]));
   const result: SchemaObject = { type: "object" };
   if (keys.length) {
@@ -468,11 +466,9 @@ export const onEach: SchemaHandler<
   }
   const { description } = schema;
   const hasTypePropertyInDepiction = prev.type !== undefined;
-  const isResponseHavingCoercion = direction === "out" && hasCoercion(schema);
+  const isResponse = direction === "out";
   const isActuallyNullable =
-    hasTypePropertyInDepiction &&
-    !isResponseHavingCoercion &&
-    schema.isNullable();
+    hasTypePropertyInDepiction && !isResponse && schema.isNullable();
   const result: SchemaObject = {};
   if (description) {
     result.description = description;

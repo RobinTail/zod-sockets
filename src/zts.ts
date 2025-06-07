@@ -1,11 +1,6 @@
 import ts from "typescript";
 import { z } from "zod/v4";
-import {
-  hasCoercion,
-  lcFirst,
-  makeCleanId,
-  getTransformedType,
-} from "./common-helpers";
+import { lcFirst, makeCleanId, getTransformedType } from "./common-helpers";
 import { HandlingRules, walkSchema } from "./schema-walker";
 import {
   LiteralType,
@@ -45,9 +40,7 @@ const onObject: Producer = (
 ) => {
   const members = Object.entries(shape).map<ts.TypeElement>(([key, value]) => {
     const isOptional =
-      direction === "out" && hasCoercion(value)
-        ? value instanceof z.ZodOptional
-        : value.isOptional();
+      direction === "out" ? value instanceof z.ZodOptional : value.isOptional();
     const propertySignature = f.createPropertySignature(
       undefined,
       makePropertyIdentifier(key),

@@ -1,5 +1,6 @@
 import type { $ZodType, $ZodTypeDef } from "zod/v4/core";
 import type { EmptyObject, FlatObject } from "./common-helpers";
+import { isFunctionSchema } from "./function-schema";
 
 export type FirstPartyKind = $ZodTypeDef["type"];
 
@@ -49,7 +50,8 @@ export const walkSchema = <
     onMissing: SchemaHandler<U, Context, "last">;
   },
 ): U => {
-  const handler = rules[schema._zod.def.type];
+  const handler =
+    rules[isFunctionSchema(schema) ? "function" : schema._zod.def.type];
   const next = (subject: $ZodType) =>
     walkSchema(subject, { ctx, onEach, rules, onMissing });
   const result = handler

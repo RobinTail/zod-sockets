@@ -39,3 +39,50 @@ export const makeEventFnSchema = (
   });
   return z.union(variants);
 };
+
+interface NestedSchemaLookupProps {
+  io: "input" | "output";
+  condition: (zodSchema: $ZodType) => boolean;
+}
+
+export const findNestedSchema = (
+  subject: $ZodType,
+  { io, condition }: NestedSchemaLookupProps,
+) =>
+  R.tryCatch(
+    () => {
+      z.toJSONSchema(subject, {
+        io,
+        unrepresentable: "any",
+        override: ({ zodSchema }) => {
+          if (condition(zodSchema)) throw new DeepCheckError(zodSchema); // exits early
+        },
+      });
+      return undefined;
+    },
+    (err: DeepCheckError) => err.cause,
+  )();
+
+/** not using cycle:"throw" because it also affects parenting objects */
+export const hasCycle = (
+  subject: $ZodType,
+  { io }: Pick<NestedSchemaLookupProps, "io">,
+) => {
+  const json = z.toJSONSchema(subject, {
+    io,
+    unrepresentable: "any",
+    override: ({ jsonSchema }) => {
+      if (typeof jsonSchema.default === "bigint") delete jsonSchema.default;
+    },
+  });
+  const stack: unknown[] = [json];
+  while (stack.length) {
+    const entry = stack.shift()!;
+    if (R.is(Object, entry)) {
+      if ((entry as JSONSchema.BaseSchema).$ref === "#") return true;
+      stack.push(...R.values(entry));
+    }
+    if (R.is(Array, entry)) stack.push(...R.values(entry));
+  }
+  return false;
+};

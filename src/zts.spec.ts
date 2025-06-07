@@ -1,18 +1,18 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
 import { z } from "zod/v4";
-import { f } from "./integration-helpers";
+import { functionSchema } from "./function-schema";
+import { f, printNode } from "./typescript-api";
 import { zodToTs } from "./zts";
-import { ZTSContext, createTypeAlias, printNode } from "./zts-helpers";
+import { ZTSContext } from "./zts-helpers";
 import { describe, expect, test, vi } from "vitest";
 
 describe("zod-to-ts", () => {
   const printNodeTest = (node: ts.Node) =>
     printNode(node, { newLine: ts.NewLineKind.LineFeed });
   const defaultCtx: ZTSContext = {
-    direction: "in",
+    isResponse: false,
     makeAlias: vi.fn(() => f.createTypeReferenceNode("SomeType")),
-    optionalPropStyle: { withQuestionMark: true, withUndefined: true },
   };
 
   describe("z.array()", () => {
@@ -22,24 +22,6 @@ describe("zod-to-ts", () => {
         defaultCtx,
       );
       expect(printNodeTest(node)).toMatchSnapshot();
-    });
-  });
-
-  describe("createTypeAlias()", () => {
-    const identifier = "User";
-    const node = zodToTs(
-      z.object({ username: z.string(), age: z.number() }),
-      defaultCtx,
-    );
-
-    test("outputs correct typescript", () => {
-      const typeAlias = createTypeAlias(node, identifier);
-      expect(printNodeTest(typeAlias)).toMatchSnapshot();
-    });
-
-    test("optionally takes a comment", () => {
-      const typeAlias = createTypeAlias(node, identifier, "A basic user");
-      expect(printNodeTest(typeAlias)).toMatchSnapshot();
     });
   });
 
@@ -134,6 +116,7 @@ describe("zod-to-ts", () => {
       ]),
       tupleRest: z.tuple([z.string(), z.number()]).rest(z.boolean()),
       record: z.record(
+        z.string(),
         z.object({
           object: z.object({
             arrayOfUnions: z
@@ -149,10 +132,14 @@ describe("zod-to-ts", () => {
       set: z.set(z.string()),
       intersection: z.intersection(z.string(), z.number()).or(z.bigint()),
       promise: z.promise(z.number()),
-      function: z
-        .function()
-        .args(z.string().nullish().default("heo"), z.boolean(), z.boolean())
-        .returns(z.string()),
+      function: functionSchema(
+        z.tuple([
+          z.string().nullish().default("heo"),
+          z.boolean(),
+          z.boolean(),
+        ]),
+        z.string(),
+      ),
       optDefaultString: z.string().optional().default("hi"),
       refinedStringWithSomeBullshit: z
         .string()

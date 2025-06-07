@@ -4,7 +4,7 @@ import {
   hasCoercion,
   lcFirst,
   makeCleanId,
-  tryToTransform,
+  getTransformedType,
 } from "./common-helpers";
 import { HandlingRules, walkSchema } from "./schema-walker";
 import {
@@ -94,7 +94,7 @@ const onEffects: Producer = (
   const input = next(src);
   const effect = schema._def.effect;
   if (direction === "out" && effect.type === "transform") {
-    const outputType = tryToTransform(schema, makeSample(input, src));
+    const outputType = getTransformedType(schema, makeSample(input, src));
     const resolutions: Partial<
       Record<NonNullable<typeof outputType>, ts.KeywordTypeSyntaxKind>
     > = {

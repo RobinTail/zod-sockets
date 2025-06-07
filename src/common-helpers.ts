@@ -1,18 +1,15 @@
 import { z } from "zod/v4";
+import type { $ZodTransform } from "zod/v4/core";
+import * as R from "ramda";
 
 export type EmptyObject = Record<string, never>;
 export type FlatObject = Record<string, unknown>;
 
-export const tryToTransform = <T>(
-  schema: z.ZodEffects<z.ZodTypeAny, T>,
-  sample: T,
-) => {
-  try {
-    return typeof schema.parse(sample);
-  } catch {
-    return undefined;
-  }
-};
+export const getTransformedType = R.tryCatch(
+  <T>(schema: $ZodTransform<unknown, T>, sample: T) =>
+    typeof z.parse(schema, sample),
+  R.always(undefined),
+);
 
 /**
  * @desc isNullable() and isOptional() validate the schema's input

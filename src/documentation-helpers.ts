@@ -18,7 +18,7 @@ import {
   SchemaObjectType,
 } from "./async-api/model";
 import { isReferenceObject } from "./async-api/helpers";
-import { FlatObject, hasCoercion, tryToTransform } from "./common-helpers";
+import { FlatObject, hasCoercion, getTransformedType } from "./common-helpers";
 import { HandlingRules, SchemaHandler, walkSchema } from "./schema-walker";
 
 export interface AsyncAPIContext extends FlatObject {
@@ -393,7 +393,7 @@ export const depictEffect: Depicter = (
     effect.type === "transform" &&
     !isReferenceObject(input)
   ) {
-    const outputType = tryToTransform(schema, makeSample(input));
+    const outputType = getTransformedType(schema, makeSample(input));
     if (outputType && ["number", "string", "boolean"].includes(outputType)) {
       return { type: outputType as "number" | "string" | "boolean" };
     } else {

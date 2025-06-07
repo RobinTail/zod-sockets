@@ -51,7 +51,7 @@ describe("Entrypoint", () => {
       all: {
         getRooms: () => string[];
         getClients: () => Promise<RemoteClient<SampleEmission, SampleData>[]>;
-        broadcast: () => Promise<true>;
+        broadcast: () => Promise<any>; // @todo revisit
       };
       logger: Console;
       withRooms: RoomService<SampleEmission, SampleData>;

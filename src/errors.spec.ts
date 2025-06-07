@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ZodError } from "zod";
+import { ZodError } from "zod/v4";
 import {
   InputValidationError,
   OutputValidationError,

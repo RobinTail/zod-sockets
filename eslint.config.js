@@ -6,10 +6,26 @@ import prettierRules from "eslint-plugin-prettier/recommended";
 import allowedDepsPlugin from "eslint-plugin-allowed-dependencies";
 import { builtinModules } from "node:module";
 
-const importConcerns = builtinModules.map((mod) => ({
-  selector: `ImportDeclaration[source.value='${mod}']`,
-  message: `use node:${mod} for the built-in module`,
-}));
+const importConcerns = [
+  {
+    selector:
+      "ImportDeclaration[source.value='ramda'] > ImportSpecifier, " +
+      "ImportDeclaration[source.value='ramda'] > ImportDefaultSpecifier",
+    message: "use import * as R from 'ramda'",
+  },
+  {
+    selector: "ImportDeclaration[source.value=/^zod/] > ImportDefaultSpecifier",
+    message: "do import { z } instead",
+  },
+  {
+    selector: "ImportDeclaration[source.value='zod'] > ImportSpecifier",
+    message: "should import from zod/v4", // @todo remove when zod version changed to 4.0.0
+  },
+  ...builtinModules.map((mod) => ({
+    selector: `ImportDeclaration[source.value='${mod}']`,
+    message: `use node:${mod} for the built-in module`,
+  })),
+];
 
 export default tsPlugin.config(
   {

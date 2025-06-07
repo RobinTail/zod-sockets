@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { afterAll, describe, expect, test, vi } from "vitest";
 import { io } from "socket.io-client";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { waitFor } from "../helpers";
 
 describe("System test on Example", async () => {

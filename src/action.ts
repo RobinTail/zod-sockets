@@ -1,8 +1,9 @@
-import { init, last } from "ramda";
-import { z } from "zod";
+import * as R from "ramda";
+import { z } from "zod/v4";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { OutputValidationError, InputValidationError } from "./errors";
+import { functionSchema } from "./function-schema";
 import { ActionContext, ClientContext, Handler } from "./handler";
 import { Namespaces, rootNS } from "./namespace";
 
@@ -12,37 +13,24 @@ export abstract class AbstractAction {
   public abstract execute(
     params: {
       params: unknown[];
-    } & ClientContext<EmissionMap, z.SomeZodObject>,
+    } & ClientContext<EmissionMap, z.ZodObject>,
   ): Promise<void>;
-  public abstract getSchema(variant: "input"): z.AnyZodTuple;
-  public abstract getSchema(variant: "output"): z.AnyZodTuple | undefined;
-  public abstract example(
-    variant: "input" | "output",
-    payload: z.infer<z.AnyZodTuple>,
-  ): this;
-  public abstract getExamples(
-    variant: "input" | "output",
-  ): z.infer<z.AnyZodTuple>[];
+  public abstract getSchema(variant: "input"): z.ZodTuple;
+  public abstract getSchema(variant: "output"): z.ZodTuple | undefined;
 }
 
 export class Action<
   NS extends Namespaces,
-  IN extends z.AnyZodTuple,
-  OUT extends z.AnyZodTuple | undefined = undefined,
+  IN extends z.ZodTuple,
+  OUT extends z.ZodTuple | undefined = undefined,
 > extends AbstractAction {
   readonly #event: string;
   readonly #namespace: keyof NS;
   readonly #inputSchema: IN;
   readonly #outputSchema: OUT;
-  readonly #examples: Array<{
-    variant: "input" | "output";
-    payload: Array<
-      z.input<IN> | (OUT extends z.AnyZodTuple ? z.output<OUT> : never)
-    >;
-  }>;
   readonly #handler: Handler<
-    ActionContext<z.output<IN>, EmissionMap, z.SomeZodObject>,
-    z.input<z.AnyZodTuple> | void // type compliance fix here
+    ActionContext<z.output<IN>, EmissionMap, z.ZodObject>,
+    z.input<NonNullable<OUT>> | void
   >;
 
   public constructor(
@@ -56,7 +44,6 @@ export class Action<
     this.#inputSchema = action.input;
     this.#outputSchema =
       "output" in action ? action.output : (undefined as OUT);
-    this.#examples = [];
     this.#handler = action.handler;
   }
 
@@ -76,7 +63,7 @@ export class Action<
 
   /** @throws InputValidationError */
   #parseInput(params: unknown[]) {
-    const payload = this.#outputSchema ? init(params) : params;
+    const payload = this.#outputSchema ? R.init(params) : params;
     try {
       return this.#inputSchema.parse(payload);
     } catch (e) {
@@ -90,9 +77,9 @@ export class Action<
       return undefined;
     }
     try {
-      return z
-        .function(this.#outputSchema, z.void())
-        .parse(last(params), { path: [Math.max(0, params.length - 1)] });
+      return functionSchema(this.#outputSchema, z.void(), {
+        path: [Math.max(0, params.length - 1)],
+      }).parse(R.last(params));
     } catch (e) {
       throw e instanceof z.ZodError ? new InputValidationError(e) : e;
     }
@@ -116,7 +103,7 @@ export class Action<
     ...rest
   }: { params: unknown[] } & ClientContext<
     EmissionMap,
-    z.SomeZodObject
+    z.ZodObject
   >): Promise<void> {
     const input = this.#parseInput(params);
     logger.debug(
@@ -130,28 +117,5 @@ export class Action<
       logger.debug(`${this.#event}: parsed output`, response);
       ack(...response);
     }
-  }
-
-  public override example(variant: "input", payload: z.input<IN>): this;
-  public override example(
-    variant: "output",
-    payload: OUT extends z.AnyZodTuple ? z.output<OUT> : never,
-  ): this;
-  public override example(
-    variant: "input" | "output",
-    payload: z.input<IN> | (OUT extends z.AnyZodTuple ? z.output<OUT> : never),
-  ): this {
-    this.#examples.push({ variant, payload });
-    return this;
-  }
-
-  public override getExamples(variant: "input"): z.input<IN>[];
-  public override getExamples(
-    variant: "output",
-  ): OUT extends z.AnyZodTuple ? z.output<OUT>[] : never;
-  public override getExamples(variant: "input" | "output") {
-    return this.#examples
-      .filter((entry) => entry.variant === variant)
-      .map(({ payload }) => payload);
   }
 }

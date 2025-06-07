@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { EmissionMap } from "./emission";
 import {
   ClientContext,
@@ -8,7 +8,7 @@ import {
   TracingContext,
 } from "./handler";
 
-export interface Hooks<E extends EmissionMap, D extends z.SomeZodObject> {
+export interface Hooks<E extends EmissionMap, D extends z.ZodObject> {
   /** @desc The place for emitting events regardless receiving events */
   onConnection: Handler<ClientContext<E, D>, void>;
   onDisconnect: Handler<ClientContext<E, D>, void>;
@@ -20,7 +20,7 @@ export interface Hooks<E extends EmissionMap, D extends z.SomeZodObject> {
   onError: Handler<ErrorContext<E, D>, void>;
 }
 
-export const defaultHooks: Hooks<EmissionMap, z.SomeZodObject> = {
+export const defaultHooks: Hooks<EmissionMap, z.ZodObject> = {
   onConnection: ({ client: { id, getData }, logger }) =>
     logger.debug("Client connected", { ...getData(), id }),
   onDisconnect: ({ client: { id, getData }, logger }) =>

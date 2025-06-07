@@ -1,27 +1,15 @@
-import { z } from "zod";
+import { z } from "zod/v4";
+import type { $ZodTransform, $ZodType } from "zod/v4/core";
+import * as R from "ramda";
 
 export type EmptyObject = Record<string, never>;
 export type FlatObject = Record<string, unknown>;
 
-export const tryToTransform = <T>(
-  schema: z.ZodEffects<z.ZodTypeAny, T>,
-  sample: T,
-) => {
-  try {
-    return typeof schema.parse(sample);
-  } catch {
-    return undefined;
-  }
-};
-
-/**
- * @desc isNullable() and isOptional() validate the schema's input
- * @desc They always return true in case of coercion, which should be taken into account when depicting response
- */
-export const hasCoercion = (schema: z.ZodTypeAny): boolean =>
-  "coerce" in schema._def && typeof schema._def.coerce === "boolean"
-    ? schema._def.coerce
-    : false;
+export const getTransformedType = R.tryCatch(
+  <T>(schema: $ZodTransform<unknown, T>, sample: T) =>
+    typeof z.parse(schema, sample),
+  R.always(undefined),
+);
 
 export const ucFirst = (subject: string) =>
   subject.charAt(0).toUpperCase() + subject.slice(1).toLowerCase();
@@ -52,3 +40,16 @@ export const getMessageFromError = (error: Error): string => {
   }
   return error.message;
 };
+
+/** Faster replacement to instanceof for code operating core types (traversing schemas) */
+export const isSchema = <T extends $ZodType = $ZodType>(
+  subject: unknown,
+  type?: T["_zod"]["def"]["type"],
+): subject is T =>
+  isObject(subject) &&
+  "_zod" in subject &&
+  (type ? R.path(["_zod", "def", "type"], subject) === type : true);
+
+/** @desc can still be an array, use Array.isArray() or rather R.type() to exclude that case */
+export const isObject = (subject: unknown) =>
+  typeof subject === "object" && subject !== null;

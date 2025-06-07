@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { makeEventFnSchema } from "./integration-helpers";
 
 describe("Integration helpers", () => {

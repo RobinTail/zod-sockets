@@ -18,26 +18,26 @@ describe("Entrypoint", () => {
   });
 
   test("should expose certain types and interfaces", () => {
-    expectTypeOf(console).toMatchTypeOf<AbstractLogger>();
-    expectTypeOf({}).toMatchTypeOf<EmissionMap>();
+    expectTypeOf(console).toExtend<AbstractLogger>();
+    expectTypeOf({}).toExtend<EmissionMap>();
     expectTypeOf({
       event: { schema: z.tuple([]) },
-    }).toMatchTypeOf<EmissionMap>();
+    }).toExtend<EmissionMap>();
     expectTypeOf({
       event: { schema: z.tuple([]), ack: z.tuple([]) },
-    }).toMatchTypeOf<EmissionMap>();
+    }).toExtend<EmissionMap>();
     expectTypeOf({
       event: { schema: z.object({}) },
-    }).not.toMatchTypeOf<EmissionMap>();
+    }).not.toExtend<EmissionMap>();
     expectTypeOf({}).toEqualTypeOf<LoggerOverrides>();
-    expectTypeOf(null).not.toMatchTypeOf<LoggerOverrides>();
+    expectTypeOf(null).not.toExtend<LoggerOverrides>();
     expectTypeOf({
       emission: { event: { schema: z.tuple([]) } },
       hooks: {},
       examples: {},
       security: [],
       metadata: z.object({ count: z.number() }),
-    }).toMatchTypeOf<
+    }).toExtend<
       Namespace<
         { event: { schema: z.ZodTuple<[]> } },
         z.ZodObject<{ count: z.ZodNumber }>
@@ -55,6 +55,6 @@ describe("Entrypoint", () => {
       };
       logger: Console;
       withRooms: RoomService<SampleEmission, SampleData>;
-    }>().toMatchTypeOf<ClientContext<SampleEmission, SampleData>>();
+    }>().toExtend<ClientContext<SampleEmission, SampleData>>();
   });
 });

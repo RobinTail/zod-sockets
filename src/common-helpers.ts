@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import type { $ZodTransform } from "zod/v4/core";
+import type { $ZodTransform, $ZodType } from "zod/v4/core";
 import * as R from "ramda";
 
 export type EmptyObject = Record<string, never>;
@@ -40,3 +40,16 @@ export const getMessageFromError = (error: Error): string => {
   }
   return error.message;
 };
+
+/** Faster replacement to instanceof for code operating core types (traversing schemas) */
+export const isSchema = <T extends $ZodType = $ZodType>(
+  subject: unknown,
+  type?: T["_zod"]["def"]["type"],
+): subject is T =>
+  isObject(subject) &&
+  "_zod" in subject &&
+  (type ? R.path(["_zod", "def", "type"], subject) === type : true);
+
+/** @desc can still be an array, use Array.isArray() or rather R.type() to exclude that case */
+export const isObject = (subject: unknown) =>
+  typeof subject === "object" && subject !== null;

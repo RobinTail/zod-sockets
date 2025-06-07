@@ -13,8 +13,6 @@ import {
   depictMessage,
   depictOperation,
   depicters,
-  onEach,
-  onMissing,
 } from "./documentation-helpers";
 import { Emission } from "./emission";
 import { Example, Namespaces, normalizeNS } from "./namespace";

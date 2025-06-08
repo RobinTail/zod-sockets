@@ -47,7 +47,11 @@ exports[`Documentation helpers > depictNullable() > should not add null type whe
 }
 `;
 
-exports[`Documentation helpers > depictPipeline > should depict as 'number (out)' 1`] = `{}`;
+exports[`Documentation helpers > depictPipeline > should depict as 'number (out)' 1`] = `
+{
+  "type": "number",
+}
+`;
 
 exports[`Documentation helpers > depictPipeline > should depict as 'string (preprocess)' 1`] = `
 {

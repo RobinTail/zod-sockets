@@ -14,7 +14,6 @@ import {
   depictMessage,
   depictOperation,
 } from "./documentation-helpers";
-import { Emission } from "./emission";
 import { Namespaces, normalizeNS } from "./namespace";
 
 interface DocumentationParams {
@@ -116,20 +115,20 @@ export class Documentation extends AsyncApiBuilder {
         messages[messageId] = depictMessage({
           event,
           schema,
-          direction: "out",
+          isResponse: true,
         });
         if (ack) {
           messages[ackId] = depictMessage({
             event,
             schema: ack,
-            direction: "in",
+            isResponse: false,
             isAck: true,
           });
         }
         this.addOperation(
           makeCleanId(`${channelId} send operation ${event}`),
           depictOperation({
-            direction: "out",
+            isResponse: true,
             event,
             channelId,
             messageId,
@@ -151,20 +150,20 @@ export class Documentation extends AsyncApiBuilder {
           messages[messageId] = depictMessage({
             event,
             schema: action.getSchema("input"),
-            direction: "in",
+            isResponse: false,
           });
           if (output) {
             messages[ackId] = depictMessage({
               event,
               schema: output,
-              direction: "out",
+              isResponse: true,
               isAck: true,
             });
           }
           this.addOperation(
             makeCleanId(`${channelId} recv operation ${event}`),
             depictOperation({
-              direction: "in",
+              isResponse: false,
               channelId,
               messageId,
               event,

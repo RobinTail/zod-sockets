@@ -13,10 +13,10 @@ import assert from "node:assert/strict";
 
 describe("Documentation helpers", () => {
   const requestCtx: AsyncAPIContext = {
-    direction: "in",
+    isResponse: false,
   };
   const responseCtx: AsyncAPIContext = {
-    direction: "out",
+    isResponse: true,
   };
 
   describe("depictUnion()", () => {

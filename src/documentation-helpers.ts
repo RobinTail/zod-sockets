@@ -1,6 +1,7 @@
 import * as R from "ramda";
 import { globalRegistry, z } from "zod/v4";
 import type {
+  $ZodDate,
   $ZodDiscriminatedUnion,
   $ZodPipe,
   $ZodShape,
@@ -22,7 +23,7 @@ import { FlatObject, getTransformedType, isSchema } from "./common-helpers";
 import { FirstPartyKind } from "./schema-walker";
 
 export interface AsyncAPIContext extends FlatObject {
-  direction: "in" | "out";
+  isResponse: boolean;
 }
 
 export type Depicter = (
@@ -89,7 +90,9 @@ export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
     } else {
       const targetType = getTransformedType(
         target,
-        makeSample(opposingDepiction),
+        isSchema<$ZodDate>(opposite, "date")
+          ? new Date()
+          : makeSample(opposingDepiction),
       );
       if (targetType && ["number", "string", "boolean"].includes(targetType)) {
         return {
@@ -207,7 +210,7 @@ export const getExamples = (subject: $ZodType): ReadonlyArray<unknown> => {
 export const depictMessage = ({
   event,
   schema,
-  direction,
+  isResponse,
   isAck,
 }: {
   event: string;
@@ -216,14 +219,14 @@ export const depictMessage = ({
 } & AsyncAPIContext): MessageObject => ({
   name: isAck ? undefined : event,
   title: isAck ? `Acknowledgement for ${event}` : event,
-  payload: ensureCompliance(depict(schema, { ctx: { direction } })), // @todo add pulling examples
+  payload: ensureCompliance(depict(schema, { ctx: { isResponse } })), // @todo add pulling examples
   examples: getExamples(schema).map((example) => ({
     payload: example as object, // @todo revisit
   })),
 });
 
 export const depictOperation = ({
-  direction,
+  isResponse,
   channelId,
   messageId,
   ackId,
@@ -238,13 +241,13 @@ export const depictOperation = ({
   ns: string;
   securityIds?: string[];
 } & AsyncAPIContext): OperationObject => ({
-  action: direction === "out" ? "send" : "receive",
+  action: isResponse ? "send" : "receive",
   channel: { $ref: `#/channels/${channelId}` },
   messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
   title: event,
-  summary: `${direction === "out" ? "Outgoing" : "Incoming"} event ${event}`,
+  summary: `${isResponse ? "Outgoing" : "Incoming"} event ${event}`,
   description:
-    `The message ${direction === "out" ? "produced" : "consumed"} by ` +
+    `The message ${isResponse ? "produced" : "consumed"} by ` +
     `the application within the ${ns} namespace`,
   security:
     securityIds && securityIds.length
@@ -269,6 +272,6 @@ export const depictProtocolFeatures = (
   extra?: SchemaObject,
 ) =>
   Object.assign(
-    ensureCompliance(depict(z.object(shape), { ctx: { direction: "in" } })),
+    ensureCompliance(depict(z.object(shape), { ctx: { isResponse: false } })),
     extra,
   );

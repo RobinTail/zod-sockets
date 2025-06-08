@@ -26,7 +26,10 @@ export const functionSchema = <IN extends $ZodTuple, OUT extends $ZodType>(
   const template = z.function({ input, output });
   const schema = z.custom().transform((arg, ctx) => {
     if (typeof arg !== "function") {
-      ctx.addIssue({ ...params, message: "Expected function" });
+      ctx.addIssue({
+        ...params,
+        message: `Expected function, received ${typeof ctx.value}`,
+      });
       return z.NEVER;
     }
     return template.implement(arg as $InferInnerFunctionType<IN, OUT>);

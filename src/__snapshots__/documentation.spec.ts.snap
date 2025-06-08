@@ -2043,18 +2043,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -2067,7 +2067,9 @@ channels:
         title: test
         payload:
           type: array
-          additionalItems: false
+          prefixItems: []
+          items:
+            not: {}
 components:
   securitySchemes:
     serverSecurity0:

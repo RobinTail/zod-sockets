@@ -216,12 +216,16 @@ export const depictMessage = ({
   event: string;
   schema: z.ZodTuple;
   isAck?: boolean;
-} & AsyncAPIContext): MessageObject => ({
-  name: isAck ? undefined : event,
-  title: isAck ? `Acknowledgement for ${event}` : event,
-  payload: ensureCompliance(depict(schema, { ctx: { isResponse } })), // @todo add pulling examples
-  examples: getExamples(schema).map((example) => ({ payload: example })),
-});
+} & AsyncAPIContext) => {
+  const msg: MessageObject = {
+    name: isAck ? undefined : event,
+    title: isAck ? `Acknowledgement for ${event}` : event,
+    payload: ensureCompliance(depict(schema, { ctx: { isResponse } })), // @todo add pulling examples
+  };
+  const examples = getExamples(schema).map((example) => ({ payload: example }));
+  if (examples.length) msg.examples = examples;
+  return msg;
+};
 
 export const depictOperation = ({
   isResponse,

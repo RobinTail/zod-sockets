@@ -1183,18 +1183,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1207,22 +1207,24 @@ channels:
         title: test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: string
               enum:
                 - ABC
                 - DEF
-          additionalItems: false
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: number
               enum:
                 - 1
                 - 2
-          additionalItems: false
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1947,18 +1949,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1971,21 +1973,21 @@ channels:
         title: test
         payload:
           type: array
-          items:
+          prefixItems:
             - format: string (preprocessed)
-            - format: int64 (preprocessed)
-              minimum: 0
+            - minimum: 0
               maximum: 9007199254740991
-          additionalItems: false
+              format: integer (preprocessed)
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
+          prefixItems:
+            - type: boolean
           items:
-            - type:
-                - boolean
-                - "null"
-          additionalItems: false
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:

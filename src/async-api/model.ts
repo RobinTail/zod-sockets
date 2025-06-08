@@ -294,7 +294,7 @@ interface MessageExampleObject {
   name?: string;
   summary?: string;
   headers?: Record<string, any>;
-  payload?: Record<string, any>;
+  payload?: any; // https://www.asyncapi.com/docs/reference/specification/v3.0.0#messageExampleObject
 }
 
 /** @since 3.0.0 new */

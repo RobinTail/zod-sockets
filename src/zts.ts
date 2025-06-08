@@ -2,6 +2,7 @@ import ts from "typescript";
 import type {
   $ZodArray,
   $ZodCatch,
+  $ZodDate,
   $ZodDefault,
   $ZodDiscriminatedUnion,
   $ZodEnum,
@@ -207,7 +208,12 @@ const onPipeline: Producer = (
   const opposite = def[isResponse ? "in" : "out"];
   if (!isSchema<$ZodTransform>(target, "transform")) return next(target);
   const opposingType = next(opposite);
-  const targetType = getTransformedType(target, makeSample(opposingType));
+  const targetType = getTransformedType(
+    target,
+    isSchema<$ZodDate>(opposite, "date")
+      ? new Date()
+      : makeSample(opposingType),
+  );
   const resolutions: Partial<
     Record<NonNullable<typeof targetType>, ts.KeywordTypeSyntaxKind>
   > = {
@@ -281,7 +287,7 @@ const producers: HandlingRules<
   any: onPrimitive(ts.SyntaxKind.AnyKeyword),
   undefined: onPrimitive(ts.SyntaxKind.UndefinedKeyword),
   never: onPrimitive(ts.SyntaxKind.NeverKeyword),
-  void: onPrimitive(ts.SyntaxKind.UndefinedKeyword),
+  void: onPrimitive(ts.SyntaxKind.VoidKeyword),
   unknown: onPrimitive(ts.SyntaxKind.UnknownKeyword),
   date: onDate,
   null: onNull,

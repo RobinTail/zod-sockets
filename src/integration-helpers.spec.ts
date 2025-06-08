@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { z } from "zod/v4";
+import { functionSchema } from "./function-schema";
 import { makeEventFnSchema } from "./integration-helpers";
 
 describe("Integration helpers", () => {
@@ -7,8 +8,9 @@ describe("Integration helpers", () => {
     test("should simply use base when no ack", () => {
       const base = z.tuple([z.string()]);
       const result = makeEventFnSchema(base);
+      // @todo update vitest serializer and remove JSON.stringify
       expect(JSON.stringify(result)).toBe(
-        JSON.stringify(z.function(base, z.void())),
+        JSON.stringify(functionSchema(base, z.void())),
       );
     });
 
@@ -18,8 +20,8 @@ describe("Integration helpers", () => {
       const result = makeEventFnSchema(base, ack);
       expect(JSON.stringify(result)).toBe(
         JSON.stringify(
-          z.function(
-            z.tuple([z.string(), z.function(ack, z.void())]),
+          functionSchema(
+            z.tuple([z.string(), functionSchema(ack, z.void())]),
             z.void(),
           ),
         ),
@@ -33,15 +35,15 @@ describe("Integration helpers", () => {
       expect(JSON.stringify(result)).toBe(
         JSON.stringify(
           z.union([
-            z.function(
-              z.tuple([z.string(), z.function(ack, z.void())]),
+            functionSchema(
+              z.tuple([z.string(), functionSchema(ack, z.void())]),
               z.void(),
             ),
-            z.function(
+            functionSchema(
               z.tuple([
                 z.string(),
                 z.unknown().describe("rest1"),
-                z.function(ack, z.void()),
+                functionSchema(ack, z.void()),
               ]),
               z.void(),
             ),

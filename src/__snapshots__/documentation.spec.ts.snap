@@ -1275,18 +1275,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1299,49 +1299,59 @@ channels:
         title: test
         payload:
           type: array
-          additionalItems: false
+          prefixItems: []
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: object
+              propertyNames:
+                type: string
               additionalProperties:
                 type: integer
-                format: int64
                 minimum: -9007199254740991
                 maximum: 9007199254740991
             - type: object
+              propertyNames:
+                type: string
+                pattern: "[A-Z]+"
               additionalProperties:
                 type: boolean
             - type: object
+              propertyNames:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
               additionalProperties:
                 type: boolean
             - type: object
-              properties:
-                only:
-                  type: boolean
-              required:
-                - only
+              propertyNames:
+                type: string
+                const: only
+              additionalProperties:
+                type: boolean
             - type: object
-              properties:
-                option1:
-                  type: boolean
-                option2:
-                  type: boolean
-              required:
-                - option1
-                - option2
+              propertyNames:
+                anyOf:
+                  - type: string
+                    const: option1
+                  - type: string
+                    const: option2
+              additionalProperties:
+                type: boolean
             - type: object
-              properties:
-                option1:
-                  type: boolean
-                option2:
-                  type: boolean
-              required:
-                - option1
-                - option2
-          additionalItems: false
+              propertyNames:
+                type: string
+                enum:
+                  - option1
+                  - option2
+              additionalProperties:
+                type: boolean
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:

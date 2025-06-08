@@ -8,8 +8,8 @@ export namespace Root {
     export const path = "/";
     type Type1 = {
         title: string;
-        features: Type1;
-    }[];
+        features: Type1[];
+    };
     export interface Emission {
         time: (currentIsoTime: string) => void;
         chat: (message: string, extraInfo: {
@@ -20,10 +20,7 @@ export namespace Root {
         error: (name: string, message: string) => void;
     }
     export interface Actions {
-        test: (p1: {
-            title: string;
-            features: Type1;
-        }) => void;
+        test: (p1: Type1[]) => void;
     }
     /** @example const socket: Root.Socket = io(Root.path) */
     export type Socket = SocketBase<Emission, Actions>;

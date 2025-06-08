@@ -13,16 +13,13 @@ describe("Integration", () => {
     });
 
     test("should handle circular references", () => {
-      const baseFeature = z.object({
+      const feature = z.object({
         title: z.string(),
+        get features() {
+          return feature.array();
+        },
       });
-      type Feature = z.infer<typeof baseFeature> & {
-        features: Feature[];
-      };
-      const feature: z.ZodType<Feature> = baseFeature.extend({
-        features: z.lazy(() => feature.array()),
-      });
-      const input = z.tuple([feature]);
+      const input = z.tuple([feature.array()]);
       const instance = new Integration({
         config,
         actions: [

@@ -1068,18 +1068,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1092,7 +1092,7 @@ channels:
         title: test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: string
             - type: string
               minLength: 1
@@ -1103,36 +1103,46 @@ channels:
               maxLength: 3
             - type: string
               format: email
+              pattern: ^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$
             - type: string
               format: uuid
+              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$
             - type: string
               format: cuid
+              pattern: ^[cC][^\\s-]{8,}$
             - type: string
               format: cuid2
+              pattern: ^[0-9a-z]+$
             - type: string
               format: ulid
+              pattern: ^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$
             - type: string
-              format: ip
+              format: ipv4
+              pattern: ^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$
             - type: string
               format: emoji
+              pattern: ^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$
             - type: string
-              format: url
+              format: uri
             - type: string
               pattern: \\d+
             - type: string
-              format: email
               minLength: 1
               maxLength: 90
-              pattern: .*@example\\.com
-          additionalItems: false
+              allOf:
+                - pattern: ^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$
+                - pattern: .*@example\\.com
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: string
               minLength: 1
-          additionalItems: false
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1487,18 +1497,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1511,14 +1521,17 @@ channels:
         title: test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: boolean
-          additionalItems: false
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          additionalItems: false
+          prefixItems: []
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1569,18 +1582,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1593,17 +1606,20 @@ channels:
         title: test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: string
             - type:
                 - string
                 - "null"
-          additionalItems: false
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          additionalItems: false
+          prefixItems: []
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1654,18 +1670,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1678,19 +1694,21 @@ channels:
         title: test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: boolean
             - type: string
             - type: integer
-              format: int64
               exclusiveMinimum: 0
               maximum: 9007199254740991
-          additionalItems: false
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          additionalItems: false
+          prefixItems: []
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1741,18 +1759,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1765,12 +1783,16 @@ channels:
         title: test
         payload:
           type: array
-          additionalItems: false
+          prefixItems: []
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          additionalItems: false
+          prefixItems: []
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:

@@ -18,7 +18,7 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
     date: Date;
     undefined: undefined;
     null: null;
-    void: undefined;
+    void: void;
     any: any;
     unknown: unknown;
     never: never;
@@ -148,7 +148,7 @@ exports[`zod-to-ts > PrimitiveSchema (isResponse=false) > outputs correct typesc
     date: Date;
     undefined: undefined;
     null: null;
-    void: undefined;
+    void: void;
     any: any;
     unknown: unknown;
     never: never;
@@ -163,7 +163,7 @@ exports[`zod-to-ts > PrimitiveSchema (isResponse=true) > outputs correct typescr
     date: Date;
     undefined: undefined;
     null: null;
-    void: undefined;
+    void: void;
     any: any;
     unknown: unknown;
     never: never;

@@ -1833,18 +1833,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -1857,16 +1857,18 @@ channels:
         title: test
         payload:
           type: array
+          prefixItems:
+            - {}
           items:
-            - format: any
-          additionalItems: false
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
+          prefixItems:
+            - {}
           items:
-            - format: any
-          additionalItems: false
+            not: {}
   Test:
     address: /test
     title: Namespace /test
@@ -1878,19 +1880,18 @@ channels:
         title: withAck
         payload:
           type: array
-          additionalItems: false
-        examples:
-          - payload: []
+          prefixItems: []
+          items:
+            not: {}
       testAckForOutgoingWithAck:
         title: Acknowledgement for withAck
         payload:
           type: array
-          items:
-            - format: any
-              examples:
-                - something
-          additionalItems:
-            format: any
+          examples:
+            - - something
+          prefixItems:
+            - {}
+          items: {}
         examples:
           - payload:
               - something

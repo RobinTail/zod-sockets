@@ -34,7 +34,7 @@ ZodError({
   "issues": [
     {
       "code": "custom",
-      "message": "Expected function",
+      "message": "Expected function, received string",
       "path": [],
     },
   ],

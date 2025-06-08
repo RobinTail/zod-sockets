@@ -1,9 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { ZodError } from "zod/v4";
+import { z } from "zod/v4";
 import {
   InputValidationError,
   OutputValidationError,
   IOSchemaError,
+  DeepCheckError,
 } from "./errors";
 
 describe("Errors", () => {
@@ -17,8 +18,26 @@ describe("Errors", () => {
     });
   });
 
+  describe("DeepCheckError", () => {
+    const schema = z.any();
+    const error = new DeepCheckError(schema);
+
+    test("should be an instance of IOSchemaError and Error", () => {
+      expect(error).toBeInstanceOf(IOSchemaError);
+      expect(error).toBeInstanceOf(Error);
+    });
+
+    test("should have the name matching its class", () => {
+      expect(error.name).toBe("DeepCheckError");
+    });
+
+    test("should have the cause matching the schema", () => {
+      expect(error.cause).toBe(schema);
+    });
+  });
+
   describe("InputValidationError", () => {
-    const zodError = new ZodError([]);
+    const zodError = new z.ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
       expect(new InputValidationError(zodError)).toBeInstanceOf(IOSchemaError);
@@ -39,7 +58,7 @@ describe("Errors", () => {
   });
 
   describe("OutputValidationError", () => {
-    const zodError = new ZodError([]);
+    const zodError = new z.ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
       expect(new OutputValidationError(zodError)).toBeInstanceOf(IOSchemaError);

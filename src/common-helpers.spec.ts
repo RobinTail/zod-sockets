@@ -5,7 +5,7 @@ import {
   getMessageFromError,
   lcFirst,
   makeCleanId,
-  makeErrorFromAnything,
+  ensureError,
 } from "./common-helpers";
 
 describe("Common helpers", () => {
@@ -32,7 +32,7 @@ describe("Common helpers", () => {
     });
   });
 
-  describe("makeErrorFromAnything()", () => {
+  describe("ensureError()", () => {
     test.each([
       [new Error("error"), "error"],
       [
@@ -40,13 +40,13 @@ describe("Common helpers", () => {
           {
             code: "invalid_type",
             expected: "string",
-            received: "number",
+            input: 123,
             path: [""],
             message: "invalid type",
           },
         ]),
         `[\n  {\n    "code": "invalid_type",\n    "expected": "string",\n` +
-          `    "received": "number",\n    "path": [\n      ""\n` +
+          `    "input": 123,\n    "path": [\n      ""\n` +
           `    ],\n    "message": "invalid type"\n  }\n]`,
       ],
       [
@@ -72,7 +72,7 @@ describe("Common helpers", () => {
       [/regexp/is, "/regexp/is"],
       [[1, 2, 3], "1,2,3"],
     ])("should accept %#", (argument, expected) => {
-      const result = makeErrorFromAnything(argument);
+      const result = ensureError(argument);
       expectTypeOf(result).toEqualTypeOf<Error>();
       expect(result).toBeInstanceOf(Error);
       expect(result).toHaveProperty("message");
@@ -89,14 +89,14 @@ describe("Common helpers", () => {
           path: ["user", "id"],
           message: "expected number, got string",
           expected: "number",
-          received: "string",
+          input: "test",
         },
         {
           code: "invalid_type",
           path: ["user", "name"],
           message: "expected string, got number",
           expected: "string",
-          received: "number",
+          input: 123,
         },
       ]);
       expect(getMessageFromError(error)).toMatchSnapshot();
@@ -106,7 +106,7 @@ describe("Common helpers", () => {
       "should handle path in ZodIssue %#",
       (path) => {
         const error = new z.ZodError([
-          { code: "custom", path, message: "Custom error" },
+          { code: "custom", path, message: "Custom error", input: "test" },
         ]);
         expect(getMessageFromError(error)).toMatchSnapshot();
       },

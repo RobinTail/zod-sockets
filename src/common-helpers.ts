@@ -27,15 +27,20 @@ export const makeCleanId = (...args: string[]) =>
     .map(ucFirst)
     .join("");
 
-export const makeErrorFromAnything = (subject: unknown): Error =>
-  subject instanceof Error ? subject : new Error(String(subject));
+export const ensureError = (subject: unknown): Error =>
+  subject instanceof Error
+    ? subject
+    : subject instanceof z.ZodError // ZodError does not extend Error, unlike ZodRealError that does
+      ? new z.ZodRealError(subject.issues)
+      : new Error(String(subject));
 
 export const getMessageFromError = (error: Error): string => {
   if (error instanceof z.ZodError) {
     return error.issues
-      .map(({ path, message }) =>
-        (path.length ? [path.join("/")] : []).concat(message).join(": "),
-      )
+      .map(({ path, message }) => {
+        const prefix = path.length ? `${z.core.toDotPath(path)}: ` : "";
+        return `${prefix}${message}`;
+      })
       .join("; ");
   }
   return error.message;

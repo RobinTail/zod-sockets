@@ -18,14 +18,12 @@ describe("Config", () => {
             emission: {},
             hooks: {},
             metadata: z.object({}),
-            examples: {},
             security: [],
           },
           test: {
             emission: {},
             hooks: {},
             metadata: z.object({}),
-            examples: {},
             security: [],
           },
         },
@@ -38,14 +36,12 @@ describe("Config", () => {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
         test: {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });
@@ -69,7 +65,6 @@ describe("Config", () => {
           emission: { test: { schema } },
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });
@@ -86,7 +81,6 @@ describe("Config", () => {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });
@@ -106,7 +100,6 @@ describe("Config", () => {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });

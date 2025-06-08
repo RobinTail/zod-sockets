@@ -117,7 +117,7 @@ describe("Action", () => {
         simpleAction.execute({
           ...commons,
           logger: loggerMock as unknown as AbstractLogger,
-          params: [], // too short
+          params: [], // first one missing
         }),
       ).rejects.toThrowErrorMatchingSnapshot();
     });

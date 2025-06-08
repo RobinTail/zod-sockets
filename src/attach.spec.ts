@@ -113,7 +113,7 @@ describe("Attach", () => {
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");
       expect(call).toBeTruthy();
       const execError = new z.ZodError([
-        { code: "custom", path: [], message: "sample error" },
+        { code: "custom", path: [], message: "sample error", input: "test" },
       ]);
       actionsMock[0].execute.mockImplementationOnce(() => {
         throw execError;

@@ -266,11 +266,11 @@ describe("Documentation", () => {
           emission: {
             withAck: {
               schema: z.tuple([]),
-              ack: z.tuple([z.any()]).rest(z.any()),
+              ack: z
+                .tuple([z.any()])
+                .rest(z.any())
+                .meta({ examples: [["something"]] }),
             },
-          },
-          examples: {
-            withAck: { payload: [], ack: ["something"] },
           },
         }),
         actions: [

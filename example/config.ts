@@ -7,6 +7,14 @@ import { createSimpleConfig, InputValidationError } from "../src";
  * */
 export const subscribersRoom = "subscribers";
 
+// Demo of circular/recursive schema in Zod 4
+const feature = z.object({
+  name: z.string(),
+  get features() {
+    return feature.array().optional();
+  },
+});
+
 export const config = createSimpleConfig({
   emission: {
     time: {
@@ -24,8 +32,14 @@ export const config = createSimpleConfig({
       schema: z.tuple([
         z.string().meta({ description: "message", examples: ["Hello there!"] }),
         z
-          .object({ from: z.string().describe("the ID of author") })
-          .meta({ description: "extra info", examples: [{ from: "123abc" }] }),
+          .object({
+            from: z.string().describe("the ID of author"),
+            features: feature.array(),
+          })
+          .meta({
+            description: "extra info",
+            examples: [{ from: "123abc", features: [{ name: "visitor" }] }],
+          }),
       ]),
     },
     rooms: {
@@ -57,6 +71,7 @@ export const config = createSimpleConfig({
     onConnection: async ({ client }) => {
       await client.broadcast("chat", `${client.id} entered the chat`, {
         from: client.id,
+        features: client.getData().features || [],
       });
     },
     onStartup: async ({ all, withRooms }) => {
@@ -79,6 +94,7 @@ export const config = createSimpleConfig({
   metadata: z.object({
     // Number of messages sent using the chat event
     msgCount: z.number().int(),
+    features: feature.array(),
   }),
 });
 

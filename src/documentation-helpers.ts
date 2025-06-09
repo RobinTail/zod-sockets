@@ -19,11 +19,16 @@ import {
   SchemaObjectType,
 } from "./async-api/model";
 import { isReferenceObject } from "./async-api/helpers";
-import { FlatObject, getTransformedType, isSchema } from "./common-helpers";
+import { getTransformedType, isSchema } from "./common-helpers";
 import { FirstPartyKind } from "./schema-walker";
 
-export interface AsyncAPIContext extends FlatObject {
+export interface AsyncAPIContext {
   isResponse: boolean;
+  makeRef: (
+    key: object | string,
+    subject: SchemaObject | ReferenceObject,
+    name?: string,
+  ) => ReferenceObject;
 }
 
 export type Depicter = (
@@ -159,12 +164,36 @@ const depicters: Partial<Record<FirstPartyKind, Depicter>> = {
   date: depictDate,
 };
 
-/** @todo implement */
+/**
+ * @todo simplify if fixed (unable to customize references):
+ * @link https://github.com/colinhacks/zod/issues/4281
+ * */
 const fixReferences = (
   subject: JSONSchema.BaseSchema,
-  {}: Record<string, JSONSchema.BaseSchema>,
-  {}: AsyncAPIContext,
-) => subject;
+  defs: Record<string, JSONSchema.BaseSchema>,
+  ctx: AsyncAPIContext,
+) => {
+  const stack: unknown[] = [subject, defs];
+  while (stack.length) {
+    const entry = stack.shift()!;
+    if (R.is(Object, entry)) {
+      if (isReferenceObject(entry) && !entry.$ref.startsWith("#/components")) {
+        const actualName = entry.$ref.split("/").pop()!;
+        const depiction = defs[actualName];
+        if (depiction) {
+          entry.$ref = ctx.makeRef(
+            depiction.id || depiction, // avoiding serialization, because changing $ref
+            ensureCompliance(depiction),
+          ).$ref;
+        }
+        continue;
+      }
+      stack.push(...R.values(entry));
+    }
+    if (R.is(Array, entry)) stack.push(...R.values(entry));
+  }
+  return subject;
+};
 
 const depict = (
   subject: $ZodType,
@@ -224,6 +253,7 @@ export const depictMessage = ({
   schema,
   isResponse,
   isAck,
+  makeRef,
 }: {
   event: string;
   schema: z.ZodTuple;
@@ -232,7 +262,7 @@ export const depictMessage = ({
   const msg: MessageObject = {
     name: isAck ? undefined : event,
     title: isAck ? `Acknowledgement for ${event}` : event,
-    payload: ensureCompliance(depict(schema, { ctx: { isResponse } })),
+    payload: ensureCompliance(depict(schema, { ctx: { isResponse, makeRef } })),
   };
   const examples = getExamples(schema).map((example) => ({ payload: example }));
   if (examples.length) msg.examples = examples;
@@ -254,7 +284,7 @@ export const depictOperation = ({
   event: string;
   ns: string;
   securityIds?: string[];
-} & AsyncAPIContext): OperationObject => ({
+} & Pick<AsyncAPIContext, "isResponse">): OperationObject => ({
   action: isResponse ? "send" : "receive",
   channel: { $ref: `#/channels/${channelId}` },
   messages: [{ $ref: `#/channels/${channelId}/messages/${messageId}` }],
@@ -283,9 +313,16 @@ export const depictOperation = ({
 
 export const depictProtocolFeatures = (
   shape: $ZodShape,
-  extra?: SchemaObject,
+  {
+    extra,
+    makeRef,
+  }: { extra?: SchemaObject } & Pick<AsyncAPIContext, "makeRef">,
 ) =>
   Object.assign(
-    ensureCompliance(depict(z.object(shape), { ctx: { isResponse: false } })),
+    ensureCompliance(
+      depict(z.object(shape), {
+        ctx: { isResponse: false, makeRef },
+      }),
+    ),
     extra,
   );

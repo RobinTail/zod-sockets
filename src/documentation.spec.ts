@@ -415,6 +415,43 @@ describe("Documentation", () => {
       expect(boolean.parse("")).toBe(false);
       expect(boolean.parse(null)).toBe(false);
     });
+
+    test("should handle circular schemas via z.object()", () => {
+      const category = z.object({
+        name: z.string(),
+        get subcategories() {
+          return z.array(category);
+        },
+      });
+      const spec = new Documentation({
+        config: sampleConfig,
+        actions: [
+          factory.build({
+            event: "test",
+            input: z.tuple([category]),
+            output: z.tuple([]).rest(z.object({ zodExample: category })),
+            handler: async () => [
+              {
+                zodExample: {
+                  name: "People",
+                  subcategories: [
+                    {
+                      name: "Politicians",
+                      subcategories: [
+                        { name: "Presidents", subcategories: [] },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+          }),
+        ],
+        version: "3.4.5",
+        title: "Testing circular",
+      }).getSpecAsYaml();
+      expect(spec).toMatchSnapshot();
+    });
   });
 
   describe("Security", () => {

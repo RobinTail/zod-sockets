@@ -4,6 +4,8 @@ import {
   ContactObject,
   LicenseObject,
   MessagesObject,
+  ReferenceObject,
+  SchemaObject,
 } from "./async-api/model";
 import { AsyncApiBuilder } from "./async-api/builder";
 import { WS } from "./async-api/websockets";
@@ -29,14 +31,32 @@ interface DocumentationParams {
 }
 
 export class Documentation extends AsyncApiBuilder {
+  readonly #references = new Map<object | string, string>();
+
+  #makeRef(
+    key: object | string,
+    subject: SchemaObject | ReferenceObject,
+    name = this.#references.get(key),
+  ): ReferenceObject {
+    if (!name) {
+      name = `Schema${this.#references.size + 1}`;
+      this.#references.set(key, name);
+    }
+    this.addSchema(name, subject);
+    return { $ref: `#/components/schemas/${name}` };
+  }
+
   #makeChannelBinding(): WS.Channel {
     return {
       bindingVersion: "0.1.0",
       method: "GET",
-      headers: depictProtocolFeatures({
-        connection: z.literal("Upgrade").optional(),
-        upgrade: z.literal("websocket").optional(),
-      }),
+      headers: depictProtocolFeatures(
+        {
+          connection: z.literal("Upgrade").optional(),
+          upgrade: z.literal("websocket").optional(),
+        },
+        { makeRef: this.#makeRef.bind(this) },
+      ),
       query: depictProtocolFeatures(
         {
           EIO: z.literal("4").describe("The version of the protocol"),
@@ -46,9 +66,12 @@ export class Documentation extends AsyncApiBuilder {
           sid: z.string().optional().describe("The session identifier"),
         },
         {
-          externalDocs: {
-            description: "Engine.IO Protocol",
-            url: "https://socket.io/docs/v4/engine-io-protocol/",
+          makeRef: this.#makeRef.bind(this),
+          extra: {
+            externalDocs: {
+              description: "Engine.IO Protocol",
+              url: "https://socket.io/docs/v4/engine-io-protocol/",
+            },
           },
         },
       ),
@@ -106,6 +129,7 @@ export class Documentation extends AsyncApiBuilder {
         securityIds.push(id);
       }
       for (const [event, { schema, ack }] of Object.entries(emission)) {
+        const commons = { event, makeRef: this.#makeRef.bind(this) };
         const messageId = lcFirst(
           makeCleanId(`${channelId} outgoing ${event}`),
         );
@@ -113,13 +137,13 @@ export class Documentation extends AsyncApiBuilder {
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
         messages[messageId] = depictMessage({
-          event,
+          ...commons,
           schema,
           isResponse: true,
         });
         if (ack) {
           messages[ackId] = depictMessage({
-            event,
+            ...commons,
             schema: ack,
             isResponse: false,
             isAck: true,
@@ -128,18 +152,19 @@ export class Documentation extends AsyncApiBuilder {
         this.addOperation(
           makeCleanId(`${channelId} send operation ${event}`),
           depictOperation({
-            isResponse: true,
-            event,
+            ...commons,
+            ns,
             channelId,
             messageId,
+            isResponse: true,
             ackId: ack && ackId,
-            ns,
           }),
         );
       }
       for (const action of actions) {
         if (action.namespace === ns) {
           const { event, inputSchema, outputSchema } = action;
+          const commons = { event, makeRef: this.#makeRef.bind(this) };
           const messageId = lcFirst(
             makeCleanId(`${channelId} incoming ${event}`),
           );
@@ -147,13 +172,13 @@ export class Documentation extends AsyncApiBuilder {
             makeCleanId(`${channelId} ack for incoming ${event}`),
           );
           messages[messageId] = depictMessage({
-            event,
+            ...commons,
             schema: inputSchema,
             isResponse: false,
           });
           if (outputSchema) {
             messages[ackId] = depictMessage({
-              event,
+              ...commons,
               schema: outputSchema,
               isResponse: true,
               isAck: true,
@@ -162,11 +187,11 @@ export class Documentation extends AsyncApiBuilder {
           this.addOperation(
             makeCleanId(`${channelId} recv operation ${event}`),
             depictOperation({
-              isResponse: false,
-              channelId,
-              messageId,
               event,
               ns,
+              channelId,
+              messageId,
+              isResponse: false,
               ackId: outputSchema && ackId,
               securityIds: securityIds,
             }),

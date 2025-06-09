@@ -11,13 +11,6 @@ export namespace Root {
         features: Type1[];
     };
     export interface Emission {
-        time: (currentIsoTime: string) => void;
-        chat: (message: string, extraInfo: {
-            /** the ID of author */
-            from: string;
-        }) => void;
-        rooms: (roomIds: string[]) => void;
-        error: (name: string, message: string) => void;
     }
     export interface Actions {
         test: (p1: Type1[]) => void;
@@ -33,11 +26,16 @@ exports[`Integration > print() > should print the example client side types 1`] 
 export namespace Root {
     /** @desc The actual path of the Root namespace */
     export const path = "/";
+    type Type1 = {
+        name: string;
+        features?: Type1[] | undefined;
+    };
     export interface Emission {
         time: (currentIsoTime: string) => void;
         chat: (message: string, extraInfo: {
             /** the ID of author */
             from: string;
+            features: Type1[];
         }) => void;
         rooms: (roomIds: string[]) => void;
         error: (name: string, message: string) => void;

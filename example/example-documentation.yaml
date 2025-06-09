@@ -84,13 +84,20 @@ channels:
             - description: extra info
               examples:
                 - from: 123abc
+                  features:
+                    - name: visitor
               type: object
               properties:
                 from:
                   description: the ID of author
                   type: string
+                features:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Schema1"
               required:
                 - from
+                - features
               additionalProperties: false
           items:
             not: {}
@@ -98,6 +105,8 @@ channels:
           - payload:
               - Hello there!
               - from: 123abc
+                features:
+                  - name: visitor
       rootOutgoingRooms:
         name: rooms
         title: rooms
@@ -202,7 +211,20 @@ channels:
           prefixItems: []
           items:
             description: Does not matter
-components: {}
+components:
+  schemas:
+    Schema1:
+      type: object
+      properties:
+        name:
+          type: string
+        features:
+          type: array
+          items:
+            $ref: "#/components/schemas/Schema1"
+      required:
+        - name
+      additionalProperties: false
 operations:
   RootSendOperationTime:
     action: send

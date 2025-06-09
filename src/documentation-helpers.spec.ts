@@ -15,9 +15,11 @@ import assert from "node:assert/strict";
 describe("Documentation helpers", () => {
   const requestCtx: AsyncAPIContext = {
     isResponse: false,
+    makeRef: vi.fn(),
   };
   const responseCtx: AsyncAPIContext = {
     isResponse: true,
+    makeRef: vi.fn(),
   };
 
   describe("depictUnion()", () => {

@@ -64,7 +64,10 @@ describe("System test on Example", async () => {
 
     test("should broadcast a message", async () => {
       const onChat = vi.fn((...response) => {
-        expect(response).toEqual(["Glory to Science!", { from: client.id }]);
+        expect(response).toEqual([
+          "Glory to Science!",
+          { from: client.id, features: [] },
+        ]);
       });
       partner.on("chat", onChat);
       client.emit("chat", "Glory to Science!");

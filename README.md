@@ -61,7 +61,7 @@ const actionsFactory = new ActionsFactory(config);
 ## Create an action
 
 ```typescript
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const onPing = actionsFactory.build({
   event: "ping",
@@ -121,7 +121,7 @@ the constraints on your further implementation as well as payload validation and
 development. Consider the following examples of two outgoing events, with and without acknowledgment:
 
 ```typescript
-import { z } from "zod";
+import { z } from "zod/v4";
 import { createSimpleConfig } from "zod-sockets";
 
 const config = createSimpleConfig({
@@ -454,7 +454,7 @@ to those who are in that room. Here is a simplified example:
 import { createServer } from "express-zod-api";
 import { attachSockets, createSimpleConfig, ActionsFactory } from "zod-sockets";
 import { Server } from "socket.io";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const { logger, servers } = await createServer();
 
@@ -503,7 +503,7 @@ You can specify the schema of the `metadata` in config.
 Please avoid transformations in those schemas since they are not going to be applied.
 
 ```typescript
-import { z } from "zod";
+import { z } from "zod/v4";
 import { createSimpleConfig } from "zod-sockets";
 
 const config = createSimpleConfig({

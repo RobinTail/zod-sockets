@@ -119,11 +119,7 @@ const ensureCompliance = ({
 }: JSONSchema.BaseSchema): SchemaObject | ReferenceObject => {
   if ($ref) return { $ref };
   const valid: SchemaObject = {
-    type: Array.isArray(type)
-      ? type.filter(isSupportedType)
-      : type && isSupportedType(type)
-        ? type
-        : undefined,
+    type: type && isSupportedType(type) ? type : undefined,
     ...rest,
   };
   for (const [prop, entry] of R.toPairs({ allOf, oneOf, anyOf }))

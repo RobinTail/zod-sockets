@@ -1,8 +1,8 @@
-import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { actions } from "../example/actions";
 import { config } from "../example/config";
 import { ActionsFactory } from "./actions-factory";
+import { createSimpleConfig } from "./config";
 import { Integration } from "./integration";
 
 describe("Integration", () => {
@@ -13,18 +13,15 @@ describe("Integration", () => {
     });
 
     test("should handle circular references", () => {
-      const baseFeature = z.object({
+      const feature = z.object({
         title: z.string(),
+        get features() {
+          return feature.array();
+        },
       });
-      type Feature = z.infer<typeof baseFeature> & {
-        features: Feature[];
-      };
-      const feature: z.ZodType<Feature> = baseFeature.extend({
-        features: z.lazy(() => feature.array()),
-      });
-      const input = z.tuple([feature]);
+      const input = z.tuple([feature.array()]);
       const instance = new Integration({
-        config,
+        config: createSimpleConfig(),
         actions: [
           new ActionsFactory(config).build({
             event: "test",

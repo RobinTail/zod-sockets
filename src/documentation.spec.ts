@@ -4,8 +4,7 @@ import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";
 import { Config, createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";
-import { z } from "zod";
-import { describe, expect, test, vi } from "vitest";
+import { z } from "zod/v4";
 import { protocol } from "engine.io";
 
 describe("Documentation", () => {
@@ -240,7 +239,7 @@ describe("Documentation", () => {
             event: "test",
             input: z.tuple([]),
             output: z.tuple([
-              z.record(z.number().int()),
+              z.record(z.string(), z.number().int()),
               z.record(z.string().regex(/[A-Z]+/), z.boolean()),
               z.record(z.number().int(), z.boolean()),
               z.record(z.literal("only"), z.boolean()),
@@ -266,11 +265,11 @@ describe("Documentation", () => {
           emission: {
             withAck: {
               schema: z.tuple([]),
-              ack: z.tuple([z.any()]).rest(z.any()),
+              ack: z
+                .tuple([z.any()])
+                .rest(z.any())
+                .meta({ examples: [["something"]] }),
             },
-          },
-          examples: {
-            withAck: { payload: [], ack: ["something"] },
           },
         }),
         actions: [
@@ -325,19 +324,18 @@ describe("Documentation", () => {
               z.string().min(1),
               z.string().max(15),
               z.string().min(2).max(3),
-              z.string().email(),
-              z.string().uuid(),
-              z.string().cuid(),
-              z.string().cuid2(),
-              z.string().ulid(),
-              z.string().ip(),
-              z.string().emoji(),
-              z.string().url(),
+              z.email(),
+              z.uuid(),
+              z.cuid(),
+              z.cuid2(),
+              z.ulid(),
+              z.ipv4(),
+              z.emoji(),
+              z.url(),
               z.string().regex(/\d+/),
               z
-                .string()
-                .min(1)
                 .email()
+                .min(1)
                 .regex(/.*@example\.com/is)
                 .max(90),
             ]),
@@ -380,8 +378,8 @@ describe("Documentation", () => {
           factory.build({
             event: "test",
             input: z.tuple([z.enum(["ABC", "DEF"])]),
-            output: z.tuple([z.nativeEnum({ FEG: 1, XYZ: 2 })]),
-            handler: async () => [1],
+            output: z.tuple([z.enum({ FEG: 1, XYZ: 2 })]),
+            handler: async () => [1 as const],
           }),
         ],
         version: "3.4.5",
@@ -418,30 +416,41 @@ describe("Documentation", () => {
       expect(boolean.parse(null)).toBe(false);
     });
 
-    test.each([
-      z.undefined(),
-      z.map(z.any(), z.any()),
-      z.function(),
-      z.promise(z.any()),
-      z.never(),
-      z.void(),
-    ])("should throw on unsupported types %#", (zodType) => {
-      expect(
-        () =>
-          new Documentation({
-            config: sampleConfig,
-            actions: [
-              factory.build({
-                event: "test",
-                input: z.tuple([zodType]),
-                output: z.tuple([]),
-                handler: async () => [],
-              }),
+    test("should handle circular schemas via z.object()", () => {
+      const category = z.object({
+        name: z.string(),
+        get subcategories() {
+          return z.array(category);
+        },
+      });
+      const spec = new Documentation({
+        config: sampleConfig,
+        actions: [
+          factory.build({
+            event: "test",
+            input: z.tuple([category]),
+            output: z.tuple([]).rest(z.object({ zodExample: category })),
+            handler: async () => [
+              {
+                zodExample: {
+                  name: "People",
+                  subcategories: [
+                    {
+                      name: "Politicians",
+                      subcategories: [
+                        { name: "Presidents", subcategories: [] },
+                      ],
+                    },
+                  ],
+                },
+              },
             ],
-            version: "3.4.5",
-            title: "Testing unsupported types",
           }),
-      ).toThrow(`Zod type ${zodType._def.typeName} is unsupported.`);
+        ],
+        version: "3.4.5",
+        title: "Testing circular",
+      }).getSpecAsYaml();
+      expect(spec).toMatchSnapshot();
     });
   });
 

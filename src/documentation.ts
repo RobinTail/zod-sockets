@@ -1,24 +1,22 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { AbstractAction } from "./action";
 import {
   ContactObject,
   LicenseObject,
   MessagesObject,
+  ReferenceObject,
+  SchemaObject,
 } from "./async-api/model";
 import { AsyncApiBuilder } from "./async-api/builder";
 import { WS } from "./async-api/websockets";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import {
+  depictProtocolFeatures,
   depictMessage,
   depictOperation,
-  depicters,
-  onEach,
-  onMissing,
 } from "./documentation-helpers";
-import { Emission } from "./emission";
-import { Example, Namespaces, normalizeNS } from "./namespace";
-import { walkSchema } from "./schema-walker";
+import { Namespaces, normalizeNS } from "./namespace";
 
 interface DocumentationParams {
   title: string;
@@ -32,49 +30,51 @@ interface DocumentationParams {
   config: Config<Namespaces>;
 }
 
-const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
-  variant: V,
-  eventExamples: T | T[] | undefined,
-): NonNullable<T[V]>[] | undefined =>
-  eventExamples &&
-  (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
-    .map((example) => example[variant])
-    .filter((value): value is NonNullable<typeof value> => !!value);
-
 export class Documentation extends AsyncApiBuilder {
+  readonly #references = new Map<object | string, string>();
+
+  #makeRef(
+    key: object | string,
+    subject: SchemaObject | ReferenceObject,
+    name = this.#references.get(key),
+  ): ReferenceObject {
+    if (!name) {
+      name = `Schema${this.#references.size + 1}`;
+      this.#references.set(key, name);
+    }
+    this.addSchema(name, subject);
+    return { $ref: `#/components/schemas/${name}` };
+  }
+
   #makeChannelBinding(): WS.Channel {
-    const commons = {
-      onEach,
-      onMissing,
-      rules: depicters,
-      ctx: { direction: "in" as const },
-    };
     return {
       bindingVersion: "0.1.0",
       method: "GET",
-      headers: walkSchema(
-        z.object({
+      headers: depictProtocolFeatures(
+        {
           connection: z.literal("Upgrade").optional(),
           upgrade: z.literal("websocket").optional(),
-        }),
-        commons,
-      ),
-      query: {
-        ...walkSchema(
-          z.object({
-            EIO: z.literal("4").describe("The version of the protocol"),
-            transport: z
-              .enum(["polling", "websocket"])
-              .describe("The name of the transport"),
-            sid: z.string().optional().describe("The session identifier"),
-          }),
-          commons,
-        ),
-        externalDocs: {
-          description: "Engine.IO Protocol",
-          url: "https://socket.io/docs/v4/engine-io-protocol/",
         },
-      },
+        { makeRef: this.#makeRef.bind(this) },
+      ),
+      query: depictProtocolFeatures(
+        {
+          EIO: z.literal("4").describe("The version of the protocol"),
+          transport: z
+            .enum(["polling", "websocket"])
+            .describe("The name of the transport"),
+          sid: z.string().optional().describe("The session identifier"),
+        },
+        {
+          makeRef: this.#makeRef.bind(this),
+          extra: {
+            externalDocs: {
+              description: "Engine.IO Protocol",
+              url: "https://socket.io/docs/v4/engine-io-protocol/",
+            },
+          },
+        },
+      ),
     };
   }
 
@@ -118,9 +118,7 @@ export class Documentation extends AsyncApiBuilder {
       }
     }
     const channelBinding = this.#makeChannelBinding();
-    for (const [dirty, { emission, examples, security }] of Object.entries(
-      namespaces,
-    )) {
+    for (const [dirty, { emission, security }] of Object.entries(namespaces)) {
       const ns = normalizeNS(dirty);
       const channelId = makeCleanId(ns) || "Root";
       const messages: MessagesObject = {};
@@ -131,6 +129,7 @@ export class Documentation extends AsyncApiBuilder {
         securityIds.push(id);
       }
       for (const [event, { schema, ack }] of Object.entries(emission)) {
+        const commons = { event, makeRef: this.#makeRef.bind(this) };
         const messageId = lcFirst(
           makeCleanId(`${channelId} outgoing ${event}`),
         );
@@ -138,66 +137,62 @@ export class Documentation extends AsyncApiBuilder {
           makeCleanId(`${channelId} ack for outgoing ${event}`),
         );
         messages[messageId] = depictMessage({
-          event,
+          ...commons,
           schema,
-          direction: "out",
-          examples: getEmissionExamples("payload", examples[event]),
+          isResponse: true,
         });
         if (ack) {
           messages[ackId] = depictMessage({
-            event,
+            ...commons,
             schema: ack,
-            examples: getEmissionExamples("ack", examples[event]),
-            direction: "in",
+            isResponse: false,
             isAck: true,
           });
         }
         this.addOperation(
           makeCleanId(`${channelId} send operation ${event}`),
           depictOperation({
-            direction: "out",
-            event,
+            ...commons,
+            ns,
             channelId,
             messageId,
+            isResponse: true,
             ackId: ack && ackId,
-            ns,
           }),
         );
       }
       for (const action of actions) {
-        if (action.getNamespace() === ns) {
-          const event = action.getEvent();
+        if (action.namespace === ns) {
+          const { event, inputSchema, outputSchema } = action;
+          const commons = { event, makeRef: this.#makeRef.bind(this) };
           const messageId = lcFirst(
             makeCleanId(`${channelId} incoming ${event}`),
           );
           const ackId = lcFirst(
             makeCleanId(`${channelId} ack for incoming ${event}`),
           );
-          const output = action.getSchema("output");
           messages[messageId] = depictMessage({
-            event,
-            schema: action.getSchema("input"),
-            examples: action.getExamples("input"),
-            direction: "in",
+            ...commons,
+            schema: inputSchema,
+            isResponse: false,
           });
-          if (output) {
+          if (outputSchema) {
             messages[ackId] = depictMessage({
-              event,
-              schema: output,
-              examples: action.getExamples("output"),
-              direction: "out",
+              ...commons,
+              schema: outputSchema,
+              isResponse: true,
               isAck: true,
             });
           }
           this.addOperation(
             makeCleanId(`${channelId} recv operation ${event}`),
             depictOperation({
-              direction: "in",
-              channelId,
-              messageId,
               event,
               ns,
-              ackId: output && ackId,
+              channelId,
+              messageId,
+              isResponse: false,
+              ackId: outputSchema && ackId,
               securityIds: securityIds,
             }),
           );

@@ -4,9 +4,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    env: {
-      FORCE_COLOR: "1",
-    },
+    globals: true,
     pool: "threads",
     testTimeout: 10000,
     setupFiles: join(
@@ -14,7 +12,7 @@ export default defineConfig({
       "vitest.setup.ts",
     ),
     coverage: {
-      provider: "istanbul",
+      provider: "v8",
       reporter: [["text", { maxCols: 120 }], "json-summary", "html", "lcov"],
       include: ["src/**"],
     },

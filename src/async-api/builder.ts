@@ -2,6 +2,8 @@ import {
   AsyncApiObject,
   ChannelObject,
   OperationObject,
+  ReferenceObject,
+  SchemaObject,
   ServerObject,
 } from "./model";
 import yaml from "yaml";
@@ -40,12 +42,23 @@ export class AsyncApiBuilder {
     return this;
   }
 
-  public addSecurityScheme(name: string, scheme: SecuritySchemeObject): this {
+  public addSecurityScheme(name: string, schema: SecuritySchemeObject): this {
     this.document.components = {
       ...this.document.components,
       securitySchemes: {
         ...this.document.components?.securitySchemes,
-        [name]: scheme,
+        [name]: schema,
+      },
+    };
+    return this;
+  }
+
+  public addSchema(name: string, schema: SchemaObject | ReferenceObject): this {
+    this.document.components = {
+      ...this.document.components,
+      schemas: {
+        ...this.document.components?.schemas,
+        [name]: schema,
       },
     };
     return this;

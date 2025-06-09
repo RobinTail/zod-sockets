@@ -1,7 +1,7 @@
 import { hex, italic } from "ansis";
-import { T, always, cond, gt } from "ramda";
+import * as R from "ramda";
 
-const dedication = italic("for Whispering Wind Bear Spirit".padEnd(40));
+const dedication = italic("for Sheila".padEnd(40));
 const proud = "Proudly supports non-binary community.".padStart(57);
 
 const georgia11 = `
@@ -17,11 +17,11 @@ AMVmmmmMM  `Ybmd9’   `Wbmd"MML.    P"Ybmmd"   `Ybmd9’   YMbmd’ .JMML
 ${dedication}${proud}
 `;
 
-const getColorFn = cond([
-  [gt(4), always(hex("#FCF434"))],
-  [gt(5), always(hex("#FFF"))],
-  [gt(8), always(hex("#9C59D1"))],
-  [T, always(hex("#383838"))],
+const getColorFn = R.cond([
+  [R.gt(4), R.always(hex("#FCF434"))],
+  [R.gt(5), R.always(hex("#FFF"))],
+  [R.gt(8), R.always(hex("#9C59D1"))],
+  [R.T, R.always(hex("#383838"))],
 ]);
 
 export const getStartupLogo = () =>

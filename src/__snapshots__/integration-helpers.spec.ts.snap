@@ -1,0 +1,125 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest in base 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-brand": "function",
+  "x-input": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "prefixItems": [
+      {
+        "type": "string",
+      },
+      {
+        "x-brand": "function",
+        "x-input": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "prefixItems": [
+            {
+              "type": "number",
+            },
+          ],
+          "type": "array",
+        },
+        "x-output": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+        },
+      },
+    ],
+    "type": "array",
+  },
+  "x-output": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+  },
+}
+`;
+
+exports[`Integration helpers > makeEventFnSchema() > should simply use base when no ack 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-brand": "function",
+  "x-input": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "prefixItems": [
+      {
+        "type": "string",
+      },
+    ],
+    "type": "array",
+  },
+  "x-output": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+  },
+}
+`;
+
+exports[`Integration helpers > makeEventFnSchema() > should use overloads when both rest and ack are present 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "x-brand": "function",
+      "x-input": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "prefixItems": [
+          {
+            "type": "string",
+          },
+          {
+            "x-brand": "function",
+            "x-input": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "prefixItems": [
+                {
+                  "type": "number",
+                },
+              ],
+              "type": "array",
+            },
+            "x-output": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+            },
+          },
+        ],
+        "type": "array",
+      },
+      "x-output": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+      },
+    },
+    {
+      "x-brand": "function",
+      "x-input": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "prefixItems": [
+          {
+            "type": "string",
+          },
+          {
+            "description": "rest1",
+          },
+          {
+            "x-brand": "function",
+            "x-input": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "prefixItems": [
+                {
+                  "type": "number",
+                },
+              ],
+              "type": "array",
+            },
+            "x-output": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+            },
+          },
+        ],
+        "type": "array",
+      },
+      "x-output": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+      },
+    },
+  ],
+}
+`;

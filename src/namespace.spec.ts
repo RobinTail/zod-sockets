@@ -1,4 +1,3 @@
-import { describe, expect, test } from "vitest";
 import { normalizeNS, rootNS } from "./namespace";
 
 describe("Namespace", () => {

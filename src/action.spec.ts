@@ -1,6 +1,5 @@
 import { Socket } from "socket.io";
-import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { AbstractAction, Action } from "./action";
 import { AbstractLogger } from "./logger";
 
@@ -27,32 +26,28 @@ describe("Action", () => {
     });
   });
 
-  describe("getName()", () => {
-    test("should return the event name", () => {
-      expect(simpleAction.getEvent()).toBe("simple");
-      expect(ackAction.getEvent()).toBe("ackOne");
+  describe(".event", () => {
+    test("should be the event name", () => {
+      expect(simpleAction.event).toBe("simple");
+      expect(ackAction.event).toBe("ackOne");
     });
   });
 
-  describe("getNamespace()", () => {
-    test("should return the namespace", () => {
-      expect(simpleAction.getNamespace()).toBe("/");
-      expect(ackAction.getNamespace()).toBe("test");
+  describe(".namespace", () => {
+    test("should be the namespace", () => {
+      expect(simpleAction.namespace).toBe("/");
+      expect(ackAction.namespace).toBe("test");
     });
   });
 
-  describe("getSchema()", () => {
-    test("should return input schema", () => {
-      expect(JSON.stringify(ackAction.getSchema("input"))).toBe(
-        JSON.stringify(z.tuple([z.string()])),
-      );
-    });
-    test("should return output schema", () => {
-      expect(JSON.stringify(ackAction.getSchema("output"))).toBe(
-        JSON.stringify(z.tuple([z.number()])),
-      );
-    });
-  });
+  describe.each<keyof typeof ackAction>(["inputSchema", "outputSchema"])(
+    ".%s",
+    (prop) => {
+      test("should be the schema", () => {
+        expect(ackAction[prop]).toMatchSnapshot();
+      });
+    },
+  );
 
   describe("execute()", () => {
     const loggerMock = {
@@ -117,7 +112,7 @@ describe("Action", () => {
         simpleAction.execute({
           ...commons,
           logger: loggerMock as unknown as AbstractLogger,
-          params: [], // too short
+          params: [], // first one missing
         }),
       ).rejects.toThrowErrorMatchingSnapshot();
     });

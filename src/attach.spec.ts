@@ -1,8 +1,8 @@
 import http from "node:http";
 import { Server } from "socket.io";
-import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { attachSockets } from "./attach";
+import { ensureError } from "./common-helpers";
 import { createSimpleConfig } from "./config";
 import { AbstractLogger } from "./logger";
 
@@ -56,11 +56,10 @@ describe("Attach", () => {
     const actionsMock = [
       {
         execute: vi.fn(),
-        getNamespace: () => "/",
-        getEvent: () => "test",
-        getSchema: vi.fn(),
-        example: vi.fn(),
-        getExamples: vi.fn(),
+        namespace: "/",
+        event: "test",
+        inputSchema: z.tuple([]),
+        outputSchema: undefined,
       },
     ];
 
@@ -113,7 +112,7 @@ describe("Attach", () => {
       const call = socketMock.on.mock.calls.find(([evt]) => evt === "test");
       expect(call).toBeTruthy();
       const execError = new z.ZodError([
-        { code: "custom", path: [], message: "sample error" },
+        { code: "custom", path: [], message: "sample error", input: "test" },
       ]);
       actionsMock[0].execute.mockImplementationOnce(() => {
         throw execError;
@@ -121,7 +120,7 @@ describe("Attach", () => {
       await call![1]([123, 456]);
       expect(loggerMock.error).toHaveBeenLastCalledWith(
         "test handling error",
-        execError,
+        ensureError(execError), // converted to ZodRealError
       );
       expect(actionsMock[0].execute).toHaveBeenLastCalledWith({
         withRooms: expect.any(Function),

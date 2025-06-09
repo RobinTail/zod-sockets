@@ -49,9 +49,7 @@ describe("System test on Example", async () => {
     test("should receive time events every second", async () => {
       const onTime = vi.fn((...response) => {
         expect(response).toEqual([expect.any(String)]);
-        expect(
-          z.string().datetime().safeParse(response[0]).success,
-        ).toBeTruthy();
+        expect(z.iso.datetime().safeParse(response[0]).success).toBeTruthy();
       });
       client.on("time", onTime);
       client.emit("subscribe");

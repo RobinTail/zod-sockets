@@ -324,19 +324,18 @@ describe("Documentation", () => {
               z.string().min(1),
               z.string().max(15),
               z.string().min(2).max(3),
-              z.string().email(),
-              z.string().uuid(),
-              z.string().cuid(),
-              z.string().cuid2(),
-              z.string().ulid(),
-              z.string().ipv4(),
-              z.string().emoji(),
-              z.string().url(),
+              z.email(),
+              z.uuid(),
+              z.cuid(),
+              z.cuid2(),
+              z.ulid(),
+              z.ipv4(),
+              z.emoji(),
+              z.url(),
               z.string().regex(/\d+/),
               z
-                .string()
-                .min(1)
                 .email()
+                .min(1)
                 .regex(/.*@example\.com/is)
                 .max(90),
             ]),
@@ -379,8 +378,8 @@ describe("Documentation", () => {
           factory.build({
             event: "test",
             input: z.tuple([z.enum(["ABC", "DEF"])]),
-            output: z.tuple([z.nativeEnum({ FEG: 1, XYZ: 2 })]),
-            handler: async () => [1],
+            output: z.tuple([z.enum({ FEG: 1, XYZ: 2 })]),
+            handler: async () => [1 as const],
           }),
         ],
         version: "3.4.5",

@@ -24,7 +24,35 @@
 - Method `ActionsFactory::example()` removed — use the `.meta({ examples })` method of its schema;
 - Property `examples` removed from the argument of `createSimpleConfig()` and `Config::addNamespace()`:
   - use the `.meta({ examples })` method of the corresponding schema;
-- The property `originalError` renamed to `cause` for `InputValidationError` and `OutputValidationError`;
+- The property `originalError` renamed to `cause` for `InputValidationError` and `OutputValidationError`.
+
+```diff
+- import { z } from "zod";
++ import { z } from "zod/v4";
+```
+
+```diff
+  createSimpleConfig({
+    emission: {
+      event: {
+-       schema: z.tuple([z.string()]),
++       schema: z.tuple([z.string().meta({ examples: ["test"] })]),
+      },
+    },
+-   examples: {
+-     event: {
+-       payload: ["test"],
+-     },
+-   },
+- });
+```
+
+```diff
+  const action = actionsFactory
+-   .build({ input: z.tuple([z.string()]) })
++   .build({ input: z.tuple([z.string().meta({ examples: ["test"] })]) })
+-   .example("input", ["test"]);
+```
 
 ## Version 3
 

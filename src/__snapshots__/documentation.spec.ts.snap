@@ -944,6 +944,123 @@ operations:
 "
 `;
 
+exports[`Documentation > Basic cases > should handle circular schemas via z.object() 1`] = `
+"asyncapi: 3.0.0
+info:
+  title: Testing circular
+  version: 3.4.5
+defaultContentType: text/plain
+servers: {}
+channels:
+  Root:
+    address: /
+    title: Namespace /
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        method: GET
+        headers:
+          type: object
+          properties:
+            connection:
+              type: string
+              const: Upgrade
+            upgrade:
+              type: string
+              const: websocket
+        query:
+          type: object
+          properties:
+            EIO:
+              description: The version of the protocol
+              type: string
+              const: "4"
+            transport:
+              description: The name of the transport
+              type: string
+              enum:
+                - polling
+                - websocket
+            sid:
+              description: The session identifier
+              type: string
+          required:
+            - EIO
+            - transport
+          externalDocs:
+            description: Engine.IO Protocol
+            url: https://socket.io/docs/v4/engine-io-protocol/
+    messages:
+      rootIncomingTest:
+        name: test
+        title: test
+        payload:
+          type: array
+          prefixItems:
+            - $ref: "#/components/schemas/Schema1"
+          items:
+            not: {}
+      rootAckForIncomingTest:
+        title: Acknowledgement for test
+        payload:
+          type: array
+          prefixItems: []
+          items:
+            type: object
+            properties:
+              zodExample:
+                $ref: "#/components/schemas/Schema2"
+            required:
+              - zodExample
+            additionalProperties: false
+components:
+  schemas:
+    Schema1:
+      type: object
+      properties:
+        name:
+          type: string
+        subcategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Schema1"
+      required:
+        - name
+        - subcategories
+    Schema2:
+      type: object
+      properties:
+        name:
+          type: string
+        subcategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Schema2"
+      required:
+        - name
+        - subcategories
+      additionalProperties: false
+operations:
+  RootRecvOperationTest:
+    action: receive
+    channel:
+      $ref: "#/channels/Root"
+    messages:
+      - $ref: "#/channels/Root/messages/rootIncomingTest"
+    title: test
+    summary: Incoming event test
+    description: The message consumed by the application within the / namespace
+    reply:
+      address:
+        location: $message.payload#
+        description: "Last argument: acknowledgement handler"
+      channel:
+        $ref: "#/channels/Root"
+      messages:
+        - $ref: "#/channels/Root/messages/rootAckForIncomingTest"
+"
+`;
+
 exports[`Documentation > Basic cases > should handle different number types 1`] = `
 "asyncapi: 3.0.0
 info:

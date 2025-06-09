@@ -188,7 +188,7 @@ export interface SchemaObject extends Draft07 {
 
 /** @since 3.0.0 added replies */
 export interface ComponentsObject {
-  schemas?: Record<string, SchemaObject>;
+  schemas?: Record<string, SchemaObject | ReferenceObject>;
   servers?: Record<string, ServerObject>;
   serverVariables?: Record<string, ServerVariableObject>;
   channels?: Record<string, ChannelObject>;

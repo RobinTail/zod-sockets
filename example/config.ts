@@ -36,7 +36,10 @@ export const config = createSimpleConfig({
             from: z.string().describe("the ID of author"),
             features: feature.array(),
           })
-          .meta({ description: "extra info", examples: [{ from: "123abc" }] }),
+          .meta({
+            description: "extra info",
+            examples: [{ from: "123abc", features: [{ name: "visitor" }] }],
+          }),
       ]),
     },
     rooms: {

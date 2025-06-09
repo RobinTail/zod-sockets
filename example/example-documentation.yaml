@@ -84,6 +84,8 @@ channels:
             - description: extra info
               examples:
                 - from: 123abc
+                  features:
+                    - name: visitor
               type: object
               properties:
                 from:
@@ -103,6 +105,8 @@ channels:
           - payload:
               - Hello there!
               - from: 123abc
+                features:
+                  - name: visitor
       rootOutgoingRooms:
         name: rooms
         title: rooms

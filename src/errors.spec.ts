@@ -4,7 +4,6 @@ import {
   InputValidationError,
   OutputValidationError,
   IOSchemaError,
-  DeepCheckError,
 } from "./errors";
 
 describe("Errors", () => {
@@ -15,24 +14,6 @@ describe("Errors", () => {
 
     test("should have the name matching its class", () => {
       expect(new IOSchemaError("test").name).toBe("IOSchemaError");
-    });
-  });
-
-  describe("DeepCheckError", () => {
-    const schema = z.any();
-    const error = new DeepCheckError(schema);
-
-    test("should be an instance of IOSchemaError and Error", () => {
-      expect(error).toBeInstanceOf(IOSchemaError);
-      expect(error).toBeInstanceOf(Error);
-    });
-
-    test("should have the name matching its class", () => {
-      expect(error.name).toBe("DeepCheckError");
-    });
-
-    test("should have the cause matching the schema", () => {
-      expect(error.cause).toBe(schema);
     });
   });
 

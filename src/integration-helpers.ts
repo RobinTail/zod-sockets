@@ -1,7 +1,6 @@
 import * as R from "ramda";
 import { globalRegistry, z } from "zod/v4";
 import type { $ZodType, JSONSchema } from "zod/v4/core";
-import { DeepCheckError } from "./errors";
 import { functionSchema } from "./function-schema";
 
 const squeeze = (...schemas: $ZodType[]) =>
@@ -41,33 +40,10 @@ export const makeEventFnSchema = (
   return z.union(variants);
 };
 
-interface NestedSchemaLookupProps {
-  io: "input" | "output";
-  condition: (zodSchema: $ZodType) => boolean;
-}
-
-export const findNestedSchema = (
-  subject: $ZodType,
-  { io, condition }: NestedSchemaLookupProps,
-) =>
-  R.tryCatch(
-    () => {
-      z.toJSONSchema(subject, {
-        io,
-        unrepresentable: "any",
-        override: ({ zodSchema }) => {
-          if (condition(zodSchema)) throw new DeepCheckError(zodSchema); // exits early
-        },
-      });
-      return undefined;
-    },
-    (err: DeepCheckError) => err.cause,
-  )();
-
 /** not using cycle:"throw" because it also affects parenting objects */
 export const hasCycle = (
   subject: $ZodType,
-  { io }: Pick<NestedSchemaLookupProps, "io">,
+  { io }: { io: "input" | "output" },
 ) => {
   const json = z.toJSONSchema(subject, {
     io,

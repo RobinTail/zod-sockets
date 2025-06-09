@@ -44,43 +44,6 @@ export const makePropertyIdentifier = (name: string | number) =>
     ? f.createIdentifier(name)
     : literally(name);
 
-export const makeParam = (
-  name: string | ts.Identifier,
-  {
-    type,
-    mod,
-    init,
-    optional,
-  }: {
-    type?: Typeable;
-    mod?: ts.Modifier[];
-    init?: ts.Expression;
-    optional?: boolean;
-  } = {},
-) =>
-  f.createParameterDeclaration(
-    mod,
-    undefined,
-    name,
-    optional ? f.createToken(ts.SyntaxKind.QuestionToken) : undefined,
-    type ? ensureTypeNode(type) : undefined,
-    init,
-  );
-
-export const makeParams = (
-  params: Partial<Record<string, Typeable | Parameters<typeof makeParam>[1]>>,
-) =>
-  Object.entries(params).map(([name, value]) =>
-    makeParam(
-      name,
-      typeof value === "string" ||
-        typeof value === "number" ||
-        (typeof value === "object" && "kind" in value)
-        ? { type: value }
-        : value,
-    ),
-  );
-
 export const ensureTypeNode = (
   subject: Typeable,
   args?: Typeable[], // only for string and id
@@ -90,12 +53,6 @@ export const ensureTypeNode = (
     : typeof subject === "string" || ts.isIdentifier(subject)
       ? f.createTypeReferenceNode(subject, args && R.map(ensureTypeNode, args))
       : subject;
-
-// Record<string, any>
-export const recordStringAny = ensureTypeNode("Record", [
-  ts.SyntaxKind.StringKeyword,
-  ts.SyntaxKind.AnyKeyword,
-]);
 
 export const makeInterfaceProp = (
   name: string | number,
@@ -143,9 +100,6 @@ export const makeType = (
   return comment ? addJsDoc(node, comment) : node;
 };
 
-export const makePromise = (subject: Typeable) =>
-  ensureTypeNode(Promise.name, [subject]);
-
 export const makeTypeParams = (
   params:
     | string[]
@@ -166,17 +120,6 @@ export const makeTypeParams = (
       init ? ensureTypeNode(init) : undefined,
     );
   });
-
-// @todo use to describe functions
-export const makeFnType = (
-  params: Parameters<typeof makeParams>[0],
-  returns: Typeable,
-) =>
-  f.createFunctionTypeNode(
-    undefined,
-    makeParams(params),
-    ensureTypeNode(returns),
-  );
 
 /* eslint-disable prettier/prettier -- shorter and works better this way than overrides */
 export const literally = <T extends string | null | boolean | number | bigint>(subj: T) => (

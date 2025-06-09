@@ -7,10 +7,6 @@ export type Typeable =
   | string
   | ts.KeywordTypeSyntaxKind;
 
-type TypeParams =
-  | string[]
-  | Partial<Record<string, Typeable | { type?: ts.TypeNode; init: Typeable }>>;
-
 export const f = ts.factory;
 
 export const exportModifier = [f.createModifier(ts.SyntaxKind.ExportKeyword)];
@@ -85,41 +81,16 @@ export const makeInterfaceProp = (
 export const makeType = (
   name: ts.Identifier | string,
   value: ts.TypeNode,
-  {
-    expose,
-    comment,
-    params,
-  }: { expose?: boolean; comment?: string; params?: TypeParams } = {},
+  { expose, comment }: { expose?: boolean; comment?: string } = {},
 ) => {
   const node = f.createTypeAliasDeclaration(
     expose ? exportModifier : undefined,
     name,
-    params && makeTypeParams(params),
+    undefined,
     value,
   );
   return comment ? addJsDoc(node, comment) : node;
 };
-
-export const makeTypeParams = (
-  params:
-    | string[]
-    | Partial<
-        Record<string, Typeable | { type?: ts.TypeNode; init: Typeable }>
-      >,
-) =>
-  (Array.isArray(params)
-    ? params.map((name) => R.pair(name, undefined))
-    : Object.entries(params)
-  ).map(([name, val]) => {
-    const { type, init } =
-      typeof val === "object" && "init" in val ? val : { type: val };
-    return f.createTypeParameterDeclaration(
-      [],
-      name,
-      type ? ensureTypeNode(type) : undefined,
-      init ? ensureTypeNode(init) : undefined,
-    );
-  });
 
 /* eslint-disable prettier/prettier -- shorter and works better this way than overrides */
 export const literally = <T extends string | null | boolean | number | bigint>(subj: T) => (

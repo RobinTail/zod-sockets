@@ -1,4 +1,4 @@
-import type { JSONSchema } from "zod/v4/core";
+import type { GlobalMeta, JSONSchema } from "zod/v4/core";
 import { z } from "zod/v4";
 import {
   AsyncAPIContext,
@@ -8,6 +8,7 @@ import {
   depictTuple,
   depictPipeline,
   depictDate,
+  getExamples,
 } from "./documentation-helpers";
 import { describe, expect, test } from "vitest";
 import assert from "node:assert/strict";
@@ -119,5 +120,32 @@ describe("Documentation helpers", () => {
         depictPipeline({ zodSchema, jsonSchema: {} }, responseCtx),
       ).toEqual({});
     });
+  });
+
+  describe("getExamples()", () => {
+    test.each<GlobalMeta>([
+      { examples: [1, 2, 3] },
+      { examples: [] },
+      { examples: undefined },
+      { examples: { one: { value: 123 } } },
+      { example: 123 },
+      { example: 0 },
+      { example: undefined },
+      { examples: [1, 2, 3], example: 123 }, // priority
+      {},
+    ])("should handle %s", (meta) => {
+      const schema = z.unknown().meta(meta);
+      expect(getExamples(schema)).toMatchSnapshot();
+    });
+  });
+
+  test("should pull for tuples", () => {
+    const schema = z
+      .tuple([
+        z.string().meta({ examples: ["123", "456"] }),
+        z.number().meta({ example: 123 }),
+      ])
+      .rest(z.boolean());
+    expect(getExamples(schema)).toMatchSnapshot();
   });
 });

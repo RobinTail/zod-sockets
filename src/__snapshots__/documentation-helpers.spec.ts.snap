@@ -94,3 +94,54 @@ exports[`Documentation helpers > depictUnion() > should set discriminator prop f
   },
 }
 `;
+
+exports[`Documentation helpers > getExamples() > should handle { example: +0 } 1`] = `
+[
+  0,
+]
+`;
+
+exports[`Documentation helpers > getExamples() > should handle { example: 123 } 1`] = `
+[
+  123,
+]
+`;
+
+exports[`Documentation helpers > getExamples() > should handle { example: undefined } 1`] = `[]`;
+
+exports[`Documentation helpers > getExamples() > should handle { examples: [ 1, 2, 3 ] } 1`] = `
+[
+  1,
+  2,
+  3,
+]
+`;
+
+exports[`Documentation helpers > getExamples() > should handle { examples: [ 1, 2, 3 ], example: 123 } 1`] = `
+[
+  1,
+  2,
+  3,
+]
+`;
+
+exports[`Documentation helpers > getExamples() > should handle { examples: [] } 1`] = `[]`;
+
+exports[`Documentation helpers > getExamples() > should handle { examples: { one: { value: 123 } } } 1`] = `
+[
+  123,
+]
+`;
+
+exports[`Documentation helpers > getExamples() > should handle { examples: undefined } 1`] = `[]`;
+
+exports[`Documentation helpers > getExamples() > should handle {} 1`] = `[]`;
+
+exports[`Documentation helpers > should pull for tuples 1`] = `
+[
+  [
+    "123",
+    123,
+  ],
+]
+`;

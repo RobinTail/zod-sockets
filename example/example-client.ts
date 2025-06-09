@@ -3,6 +3,10 @@ import type { Socket as SocketBase } from "socket.io-client";
 export namespace Root {
   /** @desc The actual path of the Root namespace */
   export const path = "/";
+  type Type1 = {
+    name: string;
+    features?: Type1[] | undefined;
+  };
   export interface Emission {
     time: (currentIsoTime: string) => void;
     chat: (
@@ -10,6 +14,7 @@ export namespace Root {
       extraInfo: {
         /** the ID of author */
         from: string;
+        features: Type1[];
       },
     ) => void;
     rooms: (roomIds: string[]) => void;

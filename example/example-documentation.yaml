@@ -89,8 +89,13 @@ channels:
                 from:
                   description: the ID of author
                   type: string
+                features:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Schema1"
               required:
                 - from
+                - features
               additionalProperties: false
           items:
             not: {}
@@ -202,7 +207,20 @@ channels:
           prefixItems: []
           items:
             description: Does not matter
-components: {}
+components:
+  schemas:
+    Schema1:
+      type: object
+      properties:
+        name:
+          type: string
+        features:
+          type: array
+          items:
+            $ref: "#/components/schemas/Schema1"
+      required:
+        - name
+      additionalProperties: false
 operations:
   RootSendOperationTime:
     action: send

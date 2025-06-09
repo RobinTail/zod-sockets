@@ -9,9 +9,13 @@ const errorSerializer: NewPlugin = {
   test: (subject) => subject instanceof Error,
   serialize: (error: Error, config, indentation, depth, refs, printer) => {
     const { name, message, cause } = error;
-    const { issues } = error instanceof z.ZodError ? error : {};
+    const { issues } =
+      error instanceof z.ZodError || error instanceof z.ZodRealError
+        ? error
+        : {};
     const obj = Object.assign(
-      issues ? { issues } : { message },
+      {},
+      issues ? { issues } : { message }, // ZodError.message is a serialization of issues (looks bad in snapshot)
       cause && { cause },
     );
     return `${name}(${printer(obj, config, indentation, depth, refs)})`;

@@ -15,7 +15,7 @@
 
 - [Typescript](https://www.typescriptlang.org/) first.
 - Sockets — [Socket.IO](https://socket.io/), using [WebSocket](https://github.com/websockets/ws) for transport.
-- Schema validation — [Zod 3.x](https://github.com/colinhacks/zod).
+- Schema validation — [Zod 4.x](https://github.com/colinhacks/zod).
 - Generating documentation according to [AsyncAPI 3.0](https://www.asyncapi.com) specification.
 - Generating client side types — inspired by [zod-to-ts](https://github.com/sachinraja/zod-to-ts).
 - Supports any logger having `info()`, `debug()`, `error()` and `warn()` methods.

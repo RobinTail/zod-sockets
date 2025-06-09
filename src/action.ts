@@ -8,18 +8,18 @@ import { ActionContext, ClientContext, Handler } from "./handler";
 import { Namespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
-  /** @private */
+  /** @internal */
   public abstract get event(): string;
-  /** @private */
+  /** @internal */
   public abstract get namespace(): PropertyKey;
   public abstract execute(
     params: {
       params: unknown[];
     } & ClientContext<EmissionMap, z.ZodObject>,
   ): Promise<void>;
-  /** @private */
+  /** @internal */
   public abstract get inputSchema(): z.ZodTuple;
-  /** @private */
+  /** @internal */
   public abstract get outputSchema(): z.ZodTuple | undefined;
 }
 

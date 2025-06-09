@@ -10,34 +10,47 @@ export const subscribersRoom = "subscribers";
 export const config = createSimpleConfig({
   emission: {
     time: {
-      schema: z
-        .tuple([
-          z
-            .date()
-            .transform((date) => date.toISOString())
-            .describe("current ISO time"),
-        ])
-        .meta({ examples: [["2024-03-28T21:13:15.084Z"]] }),
+      schema: z.tuple([
+        z
+          .date()
+          .transform((date) => date.toISOString())
+          .meta({
+            description: "current ISO time",
+            examples: ["2024-03-28T21:13:15.084Z"],
+          }),
+      ]),
     },
     chat: {
-      schema: z
-        .tuple([
-          z.string().describe("message"),
-          z
-            .object({ from: z.string().describe("the ID of author") })
-            .describe("extra info"),
-        ])
-        .meta({ examples: [["Hello there!", { from: "123abc" }]] }),
+      schema: z.tuple([
+        z.string().meta({ description: "message", examples: ["Hello there!"] }),
+        z
+          .object({ from: z.string().describe("the ID of author") })
+          .meta({ description: "extra info", examples: [{ from: "123abc" }] }),
+      ]),
     },
     rooms: {
-      schema: z.tuple([z.string().array().describe("room IDs")]).meta({
-        examples: [[["room1", "room2"]], [["room3", "room4", "room5"]]],
-      }),
+      schema: z.tuple([
+        z
+          .string()
+          .array()
+          .meta({
+            description: "room IDs",
+            examples: [
+              ["room1", "room2"],
+              ["room3", "room4", "room5"],
+            ],
+          }),
+      ]),
     },
     error: {
-      schema: z
-        .tuple([z.string().describe("name"), z.string().describe("message")])
-        .meta({ examples: [["InputValidationError", "1: Required"]] }),
+      schema: z.tuple([
+        z
+          .string()
+          .meta({ description: "name", examples: ["InputValidationError"] }),
+        z
+          .string()
+          .meta({ description: "message", examples: ["[1]: Required"] }),
+      ]),
     },
   },
   hooks: {

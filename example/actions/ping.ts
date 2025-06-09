@@ -6,11 +6,13 @@ export const onPing = actionsFactory.build({
   event: "ping",
   input: z
     .tuple([])
-    .rest(z.unknown().describe("Anything"))
-    .meta({ examples: [["something"]] }),
+    .rest(
+      z.unknown().meta({ description: "Anything", examples: ["something"] }),
+    ),
   output: z
-    .tuple([z.literal("pong").describe("literally")])
-    .rest(z.unknown().describe("echo"))
-    .meta({ examples: [["pong", "something"]] }),
+    .tuple([
+      z.literal("pong").meta({ description: "literally", examples: ["pong"] }),
+    ])
+    .rest(z.unknown().meta({ description: "echo", examples: ["something"] })),
   handler: async ({ input }) => ["pong", ...input] as const,
 });

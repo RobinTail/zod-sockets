@@ -593,18 +593,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -617,12 +617,13 @@ channels:
         title: time
         payload:
           type: array
-          items:
-            - type: string
-              description: current ISO time
+          prefixItems:
+            - description: current ISO time
               examples:
                 - 2024-03-28T21:13:15.084Z
-          additionalItems: false
+              type: string
+          items:
+            not: {}
         examples:
           - payload:
               - 2024-03-28T21:13:15.084Z
@@ -631,81 +632,82 @@ channels:
         title: chat
         payload:
           type: array
-          items:
-            - type: string
-              description: message
+          prefixItems:
+            - description: message
               examples:
                 - Hello there!
-            - type: object
+              type: string
+            - description: extra info
+              examples:
+                - from: 123abc
+              type: object
               properties:
                 from:
-                  type: string
                   description: the ID of author
+                  type: string
               required:
                 - from
-              description: extra info
-              examples:
-                - &a1
-                  from: 123abc
-          additionalItems: false
+              additionalProperties: false
+          items:
+            not: {}
         examples:
           - payload:
               - Hello there!
-              - *a1
+              - from: 123abc
       rootOutgoingRooms:
         name: rooms
         title: rooms
         payload:
           type: array
-          items:
-            - type: array
-              items:
-                type: string
-              description: room IDs
+          prefixItems:
+            - description: room IDs
               examples:
-                - &a2
-                  - room1
+                - - room1
                   - room2
-                - &a3
-                  - room3
+                - - room3
                   - room4
                   - room5
-          additionalItems: false
+              type: array
+              items:
+                type: string
+          items:
+            not: {}
         examples:
           - payload:
-              - *a2
-          - payload:
-              - *a3
+              - - room1
+                - room2
       rootOutgoingError:
         name: error
         title: error
         payload:
           type: array
-          items:
-            - type: string
-              description: name
+          prefixItems:
+            - description: name
               examples:
                 - InputValidationError
-            - type: string
-              description: message
+              type: string
+            - description: message
               examples:
-                - "1: Required"
-          additionalItems: false
+                - "[1]: Required"
+              type: string
+          items:
+            not: {}
         examples:
           - payload:
               - InputValidationError
-              - "1: Required"
+              - "[1]: Required"
       rootIncomingChat:
         name: chat
         title: chat
         payload:
           type: array
-          items:
-            - type: string
-              description: message
+          prefixItems:
+            - description: message
               examples:
                 - Hello there
-          additionalItems: false
+              type: string
+          items:
+            not: {}
         examples:
           - payload:
               - Hello there
@@ -714,9 +716,11 @@ channels:
         title: ping
         payload:
           type: array
-          additionalItems:
-            format: any
+          prefixItems: []
+          items:
             description: Anything
+            examples:
+              - something
         examples:
           - payload:
               - something
@@ -724,15 +728,16 @@ channels:
         title: Acknowledgement for ping
         payload:
           type: array
-          items:
-            - type: string
-              const: pong
-              description: literally
+          prefixItems:
+            - description: literally
               examples:
                 - pong
-          additionalItems:
-            format: any
+              type: string
+              const: pong
+          items:
             description: echo
+            examples:
+              - something
         examples:
           - payload:
               - pong
@@ -742,17 +747,21 @@ channels:
         title: subscribe
         payload:
           type: array
-          additionalItems:
-            format: any
+          prefixItems: []
+          items:
             description: Does not matter
+        examples:
+          - payload: []
       rootIncomingUnsubscribe:
         name: unsubscribe
         title: unsubscribe
         payload:
           type: array
-          additionalItems:
-            format: any
+          prefixItems: []
+          items:
             description: Does not matter
+        examples:
+          - payload: []
 components: {}
 operations:
   RootSendOperationTime:

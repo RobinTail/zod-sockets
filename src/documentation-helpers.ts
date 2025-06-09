@@ -207,7 +207,21 @@ export const getExamples = (subject: $ZodType): ReadonlyArray<unknown> => {
       ? examples
       : Object.values(examples).map(({ value }) => value);
   }
-  return example === undefined ? [] : [example];
+  if (example !== undefined) return [example];
+  if (isSchema<$ZodTuple>(subject, "tuple")) {
+    const pulled: unknown[] = [];
+    for (const item of subject._zod.def.items) {
+      const itemExamples = getExamples(item);
+      if (itemExamples.length) pulled.push(itemExamples[0]);
+    }
+    if (pulled.length !== subject._zod.def.items.length) return [];
+    if (subject._zod.def.rest) {
+      const restExamples = getExamples(subject._zod.def.rest);
+      if (restExamples.length) pulled.push(restExamples[0]);
+    }
+    return [pulled];
+  }
+  return [];
 };
 
 export const depictMessage = ({

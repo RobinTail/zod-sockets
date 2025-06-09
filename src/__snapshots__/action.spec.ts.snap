@@ -52,3 +52,27 @@ InputValidationError({
   }),
 })
 `;
+
+exports[`Action > getSchema() > should return input schema 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "prefixItems": [
+    {
+      "type": "string",
+    },
+  ],
+  "type": "array",
+}
+`;
+
+exports[`Action > getSchema() > should return output schema 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "prefixItems": [
+    {
+      "type": "number",
+    },
+  ],
+  "type": "array",
+}
+`;

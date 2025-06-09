@@ -42,14 +42,10 @@ describe("Action", () => {
 
   describe("getSchema()", () => {
     test("should return input schema", () => {
-      expect(JSON.stringify(ackAction.getSchema("input"))).toBe(
-        JSON.stringify(z.tuple([z.string()])),
-      );
+      expect(ackAction.getSchema("input")).toMatchSnapshot();
     });
     test("should return output schema", () => {
-      expect(JSON.stringify(ackAction.getSchema("output"))).toBe(
-        JSON.stringify(z.tuple([z.number()])),
-      );
+      expect(ackAction.getSchema("output")).toMatchSnapshot();
     });
   });
 

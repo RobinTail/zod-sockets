@@ -750,8 +750,6 @@ channels:
           prefixItems: []
           items:
             description: Does not matter
-        examples:
-          - payload: []
       rootIncomingUnsubscribe:
         name: unsubscribe
         title: unsubscribe
@@ -760,8 +758,6 @@ channels:
           prefixItems: []
           items:
             description: Does not matter
-        examples:
-          - payload: []
 components: {}
 operations:
   RootSendOperationTime:

@@ -219,7 +219,7 @@ export const getExamples = (subject: $ZodType): ReadonlyArray<unknown> => {
       const restExamples = getExamples(subject._zod.def.rest);
       if (restExamples.length) pulled.push(restExamples[0]);
     }
-    return [pulled];
+    if (pulled.length) return [pulled];
   }
   return [];
 };

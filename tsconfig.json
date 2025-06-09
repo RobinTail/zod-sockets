@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "ES2022",
     "moduleResolution": "Bundler",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "stripInternal": true
   },
   "include": ["src", "example", "*.config.ts", "*.setup.ts", "tools", "tests/helpers.ts"]
 }

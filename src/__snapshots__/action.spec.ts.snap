@@ -1,5 +1,29 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Action > .inputSchema > should be the schema 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "prefixItems": [
+    {
+      "type": "string",
+    },
+  ],
+  "type": "array",
+}
+`;
+
+exports[`Action > .outputSchema > should be the schema 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "prefixItems": [
+    {
+      "type": "number",
+    },
+  ],
+  "type": "array",
+}
+`;
+
 exports[`Action > execute() > should throw acknowledgment related errors 0 1`] = `
 InputValidationError({
   "cause": ZodError({
@@ -51,28 +75,4 @@ InputValidationError({
   }),
   "message": "[0]: Invalid input: expected string, received undefined",
 })
-`;
-
-exports[`Action > getSchema() > should return input schema 1`] = `
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "prefixItems": [
-    {
-      "type": "string",
-    },
-  ],
-  "type": "array",
-}
-`;
-
-exports[`Action > getSchema() > should return output schema 1`] = `
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "prefixItems": [
-    {
-      "type": "number",
-    },
-  ],
-  "type": "array",
-}
 `;

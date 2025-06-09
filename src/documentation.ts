@@ -138,24 +138,23 @@ export class Documentation extends AsyncApiBuilder {
         );
       }
       for (const action of actions) {
-        if (action.getNamespace() === ns) {
-          const event = action.getEvent();
+        if (action.namespace === ns) {
+          const { event, inputSchema, outputSchema } = action;
           const messageId = lcFirst(
             makeCleanId(`${channelId} incoming ${event}`),
           );
           const ackId = lcFirst(
             makeCleanId(`${channelId} ack for incoming ${event}`),
           );
-          const output = action.getSchema("output");
           messages[messageId] = depictMessage({
             event,
-            schema: action.getSchema("input"),
+            schema: inputSchema,
             isResponse: false,
           });
-          if (output) {
+          if (outputSchema) {
             messages[ackId] = depictMessage({
               event,
-              schema: output,
+              schema: outputSchema,
               isResponse: true,
               isAck: true,
             });
@@ -168,7 +167,7 @@ export class Documentation extends AsyncApiBuilder {
               messageId,
               event,
               ns,
-              ackId: output && ackId,
+              ackId: outputSchema && ackId,
               securityIds: securityIds,
             }),
           );

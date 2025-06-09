@@ -8,15 +8,19 @@ import { ActionContext, ClientContext, Handler } from "./handler";
 import { Namespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
-  public abstract getEvent(): string;
-  public abstract getNamespace(): PropertyKey;
+  /** @internal */
+  public abstract get event(): string;
+  /** @internal */
+  public abstract get namespace(): PropertyKey;
   public abstract execute(
     params: {
       params: unknown[];
     } & ClientContext<EmissionMap, z.ZodObject>,
   ): Promise<void>;
-  public abstract getSchema(variant: "input"): z.ZodTuple;
-  public abstract getSchema(variant: "output"): z.ZodTuple | undefined;
+  /** @internal */
+  public abstract get inputSchema(): z.ZodTuple;
+  /** @internal */
+  public abstract get outputSchema(): z.ZodTuple | undefined;
 }
 
 export class Action<
@@ -47,18 +51,19 @@ export class Action<
     this.#handler = action.handler;
   }
 
-  public override getEvent(): string {
+  public override get event(): string {
     return this.#event;
   }
 
-  public override getNamespace(): keyof NS {
+  public override get namespace(): keyof NS {
     return this.#namespace;
   }
 
-  public override getSchema(variant: "input"): IN;
-  public override getSchema(variant: "output"): OUT;
-  public override getSchema(variant: "input" | "output") {
-    return variant === "input" ? this.#inputSchema : this.#outputSchema;
+  public override get inputSchema(): IN {
+    return this.#inputSchema;
+  }
+  public override get outputSchema(): OUT {
+    return this.#outputSchema;
   }
 
   /** @throws InputValidationError */

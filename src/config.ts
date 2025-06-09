@@ -26,9 +26,13 @@ interface ConstructorOptions<NS extends Namespaces> {
 
 /** @todo consider using it for namespaces declaration only */
 export class Config<T extends Namespaces = EmptyObject> {
+  /** @internal */
   public readonly timeout: number;
+  /** @internal */
   public readonly startupLogo: boolean;
+  /** @internal */
   public readonly security: SecuritySchemeObject[];
+  /** @internal */
   public readonly namespaces: T;
 
   public constructor({

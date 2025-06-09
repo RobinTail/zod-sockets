@@ -102,8 +102,8 @@ export const attachSockets = async <NS extends Namespaces>({
         onAnyOutgoing({ event, payload, ...ctx }),
       );
       for (const action of actions) {
-        if (action.getNamespace() === name) {
-          const event = action.getEvent();
+        if (action.namespace === name) {
+          const { event } = action;
           socket.on(event, async (...params) => {
             try {
               return await action.execute({ params, ...ctx }); // await required

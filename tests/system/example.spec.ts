@@ -41,7 +41,7 @@ describe("System test on Example", async () => {
       await waitFor(() => onError.mock.calls.length > 0);
       expect(onError).toHaveBeenLastCalledWith(
         "InputValidationError",
-        "0: Required",
+        "[0]: Expected function, received undefined",
       );
     });
   });
@@ -82,7 +82,7 @@ describe("System test on Example", async () => {
       await waitFor(() => onError.mock.calls.length > 0);
       expect(onError).toHaveBeenLastCalledWith(
         "InputValidationError",
-        "0: Expected string, received number",
+        "[0]: Invalid input: expected string, received number",
       );
     });
   });

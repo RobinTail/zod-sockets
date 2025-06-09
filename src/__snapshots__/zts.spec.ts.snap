@@ -170,36 +170,6 @@ exports[`zod-to-ts > PrimitiveSchema (isResponse=true) > outputs correct typescr
 }"
 `;
 
-exports[`zod-to-ts > PrimitiveSchema > outputs correct typescript 1`] = `
-"{
-    string: string;
-    number: number;
-    boolean: boolean;
-    date: Date;
-    undefined?: any;
-    null: null;
-    void?: void;
-    any?: any;
-    unknown?: unknown;
-    never: any;
-}"
-`;
-
-exports[`zod-to-ts > createTypeAlias() > optionally takes a comment 1`] = `
-"/** A basic user */
-type User = {
-    username: string;
-    age: number;
-};"
-`;
-
-exports[`zod-to-ts > createTypeAlias() > outputs correct typescript 1`] = `
-"type User = {
-    username: string;
-    age: number;
-};"
-`;
-
 exports[`zod-to-ts > enums > handles 'numeric' literals 1`] = `""Red" | "Green" | "Blue" | 0 | 1 | 2"`;
 
 exports[`zod-to-ts > enums > handles 'quoted string' literals 1`] = `""Two Words" | "'Quotes\\"" | "\\\\\\"Escaped\\\\\\"" | 0 | 1 | 2"`;
@@ -226,14 +196,6 @@ exports[`zod-to-ts > z.discriminatedUnion() > outputs correct typescript 1`] = `
     y: number;
 }"
 `;
-
-exports[`zod-to-ts > z.effect() > transformations > should handle an error within the transformation 1`] = `"any"`;
-
-exports[`zod-to-ts > z.effect() > transformations > should handle unsupported transformation in response 1`] = `"any"`;
-
-exports[`zod-to-ts > z.effect() > transformations > should produce the schema type 'intact' 1`] = `"number"`;
-
-exports[`zod-to-ts > z.effect() > transformations > should produce the schema type 'transformed' 1`] = `"string"`;
 
 exports[`zod-to-ts > z.literal() > Should produce the correct typescript 0 1`] = `""test""`;
 
@@ -303,25 +265,6 @@ exports[`zod-to-ts > z.optional() > Zod 4: should add question mark only to opti
     or: number | string;
     tuple?: [
         string,
-        number,
-        {
-            optional?: string | undefined;
-            required: string;
-        }
-    ] | undefined;
-}"
-`;
-
-exports[`zod-to-ts > z.optional() > outputs correct typescript 1`] = `"string | undefined"`;
-
-exports[`zod-to-ts > z.optional() > should output \`?:\` and undefined union for optional properties 1`] = `
-"{
-    optional?: string | undefined;
-    required: string;
-    transform?: number | undefined;
-    or?: (number | undefined) | string;
-    tuple?: [
-        string | undefined,
         number,
         {
             optional?: string | undefined;

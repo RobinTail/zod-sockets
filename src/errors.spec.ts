@@ -30,10 +30,8 @@ describe("Errors", () => {
       );
     });
 
-    test("should have .originalError property matching the one used for constructing", () => {
-      expect(new InputValidationError(zodError).originalError).toEqual(
-        zodError,
-      );
+    test("should have .cause property matching the one used for constructing", () => {
+      expect(new InputValidationError(zodError).cause).toEqual(zodError);
     });
   });
 
@@ -51,10 +49,8 @@ describe("Errors", () => {
       );
     });
 
-    test("should have .originalError property matching th ones used for constructing", () => {
-      expect(new OutputValidationError(zodError).originalError).toEqual(
-        zodError,
-      );
+    test("should have .cause property matching th ones used for constructing", () => {
+      expect(new OutputValidationError(zodError).cause).toEqual(zodError);
     });
   });
 });

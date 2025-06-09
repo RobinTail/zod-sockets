@@ -24,6 +24,7 @@
 - Method `ActionsFactory::example()` removed — use the `.meta({ examples })` method of its schema;
 - Property `examples` removed from the argument of `createSimpleConfig()` and `Config::addNamespace()`:
   - use the `.meta({ examples })` method of the corresponding schema;
+- The property `originalError` renamed to `cause` for `InputValidationError` and `OutputValidationError`;
 
 ## Version 3
 

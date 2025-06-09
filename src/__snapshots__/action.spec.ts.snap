@@ -2,8 +2,7 @@
 
 exports[`Action > execute() > should throw acknowledgment related errors 0 1`] = `
 InputValidationError({
-  "message": "[1]: Expected function, received string",
-  "originalError": ZodError({
+  "cause": ZodError({
     "issues": [
       {
         "code": "custom",
@@ -14,13 +13,13 @@ InputValidationError({
       },
     ],
   }),
+  "message": "[1]: Expected function, received string",
 })
 `;
 
 exports[`Action > execute() > should throw acknowledgment related errors 1 1`] = `
 OutputValidationError({
-  "message": "[0]: Invalid input: expected number, received string",
-  "originalError": ZodError({
+  "cause": ZodError({
     "issues": [
       {
         "code": "invalid_type",
@@ -32,13 +31,13 @@ OutputValidationError({
       },
     ],
   }),
+  "message": "output[0]: Invalid input: expected number, received string",
 })
 `;
 
 exports[`Action > execute() > should throw input parsing error 1`] = `
 InputValidationError({
-  "message": "[0]: Invalid input: expected string, received undefined",
-  "originalError": ZodError({
+  "cause": ZodError({
     "issues": [
       {
         "code": "invalid_type",
@@ -50,6 +49,7 @@ InputValidationError({
       },
     ],
   }),
+  "message": "[0]: Invalid input: expected string, received undefined",
 })
 `;
 

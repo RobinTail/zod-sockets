@@ -126,7 +126,6 @@ const ensureCompliance = ({
         : undefined,
     ...rest,
   };
-
   for (const [prop, entry] of R.toPairs({ allOf, oneOf, anyOf }))
     if (entry) valid[prop] = entry.map(ensureCompliance);
   if (not) valid.not = ensureCompliance(not);

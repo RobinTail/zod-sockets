@@ -74,7 +74,7 @@ describe("Emission", () => {
 
       test("should emit events with ack", async () => {
         subject.emitWithAck.mockImplementationOnce(async () => ack);
-        expect(await emitter("two", 123)).toEqual(ack);
+        expect(await emitter("two", 123)).toEqual(ack as unknown[]);
       });
     });
   });

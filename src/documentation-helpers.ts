@@ -237,7 +237,7 @@ export const depictMessage = ({
   const msg: MessageObject = {
     name: isAck ? undefined : event,
     title: isAck ? `Acknowledgement for ${event}` : event,
-    payload: ensureCompliance(depict(schema, { ctx: { isResponse } })), // @todo add pulling examples
+    payload: ensureCompliance(depict(schema, { ctx: { isResponse } })),
   };
   const examples = getExamples(schema).map((example) => ({ payload: example }));
   if (examples.length) msg.examples = examples;

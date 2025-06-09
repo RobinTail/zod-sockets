@@ -29,7 +29,7 @@ import {
   getTransformedType,
   isSchema,
 } from "./common-helpers";
-import { isFunctionSchema } from "./function-schema";
+import { FunctionSchema, isFunctionSchema } from "./function-schema";
 import { hasCycle } from "./integration-helpers";
 import { FirstPartyKind, HandlingRules, walkSchema } from "./schema-walker";
 import * as R from "ramda";
@@ -236,24 +236,22 @@ const onLazy: Producer = ({ _zod: { def } }: $ZodLazy, { makeAlias, next }) =>
 
 const onDate: Producer = () => ensureTypeNode("Date");
 
-const onFunction: Producer = (schema: $ZodPipe, { next }) => {
-  const params = (schema._zod.bag.input as $ZodTuple)._zod.def.items.map(
-    (subject, index) => {
-      const { description } = globalRegistry.get(subject) || {};
-      return f.createParameterDeclaration(
-        undefined,
-        undefined,
-        f.createIdentifier(
-          description
-            ? lcFirst(makeCleanId(description))
-            : `${isFunctionSchema(subject) ? "cb" : "p"}${index + 1}`,
-        ),
-        undefined,
-        next(subject),
-      );
-    },
-  );
-  const { rest } = (schema._zod.bag.input as $ZodTuple)._zod.def;
+const onFunction: Producer = (schema: FunctionSchema, { next }) => {
+  const params = schema._zod.bag.input._zod.def.items.map((subject, index) => {
+    const { description } = globalRegistry.get(subject) || {};
+    return f.createParameterDeclaration(
+      undefined,
+      undefined,
+      f.createIdentifier(
+        description
+          ? lcFirst(makeCleanId(description))
+          : `${isFunctionSchema(subject) ? "cb" : "p"}${index + 1}`,
+      ),
+      undefined,
+      next(subject),
+    );
+  });
+  const { rest } = schema._zod.bag.input._zod.def;
   if (rest) {
     const { description } = globalRegistry.get(rest) || {};
     params.push(
@@ -271,7 +269,7 @@ const onFunction: Producer = (schema: $ZodPipe, { next }) => {
   return f.createFunctionTypeNode(
     undefined,
     params,
-    next(schema._zod.bag.output as $ZodType),
+    next(schema._zod.bag.output),
   );
 };
 

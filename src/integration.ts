@@ -1,12 +1,18 @@
 import ts from "typescript";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
 import { Config } from "./config";
-import { exportModifier, f, makeEventFnSchema } from "./integration-helpers";
+import { makeEventFnSchema } from "./integration-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
-import { addJsDocComment, createTypeAlias, printNode } from "./zts-helpers";
+import {
+  addJsDoc,
+  makeType,
+  printNode,
+  f,
+  exportModifier,
+} from "./typescript-api";
 
 interface IntegrationProps {
   config: Config<Namespaces>;
@@ -18,22 +24,6 @@ interface IntegrationProps {
    * @example ( (cb) => void ) | ( (rest1, cb) => void ) | ( (rest1, rest2, cb) => void )
    */
   maxOverloads?: number;
-  /**
-   * @desc configures the style of object's optional properties
-   * @default { withQuestionMark: true, withUndefined: true }
-   */
-  optionalPropStyle?: {
-    /**
-     * @desc add question mark to the optional property definition
-     * @example { someProp?: boolean }
-     * */
-    withQuestionMark?: boolean;
-    /**
-     * @desc add undefined to the property union type
-     * @example { someProp: boolean | undefined }
-     */
-    withUndefined?: boolean;
-  };
 }
 
 const fallbackNs = "root";
@@ -43,7 +33,7 @@ export class Integration {
   protected program: ts.Node[] = [];
   protected aliases: Record<
     string, // namespace
-    Map<z.ZodTypeAny, ts.TypeAliasDeclaration>
+    Map<object, ts.TypeAliasDeclaration>
   > = {};
   protected ids = {
     path: f.createIdentifier("path"),
@@ -63,15 +53,15 @@ export class Integration {
 
   protected makeAlias(
     ns: string,
-    schema: z.ZodTypeAny,
+    key: object,
     produce: () => ts.TypeNode,
   ): ts.TypeReferenceNode {
-    let name = this.aliases[ns].get(schema)?.name?.text;
+    let name = this.aliases[ns].get(key)?.name?.text;
     if (!name) {
       name = `Type${this.aliases[ns].size + 1}`;
       const temp = f.createLiteralTypeNode(f.createNull());
-      this.aliases[ns].set(schema, createTypeAlias(temp, name));
-      this.aliases[ns].set(schema, createTypeAlias(produce(), name));
+      this.aliases[ns].set(key, makeType(name, temp));
+      this.aliases[ns].set(key, makeType(name, produce()));
     }
     return f.createTypeReferenceNode(name);
   }
@@ -79,7 +69,6 @@ export class Integration {
   constructor({
     config: { namespaces },
     actions,
-    optionalPropStyle = { withQuestionMark: true, withUndefined: true },
     maxOverloads = 3,
   }: IntegrationProps) {
     this.program.push(
@@ -103,13 +92,10 @@ export class Integration {
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       this.aliases[ns] = new Map<z.ZodTypeAny, ts.TypeAliasDeclaration>();
       this.registry[ns] = { emission: [], actions: [] };
-      const commons = {
-        makeAlias: this.makeAlias.bind(this, ns),
-        optionalPropStyle,
-      };
+      const commons = { makeAlias: this.makeAlias.bind(this, ns) };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs(makeEventFnSchema(schema, ack, maxOverloads), {
-          direction: "out",
+          isResponse: true,
           ...commons,
         });
         this.registry[ns].emission.push({ event, node });
@@ -120,7 +106,7 @@ export class Integration {
           const input = action.getSchema("input");
           const output = action.getSchema("output");
           const node = zodToTs(makeEventFnSchema(input, output, maxOverloads), {
-            direction: "in",
+            isResponse: false,
             ...commons,
           });
           this.registry[ns].actions.push({ event, node });
@@ -145,7 +131,7 @@ export class Integration {
           ts.NodeFlags.Const,
         ),
       );
-      addJsDocComment(
+      addJsDoc(
         nsNameNode,
         `@desc The actual path of the ${publicName} namespace`,
       );
@@ -171,7 +157,7 @@ export class Integration {
           f.createTypeReferenceNode(this.ids.actions),
         ]),
       );
-      addJsDocComment(
+      addJsDoc(
         socketNode,
         `@example const socket: ${publicName}.${this.ids.socket.text} = io(${publicName}.${this.ids.path.text})`,
       );

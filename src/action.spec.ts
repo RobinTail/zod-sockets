@@ -1,6 +1,5 @@
 import { Socket } from "socket.io";
-import { describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { AbstractAction, Action } from "./action";
 import { AbstractLogger } from "./logger";
 
@@ -43,14 +42,10 @@ describe("Action", () => {
 
   describe("getSchema()", () => {
     test("should return input schema", () => {
-      expect(JSON.stringify(ackAction.getSchema("input"))).toBe(
-        JSON.stringify(z.tuple([z.string()])),
-      );
+      expect(ackAction.getSchema("input")).toMatchSnapshot();
     });
     test("should return output schema", () => {
-      expect(JSON.stringify(ackAction.getSchema("output"))).toBe(
-        JSON.stringify(z.tuple([z.number()])),
-      );
+      expect(ackAction.getSchema("output")).toMatchSnapshot();
     });
   });
 
@@ -117,7 +112,7 @@ describe("Action", () => {
         simpleAction.execute({
           ...commons,
           logger: loggerMock as unknown as AbstractLogger,
-          params: [], // too short
+          params: [], // first one missing
         }),
       ).rejects.toThrowErrorMatchingSnapshot();
     });

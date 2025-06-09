@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { AbstractAction } from "./action";
 import {
   ContactObject,
@@ -10,15 +10,11 @@ import { WS } from "./async-api/websockets";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import {
+  depictProtocolFeatures,
   depictMessage,
   depictOperation,
-  depicters,
-  onEach,
-  onMissing,
 } from "./documentation-helpers";
-import { Emission } from "./emission";
-import { Example, Namespaces, normalizeNS } from "./namespace";
-import { walkSchema } from "./schema-walker";
+import { Namespaces, normalizeNS } from "./namespace";
 
 interface DocumentationParams {
   title: string;
@@ -32,49 +28,30 @@ interface DocumentationParams {
   config: Config<Namespaces>;
 }
 
-const getEmissionExamples = <T extends Example<Emission>, V extends keyof T>(
-  variant: V,
-  eventExamples: T | T[] | undefined,
-): NonNullable<T[V]>[] | undefined =>
-  eventExamples &&
-  (Array.isArray(eventExamples) ? eventExamples : [eventExamples])
-    .map((example) => example[variant])
-    .filter((value): value is NonNullable<typeof value> => !!value);
-
 export class Documentation extends AsyncApiBuilder {
   #makeChannelBinding(): WS.Channel {
-    const commons = {
-      onEach,
-      onMissing,
-      rules: depicters,
-      ctx: { direction: "in" as const },
-    };
     return {
       bindingVersion: "0.1.0",
       method: "GET",
-      headers: walkSchema(
-        z.object({
-          connection: z.literal("Upgrade").optional(),
-          upgrade: z.literal("websocket").optional(),
-        }),
-        commons,
-      ),
-      query: {
-        ...walkSchema(
-          z.object({
-            EIO: z.literal("4").describe("The version of the protocol"),
-            transport: z
-              .enum(["polling", "websocket"])
-              .describe("The name of the transport"),
-            sid: z.string().optional().describe("The session identifier"),
-          }),
-          commons,
-        ),
-        externalDocs: {
-          description: "Engine.IO Protocol",
-          url: "https://socket.io/docs/v4/engine-io-protocol/",
+      headers: depictProtocolFeatures({
+        connection: z.literal("Upgrade").optional(),
+        upgrade: z.literal("websocket").optional(),
+      }),
+      query: depictProtocolFeatures(
+        {
+          EIO: z.literal("4").describe("The version of the protocol"),
+          transport: z
+            .enum(["polling", "websocket"])
+            .describe("The name of the transport"),
+          sid: z.string().optional().describe("The session identifier"),
         },
-      },
+        {
+          externalDocs: {
+            description: "Engine.IO Protocol",
+            url: "https://socket.io/docs/v4/engine-io-protocol/",
+          },
+        },
+      ),
     };
   }
 
@@ -118,9 +95,7 @@ export class Documentation extends AsyncApiBuilder {
       }
     }
     const channelBinding = this.#makeChannelBinding();
-    for (const [dirty, { emission, examples, security }] of Object.entries(
-      namespaces,
-    )) {
+    for (const [dirty, { emission, security }] of Object.entries(namespaces)) {
       const ns = normalizeNS(dirty);
       const channelId = makeCleanId(ns) || "Root";
       const messages: MessagesObject = {};
@@ -140,22 +115,20 @@ export class Documentation extends AsyncApiBuilder {
         messages[messageId] = depictMessage({
           event,
           schema,
-          direction: "out",
-          examples: getEmissionExamples("payload", examples[event]),
+          isResponse: true,
         });
         if (ack) {
           messages[ackId] = depictMessage({
             event,
             schema: ack,
-            examples: getEmissionExamples("ack", examples[event]),
-            direction: "in",
+            isResponse: false,
             isAck: true,
           });
         }
         this.addOperation(
           makeCleanId(`${channelId} send operation ${event}`),
           depictOperation({
-            direction: "out",
+            isResponse: true,
             event,
             channelId,
             messageId,
@@ -177,22 +150,20 @@ export class Documentation extends AsyncApiBuilder {
           messages[messageId] = depictMessage({
             event,
             schema: action.getSchema("input"),
-            examples: action.getExamples("input"),
-            direction: "in",
+            isResponse: false,
           });
           if (output) {
             messages[ackId] = depictMessage({
               event,
               schema: output,
-              examples: action.getExamples("output"),
-              direction: "out",
+              isResponse: true,
               isAck: true,
             });
           }
           this.addOperation(
             makeCleanId(`${channelId} recv operation ${event}`),
             depictOperation({
-              direction: "in",
+              isResponse: false,
               channelId,
               messageId,
               event,

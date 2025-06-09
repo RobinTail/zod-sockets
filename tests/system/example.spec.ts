@@ -1,7 +1,6 @@
 import { spawn } from "node:child_process";
-import { afterAll, describe, expect, test, vi } from "vitest";
 import { io } from "socket.io-client";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { waitFor } from "../helpers";
 
 describe("System test on Example", async () => {
@@ -41,7 +40,7 @@ describe("System test on Example", async () => {
       await waitFor(() => onError.mock.calls.length > 0);
       expect(onError).toHaveBeenLastCalledWith(
         "InputValidationError",
-        "0: Required",
+        "[0]: Expected function, received undefined",
       );
     });
   });
@@ -50,9 +49,7 @@ describe("System test on Example", async () => {
     test("should receive time events every second", async () => {
       const onTime = vi.fn((...response) => {
         expect(response).toEqual([expect.any(String)]);
-        expect(
-          z.string().datetime().safeParse(response[0]).success,
-        ).toBeTruthy();
+        expect(z.iso.datetime().safeParse(response[0]).success).toBeTruthy();
       });
       client.on("time", onTime);
       client.emit("subscribe");
@@ -82,7 +79,7 @@ describe("System test on Example", async () => {
       await waitFor(() => onError.mock.calls.length > 0);
       expect(onError).toHaveBeenLastCalledWith(
         "InputValidationError",
-        "0: Expected string, received number",
+        "[0]: Invalid input: expected string, received number",
       );
     });
   });

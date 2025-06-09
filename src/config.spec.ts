@@ -1,5 +1,4 @@
-import { describe, expect, test } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { Config, createSimpleConfig } from "./config";
 
 describe("Config", () => {
@@ -18,14 +17,12 @@ describe("Config", () => {
             emission: {},
             hooks: {},
             metadata: z.object({}),
-            examples: {},
             security: [],
           },
           test: {
             emission: {},
             hooks: {},
             metadata: z.object({}),
-            examples: {},
             security: [],
           },
         },
@@ -38,14 +35,12 @@ describe("Config", () => {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
         test: {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });
@@ -69,7 +64,6 @@ describe("Config", () => {
           emission: { test: { schema } },
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });
@@ -86,7 +80,6 @@ describe("Config", () => {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });
@@ -106,7 +99,6 @@ describe("Config", () => {
           emission: {},
           hooks: {},
           metadata: expect.any(z.ZodObject),
-          examples: {},
           security: [],
         },
       });

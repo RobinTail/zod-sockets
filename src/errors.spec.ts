@@ -1,5 +1,4 @@
-import { describe, expect, test } from "vitest";
-import { ZodError } from "zod";
+import { z } from "zod/v4";
 import {
   InputValidationError,
   OutputValidationError,
@@ -18,7 +17,7 @@ describe("Errors", () => {
   });
 
   describe("InputValidationError", () => {
-    const zodError = new ZodError([]);
+    const zodError = new z.ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
       expect(new InputValidationError(zodError)).toBeInstanceOf(IOSchemaError);
@@ -31,15 +30,13 @@ describe("Errors", () => {
       );
     });
 
-    test("should have .originalError property matching the one used for constructing", () => {
-      expect(new InputValidationError(zodError).originalError).toEqual(
-        zodError,
-      );
+    test("should have .cause property matching the one used for constructing", () => {
+      expect(new InputValidationError(zodError).cause).toEqual(zodError);
     });
   });
 
   describe("OutputValidationError", () => {
-    const zodError = new ZodError([]);
+    const zodError = new z.ZodError([]);
 
     test("should be an instance of IOSchemaError and Error", () => {
       expect(new OutputValidationError(zodError)).toBeInstanceOf(IOSchemaError);
@@ -52,10 +49,8 @@ describe("Errors", () => {
       );
     });
 
-    test("should have .originalError property matching th ones used for constructing", () => {
-      expect(new OutputValidationError(zodError).originalError).toEqual(
-        zodError,
-      );
+    test("should have .cause property matching th ones used for constructing", () => {
+      expect(new OutputValidationError(zodError).cause).toEqual(zodError);
     });
   });
 });

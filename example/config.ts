@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { createSimpleConfig, InputValidationError } from "../src";
 
 /**
@@ -14,35 +14,44 @@ export const config = createSimpleConfig({
         z
           .date()
           .transform((date) => date.toISOString())
-          .describe("current ISO time"),
+          .meta({
+            description: "current ISO time",
+            examples: ["2024-03-28T21:13:15.084Z"],
+          }),
       ]),
     },
     chat: {
       schema: z.tuple([
-        z.string().describe("message"),
+        z.string().meta({ description: "message", examples: ["Hello there!"] }),
         z
           .object({ from: z.string().describe("the ID of author") })
-          .describe("extra info"),
+          .meta({ description: "extra info", examples: [{ from: "123abc" }] }),
       ]),
     },
     rooms: {
-      schema: z.tuple([z.string().array().describe("room IDs")]),
+      schema: z.tuple([
+        z
+          .string()
+          .array()
+          .meta({
+            description: "room IDs",
+            examples: [
+              ["room1", "room2"],
+              ["room3", "room4", "room5"],
+            ],
+          }),
+      ]),
     },
     error: {
       schema: z.tuple([
-        z.string().describe("name"),
-        z.string().describe("message"),
+        z
+          .string()
+          .meta({ description: "name", examples: ["InputValidationError"] }),
+        z
+          .string()
+          .meta({ description: "message", examples: ["[1]: Required"] }),
       ]),
     },
-  },
-  examples: {
-    time: { payload: ["2024-03-28T21:13:15.084Z"] },
-    chat: { payload: ["Hello there!", { from: "123abc" }] },
-    error: { payload: ["InputValidationError", "1: Required"] },
-    rooms: [
-      { payload: [["room1", "room2"]] },
-      { payload: [["room3", "room4", "room5"]] },
-    ],
   },
   hooks: {
     onConnection: async ({ client }) => {

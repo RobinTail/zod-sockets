@@ -2,57 +2,77 @@
 
 exports[`Action > execute() > should throw acknowledgment related errors 0 1`] = `
 InputValidationError({
-  "message": "1: Expected function, received string",
-  "originalError": ZodError({
+  "cause": ZodError({
     "issues": [
       {
-        "code": "invalid_type",
-        "expected": "function",
+        "code": "custom",
         "message": "Expected function, received string",
         "path": [
           1,
         ],
-        "received": "string",
       },
     ],
   }),
+  "message": "[1]: Expected function, received string",
 })
 `;
 
 exports[`Action > execute() > should throw acknowledgment related errors 1 1`] = `
 OutputValidationError({
-  "message": "0: Expected number, received string",
-  "originalError": ZodError({
+  "cause": ZodError({
     "issues": [
       {
         "code": "invalid_type",
         "expected": "number",
-        "message": "Expected number, received string",
+        "message": "Invalid input: expected number, received string",
         "path": [
           0,
         ],
-        "received": "string",
       },
     ],
   }),
+  "message": "output[0]: Invalid input: expected number, received string",
 })
 `;
 
 exports[`Action > execute() > should throw input parsing error 1`] = `
 InputValidationError({
-  "message": "Array must contain at least 1 element(s)",
-  "originalError": ZodError({
+  "cause": ZodError({
     "issues": [
       {
-        "code": "too_small",
-        "exact": false,
-        "inclusive": true,
-        "message": "Array must contain at least 1 element(s)",
-        "minimum": 1,
-        "path": [],
-        "type": "array",
+        "code": "invalid_type",
+        "expected": "string",
+        "message": "Invalid input: expected string, received undefined",
+        "path": [
+          0,
+        ],
       },
     ],
   }),
+  "message": "[0]: Invalid input: expected string, received undefined",
 })
+`;
+
+exports[`Action > getSchema() > should return input schema 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "prefixItems": [
+    {
+      "type": "string",
+    },
+  ],
+  "type": "array",
+}
+`;
+
+exports[`Action > getSchema() > should return output schema 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "prefixItems": [
+    {
+      "type": "number",
+    },
+  ],
+  "type": "array",
+}
 `;

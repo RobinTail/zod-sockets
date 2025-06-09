@@ -1,5 +1,31 @@
 # Changelog
 
+## Version 4
+
+### v4.0.0
+
+- Switched to Zod 4:
+  - Minimum supported version: 3.25.56;
+  - All imports must be changed to "zod/v4";
+  - Read the [Explanation of the versioning strategy](https://github.com/colinhacks/zod/issues/4371);
+- Changes to `Documentation`:
+  - Generating Documentation is mostly delegated to Zod 4 `z.toJSONSchema()`;
+  - Zod Sockets implements some overrides and improvements to fit it into AsyncAPI 3.0.0 that extends JSON Schema;
+- Changes to `Integration`:
+  - The `optionalPropStyle` option removed from `Integration` class constructor:
+  - Use `.optional()` to add question mark to the object property as well as `undefined` to its type;
+  - Use `.or(z.undefined())` to add `undefined` to the type of the object property;
+  - See the [reasoning](https://x.com/colinhacks/status/1919292504861491252);
+  - Properties assigned with `z.any()` or `z.unknown()` schema are now typed as required:
+    - Read the [details here](https://v4.zod.dev/v4/changelog#changes-zunknown-optionality);
+  - Added types generation for `z.never()`, `z.void()` and `z.unknown()` schemas;
+  - The fallback type for unsupported schemas and unclear transformations in response changed from `any` to `unknown`;
+  - Supporting `z.templateLiteral()` and `z.nonoptional()` schemas;
+- Method `ActionsFactory::example()` removed — use the `.meta({ examples })` method of its schema;
+- Property `examples` removed from the argument of `createSimpleConfig()` and `Config::addNamespace()`:
+  - use the `.meta({ examples })` method of the corresponding schema;
+- The property `originalError` renamed to `cause` for `InputValidationError` and `OutputValidationError`;
+
 ## Version 3
 
 ### v3.0.0

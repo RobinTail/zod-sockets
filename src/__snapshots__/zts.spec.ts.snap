@@ -9,18 +9,19 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
     }[];
     boolean: boolean;
     circular: SomeType;
+    circular2: SomeType;
     union: {
         number: number;
     } | "hi";
     enum: "hi" | "bye";
     intersectionWithTransform: (number & bigint) & (number & string);
     date: Date;
-    undefined?: any;
+    undefined: undefined;
     null: null;
-    void?: void;
-    any?: any;
-    unknown?: unknown;
-    never: any;
+    void: void;
+    any: any;
+    unknown: unknown;
+    never: never;
     optionalString?: string | undefined;
     nullablePartialObject: {
         string?: string | undefined;
@@ -56,9 +57,9 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
     set: any;
     intersection: (string & number) | bigint;
     promise: any;
-    function: (p1: (string | null) | undefined, p2: boolean, p3: boolean, ...rest: unknown[]) => string;
+    function: (p1: string | null, p2: boolean, p3: boolean) => string;
     optDefaultString?: string | undefined;
-    refinedStringWithSomeBullshit: (string | number) & ((bigint | null) | undefined);
+    refinedStringWithSomeBullshit: (string | number) & (bigint | null);
     nativeEnum: "A" | "apple" | "banana" | "cantaloupe" | 5;
     lazy: SomeType;
     discUnion: {
@@ -73,40 +74,100 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
         y: number;
     };
     branded: string;
-    catch?: number;
+    catch: number;
     pipeline: string;
     readonly: string;
 }"
 `;
 
-exports[`zod-to-ts > PrimitiveSchema > outputs correct typescript 1`] = `
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should deduplicate the prop with a same name 1`] = `
+"{
+    query: string;
+}"
+`;
+
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should deduplicate the prop with a same name 2`] = `
+"{
+    query: string;
+}"
+`;
+
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should deduplicate the prop with a same name 3`] = `
+"{
+    query: string;
+}"
+`;
+
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should deduplicate the prop with a same name 4`] = `
+"{
+    query: {};
+}"
+`;
+
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should not flatten the result for objects with a conflicting prop 0 1`] = `
+"{
+    query: string;
+} & {
+    query: number;
+}"
+`;
+
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should not flatten the result for objects with a conflicting prop 1 1`] = `
+"{
+    query: {
+        sub: string;
+    };
+} & {
+    query: {
+        sub: number;
+    };
+}"
+`;
+
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should not flatten the result for objects with a conflicting prop 2 1`] = `
+"{
+    query: string;
+} & {
+    query?: string | undefined;
+}"
+`;
+
+exports[`zod-to-ts > Issue #2352: intersection of objects having same prop %# > should not flatten the result for objects with a conflicting prop 3 1`] = `
+"{
+    query: string;
+} & {
+    query?: string | undefined;
+}"
+`;
+
+exports[`zod-to-ts > PrimitiveSchema (isResponse=false) > outputs correct typescript 1`] = `
 "{
     string: string;
     number: number;
     boolean: boolean;
     date: Date;
-    undefined?: any;
+    undefined: undefined;
     null: null;
-    void?: void;
-    any?: any;
-    unknown?: unknown;
-    never: any;
+    void: void;
+    any: any;
+    unknown: unknown;
+    never: never;
 }"
 `;
 
-exports[`zod-to-ts > createTypeAlias() > optionally takes a comment 1`] = `
-"/** A basic user */
-type User = {
-    username: string;
-    age: number;
-};"
-`;
-
-exports[`zod-to-ts > createTypeAlias() > outputs correct typescript 1`] = `
-"type User = {
-    username: string;
-    age: number;
-};"
+exports[`zod-to-ts > PrimitiveSchema (isResponse=true) > outputs correct typescript 1`] = `
+"{
+    string: string;
+    number: number;
+    boolean: boolean;
+    date: Date;
+    undefined: undefined;
+    null: null;
+    void: void;
+    any: any;
+    unknown: unknown;
+    never: never;
+}"
 `;
 
 exports[`zod-to-ts > enums > handles 'numeric' literals 1`] = `""Red" | "Green" | "Blue" | 0 | 1 | 2"`;
@@ -136,14 +197,6 @@ exports[`zod-to-ts > z.discriminatedUnion() > outputs correct typescript 1`] = `
 }"
 `;
 
-exports[`zod-to-ts > z.effect() > transformations > should handle an error within the transformation 1`] = `"any"`;
-
-exports[`zod-to-ts > z.effect() > transformations > should handle unsupported transformation in response 1`] = `"any"`;
-
-exports[`zod-to-ts > z.effect() > transformations > should produce the schema type 'intact' 1`] = `"number"`;
-
-exports[`zod-to-ts > z.effect() > transformations > should produce the schema type 'transformed' 1`] = `"string"`;
-
 exports[`zod-to-ts > z.literal() > Should produce the correct typescript 0 1`] = `""test""`;
 
 exports[`zod-to-ts > z.literal() > Should produce the correct typescript 1 1`] = `"true"`;
@@ -151,6 +204,8 @@ exports[`zod-to-ts > z.literal() > Should produce the correct typescript 1 1`] =
 exports[`zod-to-ts > z.literal() > Should produce the correct typescript 2 1`] = `"false"`;
 
 exports[`zod-to-ts > z.literal() > Should produce the correct typescript 3 1`] = `"123"`;
+
+exports[`zod-to-ts > z.literal() > Should produce the correct typescript 4 1`] = `"undefined"`;
 
 exports[`zod-to-ts > z.nullable() > outputs correct typescript 1`] = `
 "{
@@ -173,10 +228,16 @@ exports[`zod-to-ts > z.object() > escapes correctly 1`] = `
     "'": string;
     "\`": string;
     "\\n": number;
-    $e?: any;
-    "4t"?: any;
-    _r?: any;
-    "-r"?: any;
+    $e: any;
+    "4t": any;
+    _r: any;
+    "-r": undefined;
+}"
+`;
+
+exports[`zod-to-ts > z.object() > specially handles coercive schema in response 1`] = `
+"{
+    prop: string;
 }"
 `;
 
@@ -196,16 +257,14 @@ exports[`zod-to-ts > z.object() > supports zod.describe() 1`] = `
 }"
 `;
 
-exports[`zod-to-ts > z.optional() > outputs correct typescript 1`] = `"string | undefined"`;
-
-exports[`zod-to-ts > z.optional() > should output \`?:\` and undefined union for optional properties 1`] = `
+exports[`zod-to-ts > z.optional() > Zod 4: should add question mark only to optional props 1`] = `
 "{
     optional?: string | undefined;
     required: string;
     transform?: number | undefined;
-    or?: (number | undefined) | string;
+    or: number | string;
     tuple?: [
-        string | undefined,
+        string,
         number,
         {
             optional?: string | undefined;
@@ -214,3 +273,35 @@ exports[`zod-to-ts > z.optional() > should output \`?:\` and undefined union for
     ] | undefined;
 }"
 `;
+
+exports[`zod-to-ts > z.pipe() > transformations > should handle an error within the transformation 1`] = `"unknown"`;
+
+exports[`zod-to-ts > z.pipe() > transformations > should handle preprocess error in request 1`] = `"any"`;
+
+exports[`zod-to-ts > z.pipe() > transformations > should handle unsupported transformation in response 1`] = `"unknown"`;
+
+exports[`zod-to-ts > z.pipe() > transformations > should produce the schema type 'intact' 1`] = `"number"`;
+
+exports[`zod-to-ts > z.pipe() > transformations > should produce the schema type 'transformed' 1`] = `"string"`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 0 1`] = `"\`start\${number}mid\${boolean}end\`"`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 1 1`] = `"\`\${number}one\${boolean}two\`"`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 2 1`] = `""one-two-three""`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 3 1`] = `"\`\${string}\${number}\${boolean}\`"`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 4 1`] = `"\`\${number}\`"`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 5 1`] = `""only""`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 6 1`] = `"\`\${number}more\`"`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 7 1`] = `"\`leading\${boolean}\`"`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 8 1`] = `""""`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 9 1`] = `""head""`;
+
+exports[`zod-to-ts > z.templateLiteral() > should produce the correct typescript 10 1`] = `""head0""`;

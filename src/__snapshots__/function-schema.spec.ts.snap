@@ -1,0 +1,70 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Function schema > should not accept less arguments 1`] = `
+$ZodError({
+  "issues": [
+    {
+      "code": "invalid_type",
+      "expected": "number",
+      "message": "Invalid input: expected number, received undefined",
+      "path": [
+        1,
+      ],
+    },
+  ],
+})
+`;
+
+exports[`Function schema > should not accept no arguments 1`] = `
+$ZodError({
+  "issues": [
+    {
+      "code": "too_small",
+      "message": "Too small: expected array to have >2 items",
+      "minimum": 2,
+      "origin": "array",
+      "path": [],
+    },
+  ],
+})
+`;
+
+exports[`Function schema > should not accept not-a-function 1`] = `
+ZodError({
+  "issues": [
+    {
+      "code": "custom",
+      "message": "Expected function, received string",
+      "path": [],
+    },
+  ],
+})
+`;
+
+exports[`Function schema > should not accept wrong args 1`] = `
+$ZodError({
+  "issues": [
+    {
+      "code": "invalid_type",
+      "expected": "string",
+      "message": "Invalid input: expected string, received boolean",
+      "path": [
+        0,
+      ],
+    },
+  ],
+})
+`;
+
+exports[`Function schema > should not accept wrong output 1`] = `
+$ZodError({
+  "issues": [
+    {
+      "code": "invalid_type",
+      "expected": "boolean",
+      "message": "Invalid input: expected boolean, received string",
+      "path": [],
+    },
+  ],
+})
+`;

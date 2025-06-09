@@ -1,13 +1,9 @@
 import { Socket } from "socket.io";
-import { MockedFunction, describe, expect, test, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { makeEmitter, makeRoomService } from "./emission";
 
 describe("Emission", () => {
-  const broadcastMock: Record<
-    "emit" | "timeout" | "emitWithAck" | "fetchSockets",
-    MockedFunction<any>
-  > = {
+  const broadcastMock = {
     emit: vi.fn(),
     timeout: vi.fn(() => broadcastMock),
     emitWithAck: vi.fn(),
@@ -22,15 +18,7 @@ describe("Emission", () => {
     ]),
   };
 
-  const socketMock: Record<
-    "emit" | "timeout" | "emitWithAck",
-    MockedFunction<any>
-  > & {
-    id: string;
-    broadcast: typeof broadcastMock;
-    to: (rooms: string | string[]) => typeof broadcastMock;
-    in: (rooms: string | string[]) => typeof broadcastMock;
-  } = {
+  const socketMock = {
     id: "ID",
     emit: vi.fn(),
     timeout: vi.fn(() => socketMock),
@@ -74,7 +62,7 @@ describe("Emission", () => {
 
       test("should emit events with ack", async () => {
         subject.emitWithAck.mockImplementationOnce(async () => ack);
-        expect(await emitter("two", 123)).toEqual(ack);
+        expect(await emitter("two", 123)).toEqual(ack as unknown[]);
       });
     });
   });

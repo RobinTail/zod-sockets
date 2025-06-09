@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { SecuritySchemeObject } from "./async-api/security";
 import { EmptyObject } from "./common-helpers";
 import { EmissionMap } from "./emission";
@@ -46,26 +46,19 @@ export class Config<T extends Namespaces = EmptyObject> {
   /** @default { path: "/", emission: {}, metadata: z.object({}), hooks: {}, examples: {}, security: [] } */
   public addNamespace<
     E extends EmissionMap = EmptyObject,
-    D extends z.SomeZodObject = z.ZodObject<EmptyObject>,
+    D extends z.ZodObject = z.ZodObject<EmptyObject>,
     K extends string = RootNS,
   >({
     path = rootNS as K,
     emission = {} as E,
     metadata = z.object({}) as D,
     hooks = {},
-    examples = {},
     security = [],
   }: Partial<Namespace<E, D>> & { path?: K }): Config<
     Omit<T, K> & Record<K, Namespace<E, D>>
   > {
     const { namespaces, ...rest } = this;
-    const ns: Namespace<E, D> = {
-      emission,
-      examples,
-      hooks,
-      metadata,
-      security,
-    };
+    const ns: Namespace<E, D> = { emission, hooks, metadata, security };
     return new Config({ ...rest, namespaces: { ...namespaces, [path]: ns } });
   }
 }
@@ -73,20 +66,18 @@ export class Config<T extends Namespaces = EmptyObject> {
 /** @desc Shorthand for single namespace config (root namespace only) */
 export const createSimpleConfig = <
   E extends EmissionMap,
-  D extends z.SomeZodObject,
+  D extends z.ZodObject,
 >({
   startupLogo,
   timeout,
   security,
   emission,
-  examples,
   hooks,
   metadata,
 }: Omit<ConstructorOptions<never>, "namespaces"> &
   Partial<Namespace<E, D>> = {}) =>
   new Config({ startupLogo, timeout, security }).addNamespace({
     emission,
-    examples,
     metadata,
     hooks,
   });

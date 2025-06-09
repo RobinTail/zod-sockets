@@ -153,12 +153,15 @@ const makeNullableType = (
   );
 };
 
+export const depictDate: Depicter = () => ({ format: "date" });
+
 const depicters: Partial<Record<FirstPartyKind, Depicter>> = {
   nullable: depictNullable,
   union: depictUnion,
   bigint: depictBigInt,
   tuple: depictTuple,
   pipe: depictPipeline,
+  date: depictDate,
 };
 
 /** @todo implement */

@@ -850,18 +850,18 @@ channels:
           type: object
           properties:
             EIO:
+              description: The version of the protocol
               type: string
               const: "4"
-              description: The version of the protocol
             transport:
+              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
-              description: The name of the transport
             sid:
-              type: string
               description: The session identifier
+              type: string
           required:
             - EIO
             - transport
@@ -874,13 +874,15 @@ channels:
         title: test
         payload:
           type: array
-          items:
+          prefixItems:
             - type: object
               properties:
                 bigint:
-                  type: integer
+                  type: string
                   format: bigint
+                  pattern: ^-?\\d+$
                 boolean:
+                  readOnly: true
                   type: boolean
                 date:
                   format: date
@@ -888,16 +890,17 @@ channels:
                 - bigint
                 - boolean
                 - date
-          additionalItems: false
+          items:
+            not: {}
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
-          items:
-            - type:
-                - "null"
+          prefixItems:
+            - type: "null"
             - format: date
-          additionalItems: false
+          items:
+            not: {}
 components: {}
 operations:
   RootRecvOperationTest:

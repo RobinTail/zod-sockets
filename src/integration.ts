@@ -177,14 +177,7 @@ export class Integration {
 
   public print(printerOptions?: ts.PrinterOptions) {
     return this.#program
-      .map((node, index) =>
-        printNode(
-          node,
-          index < this.#program.length
-            ? printerOptions
-            : { ...printerOptions, omitTrailingSemicolon: true },
-        ),
-      )
+      .map((node) => printNode(node, printerOptions))
       .join("\n\n");
   }
 }

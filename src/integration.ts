@@ -24,22 +24,6 @@ interface IntegrationProps {
    * @example ( (cb) => void ) | ( (rest1, cb) => void ) | ( (rest1, rest2, cb) => void )
    */
   maxOverloads?: number;
-  /**
-   * @desc configures the style of object's optional properties
-   * @default { withQuestionMark: true, withUndefined: true }
-   */
-  optionalPropStyle?: {
-    /**
-     * @desc add question mark to the optional property definition
-     * @example { someProp?: boolean }
-     * */
-    withQuestionMark?: boolean;
-    /**
-     * @desc add undefined to the property union type
-     * @example { someProp: boolean | undefined }
-     */
-    withUndefined?: boolean;
-  };
 }
 
 const fallbackNs = "root";
@@ -85,7 +69,6 @@ export class Integration {
   constructor({
     config: { namespaces },
     actions,
-    optionalPropStyle = { withQuestionMark: true, withUndefined: true },
     maxOverloads = 3,
   }: IntegrationProps) {
     this.program.push(
@@ -109,10 +92,7 @@ export class Integration {
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       this.aliases[ns] = new Map<z.ZodTypeAny, ts.TypeAliasDeclaration>();
       this.registry[ns] = { emission: [], actions: [] };
-      const commons = {
-        makeAlias: this.makeAlias.bind(this, ns),
-        optionalPropStyle,
-      };
+      const commons = { makeAlias: this.makeAlias.bind(this, ns) };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs(makeEventFnSchema(schema, ack, maxOverloads), {
           isResponse: true,

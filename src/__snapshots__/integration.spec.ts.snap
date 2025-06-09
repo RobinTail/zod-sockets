@@ -7,25 +7,13 @@ export namespace Root {
     /** @desc The actual path of the Root namespace */
     export const path = "/";
     type Type1 = {
-        name: string;
-        features?: Type1[] | undefined;
-    };
-    type Type2 = {
         title: string;
-        features: Type2[];
+        features: Type1[];
     };
     export interface Emission {
-        time: (currentIsoTime: string) => void;
-        chat: (message: string, extraInfo: {
-            /** the ID of author */
-            from: string;
-            features: Type1[];
-        }) => void;
-        rooms: (roomIds: string[]) => void;
-        error: (name: string, message: string) => void;
     }
     export interface Actions {
-        test: (p1: Type2[]) => void;
+        test: (p1: Type1[]) => void;
     }
     /** @example const socket: Root.Socket = io(Root.path) */
     export type Socket = SocketBase<Emission, Actions>;

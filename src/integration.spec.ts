@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 import { actions } from "../example/actions";
 import { config } from "../example/config";
 import { ActionsFactory } from "./actions-factory";
+import { createSimpleConfig } from "./config";
 import { Integration } from "./integration";
 
 describe("Integration", () => {
@@ -20,7 +21,7 @@ describe("Integration", () => {
       });
       const input = z.tuple([feature.array()]);
       const instance = new Integration({
-        config,
+        config: createSimpleConfig(),
         actions: [
           new ActionsFactory(config).build({
             event: "test",

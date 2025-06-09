@@ -11,6 +11,7 @@
 - Changes to `Documentation`:
   - Generating Documentation is mostly delegated to Zod 4 `z.toJSONSchema()`;
   - Zod Sockets implements some overrides and improvements to fit it into AsyncAPI 3.0.0 that extends JSON Schema;
+  - Feat: supporting circular/recursive schemas: https://zod.dev/api#recursive-objects;
 - Changes to `Integration`:
   - The `optionalPropStyle` option removed from `Integration` class constructor:
   - Use `.optional()` to add question mark to the object property as well as `undefined` to its type;

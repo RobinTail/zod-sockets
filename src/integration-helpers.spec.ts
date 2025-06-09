@@ -1,4 +1,3 @@
-import { describe, expect, test } from "vitest";
 import { z } from "zod/v4";
 import { functionSchema } from "./function-schema";
 import { makeEventFnSchema } from "./integration-helpers";

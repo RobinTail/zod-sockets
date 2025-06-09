@@ -5,7 +5,6 @@ import { functionSchema } from "./function-schema";
 import { f, printNode } from "./typescript-api";
 import { zodToTs } from "./zts";
 import { ZTSContext } from "./zts-helpers";
-import { describe, expect, test, vi } from "vitest";
 
 describe("zod-to-ts", () => {
   const printNodeTest = (node: ts.Node) =>

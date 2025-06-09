@@ -1,6 +1,5 @@
 import http from "node:http";
 import { Server } from "socket.io";
-import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 import { attachSockets } from "./attach";
 import { ensureError } from "./common-helpers";

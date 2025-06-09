@@ -1,5 +1,4 @@
 import { spawn } from "node:child_process";
-import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { waitFor } from "../helpers";
 
 describe("Express Zod API compatibility test", () => {

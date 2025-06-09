@@ -10,7 +10,6 @@ import {
   Namespace,
 } from "./index";
 import * as entrypoint from "./index";
-import { describe, expect, expectTypeOf, test } from "vitest";
 
 describe("Entrypoint", () => {
   test("should expose certain entities", () => {

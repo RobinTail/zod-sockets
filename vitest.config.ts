@@ -2,12 +2,12 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
-// @todo use globals
 export default defineConfig({
   test: {
     env: {
       FORCE_COLOR: "1",
     },
+    globals: true,
     pool: "threads",
     testTimeout: 10000,
     setupFiles: join(

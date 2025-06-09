@@ -1,5 +1,4 @@
 import { spawn } from "node:child_process";
-import { afterAll, afterEach, describe, test } from "vitest";
 import { waitFor } from "../helpers";
 
 describe("ESM Test", async () => {

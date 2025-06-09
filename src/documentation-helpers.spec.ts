@@ -10,7 +10,6 @@ import {
   depictDate,
   getExamples,
 } from "./documentation-helpers";
-import { describe, expect, test } from "vitest";
 import assert from "node:assert/strict";
 
 describe("Documentation helpers", () => {

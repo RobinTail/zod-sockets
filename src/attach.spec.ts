@@ -56,11 +56,10 @@ describe("Attach", () => {
     const actionsMock = [
       {
         execute: vi.fn(),
-        getNamespace: () => "/",
-        getEvent: () => "test",
-        getSchema: vi.fn(),
-        example: vi.fn(),
-        getExamples: vi.fn(),
+        namespace: "/",
+        event: "test",
+        inputSchema: z.tuple([]),
+        outputSchema: undefined,
       },
     ];
 

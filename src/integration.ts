@@ -30,12 +30,12 @@ const fallbackNs = "root";
 const registryScopes = ["emission", "actions"];
 
 export class Integration {
-  protected program: ts.Node[] = [];
-  protected aliases: Record<
+  #program: ts.Node[] = [];
+  #aliases: Record<
     string, // namespace
     Map<object, ts.TypeAliasDeclaration>
   > = {};
-  protected ids = {
+  #ids = {
     path: f.createIdentifier("path"),
     socket: f.createIdentifier("Socket"),
     socketBase: f.createIdentifier("SocketBase"),
@@ -51,17 +51,17 @@ export class Integration {
     >
   > = {};
 
-  protected makeAlias(
+  #makeAlias(
     ns: string,
     key: object,
     produce: () => ts.TypeNode,
   ): ts.TypeReferenceNode {
-    let name = this.aliases[ns].get(key)?.name?.text;
+    let name = this.#aliases[ns].get(key)?.name?.text;
     if (!name) {
-      name = `Type${this.aliases[ns].size + 1}`;
+      name = `Type${this.#aliases[ns].size + 1}`;
       const temp = f.createLiteralTypeNode(f.createNull());
-      this.aliases[ns].set(key, makeType(name, temp));
-      this.aliases[ns].set(key, makeType(name, produce()));
+      this.#aliases[ns].set(key, makeType(name, temp));
+      this.#aliases[ns].set(key, makeType(name, produce()));
     }
     return f.createTypeReferenceNode(name);
   }
@@ -71,7 +71,7 @@ export class Integration {
     actions,
     maxOverloads = 3,
   }: IntegrationProps) {
-    this.program.push(
+    this.#program.push(
       f.createImportDeclaration(
         undefined,
         f.createImportClause(
@@ -80,19 +80,19 @@ export class Integration {
           f.createNamedImports([
             f.createImportSpecifier(
               false,
-              this.ids.socket,
-              this.ids.socketBase,
+              this.#ids.socket,
+              this.#ids.socketBase,
             ),
           ]),
         ),
-        this.ids.ioClient,
+        this.#ids.ioClient,
       ),
     );
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      this.aliases[ns] = new Map<z.ZodTypeAny, ts.TypeAliasDeclaration>();
+      this.#aliases[ns] = new Map<z.ZodTypeAny, ts.TypeAliasDeclaration>();
       this.registry[ns] = { emission: [], actions: [] };
-      const commons = { makeAlias: this.makeAlias.bind(this, ns) };
+      const commons = { makeAlias: this.#makeAlias.bind(this, ns) };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs(makeEventFnSchema(schema, ack, maxOverloads), {
           isResponse: true,
@@ -101,14 +101,12 @@ export class Integration {
         this.registry[ns].emission.push({ event, node });
       }
       for (const action of actions) {
-        if (action.getNamespace() === ns) {
-          const event = action.getEvent();
-          const input = action.getSchema("input");
-          const output = action.getSchema("output");
-          const node = zodToTs(makeEventFnSchema(input, output, maxOverloads), {
-            isResponse: false,
-            ...commons,
-          });
+        if (action.namespace === ns) {
+          const { event, inputSchema, outputSchema } = action;
+          const node = zodToTs(
+            makeEventFnSchema(inputSchema, outputSchema, maxOverloads),
+            { isResponse: false, ...commons },
+          );
           this.registry[ns].actions.push({ event, node });
         }
       }
@@ -122,7 +120,7 @@ export class Integration {
         f.createVariableDeclarationList(
           [
             f.createVariableDeclaration(
-              this.ids.path,
+              this.#ids.path,
               undefined,
               undefined,
               f.createStringLiteral(normalizeNS(ns)),
@@ -150,24 +148,24 @@ export class Integration {
       );
       const socketNode = f.createTypeAliasDeclaration(
         exportModifier,
-        this.ids.socket,
+        this.#ids.socket,
         undefined,
-        f.createTypeReferenceNode(this.ids.socketBase, [
-          f.createTypeReferenceNode(this.ids.emission),
-          f.createTypeReferenceNode(this.ids.actions),
+        f.createTypeReferenceNode(this.#ids.socketBase, [
+          f.createTypeReferenceNode(this.#ids.emission),
+          f.createTypeReferenceNode(this.#ids.actions),
         ]),
       );
       addJsDoc(
         socketNode,
-        `@example const socket: ${publicName}.${this.ids.socket.text} = io(${publicName}.${this.ids.path.text})`,
+        `@example const socket: ${publicName}.${this.#ids.socket.text} = io(${publicName}.${this.#ids.path.text})`,
       );
-      this.program.push(
+      this.#program.push(
         f.createModuleDeclaration(
           exportModifier,
           f.createIdentifier(publicName),
           f.createModuleBlock([
             nsNameNode,
-            ...this.aliases[ns].values(),
+            ...this.#aliases[ns].values(),
             ...interfaces,
             socketNode,
           ]),
@@ -178,11 +176,11 @@ export class Integration {
   }
 
   public print(printerOptions?: ts.PrinterOptions) {
-    return this.program
+    return this.#program
       .map((node, index) =>
         printNode(
           node,
-          index < this.program.length
+          index < this.#program.length
             ? printerOptions
             : { ...printerOptions, omitTrailingSemicolon: true },
         ),

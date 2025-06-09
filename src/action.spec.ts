@@ -26,28 +26,28 @@ describe("Action", () => {
     });
   });
 
-  describe("getName()", () => {
-    test("should return the event name", () => {
-      expect(simpleAction.getEvent()).toBe("simple");
-      expect(ackAction.getEvent()).toBe("ackOne");
+  describe(".event", () => {
+    test("should be the event name", () => {
+      expect(simpleAction.event).toBe("simple");
+      expect(ackAction.event).toBe("ackOne");
     });
   });
 
-  describe("getNamespace()", () => {
-    test("should return the namespace", () => {
-      expect(simpleAction.getNamespace()).toBe("/");
-      expect(ackAction.getNamespace()).toBe("test");
+  describe(".namespace", () => {
+    test("should be the namespace", () => {
+      expect(simpleAction.namespace).toBe("/");
+      expect(ackAction.namespace).toBe("test");
     });
   });
 
-  describe("getSchema()", () => {
-    test("should return input schema", () => {
-      expect(ackAction.getSchema("input")).toMatchSnapshot();
-    });
-    test("should return output schema", () => {
-      expect(ackAction.getSchema("output")).toMatchSnapshot();
-    });
-  });
+  describe.each<keyof typeof ackAction>(["inputSchema", "outputSchema"])(
+    ".%s",
+    (prop) => {
+      test("should be the schema", () => {
+        expect(ackAction[prop]).toMatchSnapshot();
+      });
+    },
+  );
 
   describe("execute()", () => {
     const loggerMock = {

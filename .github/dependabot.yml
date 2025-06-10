@@ -14,4 +14,4 @@ updates:
       vitest:
         patterns:
           - "vitest"
-          - "@vitest/coverage-istanbul"
+          - "@vitest/coverage-v8"

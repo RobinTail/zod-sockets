@@ -213,16 +213,15 @@ declare module "zod-sockets" {
 If you're using `express-zod-api`, you can reuse the same logger from the returns of the `createServer()` method.
 
 ```typescript
-import { createServer } from "express-zod-api";
+import { createServer, BuiltinLogger } from "express-zod-api";
 import { attachSockets } from "zod-sockets";
-import type { Logger } from "winston";
 
 const { logger } = await createServer();
 attachSockets({ logger });
 
 // Setting the type of logger used
 declare module "zod-sockets" {
-  interface LoggerOverrides extends Logger {}
+  interface LoggerOverrides extends BuiltinLogger {}
 }
 ```
 

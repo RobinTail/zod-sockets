@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "ansis": "^4.0.0",
-    "ramda": "^0.30.0",
+    "ramda": "^0.31.3",
     "yaml": "^2.4.1"
   },
   "peerDependencies": {

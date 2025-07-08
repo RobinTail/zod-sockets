@@ -2,6 +2,10 @@
 
 ## Version 4
 
+### v4.0.1
+
+- Compatibility adjustment for Zod 3.25.75.
+
 ### v4.0.0
 
 - Switched to Zod 4:

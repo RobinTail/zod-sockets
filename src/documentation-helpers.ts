@@ -19,7 +19,7 @@ import {
   SchemaObjectType,
 } from "./async-api/model";
 import { isReferenceObject } from "./async-api/helpers";
-import { getTransformedType, isSchema } from "./common-helpers";
+import { getTransformedType, isObject, isSchema } from "./common-helpers";
 import { FirstPartyKind } from "./schema-walker";
 
 export interface AsyncAPIContext {
@@ -84,7 +84,7 @@ export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
     ctx.isResponse ? "in" : "out"
   ];
   if (!isSchema<$ZodTransform>(target, "transform")) return jsonSchema;
-  const opposingDepiction = ensureCompliance(depict(opposite, { ctx }));
+  const opposingDepiction = asAsyncAPI(depict(opposite, { ctx }));
   if (!isReferenceObject(opposingDepiction)) {
     if (!ctx.isResponse) {
       const { type: opposingType, ...rest } = opposingDepiction;
@@ -110,28 +110,8 @@ export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
   return jsonSchema;
 };
 
-const isSupportedType = (subject: string): subject is SchemaObjectType =>
-  subject in samples;
-
-const ensureCompliance = ({
-  $ref,
-  type,
-  allOf,
-  oneOf,
-  anyOf,
-  not,
-  ...rest
-}: JSONSchema.BaseSchema): SchemaObject | ReferenceObject => {
-  if ($ref) return { $ref };
-  const valid: SchemaObject = {
-    type: type && isSupportedType(type) ? type : undefined,
-    ...rest,
-  };
-  for (const [prop, entry] of R.toPairs({ allOf, oneOf, anyOf }))
-    if (entry) valid[prop] = entry.map(ensureCompliance);
-  if (not) valid.not = ensureCompliance(not);
-  return valid;
-};
+const asAsyncAPI = (subject: JSONSchema.BaseSchema) =>
+  subject as SchemaObject | ReferenceObject;
 
 const makeSample = (depicted: SchemaObject) => {
   const firstType = (
@@ -183,7 +163,7 @@ const fixReferences = (
         if (depiction) {
           entry.$ref = ctx.makeRef(
             depiction.id || depiction, // avoiding serialization, because changing $ref
-            ensureCompliance(depiction),
+            asAsyncAPI(depiction),
           ).$ref;
         }
         continue;
@@ -217,7 +197,11 @@ const depict = (
       },
     },
   ) as JSONSchema.ObjectSchema;
-  return fixReferences(properties["subject"], $defs, ctx);
+  return fixReferences(
+    isObject(properties["subject"]) ? properties["subject"] : {},
+    $defs,
+    ctx,
+  );
 };
 
 /**
@@ -262,7 +246,7 @@ export const depictMessage = ({
   const msg: MessageObject = {
     name: isAck ? undefined : event,
     title: isAck ? `Acknowledgement for ${event}` : event,
-    payload: ensureCompliance(depict(schema, { ctx: { isResponse, makeRef } })),
+    payload: asAsyncAPI(depict(schema, { ctx: { isResponse, makeRef } })),
   };
   const examples = getExamples(schema).map((example) => ({ payload: example }));
   if (examples.length) msg.examples = examples;
@@ -319,7 +303,7 @@ export const depictProtocolFeatures = (
   }: { extra?: SchemaObject } & Pick<AsyncAPIContext, "makeRef">,
 ) =>
   Object.assign(
-    ensureCompliance(
+    asAsyncAPI(
       depict(z.object(shape), {
         ctx: { isResponse: false, makeRef },
       }),

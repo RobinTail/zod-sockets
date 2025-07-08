@@ -2060,9 +2060,9 @@ channels:
       testAckForOutgoingWithAck:
         title: Acknowledgement for withAck
         payload:
-          type: array
           examples:
             - - something
+          type: array
           prefixItems:
             - {}
           items: {}

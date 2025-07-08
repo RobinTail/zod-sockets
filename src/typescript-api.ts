@@ -50,6 +50,14 @@ export const ensureTypeNode = (
       ? f.createTypeReferenceNode(subject, args && R.map(ensureTypeNode, args))
       : subject;
 
+/** ensures distinct union (unique primitives) */
+export const makeUnion = (entries: ts.TypeNode[]) => {
+  const nodes = new Map<ts.TypeNode | ts.KeywordTypeSyntaxKind, ts.TypeNode>();
+  for (const entry of entries)
+    nodes.set(isPrimitive(entry) ? entry.kind : entry, entry);
+  return f.createUnionTypeNode(Array.from(nodes.values()));
+};
+
 export const makeInterfaceProp = (
   name: string | number,
   value: Typeable,
@@ -65,10 +73,7 @@ export const makeInterfaceProp = (
     makePropertyIdentifier(name),
     isOptional ? f.createToken(ts.SyntaxKind.QuestionToken) : undefined,
     isOptional
-      ? f.createUnionTypeNode([
-          propType,
-          ensureTypeNode(ts.SyntaxKind.UndefinedKeyword),
-        ])
+      ? makeUnion([propType, ensureTypeNode(ts.SyntaxKind.UndefinedKeyword)])
       : propType,
   );
   const jsdoc = R.reject(R.isNil, [
@@ -118,5 +123,6 @@ const primitives: ts.KeywordTypeSyntaxKind[] = [
   ts.SyntaxKind.UnknownKeyword,
   ts.SyntaxKind.VoidKeyword,
 ];
-export const isPrimitive = (node: ts.TypeNode): node is ts.KeywordTypeNode =>
+
+const isPrimitive = (node: ts.TypeNode): node is ts.KeywordTypeNode =>
   (primitives as ts.SyntaxKind[]).includes(node.kind);

@@ -2,6 +2,11 @@
 
 ## Version 4
 
+### v4.1.0
+
+- Supporting `zod@^4.0.5`:
+  - Imports may be changed from `zod/v4` to just `zod`;
+
 ### v4.0.1
 
 - Compatibility adjustment for Zod 3.25.75.

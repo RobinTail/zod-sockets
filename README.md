@@ -542,8 +542,8 @@ const handler = async ({ client }) => {
 
 Namespaces allow you to separate incoming and outgoing events into groups, in which events can have the same name, but
 different essence, payload and handlers. For using namespaces replace the `createSimpleConfig()` method with
-`new Config()`, then use its `.addNamespace()` method for each namespace. Namespaces may have `emission`, `examples`,
-`hooks` and `metadata`. Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
+`new Config()`, then use its `.addNamespace()` method for each namespace. Namespaces may have `emission`, `hooks`
+and `metadata`. Read the Socket.IO [documentation on namespaces](https://socket.io/docs/v4/namespaces/).
 
 ```typescript
 import { Config } from "zod-sockets";
@@ -552,7 +552,6 @@ const config = new Config()
   .addNamespace({
     // The namespace "/public"
     emission: { chat: { schema } },
-    examples: {}, // see Generating documentation section
     hooks: {
       onStartup: () => {},
       onConnection: () => {},
@@ -624,8 +623,7 @@ See the example of the generated documentation [on GitHub](example/example-docum
 
 ### Adding examples to the documentation
 
-You can add `Action` examples using its `.example()` method, and Emission examples you can describe in the `examples`
-property of namespace config.
+You can add examples to a schema using its `.meta()` method:
 
 ```ts
 import { createSimpleConfig, ActionsFactory } from "zod-sockets";
@@ -633,28 +631,20 @@ import { createSimpleConfig, ActionsFactory } from "zod-sockets";
 // Examples for outgoing events (emission)
 const config = createSimpleConfig({
   emission: {
-    event1: { schema },
-    event2: { schema, ack },
-  },
-  examples: {
-    event1: { schema: ["example payload"] }, // single example
-    event2: [
-      // multiple examples
-      { schema: ["example payload"], ack: ["example acknowledgement"] },
-      { schema: ["example payload"], ack: ["example acknowledgement"] },
-    ],
+    event1: { schema: schema.meta({ examples: ["example payload"] }) },
+    event2: {
+      schema,
+      ack: ack.meta({ examples: ["example acknowledgement"] }),
+    },
   },
 });
 
 // Examples for incoming event (action)
 const factory = new ActionsFactory(config);
-const action = factory
-  .build({
-    input: payloadSchema,
-    output: ackSchema,
-  })
-  .example("input", ["example payload"])
-  .example("output", ["example acknowledgement"]);
+const action = factory.build({
+  input: payloadSchema.meta({ examples: ["example payload"] }),
+  output: ackSchema.meta({ examples: ["example acknowledgement"] }),
+});
 ```
 
 ### Adding security schemas to the documentation

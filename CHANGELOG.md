@@ -2,6 +2,10 @@
 
 ## Version 4
 
+### v4.1.1
+
+- Updating documentation to reflect the new way to specify examples.
+
 ### v4.1.0
 
 - Supporting `zod@^4.0.5`:
@@ -31,7 +35,7 @@
   - Added types generation for `z.never()`, `z.void()` and `z.unknown()` schemas;
   - The fallback type for unsupported schemas and unclear transformations in response changed from `any` to `unknown`;
   - Supporting `z.templateLiteral()` and `z.nonoptional()` schemas;
-- Method `ActionsFactory::example()` removed — use the `.meta({ examples })` method of its schema;
+- Method `Actions::example()` removed — use the `.meta({ examples })` method of its schema;
 - Property `examples` removed from the argument of `createSimpleConfig()` and `Config::addNamespace()`:
   - use the `.meta({ examples })` method of the corresponding schema;
 - The property `originalError` renamed to `cause` for `InputValidationError` and `OutputValidationError`.

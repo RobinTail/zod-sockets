@@ -28,6 +28,7 @@ export const functionSchema = <IN extends $ZodTuple, OUT extends $ZodType>(
     if (typeof arg !== "function") {
       ctx.addIssue({
         ...params,
+        code: "custom",
         message: `Expected function, received ${typeof ctx.value}`,
       });
       return z.NEVER;

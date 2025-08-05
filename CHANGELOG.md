@@ -2,6 +2,10 @@
 
 ## Version 4
 
+### v4.1.2
+
+- Fixed the missing `code` property in the custom function schema validator.
+
 ### v4.1.1
 
 - Updating documentation to reflect the new way to specify examples.

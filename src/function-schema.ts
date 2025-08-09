@@ -1,23 +1,8 @@
 import { z } from "zod";
 import { isSchema } from "./common-helpers";
+import { getBrand, pack, unpack } from "@express-zod-api/zod-plugin";
 
-interface FunctionBag<
-  IN extends z.core.$ZodTuple,
-  OUT extends z.core.$ZodType,
-> {
-  brand: "function";
-  input: IN;
-  output: OUT;
-}
-
-export type FunctionSchema<
-  IN extends z.core.$ZodTuple = z.core.$ZodTuple,
-  OUT extends z.core.$ZodType = z.core.$ZodType,
-> = z.ZodType<(...args: z.output<IN>) => z.output<OUT>> & {
-  _zod: {
-    bag: FunctionBag<IN, OUT>;
-  };
-};
+export const fnBrand = Symbol.for("Function");
 
 /** @link https://github.com/colinhacks/zod/issues/4143#issuecomment-2931729793 */
 export const functionSchema = <
@@ -39,18 +24,16 @@ export const functionSchema = <
       return z.NEVER;
     }
     return template.implement(arg as z.core.$InferInnerFunctionType<IN, OUT>);
-  });
-  Object.assign(schema._zod.bag, {
-    brand: "function",
-    input,
-    output,
-  } satisfies FunctionBag<IN, OUT>);
-  return schema as unknown as FunctionSchema<IN, OUT>;
+  }) as z.ZodType<(...args: z.output<IN>) => z.output<OUT>>;
+  return pack(schema.brand(fnBrand), { input, output });
 };
+
+export type FunctionSchema = ReturnType<typeof functionSchema>;
 
 export const isFunctionSchema = (
   subject: z.core.$ZodType,
-): subject is FunctionSchema =>
-  subject._zod.bag.brand === "function" &&
-  isSchema<z.core.$ZodTuple>(subject._zod.bag.input, "tuple") &&
-  isSchema(subject._zod.bag.output);
+): subject is FunctionSchema => {
+  if (getBrand(subject) !== fnBrand) return false;
+  const { input, output } = unpack(subject);
+  return isSchema<z.core.$ZodTuple>(input, "tuple") && isSchema(output);
+};

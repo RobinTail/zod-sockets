@@ -52,6 +52,7 @@
     "hooks": "husky"
   },
   "dependencies": {
+    "@express-zod-api/zod-plugin": "^1.1.0-beta.1",
     "ansis": "^4.0.0",
     "ramda": "^0.31.3",
     "yaml": "^2.4.1"

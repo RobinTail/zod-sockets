@@ -1,7 +1,6 @@
 import { expect } from "vitest";
 import type { NewPlugin } from "@vitest/pretty-format";
 import { z } from "zod";
-import type { $ZodType } from "zod/v4/core";
 import { isFunctionSchema } from "./src/function-schema";
 
 /** Takes cause and certain props of custom errors into account */
@@ -22,7 +21,7 @@ const errorSerializer: NewPlugin = {
   },
 };
 
-const customSerializer = (entity: $ZodType) =>
+const customSerializer = (entity: z.core.$ZodType) =>
   z.toJSONSchema(entity, {
     unrepresentable: "any",
     override: ({ zodSchema, jsonSchema }) => {

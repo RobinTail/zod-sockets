@@ -1,4 +1,3 @@
-import type { GlobalMeta, JSONSchema } from "zod/v4/core";
 import { z } from "zod";
 import {
   AsyncAPIContext,
@@ -42,7 +41,7 @@ describe("Documentation helpers", () => {
     test.each([requestCtx, responseCtx])(
       "should add null type to the first of anyOf %#",
       (ctx) => {
-        const jsonSchema: JSONSchema.BaseSchema = {
+        const jsonSchema: z.core.JSONSchema.BaseSchema = {
           anyOf: [{ type: "string" }, { type: "null" }],
         };
         expect(
@@ -67,7 +66,7 @@ describe("Documentation helpers", () => {
         depictNullable(
           {
             zodSchema: z.never(),
-            jsonSchema: jsonSchema as JSONSchema.BaseSchema,
+            jsonSchema: jsonSchema as z.core.JSONSchema.BaseSchema,
           },
           requestCtx,
         ),
@@ -131,7 +130,7 @@ describe("Documentation helpers", () => {
   });
 
   describe("getExamples()", () => {
-    test.each<GlobalMeta>([
+    test.each<z.core.GlobalMeta>([
       { examples: [1, 2, 3] },
       { examples: [] },
       { examples: undefined },

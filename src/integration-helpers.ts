@@ -1,10 +1,9 @@
 import * as R from "ramda";
 import { globalRegistry, z } from "zod";
-import type { $ZodType, JSONSchema } from "zod/v4/core";
 import { functionSchema } from "./function-schema";
 
-const squeeze = (...schemas: $ZodType[]) =>
-  schemas as [$ZodType, ...$ZodType[]];
+const squeeze = (...schemas: z.core.$ZodType[]) =>
+  schemas as [z.core.$ZodType, ...z.core.$ZodType[]];
 
 export const makeEventFnSchema = (
   base: z.ZodTuple,
@@ -42,7 +41,7 @@ export const makeEventFnSchema = (
 
 /** not using cycle:"throw" because it also affects parenting objects */
 export const hasCycle = (
-  subject: $ZodType,
+  subject: z.core.$ZodType,
   { io }: { io: "input" | "output" },
 ) => {
   const json = z.toJSONSchema(subject, {
@@ -56,7 +55,7 @@ export const hasCycle = (
   while (stack.length) {
     const entry = stack.shift()!;
     if (R.is(Object, entry)) {
-      if ((entry as JSONSchema.BaseSchema).$ref === "#") return true;
+      if ((entry as z.core.JSONSchema.BaseSchema).$ref === "#") return true;
       stack.push(...R.values(entry));
     }
     if (R.is(Array, entry)) stack.push(...R.values(entry));

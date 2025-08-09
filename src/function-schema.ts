@@ -2,6 +2,8 @@ import { z } from "zod";
 import { isSchema } from "./common-helpers";
 import { pack, unpack } from "@express-zod-api/zod-plugin";
 
+export const fnBrand = Symbol.for("Function");
+
 /** @link https://github.com/colinhacks/zod/issues/4143#issuecomment-2931729793 */
 export const functionSchema = <
   IN extends z.core.$ZodTuple,
@@ -23,7 +25,7 @@ export const functionSchema = <
     }
     return template.implement(arg as z.core.$InferInnerFunctionType<IN, OUT>);
   }) as z.ZodType<(...args: z.output<IN>) => z.output<OUT>>;
-  return pack(schema, { brand: "function", input, output });
+  return pack(schema, { brand: fnBrand, input, output });
 };
 
 export type FunctionSchema = ReturnType<typeof functionSchema>;
@@ -33,7 +35,7 @@ export const isFunctionSchema = (
 ): subject is FunctionSchema => {
   const { brand, input, output } = unpack(subject);
   return (
-    brand === "function" &&
+    brand === fnBrand &&
     isSchema<z.core.$ZodTuple>(input, "tuple") &&
     isSchema(output)
   );

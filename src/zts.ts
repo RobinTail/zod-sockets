@@ -6,7 +6,7 @@ import {
   getTransformedType,
   isSchema,
 } from "./common-helpers";
-import { FunctionSchema, isFunctionSchema } from "./function-schema";
+import { fnBrand, FunctionSchema, isFunctionSchema } from "./function-schema";
 import { hasCycle } from "./integration-helpers";
 import { FirstPartyKind, HandlingRules, walkSchema } from "./schema-walker";
 import * as R from "ramda";
@@ -257,7 +257,7 @@ const onFunction: Producer = (schema: FunctionSchema, { next }) => {
 const producers: HandlingRules<
   ts.TypeNode,
   ZTSContext,
-  FirstPartyKind | "function"
+  FirstPartyKind | typeof fnBrand
 > = {
   string: onPrimitive(ts.SyntaxKind.StringKeyword),
   number: onPrimitive(ts.SyntaxKind.NumberKeyword),
@@ -287,7 +287,7 @@ const producers: HandlingRules<
   pipe: onPipeline,
   lazy: onLazy,
   readonly: onWrapped,
-  function: onFunction,
+  [fnBrand]: onFunction,
 };
 
 export const zodToTs = (schema: z.ZodType, ctx: ZTSContext) =>

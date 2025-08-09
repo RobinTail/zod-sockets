@@ -273,6 +273,13 @@
     "@eslint/core" "^0.15.1"
     levn "^0.4.1"
 
+"@express-zod-api/zod-plugin@^1.1.0-beta.1":
+  version "1.1.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@express-zod-api/zod-plugin/-/zod-plugin-1.1.0-beta.1.tgz#768e4bc4608dc5013bda2fbeab482cf649a36626"
+  integrity sha512-2VqXuahvJAUguQz6+q2Gd0iKly288PHW1Z1SQtq31usrbvstVpsmuaWnRDd+LYBngWTdEaIId7BhxNkjPBSWUA==
+  dependencies:
+    ramda "^0.31.3"
+
 "@humanfs/core@^0.19.1":
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/@humanfs/core/-/core-0.19.1.tgz#17c55ca7d426733fe3c561906b8173c336b40a77"

@@ -7,7 +7,7 @@ const minNode = semver.minVersion(engines.node)!;
 export default defineConfig({
   name,
   entry: ["src/index.ts"],
-  format: ["cjs", "esm"],
+  format: "esm",
   splitting: false,
   sourcemap: false,
   clean: true,

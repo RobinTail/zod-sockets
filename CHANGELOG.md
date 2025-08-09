@@ -5,6 +5,7 @@
 ### v5.0.0
 
 - Supported Node.js version: `^20.19.0 || ^22.12.0 || ^24.0.0`;
+  - Pure ESM distribution: all these version support `require(ESM)` syntax;
 
 ## Version 4
 

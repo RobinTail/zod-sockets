@@ -1,6 +1,6 @@
 import { expect } from "vitest";
 import type { NewPlugin } from "@vitest/pretty-format";
-import { z } from "zod/v4";
+import { z } from "zod";
 import type { $ZodType } from "zod/v4/core";
 import { isFunctionSchema } from "./src/function-schema";
 

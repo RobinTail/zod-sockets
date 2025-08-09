@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import type { $ZodTransform, $ZodType } from "zod/v4/core";
 import * as R from "ramda";
 

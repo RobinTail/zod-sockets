@@ -4,8 +4,10 @@
 
 ### v5.0.0
 
-- Supported Node.js version: `^20.19.0 || ^22.12.0 || ^24.0.0`;
+- Supported Node.js version: `^20.19.0 || ^22.12.0 || ^24.0.0`:
   - Pure ESM distribution: all these version support `require(ESM)` syntax;
+- Supported Zod version: `^4.0.0:
+  - Imports may be changed from `zod/v4` to just `zod`;
 
 ## Version 4
 
@@ -53,7 +55,7 @@
 
 ```diff
 - import { z } from "zod";
-+ import { z } from "zod/v4";
++ import { z } from "zod";
 ```
 
 ```diff

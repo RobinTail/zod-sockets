@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { SomeRemoteSocket, makeRemoteClients } from "./remote-client";
 
 describe("RemoteClient", () => {

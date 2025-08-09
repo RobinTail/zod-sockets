@@ -1,5 +1,5 @@
 import type { GlobalMeta, JSONSchema } from "zod/v4/core";
-import { z } from "zod/v4";
+import { z } from "zod";
 import {
   AsyncAPIContext,
   depictNullable,

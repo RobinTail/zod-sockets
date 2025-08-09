@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { globalRegistry, z } from "zod/v4";
+import { globalRegistry, z } from "zod";
 import type { $ZodType, JSONSchema } from "zod/v4/core";
 import { functionSchema } from "./function-schema";
 

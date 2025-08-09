@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { functionSchema } from "./function-schema";
 import { f, printNode } from "./typescript-api";
 import { zodToTs } from "./zts";

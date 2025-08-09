@@ -1,5 +1,5 @@
 import type { $InferInnerFunctionType, $ZodType, $ZodTuple } from "zod/v4/core";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { isSchema } from "./common-helpers";
 
 interface FunctionBag<IN extends $ZodTuple, OUT extends $ZodType> {

@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { SecuritySchemeObject } from "./async-api/security";
 import { EmptyObject } from "./common-helpers";
 import { EmissionMap } from "./emission";

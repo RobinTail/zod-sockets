@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
 import { EmissionMap } from "./emission";
 import { OutputValidationError, InputValidationError } from "./errors";

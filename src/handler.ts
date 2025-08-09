@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { Client } from "./client";
 import { Broadcaster, EmissionMap, RoomService } from "./emission";
 import { AbstractLogger } from "./logger";

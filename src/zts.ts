@@ -22,7 +22,7 @@ import type {
   $ZodType,
   $ZodUnion,
 } from "zod/v4/core";
-import { globalRegistry, z } from "zod/v4";
+import { globalRegistry, z } from "zod";
 import {
   lcFirst,
   makeCleanId,

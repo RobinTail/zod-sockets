@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { functionSchema } from "./function-schema";
+import { $brand, z } from "zod";
+import { fnBrand, functionSchema } from "./function-schema";
 
 describe("Function schema", () => {
   const schema = functionSchema(z.tuple([z.string(), z.number()]), z.boolean());
@@ -12,19 +12,23 @@ describe("Function schema", () => {
     const impl = (a: string, b: number) => Boolean(a || b);
     const parsed = schema.parse(impl);
     expect(typeof parsed).toBe("function");
-    expectTypeOf(parsed).toEqualTypeOf<(a: string, b: number) => boolean>();
+    expectTypeOf(parsed).toEqualTypeOf<
+      $brand<typeof fnBrand> & ((a: string, b: number) => boolean)
+    >();
     expect(parsed("123", 456)).toBe(true);
   });
 
   test("should not accept less arguments", () => {
     const impl = (a: string) => Boolean(a);
-    const parsed = schema.parse(impl) as (a: string) => boolean;
+    const parsed = schema.parse(impl) as $brand<typeof fnBrand> &
+      ((a: string) => boolean);
     expect(() => parsed("123")).toThrowErrorMatchingSnapshot();
   });
 
   test("should not accept no arguments", () => {
     const impl = () => false;
-    const parsed = schema.parse(impl) as () => boolean;
+    const parsed = schema.parse(impl) as $brand<typeof fnBrand> &
+      (() => boolean);
     expect(() => parsed()).toThrowErrorMatchingSnapshot();
   });
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { isSchema } from "./common-helpers";
-import { pack, unpack } from "@express-zod-api/zod-plugin";
+import { getBrand, pack, unpack } from "@express-zod-api/zod-plugin";
 
 export const fnBrand = Symbol.for("Function");
 
@@ -25,7 +25,7 @@ export const functionSchema = <
     }
     return template.implement(arg as z.core.$InferInnerFunctionType<IN, OUT>);
   }) as z.ZodType<(...args: z.output<IN>) => z.output<OUT>>;
-  return pack(schema, { brand: fnBrand, input, output });
+  return pack(schema.brand(fnBrand), { input, output });
 };
 
 export type FunctionSchema = ReturnType<typeof functionSchema>;
@@ -33,10 +33,7 @@ export type FunctionSchema = ReturnType<typeof functionSchema>;
 export const isFunctionSchema = (
   subject: z.core.$ZodType,
 ): subject is FunctionSchema => {
-  const { brand, input, output } = unpack(subject);
-  return (
-    brand === fnBrand &&
-    isSchema<z.core.$ZodTuple>(input, "tuple") &&
-    isSchema(output)
-  );
+  if (getBrand(subject) !== fnBrand) return false;
+  const { input, output } = unpack(subject);
+  return isSchema<z.core.$ZodTuple>(input, "tuple") && isSchema(output);
 };

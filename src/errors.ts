@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { getMessageFromError } from "./common-helpers";
 
 /** @desc An error related to the input and output schemas declaration */

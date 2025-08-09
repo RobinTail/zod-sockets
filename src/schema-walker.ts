@@ -1,11 +1,11 @@
-import type { $ZodType, $ZodTypeDef } from "zod/v4/core";
 import type { EmptyObject, FlatObject } from "./common-helpers";
-import { isFunctionSchema } from "./function-schema";
+import type { z } from "zod";
+import { getBrand } from "@express-zod-api/zod-plugin";
 
-export type FirstPartyKind = $ZodTypeDef["type"];
+export type FirstPartyKind = z.core.$ZodTypeDef["type"];
 
 export interface NextHandlerInc<U> {
-  next: (schema: $ZodType) => U;
+  next: (schema: z.core.$ZodType) => U;
 }
 
 interface PrevInc<U> {
@@ -37,7 +37,7 @@ export const walkSchema = <
   U extends object,
   Context extends FlatObject = EmptyObject,
 >(
-  schema: $ZodType,
+  schema: z.core.$ZodType,
   {
     onEach,
     rules,
@@ -50,9 +50,12 @@ export const walkSchema = <
     onMissing: SchemaHandler<U, Context, "last">;
   },
 ): U => {
+  const brand = getBrand(schema);
   const handler =
-    rules[isFunctionSchema(schema) ? "function" : schema._zod.def.type];
-  const next = (subject: $ZodType) =>
+    brand && brand in rules
+      ? rules[brand as keyof typeof rules]
+      : rules[schema._zod.def.type];
+  const next = (subject: z.core.$ZodType) =>
     walkSchema(subject, { ctx, onEach, rules, onMissing });
   const result = handler
     ? handler(schema, { ...ctx, next })

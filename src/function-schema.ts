@@ -1,24 +1,13 @@
-import type { $InferInnerFunctionType, $ZodType, $ZodTuple } from "zod/v4/core";
-import { z } from "zod/v4";
-import { isSchema } from "./common-helpers";
+import { z } from "zod";
+import { getBrand, pack } from "@express-zod-api/zod-plugin";
 
-interface FunctionBag<IN extends $ZodTuple, OUT extends $ZodType> {
-  brand: "function";
-  input: IN;
-  output: OUT;
-}
-
-export type FunctionSchema<
-  IN extends $ZodTuple = $ZodTuple,
-  OUT extends $ZodType = $ZodType,
-> = z.ZodType<(...args: z.output<IN>) => z.output<OUT>> & {
-  _zod: {
-    bag: FunctionBag<IN, OUT>;
-  };
-};
+export const fnBrand = Symbol.for("Function");
 
 /** @link https://github.com/colinhacks/zod/issues/4143#issuecomment-2931729793 */
-export const functionSchema = <IN extends $ZodTuple, OUT extends $ZodType>(
+export const functionSchema = <
+  IN extends z.core.$ZodTuple,
+  OUT extends z.core.$ZodType,
+>(
   input: IN,
   output: OUT,
   params?: { path?: PropertyKey[] },
@@ -33,19 +22,13 @@ export const functionSchema = <IN extends $ZodTuple, OUT extends $ZodType>(
       });
       return z.NEVER;
     }
-    return template.implement(arg as $InferInnerFunctionType<IN, OUT>);
-  });
-  Object.assign(schema._zod.bag, {
-    brand: "function",
-    input,
-    output,
-  } satisfies FunctionBag<IN, OUT>);
-  return schema as unknown as FunctionSchema<IN, OUT>;
+    return template.implement(arg as z.core.$InferInnerFunctionType<IN, OUT>);
+  }) as z.ZodType<(...args: z.output<IN>) => z.output<OUT>>;
+  return pack(schema.brand(fnBrand), { input, output });
 };
 
+export type FunctionSchema = ReturnType<typeof functionSchema>;
+
 export const isFunctionSchema = (
-  subject: $ZodType,
-): subject is FunctionSchema =>
-  subject._zod.bag.brand === "function" &&
-  isSchema<$ZodTuple>(subject._zod.bag.input, "tuple") &&
-  isSchema(subject._zod.bag.output);
+  subject: z.core.$ZodType,
+): subject is FunctionSchema => getBrand(subject) === fnBrand;

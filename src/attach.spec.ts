@@ -1,6 +1,6 @@
 import http from "node:http";
 import { Server } from "socket.io";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { attachSockets } from "./attach";
 import { ensureError } from "./common-helpers";
 import { createSimpleConfig } from "./config";

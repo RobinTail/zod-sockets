@@ -208,13 +208,8 @@ const depict = (
 export const getExamples = (
   subject: z.core.$ZodType,
 ): ReadonlyArray<unknown> => {
-  const { examples, example } = globalRegistry.get(subject) || {};
-  if (examples) {
-    return Array.isArray(examples)
-      ? examples
-      : Object.values(examples).map(({ value }) => value);
-  }
-  if (example !== undefined) return [example];
+  const { examples } = globalRegistry.get(subject) || {};
+  if (Array.isArray(examples)) return examples;
   if (isSchema<z.core.$ZodTuple>(subject, "tuple")) {
     const pulled: unknown[] = [];
     for (const item of subject._zod.def.items) {

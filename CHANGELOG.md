@@ -8,6 +8,8 @@
   - Pure ESM distribution: all these version support `require(ESM)` syntax;
 - Supported Zod version: `^4.0.0:
   - Imports may be changed from `zod/v4` to just `zod`;
+  - Dropped support of examples that are given as `example` property of `.meta()` argument;
+  - Dropped support of examples given within an object-based value of `examples` property of `.meta()` argument;
 
 ## Version 4
 

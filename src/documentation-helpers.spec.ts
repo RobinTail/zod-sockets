@@ -134,11 +134,6 @@ describe("Documentation helpers", () => {
       { examples: [1, 2, 3] },
       { examples: [] },
       { examples: undefined },
-      { examples: { one: { value: 123 } } },
-      { example: 123 },
-      { example: 0 },
-      { example: undefined },
-      { examples: [1, 2, 3], example: 123 }, // priority
       {},
     ])("should handle %s", (meta) => {
       const schema = z.unknown().meta(meta);
@@ -150,7 +145,7 @@ describe("Documentation helpers", () => {
     const schema = z
       .tuple([
         z.string().meta({ examples: ["123", "456"] }),
-        z.number().meta({ example: 123 }),
+        z.number().meta({ examples: [123] }),
       ])
       .rest(z.boolean());
     expect(getExamples(schema)).toMatchSnapshot();

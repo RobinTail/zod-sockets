@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { isSchema } from "./common-helpers";
-import { getBrand, pack, unpack } from "@express-zod-api/zod-plugin";
+import { getBrand, pack } from "@express-zod-api/zod-plugin";
 
 export const fnBrand = Symbol.for("Function");
 
@@ -32,8 +31,4 @@ export type FunctionSchema = ReturnType<typeof functionSchema>;
 
 export const isFunctionSchema = (
   subject: z.core.$ZodType,
-): subject is FunctionSchema => {
-  if (getBrand(subject) !== fnBrand) return false;
-  const { input, output } = unpack(subject);
-  return isSchema<z.core.$ZodTuple>(input, "tuple") && isSchema(output);
-};
+): subject is FunctionSchema => getBrand(subject) === fnBrand;

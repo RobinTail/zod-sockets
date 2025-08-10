@@ -73,6 +73,26 @@ export const depictTuple: Depicter = ({ zodSchema, jsonSchema }) => {
   return { ...jsonSchema, items: { not: {} } };
 };
 
+const makeSample = (depicted: SchemaObject) => {
+  const firstType = (
+    Array.isArray(depicted.type) ? depicted.type[0] : depicted.type
+  ) as keyof typeof samples;
+  return samples?.[firstType];
+};
+
+const makeNullableType = (
+  current:
+    | z.core.JSONSchema.BaseSchema["type"]
+    | Array<NonNullable<z.core.JSONSchema.BaseSchema["type"]>>,
+): typeof current => {
+  if (current === ("null" satisfies SchemaObjectType)) return current;
+  if (typeof current === "string")
+    return [current, "null" satisfies SchemaObjectType];
+  return (
+    current && [...new Set(current).add("null" satisfies SchemaObjectType)]
+  );
+};
+
 export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
   const target = (zodSchema as z.core.$ZodPipe)._zod.def[
     ctx.isResponse ? "out" : "in"
@@ -109,26 +129,6 @@ export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
 
 const asAsyncAPI = (subject: z.core.JSONSchema.BaseSchema) =>
   subject as SchemaObject | ReferenceObject;
-
-const makeSample = (depicted: SchemaObject) => {
-  const firstType = (
-    Array.isArray(depicted.type) ? depicted.type[0] : depicted.type
-  ) as keyof typeof samples;
-  return samples?.[firstType];
-};
-
-const makeNullableType = (
-  current:
-    | z.core.JSONSchema.BaseSchema["type"]
-    | Array<NonNullable<z.core.JSONSchema.BaseSchema["type"]>>,
-): typeof current => {
-  if (current === ("null" satisfies SchemaObjectType)) return current;
-  if (typeof current === "string")
-    return [current, "null" satisfies SchemaObjectType];
-  return (
-    current && [...new Set(current).add("null" satisfies SchemaObjectType)]
-  );
-};
 
 export const depictDate: Depicter = () => ({ format: "date" });
 

@@ -8,6 +8,6 @@ export default defineConfig({
   minify: true,
   attw: { profile: "esmOnly", level: "error" },
   define: {
-    "process.env.TSUP_BUILD": `"v${version}"`,
+    "process.env.TSDOWN_BUILD": `"v${version}"`,
   },
 });

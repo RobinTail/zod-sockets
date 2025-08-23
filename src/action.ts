@@ -86,9 +86,13 @@ export class Action<
           z.ZodTuple,
           z.ZodVoid
         >({ input: this.#outputSchema, output: z.void() })
-        .parse(R.last(params)); // @todo path? [Math.max(0, params.length - 1)]
+        .parse(R.last(params));
     } catch (e) {
-      throw e instanceof z.ZodError ? new InputValidationError(e) : e;
+      if (!(e instanceof z.ZodError)) throw e;
+      const path = [Math.max(0, params.length - 1)];
+      const issues = e.issues.map((one) => ({ ...one, path }));
+      const error = new z.ZodRealError(issues);
+      throw new InputValidationError(error);
     }
   }
 

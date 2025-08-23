@@ -6,7 +6,6 @@ import {
   getTransformedType,
   isSchema,
 } from "./common-helpers";
-import { fnBrand, FunctionSchema, isFunctionSchema } from "./function-schema";
 import { hasCycle } from "./integration-helpers";
 import { FirstPartyKind, HandlingRules, walkSchema } from "./schema-walker";
 import * as R from "ramda";
@@ -217,8 +216,11 @@ const onLazy: Producer = (
 
 const onDate: Producer = () => ensureTypeNode("Date");
 
-const onFunction: Producer = (schema: FunctionSchema, { next }) => {
-  const params = schema._zod.bag.input._zod.def.items.map((subject, index) => {
+const onFunction: Producer = (schema: z.core.$ZodFunction, { next }) => {
+  const { input, output } = schema._zod.def;
+  if (!isSchema<z.core.$ZodTuple>(input, "tuple"))
+    throw new Error("z.function()::input must be a tuple");
+  const params = input._zod.def.items.map((subject, index) => {
     const { description } = globalRegistry.get(subject) || {};
     return f.createParameterDeclaration(
       undefined,
@@ -226,13 +228,13 @@ const onFunction: Producer = (schema: FunctionSchema, { next }) => {
       f.createIdentifier(
         description
           ? lcFirst(makeCleanId(description))
-          : `${isFunctionSchema(subject) ? "cb" : "p"}${index + 1}`,
+          : `${isSchema(subject, "function") ? "cb" : "p"}${index + 1}`,
       ),
       undefined,
       next(subject),
     );
   });
-  const { rest } = schema._zod.bag.input._zod.def;
+  const { rest } = input._zod.def;
   if (rest) {
     const { description } = globalRegistry.get(rest) || {};
     params.push(
@@ -247,18 +249,10 @@ const onFunction: Producer = (schema: FunctionSchema, { next }) => {
       ),
     );
   }
-  return f.createFunctionTypeNode(
-    undefined,
-    params,
-    next(schema._zod.bag.output),
-  );
+  return f.createFunctionTypeNode(undefined, params, next(output));
 };
 
-const producers: HandlingRules<
-  ts.TypeNode,
-  ZTSContext,
-  FirstPartyKind | typeof fnBrand
-> = {
+const producers: HandlingRules<ts.TypeNode, ZTSContext, FirstPartyKind> = {
   string: onPrimitive(ts.SyntaxKind.StringKeyword),
   number: onPrimitive(ts.SyntaxKind.NumberKeyword),
   bigint: onPrimitive(ts.SyntaxKind.BigIntKeyword),
@@ -287,7 +281,7 @@ const producers: HandlingRules<
   pipe: onPipeline,
   lazy: onLazy,
   readonly: onWrapped,
-  [fnBrand]: onFunction,
+  function: onFunction,
 };
 
 export const zodToTs = (schema: z.ZodType, ctx: ZTSContext) =>

@@ -1,6 +1,5 @@
 import * as R from "ramda";
 import { globalRegistry, z } from "zod";
-import { functionSchema } from "./function-schema";
 
 const squeeze = (...schemas: z.core.$ZodType[]) =>
   schemas as [z.core.$ZodType, ...z.core.$ZodType[]];
@@ -11,15 +10,15 @@ export const makeEventFnSchema = (
   maxOverloads: number = 3,
 ) => {
   if (!ack) {
-    return functionSchema(base, z.void());
+    return z.function({ input: base, output: z.void() });
   }
-  const fn = functionSchema(ack, z.void());
+  const fn = z.function({ input: ack, output: z.void() });
   const rest = base._zod.def.rest;
   if (!rest || maxOverloads <= 0) {
-    return functionSchema(
-      z.tuple(squeeze(...base._zod.def.items, fn)),
-      z.void(),
-    );
+    return z.function({
+      input: z.tuple(squeeze(...base._zod.def.items, fn)),
+      output: z.void(),
+    });
   }
   const restDesc = globalRegistry.get(rest)?.description;
   const variants = R.range(0, maxOverloads).map((count) => {
@@ -34,7 +33,7 @@ export const makeEventFnSchema = (
         }),
       )
       .concat(fn);
-    return functionSchema(z.tuple(squeeze(...items)), z.void());
+    return z.function({ input: z.tuple(squeeze(...items)), output: z.void() });
   });
   return z.union(variants);
 };

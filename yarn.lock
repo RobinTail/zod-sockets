@@ -321,13 +321,6 @@
     "@eslint/core" "^0.15.2"
     levn "^0.4.1"
 
-"@express-zod-api/zod-plugin@^1.1.0-beta.1":
-  version "1.1.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@express-zod-api/zod-plugin/-/zod-plugin-1.1.0-beta.1.tgz#768e4bc4608dc5013bda2fbeab482cf649a36626"
-  integrity sha512-2VqXuahvJAUguQz6+q2Gd0iKly288PHW1Z1SQtq31usrbvstVpsmuaWnRDd+LYBngWTdEaIId7BhxNkjPBSWUA==
-  dependencies:
-    ramda "^0.31.3"
-
 "@humanfs/core@^0.19.1":
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/@humanfs/core/-/core-0.19.1.tgz#17c55ca7d426733fe3c561906b8173c336b40a77"
@@ -2667,7 +2660,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zod@^4.0.16:
-  version "4.0.16"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-4.0.16.tgz#bf785eb8dda343c2746ecbd7a6bb47f20ed588c3"
-  integrity sha512-Djo/cM339grjI7/HmN+ixYO2FzEMcWr/On50UlQ/RjrWK1I/hPpWhpC76heCptnRFpH0LMwrEbUY50HDc0V8wg==
+zod@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.1.0.tgz#b1d5883af7653ad48cd8ecb5a2f4012b542f632a"
+  integrity sha512-UWxluYj2IDX9MHRXTMbB/2eeWrAMmmMSESM+MfT9MQw8U1qo9q5ASW08anoJh6AJ7pkt099fLdNFmfI+4aChHg==

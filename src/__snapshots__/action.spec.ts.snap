@@ -29,15 +29,16 @@ InputValidationError({
   "cause": ZodError({
     "issues": [
       {
-        "code": "custom",
-        "message": "Expected function, received string",
+        "code": "invalid_type",
+        "expected": "function",
+        "message": "Invalid input: expected function, received string",
         "path": [
           1,
         ],
       },
     ],
   }),
-  "message": "[1]: Expected function, received string",
+  "message": "[1]: Invalid input: expected function, received string",
 })
 `;
 

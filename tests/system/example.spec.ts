@@ -40,7 +40,7 @@ describe("System test on Example", async () => {
       await waitFor(() => onError.mock.calls.length > 0);
       expect(onError).toHaveBeenLastCalledWith(
         "InputValidationError",
-        "[0]: Expected function, received undefined",
+        "[0]: Invalid input: expected function, received undefined",
       );
     });
   });

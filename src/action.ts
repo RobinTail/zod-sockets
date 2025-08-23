@@ -80,13 +80,12 @@ export class Action<
     if (!this.#outputSchema) {
       return undefined;
     }
+    const fnSchema = z.function<z.ZodTuple, z.ZodVoid>({
+      input: this.#outputSchema,
+      output: z.void(),
+    });
     try {
-      return z
-        .function<
-          z.ZodTuple,
-          z.ZodVoid
-        >({ input: this.#outputSchema, output: z.void() })
-        .parse(R.last(params));
+      return fnSchema.parse(R.last(params));
     } catch (e) {
       if (!(e instanceof z.ZodError)) throw e;
       const path = [Math.max(0, params.length - 1)];

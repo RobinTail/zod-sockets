@@ -82,7 +82,10 @@ export class Action<
     }
     try {
       return z
-        .function({ input: this.#outputSchema, output: z.void() })
+        .function<
+          z.ZodTuple,
+          z.ZodVoid
+        >({ input: this.#outputSchema, output: z.void() })
         .parse(R.last(params)); // @todo path? [Math.max(0, params.length - 1)]
     } catch (e) {
       throw e instanceof z.ZodError ? new InputValidationError(e) : e;

@@ -52,7 +52,6 @@
     "hooks": "husky"
   },
   "dependencies": {
-    "@express-zod-api/zod-plugin": "^1.1.0-beta.1",
     "ansis": "^4.0.0",
     "ramda": "^0.31.3",
     "yaml": "^2.4.1"
@@ -60,7 +59,7 @@
   "peerDependencies": {
     "socket.io": "^4.7.4",
     "typescript": "^5.3.3",
-    "zod": "^4.0.0"
+    "zod": "^4.1.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.1",
@@ -82,7 +81,7 @@
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.0.1",
     "vitest": "^3.2.2",
-    "zod": "^4.0.16"
+    "zod": "^4.1.0"
   },
   "keywords": [
     "nodejs",

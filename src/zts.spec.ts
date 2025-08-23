@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
 import { z } from "zod";
-import { functionSchema } from "./function-schema";
 import { f, printNode } from "./typescript-api";
 import { zodToTs } from "./zts";
 import { ZTSContext } from "./zts-helpers";
@@ -139,14 +138,14 @@ describe("zod-to-ts", () => {
       set: z.set(z.string()),
       intersection: z.intersection(z.string(), z.number()).or(z.bigint()),
       promise: z.promise(z.number()),
-      function: functionSchema(
-        z.tuple([
+      function: z.function({
+        input: z.tuple([
           z.string().nullish().default("heo"),
           z.boolean(),
           z.boolean(),
         ]),
-        z.string(),
-      ),
+        output: z.string(),
+      }),
       optDefaultString: z.string().optional().default("hi"),
       refinedStringWithSomeBullshit: z
         .string()

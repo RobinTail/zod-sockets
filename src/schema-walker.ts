@@ -1,6 +1,5 @@
 import type { EmptyObject, FlatObject } from "./common-helpers";
 import type { z } from "zod";
-import { getBrand } from "@express-zod-api/zod-plugin";
 
 export type FirstPartyKind = z.core.$ZodTypeDef["type"];
 
@@ -50,11 +49,7 @@ export const walkSchema = <
     onMissing: SchemaHandler<U, Context, "last">;
   },
 ): U => {
-  const brand = getBrand(schema);
-  const handler =
-    brand && brand in rules
-      ? rules[brand as keyof typeof rules]
-      : rules[schema._zod.def.type];
+  const handler = rules[schema._zod.def.type];
   const next = (subject: z.core.$ZodType) =>
     walkSchema(subject, { ctx, onEach, rules, onMissing });
   const result = handler

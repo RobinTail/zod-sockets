@@ -4,7 +4,7 @@ import { actions } from "../example/actions";
 import { ActionsFactory } from "./actions-factory";
 import { Config, createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { protocol } from "engine.io";
 
 describe("Documentation", () => {

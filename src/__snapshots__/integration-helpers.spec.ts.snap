@@ -3,7 +3,6 @@
 exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest in base 1`] = `
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "x-brand": "function",
   "x-input": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "prefixItems": [
@@ -11,7 +10,6 @@ exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest
         "type": "string",
       },
       {
-        "x-brand": "function",
         "x-input": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "prefixItems": [
@@ -21,6 +19,7 @@ exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest
           ],
           "type": "array",
         },
+        "x-kind": "function",
         "x-output": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
         },
@@ -28,6 +27,7 @@ exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest
     ],
     "type": "array",
   },
+  "x-kind": "function",
   "x-output": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
   },
@@ -37,7 +37,6 @@ exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest
 exports[`Integration helpers > makeEventFnSchema() > should simply use base when no ack 1`] = `
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "x-brand": "function",
   "x-input": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "prefixItems": [
@@ -47,6 +46,7 @@ exports[`Integration helpers > makeEventFnSchema() > should simply use base when
     ],
     "type": "array",
   },
+  "x-kind": "function",
   "x-output": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
   },
@@ -58,7 +58,6 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "anyOf": [
     {
-      "x-brand": "function",
       "x-input": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "prefixItems": [
@@ -66,7 +65,6 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
             "type": "string",
           },
           {
-            "x-brand": "function",
             "x-input": {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "prefixItems": [
@@ -76,6 +74,7 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
               ],
               "type": "array",
             },
+            "x-kind": "function",
             "x-output": {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
             },
@@ -83,12 +82,12 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
         ],
         "type": "array",
       },
+      "x-kind": "function",
       "x-output": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
       },
     },
     {
-      "x-brand": "function",
       "x-input": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "prefixItems": [
@@ -99,7 +98,6 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
             "description": "rest1",
           },
           {
-            "x-brand": "function",
             "x-input": {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
               "prefixItems": [
@@ -109,6 +107,7 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
               ],
               "type": "array",
             },
+            "x-kind": "function",
             "x-output": {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
             },
@@ -116,6 +115,7 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
         ],
         "type": "array",
       },
+      "x-kind": "function",
       "x-output": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
       },

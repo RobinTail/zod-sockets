@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { actions } from "../example/actions";
 import { config } from "../example/config";
 import { ActionsFactory } from "./actions-factory";

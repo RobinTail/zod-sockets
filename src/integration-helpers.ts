@@ -1,10 +1,8 @@
 import * as R from "ramda";
-import { globalRegistry, z } from "zod/v4";
-import type { $ZodType, JSONSchema } from "zod/v4/core";
-import { functionSchema } from "./function-schema";
+import { globalRegistry, z } from "zod";
 
-const squeeze = (...schemas: $ZodType[]) =>
-  schemas as [$ZodType, ...$ZodType[]];
+const squeeze = (...schemas: z.core.$ZodType[]) =>
+  schemas as [z.core.$ZodType, ...z.core.$ZodType[]];
 
 export const makeEventFnSchema = (
   base: z.ZodTuple,
@@ -12,15 +10,15 @@ export const makeEventFnSchema = (
   maxOverloads: number = 3,
 ) => {
   if (!ack) {
-    return functionSchema(base, z.void());
+    return z.function({ input: base, output: z.void() });
   }
-  const fn = functionSchema(ack, z.void());
+  const fn = z.function({ input: ack, output: z.void() });
   const rest = base._zod.def.rest;
   if (!rest || maxOverloads <= 0) {
-    return functionSchema(
-      z.tuple(squeeze(...base._zod.def.items, fn)),
-      z.void(),
-    );
+    return z.function({
+      input: z.tuple(squeeze(...base._zod.def.items, fn)),
+      output: z.void(),
+    });
   }
   const restDesc = globalRegistry.get(rest)?.description;
   const variants = R.range(0, maxOverloads).map((count) => {
@@ -35,14 +33,14 @@ export const makeEventFnSchema = (
         }),
       )
       .concat(fn);
-    return functionSchema(z.tuple(squeeze(...items)), z.void());
+    return z.function({ input: z.tuple(squeeze(...items)), output: z.void() });
   });
   return z.union(variants);
 };
 
 /** not using cycle:"throw" because it also affects parenting objects */
 export const hasCycle = (
-  subject: $ZodType,
+  subject: z.core.$ZodType,
   { io }: { io: "input" | "output" },
 ) => {
   const json = z.toJSONSchema(subject, {
@@ -56,7 +54,7 @@ export const hasCycle = (
   while (stack.length) {
     const entry = stack.shift()!;
     if (R.is(Object, entry)) {
-      if ((entry as JSONSchema.BaseSchema).$ref === "#") return true;
+      if ((entry as z.core.JSONSchema.BaseSchema).$ref === "#") return true;
       stack.push(...R.values(entry));
     }
     if (R.is(Array, entry)) stack.push(...R.values(entry));

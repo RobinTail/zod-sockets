@@ -1,4 +1,4 @@
-import { bgHex, italic } from "ansis";
+import { hex, bgHex, italic } from "ansis";
 import * as R from "ramda";
 
 const dedication = italic("for Ociel".padEnd(40));
@@ -18,14 +18,15 @@ ${dedication}${proud}
 `;
 
 const getColorFn = R.cond([
-  [R.gt(4), R.always(bgHex("#FCF434").black)],
-  [R.gt(6), R.always(bgHex("#FFF").gray)],
-  [R.gt(8), R.always(bgHex("#9C59D1").whiteBright)],
-  [R.T, R.always(bgHex("#383838").white)],
+  [R.gt(3), R.always(hex("#FCF434"))],
+  [R.gt(5), R.always(hex("#FFF"))],
+  [R.gt(8), R.always(hex("#9C59D1"))],
+  [R.T, R.always(bgHex("#383838").hex("#888"))],
 ]);
 
 export const getStartupLogo = () =>
   georgia11
     .split("\n")
+    .slice(1)
     .map((line, index) => getColorFn(index)(line.padEnd(97)))
     .join("\n");

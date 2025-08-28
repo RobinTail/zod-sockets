@@ -6,7 +6,7 @@
 
 - Supported Node.js version: `^20.19.0 || ^22.12.0 || ^24.0.0`:
   - Pure ESM distribution: all these versions support `require(ESM)` syntax;
-- Supported Zod version: `^4.1.0:
+- Supported Zod version: `^4.1.0`:
   - Imports may be changed from `zod/v4` to just `zod`;
   - Dropped support of examples that are given as `example` property of `.meta()` argument;
   - Dropped support of examples given within an object-based value of `examples` property of `.meta()` argument;

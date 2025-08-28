@@ -1,7 +1,7 @@
 asyncapi: 3.0.0
 info:
   title: Example APP
-  version: 5.0.0-0
+  version: 5.0.0-beta.0
   contact:
     name: Anna Bocharova
     url: https://robintail.cz

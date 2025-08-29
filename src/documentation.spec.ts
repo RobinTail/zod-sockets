@@ -208,7 +208,7 @@ describe("Documentation", () => {
       expect(spec).toMatchSnapshot();
     });
 
-    test("should handle bigint, boolean, date, null and readonly", () => {
+    test("should handle bigint, boolean, null and readonly", () => {
       const spec = new Documentation({
         config: sampleConfig,
         actions: [
@@ -218,15 +218,38 @@ describe("Documentation", () => {
               z.object({
                 bigint: z.bigint(),
                 boolean: z.boolean().readonly(),
-                date: z.date(),
               }),
             ]),
-            output: z.tuple([z.null(), z.date()]),
-            handler: async () => [null, new Date("2021-12-31")],
+            output: z.tuple([z.null()]),
+            handler: async () => [null],
           }),
         ],
         version: "3.4.5",
         title: "Testing additional types",
+      }).getSpecAsYaml();
+      expect(spec).toMatchSnapshot();
+    });
+
+    test("should handle Date I/O", () => {
+      const spec = new Documentation({
+        config: sampleConfig,
+        actions: [
+          factory.build({
+            event: "test",
+            input: z.tuple([
+              z.iso.datetime().transform((str) => new Date(str)),
+            ]),
+            output: z.tuple([
+              z
+                .date()
+                .transform((date) => date.toISOString())
+                .pipe(z.iso.datetime()),
+            ]),
+            handler: async () => [new Date()],
+          }),
+        ],
+        version: "3.4.5",
+        title: "Testing date transformations",
       }).getSpecAsYaml();
       expect(spec).toMatchSnapshot();
     });

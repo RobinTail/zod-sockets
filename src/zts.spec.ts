@@ -106,7 +106,6 @@ describe("zod-to-ts", () => {
         .and(z.bigint())
         .and(z.number().and(z.string()))
         .transform((arg) => console.log(arg)),
-      date: z.date(),
       undefined: z.undefined(),
       null: z.null(),
       void: z.void(),
@@ -320,7 +319,6 @@ describe("zod-to-ts", () => {
         string: z.string(),
         number: z.number(),
         boolean: z.boolean(),
-        date: z.date(),
         undefined: z.undefined(),
         null: z.null(),
         void: z.void(),
@@ -386,6 +384,24 @@ describe("zod-to-ts", () => {
         { isResponse: true, expected: "transformed" },
       ])("should produce the schema type $expected", ({ isResponse }) => {
         const schema = z.number().transform((num) => `${num}`);
+        expect(
+          printNodeTest(zodToTs(schema, { ...ctx, isResponse })),
+        ).toMatchSnapshot();
+      });
+
+      test.each([
+        {
+          isResponse: false,
+          schema: z.iso.datetime().transform((str) => new Date(str)),
+        },
+        {
+          isResponse: true,
+          schema: z
+            .date()
+            .transform((date) => date.toISOString())
+            .pipe(z.iso.datetime()),
+        },
+      ])("should handle Date I/O %#", ({ isResponse, schema }) => {
         expect(
           printNodeTest(zodToTs(schema, { ...ctx, isResponse })),
         ).toMatchSnapshot();

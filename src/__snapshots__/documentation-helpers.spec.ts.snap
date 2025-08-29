@@ -8,18 +8,6 @@ exports[`Documentation helpers > depictBigInt() > should set type:string and for
 }
 `;
 
-exports[`Documentation helpers > depictDate > should set format date 0 1`] = `
-{
-  "format": "date",
-}
-`;
-
-exports[`Documentation helpers > depictDate > should set format date 1 1`] = `
-{
-  "format": "date",
-}
-`;
-
 exports[`Documentation helpers > depictNullable() > should add null type to the first of anyOf 0 1`] = `
 {
   "type": [

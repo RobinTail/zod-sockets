@@ -6,7 +6,6 @@ import {
   depictBigInt,
   depictTuple,
   depictPipeline,
-  depictDate,
   getExamples,
 } from "./documentation-helpers";
 import assert from "node:assert/strict";
@@ -89,14 +88,6 @@ describe("Documentation helpers", () => {
     ])("should add items:not:{} when no rest %#", (zodSchema) => {
       expect(
         depictTuple({ zodSchema, jsonSchema: {} }, requestCtx),
-      ).toMatchSnapshot();
-    });
-  });
-
-  describe("depictDate", () => {
-    test.each([responseCtx, requestCtx])("should set format date %#", (ctx) => {
-      expect(
-        depictDate({ zodSchema: z.date(), jsonSchema: {} }, ctx),
       ).toMatchSnapshot();
     });
   });

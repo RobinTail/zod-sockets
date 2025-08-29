@@ -214,8 +214,6 @@ const onLazy: Producer = (
   { makeAlias, next },
 ) => makeAlias(def.getter, () => next(def.getter()));
 
-const onDate: Producer = () => ensureTypeNode("Date");
-
 const onFunction: Producer = (schema: z.core.$ZodFunction, { next }) => {
   const { input, output } = schema._zod.def;
   if (!isSchema<z.core.$ZodTuple>(input, "tuple"))
@@ -262,7 +260,6 @@ const producers: HandlingRules<ts.TypeNode, ZTSContext, FirstPartyKind> = {
   never: onPrimitive(ts.SyntaxKind.NeverKeyword),
   void: onPrimitive(ts.SyntaxKind.VoidKeyword),
   unknown: onPrimitive(ts.SyntaxKind.UnknownKeyword),
-  date: onDate,
   null: onNull,
   array: onArray,
   tuple: onTuple,

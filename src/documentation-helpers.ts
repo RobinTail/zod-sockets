@@ -130,15 +130,12 @@ export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
 const asAsyncAPI = (subject: z.core.JSONSchema.BaseSchema) =>
   subject as SchemaObject | ReferenceObject;
 
-export const depictDate: Depicter = () => ({ format: "date" });
-
 const depicters: Partial<Record<FirstPartyKind, Depicter>> = {
   nullable: depictNullable,
   union: depictUnion,
   bigint: depictBigInt,
   tuple: depictTuple,
   pipe: depictPipeline,
-  date: depictDate,
 };
 
 /**

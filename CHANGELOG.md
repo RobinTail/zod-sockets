@@ -10,6 +10,9 @@
   - Imports may be changed from `zod/v4` to just `zod`;
   - Dropped support of examples that are given as `example` property of `.meta()` argument;
   - Dropped support of examples given within an object-based value of `examples` property of `.meta()` argument;
+- Dropped support for depicting `z.date()` without transformations:
+  - Use either `z.iso.datetime().transform((str) => new Date(str))` for input schema,
+  - Or `z.date().transform((date) => date.toISOString()).pipe(z.iso.datetime())` for output schema.
 
 ## Version 4
 

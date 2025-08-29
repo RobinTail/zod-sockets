@@ -1,35 +1,11 @@
 import ts from "typescript";
-import type {
-  $ZodArray,
-  $ZodCatch,
-  $ZodDate,
-  $ZodDefault,
-  $ZodDiscriminatedUnion,
-  $ZodEnum,
-  $ZodIntersection,
-  $ZodLazy,
-  $ZodLiteral,
-  $ZodNonOptional,
-  $ZodNullable,
-  $ZodObject,
-  $ZodOptional,
-  $ZodPipe,
-  $ZodReadonly,
-  $ZodRecord,
-  $ZodTemplateLiteral,
-  $ZodTransform,
-  $ZodTuple,
-  $ZodType,
-  $ZodUnion,
-} from "zod/v4/core";
-import { globalRegistry, z } from "zod/v4";
+import { globalRegistry, z } from "zod";
 import {
   lcFirst,
   makeCleanId,
   getTransformedType,
   isSchema,
 } from "./common-helpers";
-import { FunctionSchema, isFunctionSchema } from "./function-schema";
 import { hasCycle } from "./integration-helpers";
 import { FirstPartyKind, HandlingRules, walkSchema } from "./schema-walker";
 import * as R from "ramda";
@@ -65,7 +41,7 @@ const nodePath = {
   optional: R.path(["questionToken" satisfies keyof ts.TypeElement]),
 };
 
-const onLiteral: Producer = ({ _zod: { def } }: $ZodLiteral) => {
+const onLiteral: Producer = ({ _zod: { def } }: z.core.$ZodLiteral) => {
   const values = def.values.map((entry) =>
     entry === undefined
       ? ensureTypeNode(ts.SyntaxKind.UndefinedKeyword)
@@ -75,7 +51,7 @@ const onLiteral: Producer = ({ _zod: { def } }: $ZodLiteral) => {
 };
 
 const onTemplateLiteral: Producer = (
-  { _zod: { def } }: $ZodTemplateLiteral,
+  { _zod: { def } }: z.core.$ZodTemplateLiteral,
   { next },
 ) => {
   const parts = [...def.parts];
@@ -94,7 +70,7 @@ const onTemplateLiteral: Producer = (
   const head = f.createTemplateHead(shiftText());
   const spans: ts.TemplateLiteralTypeSpan[] = [];
   while (parts.length) {
-    const schema = next(parts.shift() as $ZodType);
+    const schema = next(parts.shift() as z.core.$ZodType);
     const text = shiftText();
     const textWrapper = parts.length
       ? f.createTemplateMiddle
@@ -106,7 +82,7 @@ const onTemplateLiteral: Producer = (
 };
 
 const onObject: Producer = (
-  obj: $ZodObject,
+  obj: z.core.$ZodObject,
   { isResponse, next, makeAlias },
 ) => {
   const produce = () => {
@@ -129,14 +105,14 @@ const onObject: Producer = (
     : produce();
 };
 
-const onArray: Producer = ({ _zod: { def } }: $ZodArray, { next }) =>
+const onArray: Producer = ({ _zod: { def } }: z.core.$ZodArray, { next }) =>
   f.createArrayTypeNode(next(def.element));
 
-const onEnum: Producer = ({ _zod: { def } }: $ZodEnum) =>
+const onEnum: Producer = ({ _zod: { def } }: z.core.$ZodEnum) =>
   makeUnion(Object.values(def.entries).map(makeLiteralType));
 
 const onSomeUnion: Producer = (
-  { _zod: { def } }: $ZodUnion | $ZodDiscriminatedUnion,
+  { _zod: { def } }: z.core.$ZodUnion | z.core.$ZodDiscriminatedUnion,
   { next },
 ) => {
   return makeUnion(def.options.map(next));
@@ -145,17 +121,19 @@ const onSomeUnion: Producer = (
 const makeSample = (produced: ts.TypeNode) =>
   samples?.[produced.kind as keyof typeof samples];
 
-const onNullable: Producer = ({ _zod: { def } }: $ZodNullable, { next }) =>
-  makeUnion([next(def.innerType), makeLiteralType(null)]);
+const onNullable: Producer = (
+  { _zod: { def } }: z.core.$ZodNullable,
+  { next },
+) => makeUnion([next(def.innerType), makeLiteralType(null)]);
 
-const onTuple: Producer = ({ _zod: { def } }: $ZodTuple, { next }) =>
+const onTuple: Producer = ({ _zod: { def } }: z.core.$ZodTuple, { next }) =>
   f.createTupleTypeNode(
     def.items
       .map(next)
       .concat(def.rest === null ? [] : f.createRestTypeNode(next(def.rest))),
   );
 
-const onRecord: Producer = ({ _zod: { def } }: $ZodRecord, { next }) =>
+const onRecord: Producer = ({ _zod: { def } }: z.core.$ZodRecord, { next }) =>
   ensureTypeNode("Record", [def.keyType, def.valueType].map(next));
 
 const intersect = R.tryCatch(
@@ -174,7 +152,7 @@ const intersect = R.tryCatch(
 );
 
 const onIntersection: Producer = (
-  { _zod: { def } }: $ZodIntersection,
+  { _zod: { def } }: z.core.$ZodIntersection,
   { next },
 ) => intersect([def.left, def.right].map(next));
 
@@ -186,7 +164,12 @@ const onPrimitive =
 const onWrapped: Producer = (
   {
     _zod: { def },
-  }: $ZodReadonly | $ZodCatch | $ZodDefault | $ZodOptional | $ZodNonOptional,
+  }:
+    | z.core.$ZodReadonly
+    | z.core.$ZodCatch
+    | z.core.$ZodDefault
+    | z.core.$ZodOptional
+    | z.core.$ZodNonOptional,
   { next },
 ) => next(def.innerType);
 
@@ -196,16 +179,16 @@ const getFallback = (isResponse: boolean) =>
   );
 
 const onPipeline: Producer = (
-  { _zod: { def } }: $ZodPipe,
+  { _zod: { def } }: z.core.$ZodPipe,
   { next, isResponse },
 ) => {
   const target = def[isResponse ? "out" : "in"];
   const opposite = def[isResponse ? "in" : "out"];
-  if (!isSchema<$ZodTransform>(target, "transform")) return next(target);
+  if (!isSchema<z.core.$ZodTransform>(target, "transform")) return next(target);
   const opposingType = next(opposite);
   const targetType = getTransformedType(
     target,
-    isSchema<$ZodDate>(opposite, "date")
+    isSchema<z.core.$ZodDate>(opposite, "date")
       ? new Date()
       : makeSample(opposingType),
   );
@@ -226,13 +209,16 @@ const onPipeline: Producer = (
 
 const onNull: Producer = () => makeLiteralType(null);
 
-const onLazy: Producer = ({ _zod: { def } }: $ZodLazy, { makeAlias, next }) =>
-  makeAlias(def.getter, () => next(def.getter()));
+const onLazy: Producer = (
+  { _zod: { def } }: z.core.$ZodLazy,
+  { makeAlias, next },
+) => makeAlias(def.getter, () => next(def.getter()));
 
-const onDate: Producer = () => ensureTypeNode("Date");
-
-const onFunction: Producer = (schema: FunctionSchema, { next }) => {
-  const params = schema._zod.bag.input._zod.def.items.map((subject, index) => {
+const onFunction: Producer = (schema: z.core.$ZodFunction, { next }) => {
+  const { input, output } = schema._zod.def;
+  if (!isSchema<z.core.$ZodTuple>(input, "tuple"))
+    throw new Error("z.function()::input must be a tuple");
+  const params = input._zod.def.items.map((subject, index) => {
     const { description } = globalRegistry.get(subject) || {};
     return f.createParameterDeclaration(
       undefined,
@@ -240,13 +226,13 @@ const onFunction: Producer = (schema: FunctionSchema, { next }) => {
       f.createIdentifier(
         description
           ? lcFirst(makeCleanId(description))
-          : `${isFunctionSchema(subject) ? "cb" : "p"}${index + 1}`,
+          : `${isSchema(subject, "function") ? "cb" : "p"}${index + 1}`,
       ),
       undefined,
       next(subject),
     );
   });
-  const { rest } = schema._zod.bag.input._zod.def;
+  const { rest } = input._zod.def;
   if (rest) {
     const { description } = globalRegistry.get(rest) || {};
     params.push(
@@ -261,18 +247,10 @@ const onFunction: Producer = (schema: FunctionSchema, { next }) => {
       ),
     );
   }
-  return f.createFunctionTypeNode(
-    undefined,
-    params,
-    next(schema._zod.bag.output),
-  );
+  return f.createFunctionTypeNode(undefined, params, next(output));
 };
 
-const producers: HandlingRules<
-  ts.TypeNode,
-  ZTSContext,
-  FirstPartyKind | "function"
-> = {
+const producers: HandlingRules<ts.TypeNode, ZTSContext, FirstPartyKind> = {
   string: onPrimitive(ts.SyntaxKind.StringKeyword),
   number: onPrimitive(ts.SyntaxKind.NumberKeyword),
   bigint: onPrimitive(ts.SyntaxKind.BigIntKeyword),
@@ -282,7 +260,6 @@ const producers: HandlingRules<
   never: onPrimitive(ts.SyntaxKind.NeverKeyword),
   void: onPrimitive(ts.SyntaxKind.VoidKeyword),
   unknown: onPrimitive(ts.SyntaxKind.UnknownKeyword),
-  date: onDate,
   null: onNull,
   array: onArray,
   tuple: onTuple,

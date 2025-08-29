@@ -1,7 +1,7 @@
-import { hex, italic } from "ansis";
+import { hex, bgHex, italic } from "ansis";
 import * as R from "ramda";
 
-const dedication = italic("for Sheila".padEnd(40));
+const dedication = italic("for Ociel".padEnd(40));
 const proud = "Proudly supports non-binary community.".padStart(57);
 
 const georgia11 = `
@@ -18,14 +18,15 @@ ${dedication}${proud}
 `;
 
 const getColorFn = R.cond([
-  [R.gt(4), R.always(hex("#FCF434"))],
+  [R.gt(3), R.always(hex("#FCF434"))],
   [R.gt(5), R.always(hex("#FFF"))],
   [R.gt(8), R.always(hex("#9C59D1"))],
-  [R.T, R.always(hex("#383838"))],
+  [R.T, R.always(bgHex("#383838").hex("#888"))],
 ]);
 
 export const getStartupLogo = () =>
   georgia11
     .split("\n")
-    .map((line, index) => getColorFn(index)(line))
+    .slice(1)
+    .map((line, index) => getColorFn(index)(line.padEnd(97)))
     .join("\n");

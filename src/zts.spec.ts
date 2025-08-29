@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
-import { z } from "zod/v4";
-import { functionSchema } from "./function-schema";
+import { z } from "zod";
 import { f, printNode } from "./typescript-api";
 import { zodToTs } from "./zts";
 import { ZTSContext } from "./zts-helpers";
@@ -107,7 +106,6 @@ describe("zod-to-ts", () => {
         .and(z.bigint())
         .and(z.number().and(z.string()))
         .transform((arg) => console.log(arg)),
-      date: z.date(),
       undefined: z.undefined(),
       null: z.null(),
       void: z.void(),
@@ -139,14 +137,14 @@ describe("zod-to-ts", () => {
       set: z.set(z.string()),
       intersection: z.intersection(z.string(), z.number()).or(z.bigint()),
       promise: z.promise(z.number()),
-      function: functionSchema(
-        z.tuple([
+      function: z.function({
+        input: z.tuple([
           z.string().nullish().default("heo"),
           z.boolean(),
           z.boolean(),
         ]),
-        z.string(),
-      ),
+        output: z.string(),
+      }),
       optDefaultString: z.string().optional().default("hi"),
       refinedStringWithSomeBullshit: z
         .string()
@@ -321,7 +319,6 @@ describe("zod-to-ts", () => {
         string: z.string(),
         number: z.number(),
         boolean: z.boolean(),
-        date: z.date(),
         undefined: z.undefined(),
         null: z.null(),
         void: z.void(),
@@ -387,6 +384,24 @@ describe("zod-to-ts", () => {
         { isResponse: true, expected: "transformed" },
       ])("should produce the schema type $expected", ({ isResponse }) => {
         const schema = z.number().transform((num) => `${num}`);
+        expect(
+          printNodeTest(zodToTs(schema, { ...ctx, isResponse })),
+        ).toMatchSnapshot();
+      });
+
+      test.each([
+        {
+          isResponse: false,
+          schema: z.iso.datetime().transform((str) => new Date(str)),
+        },
+        {
+          isResponse: true,
+          schema: z
+            .date()
+            .transform((date) => date.toISOString())
+            .pipe(z.iso.datetime()),
+        },
+      ])("should handle Date I/O %#", ({ isResponse, schema }) => {
         expect(
           printNodeTest(zodToTs(schema, { ...ctx, isResponse })),
         ).toMatchSnapshot();

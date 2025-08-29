@@ -1,12 +1,11 @@
-import { z } from "zod/v4";
-import type { $ZodTransform, $ZodType } from "zod/v4/core";
+import { z } from "zod";
 import * as R from "ramda";
 
 export type EmptyObject = Record<string, never>;
 export type FlatObject = Record<string, unknown>;
 
 export const getTransformedType = R.tryCatch(
-  <T>(schema: $ZodTransform<unknown, T>, sample: T) =>
+  <T>(schema: z.core.$ZodTransform<unknown, T>, sample: T) =>
     typeof z.parse(schema, sample),
   R.always(undefined),
 );
@@ -47,7 +46,7 @@ export const getMessageFromError = (error: Error): string => {
 };
 
 /** Faster replacement to instanceof for code operating core types (traversing schemas) */
-export const isSchema = <T extends $ZodType = $ZodType>(
+export const isSchema = <T extends z.core.$ZodType = z.core.$ZodType>(
   subject: unknown,
   type?: T["_zod"]["def"]["type"],
 ): subject is T =>

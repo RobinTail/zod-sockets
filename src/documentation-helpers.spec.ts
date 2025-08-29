@@ -1,5 +1,4 @@
-import type { GlobalMeta, JSONSchema } from "zod/v4/core";
-import { z } from "zod/v4";
+import { z } from "zod";
 import {
   AsyncAPIContext,
   depictNullable,
@@ -7,7 +6,6 @@ import {
   depictBigInt,
   depictTuple,
   depictPipeline,
-  depictDate,
   getExamples,
 } from "./documentation-helpers";
 import assert from "node:assert/strict";
@@ -42,7 +40,7 @@ describe("Documentation helpers", () => {
     test.each([requestCtx, responseCtx])(
       "should add null type to the first of anyOf %#",
       (ctx) => {
-        const jsonSchema: JSONSchema.BaseSchema = {
+        const jsonSchema: z.core.JSONSchema.BaseSchema = {
           anyOf: [{ type: "string" }, { type: "null" }],
         };
         expect(
@@ -67,7 +65,7 @@ describe("Documentation helpers", () => {
         depictNullable(
           {
             zodSchema: z.never(),
-            jsonSchema: jsonSchema as JSONSchema.BaseSchema,
+            jsonSchema: jsonSchema as z.core.JSONSchema.BaseSchema,
           },
           requestCtx,
         ),
@@ -90,14 +88,6 @@ describe("Documentation helpers", () => {
     ])("should add items:not:{} when no rest %#", (zodSchema) => {
       expect(
         depictTuple({ zodSchema, jsonSchema: {} }, requestCtx),
-      ).toMatchSnapshot();
-    });
-  });
-
-  describe("depictDate", () => {
-    test.each([responseCtx, requestCtx])("should set format date %#", (ctx) => {
-      expect(
-        depictDate({ zodSchema: z.date(), jsonSchema: {} }, ctx),
       ).toMatchSnapshot();
     });
   });
@@ -131,15 +121,10 @@ describe("Documentation helpers", () => {
   });
 
   describe("getExamples()", () => {
-    test.each<GlobalMeta>([
+    test.each<z.core.GlobalMeta>([
       { examples: [1, 2, 3] },
       { examples: [] },
       { examples: undefined },
-      { examples: { one: { value: 123 } } },
-      { example: 123 },
-      { example: 0 },
-      { example: undefined },
-      { examples: [1, 2, 3], example: 123 }, // priority
       {},
     ])("should handle %s", (meta) => {
       const schema = z.unknown().meta(meta);
@@ -151,7 +136,7 @@ describe("Documentation helpers", () => {
     const schema = z
       .tuple([
         z.string().meta({ examples: ["123", "456"] }),
-        z.number().meta({ example: 123 }),
+        z.number().meta({ examples: [123] }),
       ])
       .rest(z.boolean());
     expect(getExamples(schema)).toMatchSnapshot();

@@ -1,16 +1,5 @@
 import * as R from "ramda";
-import { globalRegistry, z } from "zod/v4";
-import type {
-  $ZodDate,
-  $ZodDiscriminatedUnion,
-  $ZodPipe,
-  $ZodShape,
-  $ZodTransform,
-  $ZodTuple,
-  $ZodType,
-  $ZodUnion,
-  JSONSchema,
-} from "zod/v4/core";
+import { globalRegistry, z } from "zod";
 import {
   MessageObject,
   OperationObject,
@@ -32,9 +21,12 @@ export interface AsyncAPIContext {
 }
 
 export type Depicter = (
-  zodCtx: { zodSchema: $ZodType; jsonSchema: JSONSchema.BaseSchema },
+  zodCtx: {
+    zodSchema: z.core.$ZodType;
+    jsonSchema: z.core.JSONSchema.BaseSchema;
+  },
   apiCtx: AsyncAPIContext,
-) => JSONSchema.BaseSchema | SchemaObject;
+) => z.core.JSONSchema.BaseSchema | SchemaObject;
 
 const samples = {
   integer: 0,
@@ -47,7 +39,12 @@ const samples = {
 } satisfies Record<SchemaObjectType, unknown>;
 
 export const depictUnion: Depicter = ({ zodSchema, jsonSchema }) => {
-  if (!isSchema<$ZodUnion | $ZodDiscriminatedUnion>(zodSchema, "union"))
+  if (
+    !isSchema<z.core.$ZodUnion | z.core.$ZodDiscriminatedUnion>(
+      zodSchema,
+      "union",
+    )
+  )
     return jsonSchema;
   if (!("discriminator" in zodSchema._zod.def)) return jsonSchema;
   const propertyName: string = zodSchema._zod.def.discriminator;
@@ -71,19 +68,39 @@ export const depictBigInt: Depicter = () => ({
 });
 
 export const depictTuple: Depicter = ({ zodSchema, jsonSchema }) => {
-  if ((zodSchema as $ZodTuple)._zod.def.rest !== null) return jsonSchema;
+  if ((zodSchema as z.core.$ZodTuple)._zod.def.rest !== null) return jsonSchema;
   // does not appear to support items:false, so not:{} is a recommended alias
   return { ...jsonSchema, items: { not: {} } };
 };
 
+const makeSample = (depicted: SchemaObject) => {
+  const firstType = (
+    Array.isArray(depicted.type) ? depicted.type[0] : depicted.type
+  ) as keyof typeof samples;
+  return samples?.[firstType];
+};
+
+const makeNullableType = (
+  current:
+    | z.core.JSONSchema.BaseSchema["type"]
+    | Array<NonNullable<z.core.JSONSchema.BaseSchema["type"]>>,
+): typeof current => {
+  if (current === ("null" satisfies SchemaObjectType)) return current;
+  if (typeof current === "string")
+    return [current, "null" satisfies SchemaObjectType];
+  return (
+    current && [...new Set(current).add("null" satisfies SchemaObjectType)]
+  );
+};
+
 export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
-  const target = (zodSchema as $ZodPipe)._zod.def[
+  const target = (zodSchema as z.core.$ZodPipe)._zod.def[
     ctx.isResponse ? "out" : "in"
   ];
-  const opposite = (zodSchema as $ZodPipe)._zod.def[
+  const opposite = (zodSchema as z.core.$ZodPipe)._zod.def[
     ctx.isResponse ? "in" : "out"
   ];
-  if (!isSchema<$ZodTransform>(target, "transform")) return jsonSchema;
+  if (!isSchema<z.core.$ZodTransform>(target, "transform")) return jsonSchema;
   const opposingDepiction = asAsyncAPI(depict(opposite, { ctx }));
   if (!isReferenceObject(opposingDepiction)) {
     if (!ctx.isResponse) {
@@ -95,7 +112,7 @@ export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
     } else {
       const targetType = getTransformedType(
         target,
-        isSchema<$ZodDate>(opposite, "date")
+        isSchema<z.core.$ZodDate>(opposite, "date")
           ? new Date()
           : makeSample(opposingDepiction),
       );
@@ -110,30 +127,8 @@ export const depictPipeline: Depicter = ({ zodSchema, jsonSchema }, ctx) => {
   return jsonSchema;
 };
 
-const asAsyncAPI = (subject: JSONSchema.BaseSchema) =>
+const asAsyncAPI = (subject: z.core.JSONSchema.BaseSchema) =>
   subject as SchemaObject | ReferenceObject;
-
-const makeSample = (depicted: SchemaObject) => {
-  const firstType = (
-    Array.isArray(depicted.type) ? depicted.type[0] : depicted.type
-  ) as keyof typeof samples;
-  return samples?.[firstType];
-};
-
-const makeNullableType = (
-  current:
-    | JSONSchema.BaseSchema["type"]
-    | Array<NonNullable<JSONSchema.BaseSchema["type"]>>,
-): typeof current => {
-  if (current === ("null" satisfies SchemaObjectType)) return current;
-  if (typeof current === "string")
-    return [current, "null" satisfies SchemaObjectType];
-  return (
-    current && [...new Set(current).add("null" satisfies SchemaObjectType)]
-  );
-};
-
-export const depictDate: Depicter = () => ({ format: "date" });
 
 const depicters: Partial<Record<FirstPartyKind, Depicter>> = {
   nullable: depictNullable,
@@ -141,7 +136,6 @@ const depicters: Partial<Record<FirstPartyKind, Depicter>> = {
   bigint: depictBigInt,
   tuple: depictTuple,
   pipe: depictPipeline,
-  date: depictDate,
 };
 
 /**
@@ -149,8 +143,8 @@ const depicters: Partial<Record<FirstPartyKind, Depicter>> = {
  * @link https://github.com/colinhacks/zod/issues/4281
  * */
 const fixReferences = (
-  subject: JSONSchema.BaseSchema,
-  defs: Record<string, JSONSchema.BaseSchema>,
+  subject: z.core.JSONSchema.BaseSchema,
+  defs: Record<string, z.core.JSONSchema.BaseSchema>,
   ctx: AsyncAPIContext,
 ) => {
   const stack: unknown[] = [subject, defs];
@@ -176,7 +170,7 @@ const fixReferences = (
 };
 
 const depict = (
-  subject: $ZodType,
+  subject: z.core.$ZodType,
   {
     ctx,
     rules = depicters,
@@ -196,7 +190,7 @@ const depict = (
         }
       },
     },
-  ) as JSONSchema.ObjectSchema;
+  ) as z.core.JSONSchema.ObjectSchema;
   return fixReferences(
     isObject(properties["subject"]) ? properties["subject"] : {},
     $defs,
@@ -208,15 +202,12 @@ const depict = (
  * @since zod 3.25.44
  * @link https://github.com/colinhacks/zod/pull/4586
  * */
-export const getExamples = (subject: $ZodType): ReadonlyArray<unknown> => {
-  const { examples, example } = globalRegistry.get(subject) || {};
-  if (examples) {
-    return Array.isArray(examples)
-      ? examples
-      : Object.values(examples).map(({ value }) => value);
-  }
-  if (example !== undefined) return [example];
-  if (isSchema<$ZodTuple>(subject, "tuple")) {
+export const getExamples = (
+  subject: z.core.$ZodType,
+): ReadonlyArray<unknown> => {
+  const { examples } = globalRegistry.get(subject) || {};
+  if (Array.isArray(examples)) return examples;
+  if (isSchema<z.core.$ZodTuple>(subject, "tuple")) {
     const pulled: unknown[] = [];
     for (const item of subject._zod.def.items) {
       const itemExamples = getExamples(item);
@@ -296,7 +287,7 @@ export const depictOperation = ({
 });
 
 export const depictProtocolFeatures = (
-  shape: $ZodShape,
+  shape: z.core.$ZodShape,
   {
     extra,
     makeRef,

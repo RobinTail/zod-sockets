@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { AbstractAction, Action } from "./action";
 import { AbstractLogger } from "./logger";
 

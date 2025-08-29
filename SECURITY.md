@@ -4,6 +4,7 @@
 
 | Version | Release |     Supported      |
 | ------: | :------ | :----------------: |
+|   5.x.x | 09.2025 | :white_check_mark: |
 |   4.x.x | 06.2025 | :white_check_mark: |
 |   3.x.x | 05.2025 | :white_check_mark: |
 |   2.x.x | 06.2024 |        :x:         |

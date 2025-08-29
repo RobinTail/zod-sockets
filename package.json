@@ -1,21 +1,15 @@
 {
   "name": "zod-sockets",
-  "version": "4.1.2",
+  "version": "5.0.0-beta.1",
   "description": "Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers",
   "type": "module",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [
@@ -23,7 +17,7 @@
     "*.md"
   ],
   "engines": {
-    "node": "^20.9.0 || ^22.0.0 || ^24.0.0"
+    "node": "^20.19.0 || ^22.12.0 || ^24.0.0"
   },
   "author": {
     "name": "Anna Bocharova",
@@ -48,7 +42,7 @@
     "mdfix": "prettier *.md --write",
     "start": "tsx example/index.ts",
     "build": "yarn build:compile && yarn build:tests && yarn build:client && yarn build:docs",
-    "build:compile": "tsup && attw --pack",
+    "build:compile": "tsdown",
     "build:client": "tsx example/generate-client.ts && prettier --write example/example*.ts",
     "build:docs": "tsx example/generate-documentation.ts",
     "build:tests": "tsx tools/make-tests.ts",
@@ -65,14 +59,13 @@
   "peerDependencies": {
     "socket.io": "^4.7.4",
     "typescript": "^5.3.3",
-    "zod": "^3.25.56 || ^4.0.5"
+    "zod": "^4.1.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.1",
     "@tsconfig/node20": "^20.1.5",
     "@types/node": "^24.0.3",
     "@types/ramda": "^0.31.0",
-    "@types/semver": "^7.5.8",
     "@vitest/coverage-v8": "^3.2.2",
     "eslint": "^9.4.0",
     "eslint-config-prettier": "^10.0.1",
@@ -81,15 +74,14 @@
     "husky": "^9.0.10",
     "make-coverage-badge": "^1.2.0",
     "prettier": "3.6.2",
-    "semver": "^7.6.3",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
-    "tsup": "^8.0.1",
+    "tsdown": "^0.14.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.0.1",
     "vitest": "^3.2.2",
-    "zod": "^4.0.5"
+    "zod": "^4.1.0"
   },
   "keywords": [
     "nodejs",

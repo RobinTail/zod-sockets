@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { Action } from "./action";
 import { ActionsFactory } from "./actions-factory";
 import { createSimpleConfig } from "./config";

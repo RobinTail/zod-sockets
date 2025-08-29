@@ -123,7 +123,7 @@ export const attachSockets = async <NS extends Namespaces>({
     await onStartup(nsCtx);
   }
   (startupLogo ? console.log : () => {})(getStartupLogo());
-  rootLogger.debug("Running", process.env.TSUP_BUILD || "from sources");
+  rootLogger.debug("Running", process.env.TSDOWN_BUILD || "from sources");
   rootLogger.info("Listening", target.address());
   return io.attach(target);
 };

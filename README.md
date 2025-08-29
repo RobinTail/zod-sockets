@@ -133,12 +133,7 @@ const config = createSimpleConfig({
     // enabling Socket::emit("secret", "message", ([readAt]: [Date]) => {})
     secret: {
       schema: z.tuple([z.string()]),
-      ack: z.tuple([
-        z
-          .string()
-          .datetime()
-          .transform((str) => new Date(str)),
-      ]),
+      ack: z.tuple([z.iso.datetime().transform((str) => new Date(str))]),
     },
   },
 });
@@ -459,7 +454,14 @@ const { logger, servers } = await createServer();
 
 const config = createSimpleConfig({
   emission: {
-    time: { schema: z.tuple([z.date()]) }, // constraints
+    time: {
+      schema: z.tuple([
+        z
+          .date() // constraints
+          .transform((date) => date.toISOString())
+          .pipe(z.iso.datetime()),
+      ]),
+    },
   },
   hooks: {
     onStartup: async ({ withRooms }) => {

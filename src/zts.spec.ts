@@ -392,11 +392,14 @@ describe("zod-to-ts", () => {
       test.each([
         {
           isResponse: false,
-          schema: z.string().transform((str) => new Date(str)),
+          schema: z.iso.datetime().transform((str) => new Date(str)),
         },
         {
           isResponse: true,
-          schema: z.date().transform((date) => date.toISOString()),
+          schema: z
+            .date()
+            .transform((date) => date.toISOString())
+            .pipe(z.iso.datetime()),
         },
       ])("should handle Date I/O %#", ({ isResponse, schema }) => {
         expect(

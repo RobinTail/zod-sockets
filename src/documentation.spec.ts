@@ -236,8 +236,15 @@ describe("Documentation", () => {
         actions: [
           factory.build({
             event: "test",
-            input: z.tuple([z.string().transform((str) => new Date(str))]),
-            output: z.tuple([z.date().transform((date) => date.toISOString())]),
+            input: z.tuple([
+              z.iso.datetime().transform((str) => new Date(str)),
+            ]),
+            output: z.tuple([
+              z
+                .date()
+                .transform((date) => date.toISOString())
+                .pipe(z.iso.datetime()),
+            ]),
             handler: async () => [new Date()],
           }),
         ],

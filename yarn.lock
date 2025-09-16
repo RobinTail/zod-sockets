@@ -704,9 +704,9 @@
     undici-types "~7.10.0"
 
 "@types/ramda@^0.31.0":
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.31.0.tgz#a32da24257804d53194875361e0d74b8666c8cb0"
-  integrity sha512-1lWWZ/2YiNttGcIUxQwnvMuh55GIEbn/zlpzzEojAsbxquI/TXQZCRaXsfxG1CHjlqGoqxWePkvaM/5qYHNuvQ==
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.31.1.tgz#da637f3110b0677521dbc13d8a86ec7cbbf8e3fe"
+  integrity sha512-Vt6sFXnuRpzaEj+yeutA0q3bcAsK7wdPuASIzR9LXqL4gJPyFw8im9qchlbp4ltuf3kDEIRmPJTD/Fkg60dn7g==
   dependencies:
     types-ramda "^0.31.0"
 

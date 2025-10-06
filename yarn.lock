@@ -2381,9 +2381,9 @@ ts-toolbelt@^9.6.0:
   integrity sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==
 
 tsdown@^0.15.4:
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/tsdown/-/tsdown-0.15.5.tgz#48786d02df4a5edc4eaf21b97b54e2b064c661ec"
-  integrity sha512-2UP5hDBVYGHnnQSIYtDxMDjePmut7EDpvW5E2kVnjpZ17JgiPvRJPHwk5Dm045bC75+q8yxAlw/CMIELymTWaw==
+  version "0.15.6"
+  resolved "https://registry.yarnpkg.com/tsdown/-/tsdown-0.15.6.tgz#10218cbebf53307f7cb1db4da2c6eed95827d7b4"
+  integrity sha512-W6++O3JeV9gm3JY6P/vLiC7zzTcJbZhQxXb+p3AvRMpDOPBIg82yXULyZCcwjsihY/bFG+Qw37HkezZbP7fzUg==
   dependencies:
     ansis "^4.1.0"
     cac "^6.7.14"

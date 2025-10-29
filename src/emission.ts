@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import type { RemoteSocket, Server, Socket } from "socket.io";
+import type { Namespace, RemoteSocket, Server, Socket } from "socket.io";
 import { z } from "zod";
 import {
   RemoteClient,
@@ -91,7 +91,7 @@ export const makeRoomService =
     subject,
     ...rest
   }: {
-    subject: Socket | Server;
+    subject: Socket | Server | Namespace;
     metadata: D;
   } & EmitterConfig<E>): RoomService<E, D> =>
   (rooms) => ({

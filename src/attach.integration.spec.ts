@@ -4,7 +4,7 @@ import { io as ioClient } from "socket.io-client";
 import { z } from "zod";
 import { attachSockets } from "./attach";
 import { Config } from "./config";
-import { ActionsFactory } from './actions-factory';
+import { ActionsFactory } from "./actions-factory";
 
 describe("Attach", () => {
   describe("attachSockets() with real Socket.IO", () => {

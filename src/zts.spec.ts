@@ -170,6 +170,16 @@ describe("zod-to-ts", () => {
     });
   });
 
+  describe("z.function()", () => {
+    test("should throw when the input schema is not a ZodTuple", () => {
+      const schema = z.function({
+        input: z.array(z.number()),
+        output: z.string(),
+      });
+      expect(() => zodToTs(schema, ctx)).toThrowErrorMatchingSnapshot();
+    });
+  });
+
   describe("z.optional()", () => {
     const optionalStringSchema = z.string().optional();
     const objectWithOptionals = z.object({

@@ -2,11 +2,16 @@ import http from "node:http";
 import { Server } from "socket.io";
 import { io as ioClient } from "socket.io-client";
 import { z } from "zod";
-import { attachSockets } from "./attach";
-import { Config } from "./config";
-import { ActionsFactory } from "./actions-factory";
+import { attachSockets, Config, ActionsFactory } from "../../src";
 
-describe("Attach", () => {
+/**
+ * withRooms().getClients() returns an empty array in action handlers even after clients join rooms in the onConnection
+ * hook. Broadcasts via withRooms().broadcast() also fail silently. ClientContext.withRooms uses socket as the subject,
+ * limiting queries to socket-local scope instead of namespace-wide scope.
+ * @link https://github.com/RobinTail/zod-sockets/pull/590
+ * @author https://github.com/simwai
+ */
+describe("Issue #590", () => {
   describe("attachSockets() with real Socket.IO", () => {
     let httpServer: http.Server;
     let io: Server;

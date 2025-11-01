@@ -194,6 +194,12 @@ exports[`zod-to-ts > z.discriminatedUnion() > outputs correct typescript 1`] = `
 }"
 `;
 
+exports[`zod-to-ts > z.function() > should throw when the input schema is not a ZodTuple 1`] = `
+Error({
+  "message": "z.function()::input must be a tuple",
+})
+`;
+
 exports[`zod-to-ts > z.literal() > Should produce the correct typescript 0 1`] = `""test""`;
 
 exports[`zod-to-ts > z.literal() > Should produce the correct typescript 1 1`] = `"true"`;

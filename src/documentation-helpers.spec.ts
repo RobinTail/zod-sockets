@@ -22,6 +22,15 @@ describe("Documentation helpers", () => {
   };
 
   describe("depictUnion()", () => {
+    test("should ignore non-union schemas", () => {
+      expect(
+        depictUnion(
+          { zodSchema: z.never(), jsonSchema: { id: "this one" } },
+          responseCtx,
+        ),
+      ).toEqual({ id: "this one" });
+    });
+
     test("should set discriminator prop for such union", () => {
       const zodSchema = z.discriminatedUnion("status", [
         z.object({ status: z.literal("success"), data: z.any() }),

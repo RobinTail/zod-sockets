@@ -14,19 +14,9 @@ import { setTimeout } from "node:timers/promises";
  */
 describe("Issue #590", () => {
   describe("attachSockets() with real Socket.IO", () => {
-    let httpServer: http.Server;
-    let io: Server;
-    let clientSocket: ReturnType<typeof ioClient> | undefined;
-
-    afterEach(async () => {
-      clientSocket?.disconnect();
-      if (io) await new Promise((resolve) => io.close(resolve));
-      if (httpServer) await new Promise((resolve) => httpServer.close(resolve));
-    });
-
     test("should query and broadcast to rooms joined in onConnection", async () => {
-      httpServer = http.createServer();
-      io = new Server();
+      const httpServer = http.createServer();
+      const io = new Server();
       const port = 10000 + Math.floor(Math.random() * 1000);
 
       let clientsInRoom = 0;
@@ -67,17 +57,17 @@ describe("Issue #590", () => {
       });
 
       // connect client:
-      clientSocket = ioClient(`http://localhost:${port}/chat`, {
+      const clientSocket = ioClient(`http://localhost:${port}/chat`, {
         transports: ["websocket"],
       });
 
       await new Promise<void>((resolve) => {
-        clientSocket!.on("connect", resolve);
+        clientSocket.on("connect", resolve);
       });
 
       // listen for broadcast:
       const broadcastReceived = new Promise<string>((resolve) => {
-        clientSocket!.on("testBroadcast", (msg: string) => resolve(msg));
+        clientSocket.on("testBroadcast", (msg: string) => resolve(msg));
       });
 
       // trigger action:
@@ -93,6 +83,10 @@ describe("Issue #590", () => {
 
       // withRooms().broadcast() should reach client:
       expect(receivedBroadcast).toBe("hello");
-    }, 15000);
+
+      clientSocket.disconnect();
+      await new Promise((resolve) => io.close(resolve));
+      await new Promise((resolve) => httpServer.close(resolve));
+    });
   });
 });

@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import { io as ioClient } from "socket.io-client";
 import { z } from "zod";
 import { attachSockets, Config, ActionsFactory } from "../../src";
+import { setTimeout } from "node:timers/promises";
 
 /**
  * withRooms().getClients() returns an empty array in action handlers even after clients join rooms in the onConnection
@@ -18,15 +19,9 @@ describe("Issue #590", () => {
     let clientSocket: ReturnType<typeof ioClient> | undefined;
 
     afterEach(async () => {
-      if (clientSocket) {
-        clientSocket.disconnect();
-      }
-      if (io) {
-        await new Promise<void>((resolve) => io.close(() => resolve()));
-      }
-      if (httpServer) {
-        await new Promise<void>((resolve) => httpServer.close(() => resolve()));
-      }
+      clientSocket?.disconnect();
+      if (io) await new Promise((resolve) => io.close(resolve));
+      if (httpServer) await new Promise((resolve) => httpServer.close(resolve));
     });
 
     test("should query and broadcast to rooms joined in onConnection", async () => {
@@ -35,7 +30,6 @@ describe("Issue #590", () => {
       const port = 10000 + Math.floor(Math.random() * 1000);
 
       let clientsInRoom = 0;
-      let receivedBroadcast = "";
 
       const config = new Config().addNamespace({
         path: "/chat",
@@ -43,9 +37,7 @@ describe("Issue #590", () => {
           testBroadcast: { schema: z.tuple([z.string()]) },
         },
         hooks: {
-          async onConnection({ client }) {
-            await client.join("testRoom");
-          },
+          onConnection: async ({ client }) => await client.join("testRoom"),
         },
         metadata: z.object({}),
       });
@@ -71,7 +63,7 @@ describe("Issue #590", () => {
       });
 
       await new Promise<void>((resolve) => {
-        httpServer.listen(port, () => resolve());
+        httpServer.listen(port, resolve);
       });
 
       // connect client:
@@ -80,7 +72,7 @@ describe("Issue #590", () => {
       });
 
       await new Promise<void>((resolve) => {
-        clientSocket!.on("connect", () => resolve());
+        clientSocket!.on("connect", resolve);
       });
 
       // listen for broadcast:
@@ -91,9 +83,9 @@ describe("Issue #590", () => {
       // trigger action:
       clientSocket.emit("testQuery");
 
-      receivedBroadcast = await Promise.race([
+      const receivedBroadcast = await Promise.race([
         broadcastReceived,
-        new Promise<string>((resolve) => setTimeout(() => resolve(""), 1000)),
+        setTimeout(1000, ""),
       ]);
 
       // withRooms().getClients() should find client:

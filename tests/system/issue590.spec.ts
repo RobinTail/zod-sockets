@@ -4,6 +4,7 @@ import { io as ioClient } from "socket.io-client";
 import { z } from "zod";
 import { attachSockets, Config, ActionsFactory } from "../../src";
 import { setTimeout } from "node:timers/promises";
+import { promisify } from "node:util";
 
 /**
  * withRooms().getClients() returns an empty array in action handlers even after clients join rooms in the onConnection
@@ -52,18 +53,14 @@ describe("Issue #590", () => {
         target: httpServer,
       });
 
-      await new Promise<void>((resolve) => {
-        httpServer.listen(port, resolve);
-      });
+      await promisify(httpServer.listen.bind(httpServer, port))();
 
       // connect client:
       const clientSocket = ioClient(`http://localhost:${port}/chat`, {
         transports: ["websocket"],
       });
 
-      await new Promise<void>((resolve) => {
-        clientSocket.on("connect", resolve);
-      });
+      await promisify(clientSocket.on.bind(clientSocket, "connect"))();
 
       // listen for broadcast:
       const broadcastReceived = new Promise<string>((resolve) => {
@@ -85,8 +82,9 @@ describe("Issue #590", () => {
       expect(receivedBroadcast).toBe("hello");
 
       clientSocket.disconnect();
-      await new Promise((resolve) => io.close(resolve));
-      await new Promise((resolve) => httpServer.close(resolve));
+      await promisify(io.close.bind(io))();
+      if (httpServer.listening)
+        await promisify(httpServer.close.bind(httpServer))();
     });
   });
 });

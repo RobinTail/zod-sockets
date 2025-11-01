@@ -92,7 +92,7 @@ export const attachSockets = async <NS extends Namespaces>({
       const ctx: ClientContext<NSEmissions, NSMeta> = {
         ...nsCtx,
         client,
-        withRooms: makeRoomService({ subject: socket, metadata, ...emitCfg }),
+        withRooms: makeRoomService({ subject: ns, metadata, ...emitCfg }),
       };
       await onConnection(ctx);
       socket.onAny((event, ...payload) =>

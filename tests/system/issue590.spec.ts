@@ -71,10 +71,9 @@ describe("Issue #590", () => {
       // trigger action:
       clientSocket.emit("testQuery");
 
-      const receivedBroadcast = await Promise.race([
-        broadcastReceived,
-        setTimeout(1000, ""),
-      ]);
+      const receivedBroadcast = await vi.waitFor(() => broadcastReceived, {
+        timeout: 1000,
+      });
 
       // withRooms().getClients() should find client:
       expect(clientsInRoom).toBe(1);

@@ -3,7 +3,6 @@ import { Server } from "socket.io";
 import { io as ioClient } from "socket.io-client";
 import { z } from "zod";
 import { attachSockets, Config, ActionsFactory } from "../../src";
-import { setTimeout } from "node:timers/promises";
 import { promisify } from "node:util";
 
 const port = 8999;

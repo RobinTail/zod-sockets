@@ -4,6 +4,7 @@ import { io as ioClient } from "socket.io-client";
 import { z } from "zod";
 import { attachSockets, Config, ActionsFactory } from "../../src";
 import { promisify } from "node:util";
+import assert from "node:assert/strict";
 
 const port = 8999;
 
@@ -60,7 +61,7 @@ describe("Issue #590", () => {
         transports: ["websocket"],
       });
 
-      await promisify(clientSocket.on.bind(clientSocket, "connect"))();
+      await vi.waitFor(() => assert(clientSocket.connected));
 
       // listen for broadcast:
       const broadcastReceived = new Promise<string>((resolve) => {

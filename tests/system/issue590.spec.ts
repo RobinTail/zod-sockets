@@ -65,7 +65,7 @@ describe("Issue #590", () => {
 
       // listen for broadcast:
       const broadcastReceived = new Promise<string>((resolve) => {
-        clientSocket.on("testBroadcast", (msg: string) => resolve(msg));
+        clientSocket.on("testBroadcast", resolve);
       });
 
       // trigger action:

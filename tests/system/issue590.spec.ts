@@ -6,6 +6,8 @@ import { attachSockets, Config, ActionsFactory } from "../../src";
 import { setTimeout } from "node:timers/promises";
 import { promisify } from "node:util";
 
+const port = 8999;
+
 /**
  * withRooms().getClients() returns an empty array in action handlers even after clients join rooms in the onConnection
  * hook. Broadcasts via withRooms().broadcast() also fail silently. ClientContext.withRooms uses socket as the subject,
@@ -18,7 +20,6 @@ describe("Issue #590", () => {
     test("should query and broadcast to rooms joined in onConnection", async () => {
       const httpServer = http.createServer();
       const io = new Server();
-      const port = 10000 + Math.floor(Math.random() * 1000);
 
       let clientsInRoom = 0;
 

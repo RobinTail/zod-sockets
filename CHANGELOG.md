@@ -4,7 +4,7 @@
 
 ### v5.0.1
 
-- Fixed `withRooms().getClients()` to return remove clients correctly in action handlers:
+- Fixed `withRooms().getClients()` to return remote clients correctly in action handlers:
   - The method used to return an empty array due to wrong configuration;
   - The issue was found, reported and fixed by [@simwai](https://github.com/simwai).
 

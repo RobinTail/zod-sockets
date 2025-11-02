@@ -1,9 +1,9 @@
 import http from "node:http";
-import {Server} from "socket.io";
-import {io as ioClient} from "socket.io-client";
-import {z} from "zod";
-import {ActionsFactory, attachSockets, Config} from "../../src";
-import {promisify} from "node:util";
+import { Server } from "socket.io";
+import { io as ioClient } from "socket.io-client";
+import { z } from "zod";
+import { ActionsFactory, attachSockets, Config } from "../../src";
+import { promisify } from "node:util";
 import assert from "node:assert/strict";
 
 const port = 8999;
@@ -26,10 +26,10 @@ describe("Issue #590", () => {
       const config = new Config().addNamespace({
         path: "/chat",
         emission: {
-          testBroadcast: {schema: z.tuple([z.string()])},
+          testBroadcast: { schema: z.tuple([z.string()]) },
         },
         hooks: {
-          onConnection: async ({client}) => await client.join("testRoom"),
+          onConnection: async ({ client }) => await client.join("testRoom"),
         },
         metadata: z.object({}),
       });
@@ -40,7 +40,7 @@ describe("Issue #590", () => {
         ns: "/chat",
         event: "testQuery",
         input: z.tuple([]),
-        async handler({withRooms}) {
+        async handler({ withRooms }) {
           const clients = await withRooms("testRoom").getClients();
           clientsInRoom = clients.length;
           await withRooms("testRoom").broadcast("testBroadcast", "hello");

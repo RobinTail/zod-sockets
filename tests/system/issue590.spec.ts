@@ -1,9 +1,9 @@
 import http from "node:http";
-import { Server } from "socket.io";
-import { io as ioClient } from "socket.io-client";
-import { z } from "zod";
-import { attachSockets, Config, ActionsFactory } from "../../src";
-import { promisify } from "node:util";
+import {Server} from "socket.io";
+import {io as ioClient} from "socket.io-client";
+import {z} from "zod";
+import {ActionsFactory, attachSockets, Config} from "../../src";
+import {promisify} from "node:util";
 import assert from "node:assert/strict";
 
 const port = 8999;
@@ -26,10 +26,10 @@ describe("Issue #590", () => {
       const config = new Config().addNamespace({
         path: "/chat",
         emission: {
-          testBroadcast: { schema: z.tuple([z.string()]) },
+          testBroadcast: {schema: z.tuple([z.string()])},
         },
         hooks: {
-          onConnection: async ({ client }) => await client.join("testRoom"),
+          onConnection: async ({client}) => await client.join("testRoom"),
         },
         metadata: z.object({}),
       });
@@ -40,7 +40,7 @@ describe("Issue #590", () => {
         ns: "/chat",
         event: "testQuery",
         input: z.tuple([]),
-        async handler({ withRooms }) {
+        async handler({withRooms}) {
           const clients = await withRooms("testRoom").getClients();
           clientsInRoom = clients.length;
           await withRooms("testRoom").broadcast("testBroadcast", "hello");
@@ -83,6 +83,123 @@ describe("Issue #590", () => {
 
       clientSocket.disconnect();
       await promisify(io.close.bind(io))();
+      if (httpServer.listening)
+        await promisify(httpServer.close.bind(httpServer))();
+    });
+    test("should broadcast to all from startup hook using all.broadcast", async () => {
+      const httpServer = http.createServer();
+      const io = new Server();
+      let intervalRef;
+
+      const config = new Config().addNamespace({
+        path: "/chat",
+        emission: {
+          testBroadcast: { schema: z.tuple([z.string()]) },
+        },
+        hooks: {
+          onConnection: async ({ client }) => {
+            await client.join("testRoom");
+          },
+          onStartup: async ({ all }) => {
+            intervalRef = setInterval(() => {
+              all.broadcast("testBroadcast", "from onStartup hook");
+            }, 100);
+          },
+        },
+        metadata: z.object({}),
+      });
+
+      await attachSockets({
+        io,
+        config,
+        actions: [],
+        target: httpServer,
+      });
+
+      await promisify(httpServer.listen.bind(httpServer, port))();
+
+      // connect client:
+      const clientSocket = ioClient(`http://localhost:${port}/chat`, {
+        transports: ["websocket"],
+      });
+
+      await vi.waitFor(() => assert(clientSocket.connected));
+
+      // listen for broadcast:
+      const broadcastReceived = new Promise<string>((resolve) => {
+        clientSocket.on("testBroadcast", resolve);
+      });
+
+      const receivedBroadcast = await vi.waitFor(() => broadcastReceived, {
+        timeout: 1000,
+      });
+
+      // withRooms().broadcast() should reach client:
+      expect(receivedBroadcast).toBe("from onStartup hook");
+
+      clientSocket.disconnect();
+      await promisify(io.close.bind(io))();
+      clearInterval(intervalRef);
+      if (httpServer.listening)
+        await promisify(httpServer.close.bind(httpServer))();
+    });
+    test("should broadcast to rooms from startup hook using withRooms", async () => {
+      const httpServer = http.createServer();
+      const io = new Server();
+      let intervalRef;
+
+      const config = new Config().addNamespace({
+        path: "/chat",
+        emission: {
+          testBroadcast: { schema: z.tuple([z.string()]) },
+        },
+        hooks: {
+          onConnection: async ({ client }) => {
+            await client.join("testRoom");
+          },
+          onStartup: async ({ withRooms }) => {
+            intervalRef = setInterval(() => {
+              withRooms("testRoom").broadcast(
+                "testBroadcast",
+                "from onStartup hook",
+              );
+            }, 100);
+          },
+        },
+        metadata: z.object({}),
+      });
+
+      await attachSockets({
+        io,
+        config,
+        actions: [],
+        target: httpServer,
+      });
+
+      await promisify(httpServer.listen.bind(httpServer, port))();
+
+      // connect client:
+      const clientSocket = ioClient(`http://localhost:${port}/chat`, {
+        transports: ["websocket"],
+      });
+
+      await vi.waitFor(() => assert(clientSocket.connected));
+
+      // listen for broadcast:
+      const broadcastReceived = new Promise<string>((resolve) => {
+        clientSocket.on("testBroadcast", resolve);
+      });
+
+      const receivedBroadcast = await vi.waitFor(() => broadcastReceived, {
+        timeout: 1000,
+      });
+
+      // withRooms().broadcast() should reach client:
+      expect(receivedBroadcast).toBe("from onStartup hook");
+
+      clientSocket.disconnect();
+      await promisify(io.close.bind(io))();
+      clearInterval(intervalRef);
       if (httpServer.listening)
         await promisify(httpServer.close.bind(httpServer))();
     });

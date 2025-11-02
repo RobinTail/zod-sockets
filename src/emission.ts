@@ -58,14 +58,16 @@ export function makeEmitter<E extends EmissionMap>(
   } & EmitterConfig<E>,
 ): Emitter<E>;
 export function makeEmitter<E extends EmissionMap>(
-  props: { subject: Socket["broadcast"] | Server } & EmitterConfig<E>,
+  props: {
+    subject: Socket["broadcast"] | Server | Namespace;
+  } & EmitterConfig<E>,
 ): Broadcaster<E>;
 export function makeEmitter({
   subject,
   emission,
   timeout,
 }: {
-  subject: Socket | SomeRemoteSocket | Socket["broadcast"] | Server;
+  subject: Socket | SomeRemoteSocket | Namespace | Socket["broadcast"] | Server;
 } & EmitterConfig<EmissionMap>) {
   /**
    * @throws z.ZodError on validation

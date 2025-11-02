@@ -59,7 +59,7 @@ export const attachSockets = async <NS extends Namespaces>({
     const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
     const nsCtx: IndependentContext<NSEmissions, NSMeta> = {
       logger: rootLogger,
-      withRooms: makeRoomService({ subject: io, metadata, ...emitCfg }),
+      withRooms: makeRoomService({ subject: ns, metadata, ...emitCfg }),
       all: {
         getClients: async () =>
           makeRemoteClients({
@@ -68,7 +68,7 @@ export const attachSockets = async <NS extends Namespaces>({
             ...emitCfg,
           }),
         getRooms: () => Array.from(ns.adapter.rooms.keys()),
-        broadcast: makeEmitter({ subject: io, ...emitCfg }),
+        broadcast: makeEmitter({ subject: ns, ...emitCfg }),
       },
     };
     ns.on("connection", async (socket) => {

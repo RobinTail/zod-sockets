@@ -17,6 +17,11 @@ const port = 8999;
  */
 describe("Issue #590", () => {
   describe("attachSockets() with real Socket.IO", () => {
+    let intervalRef: NodeJS.Timeout | undefined;
+    afterEach(() => {
+      if (intervalRef) clearInterval(intervalRef);
+    });
+
     test("should query and broadcast to rooms joined in onConnection", async () => {
       const httpServer = http.createServer();
       const io = new Server();
@@ -89,7 +94,6 @@ describe("Issue #590", () => {
     test("should broadcast to all from startup hook using all.broadcast", async () => {
       const httpServer = http.createServer();
       const io = new Server();
-      let intervalRef: NodeJS.Timeout | undefined;
 
       const config = new Config().addNamespace({
         path: "/chat",
@@ -139,14 +143,12 @@ describe("Issue #590", () => {
 
       clientSocket.disconnect();
       await promisify(io.close.bind(io))();
-      clearInterval(intervalRef);
       if (httpServer.listening)
         await promisify(httpServer.close.bind(httpServer))();
     });
     test("should broadcast to rooms from startup hook using withRooms", async () => {
       const httpServer = http.createServer();
       const io = new Server();
-      let intervalRef: NodeJS.Timeout | undefined;
 
       const config = new Config().addNamespace({
         path: "/chat",
@@ -199,7 +201,6 @@ describe("Issue #590", () => {
 
       clientSocket.disconnect();
       await promisify(io.close.bind(io))();
-      clearInterval(intervalRef);
       if (httpServer.listening)
         await promisify(httpServer.close.bind(httpServer))();
     });

@@ -89,7 +89,7 @@ describe("Issue #590", () => {
     test("should broadcast to all from startup hook using all.broadcast", async () => {
       const httpServer = http.createServer();
       const io = new Server();
-      let intervalRef;
+      let intervalRef: NodeJS.Timeout | undefined;
 
       const config = new Config().addNamespace({
         path: "/chat",
@@ -146,7 +146,7 @@ describe("Issue #590", () => {
     test("should broadcast to rooms from startup hook using withRooms", async () => {
       const httpServer = http.createServer();
       const io = new Server();
-      let intervalRef;
+      let intervalRef: NodeJS.Timeout | undefined;
 
       const config = new Config().addNamespace({
         path: "/chat",

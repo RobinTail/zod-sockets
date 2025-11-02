@@ -138,7 +138,7 @@ describe("Issue #590", () => {
         timeout: 1000,
       });
 
-      // withRooms().broadcast() should reach client:
+      // all.broadcast() should reach client:
       expect(receivedBroadcast).toBe("from onStartup hook");
 
       clientSocket.disconnect();

@@ -16,7 +16,7 @@ describe("ActionsFactory", () => {
         factory.build({
           event: "test",
           input: z.tuple([z.string()]),
-          handler: vi.fn<any>(),
+          handler: vi.fn(),
         }),
       ).toBeInstanceOf(Action);
     });

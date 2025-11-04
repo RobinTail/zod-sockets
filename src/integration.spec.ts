@@ -26,7 +26,7 @@ describe("Integration", () => {
           new ActionsFactory(config).build({
             event: "test",
             input,
-            handler: vi.fn<any>(),
+            handler: vi.fn(),
           }),
         ],
       });

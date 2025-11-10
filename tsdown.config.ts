@@ -6,6 +6,7 @@ const { version } = JSON.parse(await readFile("./package.json", "utf8"));
 export default defineConfig({
   entry: "src/index.ts",
   minify: true,
+  fixedExtension: false,
   attw: { profile: "esmOnly", level: "error" },
   define: {
     "process.env.TSDOWN_BUILD": `"v${version}"`,

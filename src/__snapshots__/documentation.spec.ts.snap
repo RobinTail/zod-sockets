@@ -151,7 +151,7 @@ channels:
         payload:
           type: array
           prefixItems:
-            - anyOf:
+            - oneOf:
                 - type: object
                   properties:
                     type:
@@ -181,7 +181,7 @@ channels:
         payload:
           type: array
           prefixItems:
-            - anyOf:
+            - oneOf:
                 - type: object
                   properties:
                     status:

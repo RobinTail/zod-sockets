@@ -7,7 +7,7 @@ export default defineConfig({
   entry: "src/index.ts",
   minify: true,
   fixedExtension: false,
-  attw: { profile: "esmOnly", level: "error" },
+  attw: { profile: "esm-only", level: "error" },
   define: {
     "process.env.TSDOWN_BUILD": `"v${version}"`,
   },

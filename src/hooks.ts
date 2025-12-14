@@ -11,7 +11,7 @@ import {
 export interface Hooks<E extends EmissionMap, D extends z.ZodObject> {
   /** @desc The place for emitting events regardless receiving events */
   onConnection: Handler<ClientContext<E, D>, void>;
-  onDisconnect: Handler<ClientContext<E, D>, void>;
+  onDisconnect: Handler<ClientContext<E, D> & { reason: string }, void>;
   onAnyIncoming: Handler<TracingContext<E, D>, void>;
   onAnyOutgoing: Handler<TracingContext<E, D>, void>;
   /** @desc The place for emitting events regardless clients activity */

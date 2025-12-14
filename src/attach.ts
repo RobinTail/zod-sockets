@@ -118,7 +118,7 @@ export const attachSockets = async <NS extends Namespaces>({
           });
         }
       }
-      socket.on("disconnect", () => onDisconnect(ctx));
+      socket.on("disconnect", (reason) => onDisconnect({...ctx,reason}));
     });
     await onStartup(nsCtx);
   }

@@ -64,7 +64,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.1",
     "@tsconfig/node20": "^20.1.5",
-    "@types/node": "^24.0.3",
+    "@types/node": "^25.0.2",
     "@types/ramda": "^0.31.0",
     "@vitest/coverage-v8": "^4.0.4",
     "eslint": "^9.4.0",

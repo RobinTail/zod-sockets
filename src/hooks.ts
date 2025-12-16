@@ -7,7 +7,7 @@ import {
   IndependentContext,
   TracingContext,
 } from "./handler";
-import { DisconnectReason } from "socket.io";
+import type { DisconnectReason } from "socket.io";
 
 export interface Hooks<E extends EmissionMap, D extends z.ZodObject> {
   /** @desc The place for emitting events regardless receiving events */

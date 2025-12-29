@@ -1908,9 +1908,9 @@ socket.io-adapter@~2.5.2:
     ws "~8.17.1"
 
 socket.io-client@^4.7.4:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.8.2.tgz#7dd38a81d429ac6098797814804707fa80c9bdbc"
-  integrity sha512-4MY14EMsyEPFA6lM01XIYepRdV8P6dUir2hxAlAysOYcbNAy5QNHYgIHOcQ1KYM7wTcKnKEW/ZRoIxRinWRXvA==
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.8.3.tgz#62717edd46a318c918125b57e92dc7f8bb71c34c"
+  integrity sha512-uP0bpjWrjQmUt5DTHq9RuoCBdFJF10cdX9X+a368j/Ft0wmaVgxlrjvK3kjvgCODOMMOz9lcaRzxmso0bTWZ/g==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.4.1"

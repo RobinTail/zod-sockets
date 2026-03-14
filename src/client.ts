@@ -4,8 +4,10 @@ import { z } from "zod";
 import { Distribution } from "./distribution";
 import { Broadcaster, EmissionMap, Emitter } from "./emission";
 
-export interface Client<E extends EmissionMap, D extends z.ZodObject>
-  extends Distribution {
+export interface Client<
+  E extends EmissionMap,
+  D extends z.ZodObject,
+> extends Distribution {
   /** @alias Socket.connected */
   isConnected: () => boolean;
   /** @alias Socket.id */

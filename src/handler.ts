@@ -21,26 +21,34 @@ export interface IndependentContext<
   withRooms: RoomService<E, D>;
 }
 
-export interface ClientContext<E extends EmissionMap, D extends z.ZodObject>
-  extends IndependentContext<E, D> {
+export interface ClientContext<
+  E extends EmissionMap,
+  D extends z.ZodObject,
+> extends IndependentContext<E, D> {
   /** @desc The sender of the incoming event */
   client: Client<E, D>;
 }
 
-export interface TracingContext<E extends EmissionMap, D extends z.ZodObject>
-  extends ClientContext<E, D> {
+export interface TracingContext<
+  E extends EmissionMap,
+  D extends z.ZodObject,
+> extends ClientContext<E, D> {
   event: string;
   payload: unknown[];
 }
 
 export interface ErrorContext<E extends EmissionMap, D extends z.ZodObject>
-  extends IndependentContext<E, D>,
+  extends
+    IndependentContext<E, D>,
     Partial<Pick<TracingContext<E, D>, "event" | "payload" | "client">> {
   error: Error;
 }
 
-export interface ActionContext<IN, E extends EmissionMap, D extends z.ZodObject>
-  extends ClientContext<E, D> {
+export interface ActionContext<
+  IN,
+  E extends EmissionMap,
+  D extends z.ZodObject,
+> extends ClientContext<E, D> {
   /** @desc Validated payload */
   input: IN;
 }

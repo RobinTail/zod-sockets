@@ -326,8 +326,10 @@ export interface TagObject {
 }
 
 /** @since 3.0.0 partially extends SchemaObject; schema prop removed */
-export interface ParameterObject
-  extends Pick<SchemaObject, "enum" | "default" | "description" | "examples"> {
+export interface ParameterObject extends Pick<
+  SchemaObject,
+  "enum" | "default" | "description" | "examples"
+> {
   /**
    * @desc A runtime expression that specifies the location of the parameter value.
    * @link https://www.asyncapi.com/docs/reference/specification/v3.0.0#runtimeExpression

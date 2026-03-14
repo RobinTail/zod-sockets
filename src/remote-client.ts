@@ -9,8 +9,10 @@ export type SomeRemoteSocket = RemoteSocket<
   unknown
 >;
 
-export interface RemoteClient<E extends EmissionMap, D extends z.ZodObject>
-  extends Distribution {
+export interface RemoteClient<
+  E extends EmissionMap,
+  D extends z.ZodObject,
+> extends Distribution {
   id: string;
   handshake: SomeRemoteSocket["handshake"];
   rooms: string[];

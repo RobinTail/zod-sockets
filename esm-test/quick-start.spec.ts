@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
-import { waitFor } from "../helpers";
+import { waitFor } from "../tools/helpers";
 
-describe("ESM Test", async () => {
+describe("ESM Test", () => {
   let out = "";
   const listener = (chunk: Buffer) => {
     out += chunk.toString();

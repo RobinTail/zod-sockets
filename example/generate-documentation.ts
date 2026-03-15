@@ -1,11 +1,11 @@
 import { writeFile } from "node:fs/promises";
-import { Documentation } from "../src";
+import { Documentation } from "zod-sockets";
 import { actions } from "./actions";
 import { config } from "./config";
-import manifest from "../package.json";
+import manifest from "../zod-sockets/package.json";
 
 await writeFile(
-  "example/example-documentation.yaml",
+  "example-documentation.yaml",
   new Documentation({
     version: manifest.version,
     title: "Example APP",

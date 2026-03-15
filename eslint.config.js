@@ -35,7 +35,7 @@ export default tsPlugin.config(
   prettierOverrides,
   prettierRules,
   // Things to turn off globally
-  { ignores: ["dist/", "coverage/"] },
+  { ignores: ["**/dist/", "coverage/", "**/node_modules/"] },
   {
     rules: {
       "no-empty": ["error", { allowEmptyCatch: true }],
@@ -50,7 +50,7 @@ export default tsPlugin.config(
   },
   // For the sources
   {
-    files: ["src/*.ts"],
+    files: ["zod-sockets/src/*.ts"],
     rules: {
       "allowed/dependencies": "error",
       "@typescript-eslint/no-empty-object-type": [
@@ -61,7 +61,12 @@ export default tsPlugin.config(
   },
   // For tests
   {
-    files: ["tests/**/*.ts", "src/*.spec.ts"],
+    files: [
+      "*-test/**/*.ts",
+      "zod-sockets/src/*.spec.ts",
+      "zod-sockets/tests/**/*.ts",
+      "example/tests/**/*.ts",
+    ],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "warn",
@@ -70,7 +75,7 @@ export default tsPlugin.config(
   },
   // For Async API
   {
-    files: ["src/async-api/*.ts"],
+    files: ["zod-sockets/src/async-api/*.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-namespace": "off",
@@ -79,7 +84,7 @@ export default tsPlugin.config(
   },
   // For generated code
   {
-    files: ["example/example-client.ts", "tests/**/quick-start.ts"],
+    files: ["example/example-client.ts", "*-test/**/quick-start.ts"],
     rules: {
       "@typescript-eslint/no-namespace": "off",
       "prettier/prettier": "off",

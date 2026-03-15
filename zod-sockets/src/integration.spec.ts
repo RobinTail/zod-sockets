@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { actions } from "../example/actions";
-import { config } from "../example/config";
+import { actions } from "../../example/actions";
+import { config } from "../../example/config";
 import { ActionsFactory } from "./actions-factory";
 import { createSimpleConfig } from "./config";
 import { Integration } from "./integration";

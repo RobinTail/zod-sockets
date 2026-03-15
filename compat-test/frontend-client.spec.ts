@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { waitFor } from "../helpers";
+import { waitFor } from "../tools/helpers";
 
 describe("Express Zod API compatibility test", () => {
   let out = "";

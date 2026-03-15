@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
+import { waitFor } from "../tools/helpers";
 
-describe("CJS Test", async () => {
-  const { waitFor } = await import("../helpers.js");
+describe("CJS Test", () => {
   let out = "";
   const listener = (chunk: Buffer) => {
     out += chunk.toString();

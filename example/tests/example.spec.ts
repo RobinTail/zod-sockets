@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { io } from "socket.io-client";
 import { z } from "zod";
-import { waitFor } from "../helpers";
+import { waitFor } from "../../tools/helpers";
 
 describe("System test on Example", async () => {
   let out = "";

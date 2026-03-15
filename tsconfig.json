@@ -1,10 +1,12 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "strictNullChecks": true,
     "module": "ES2022",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "stripInternal": true
-  },
-  "include": ["src", "example", "*.config.ts", "*.setup.ts", "tools", "tests/helpers.ts"]
+    "types": ["vitest/globals"]
+  }
 }

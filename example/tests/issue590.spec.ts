@@ -2,7 +2,7 @@ import http from "node:http";
 import { Server } from "socket.io";
 import { io as ioClient } from "socket.io-client";
 import { z } from "zod";
-import { attachSockets, Config, ActionsFactory } from "../../src";
+import { attachSockets, Config, ActionsFactory } from "zod-sockets";
 import { promisify } from "node:util";
 import assert from "node:assert/strict";
 

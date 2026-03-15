@@ -45,9 +45,6 @@ importers:
       '@types/node':
         specifier: ^25.0.2
         version: 25.5.0
-      '@types/ramda':
-        specifier: ^0.31.0
-        version: 0.31.1
       '@vitest/coverage-v8':
         specifier: ^4.0.4
         version: 4.1.0(vitest@4.1.0(@types/node@25.5.0)(esbuild@0.27.4)(tsx@4.21.0)(yaml@2.8.2))

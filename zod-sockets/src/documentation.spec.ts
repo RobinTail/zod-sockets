@@ -3,7 +3,6 @@ import { ActionsFactory } from "./actions-factory";
 import { Config, createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";
 import { z } from "zod";
-import { protocol } from "engine.io";
 
 describe("Documentation", () => {
   const sampleConfig = createSimpleConfig();
@@ -25,7 +24,7 @@ describe("Documentation", () => {
           (doc.channels!.Root.bindings?.ws?.query as SchemaObject).properties
             ?.EIO as SchemaObject
         ).const,
-      ).toEqual(protocol.toString());
+      ).toEqual("4"); // engine.io protocol
     });
 
     test("should generate the correct schema for complex types", () => {

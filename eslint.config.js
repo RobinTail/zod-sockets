@@ -5,6 +5,11 @@ import prettierOverrides from "eslint-config-prettier/flat";
 import prettierRules from "eslint-plugin-prettier/recommended";
 import allowedDepsPlugin from "eslint-plugin-allowed-dependencies";
 import { builtinModules } from "node:module";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const cwd = dirname(fileURLToPath(import.meta.url));
+const zodSocketsDir = join(cwd, "zod-sockets");
 
 const importConcerns = [
   {
@@ -52,7 +57,7 @@ export default tsPlugin.config(
   {
     files: ["zod-sockets/src/*.ts"],
     rules: {
-      "allowed/dependencies": ["error", { packageDir: "zod-sockets" }],
+      "allowed/dependencies": ["error", { packageDir: zodSocketsDir }],
       "@typescript-eslint/no-empty-object-type": [
         "error",
         { allowWithName: "LoggerOverrides" },

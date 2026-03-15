@@ -28,3 +28,4 @@ catalogs:
     "zod": "^4.1.0"
 overrides:
   "@scarf/scarf": "npm:empty-npm-package@1.0.0"
+  "lightningcss": "npm:empty-npm-package@1.0.0"

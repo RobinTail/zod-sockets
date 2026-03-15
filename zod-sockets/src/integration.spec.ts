@@ -16,7 +16,7 @@ describe("Integration", () => {
       });
       const input = z.tuple([feature.array()]);
       const instance = new Integration({
-        config: createSimpleConfig(),
+        config: sampleConfig,
         actions: [
           new ActionsFactory(sampleConfig).build({
             event: "test",

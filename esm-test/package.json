@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "pretest": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --globals"
   },
   "devDependencies": {
     "socket.io": "catalog:dev",

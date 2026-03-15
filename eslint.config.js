@@ -69,7 +69,6 @@ export default tsPlugin.config(
     files: [
       "*-test/**/*.ts",
       "zod-sockets/src/*.spec.ts",
-      "zod-sockets/tests/**/*.ts",
       "example/tests/**/*.ts",
     ],
     rules: {

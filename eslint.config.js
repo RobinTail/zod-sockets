@@ -52,7 +52,7 @@ export default tsPlugin.config(
   {
     files: ["zod-sockets/src/*.ts"],
     rules: {
-      "allowed/dependencies": "error",
+      "allowed/dependencies": ["error", { packageDir: "zod-sockets" }],
       "@typescript-eslint/no-empty-object-type": [
         "error",
         { allowWithName: "LoggerOverrides" },

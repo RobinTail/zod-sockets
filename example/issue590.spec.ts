@@ -5,8 +5,9 @@ import { z } from "zod";
 import { attachSockets, Config, ActionsFactory } from "zod-sockets";
 import { promisify } from "node:util";
 import assert from "node:assert/strict";
+import { givePort } from "../tools/ports";
 
-const port = 8999;
+const port = givePort("issue590");
 
 /**
  * withRooms().getClients() returns an empty array in action handlers even after clients join rooms in the onConnection
@@ -82,7 +83,7 @@ describe("Issue #590", () => {
       expect(receivedBroadcast).toBe("hello");
 
       clientSocket.disconnect();
-      await promisify(io.close.bind(io))();
+      await io.close();
       if (httpServer.listening)
         await promisify(httpServer.close.bind(httpServer))();
     });

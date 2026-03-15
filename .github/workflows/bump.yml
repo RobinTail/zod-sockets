@@ -39,6 +39,6 @@ jobs:
       - name: Bumpp ${{inputs.kind}}
         run: |
           pnpm -F zod-sockets exec \
-            pnpm dlx bumpp ${{inputs.kind}} \
+            pnpm dlx bumpp@10 ${{inputs.kind}} \
             ${{ startsWith(inputs.kind, 'pre') && '--preid beta' || '' }} \
             --tag=v%s --commit='%s' -y

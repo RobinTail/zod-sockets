@@ -9,7 +9,6 @@
     "start": "pnpm -F example start",
     "build": "pnpm -r build",
     "precommit": "pnpm lint && pnpm build && pnpm test && git add example/example*.*",
-    "postversion": "git push && git push --tags",
     "prepublishOnly": "pnpm lint && pnpm build && pnpm test",
     "hooks": "husky"
   },

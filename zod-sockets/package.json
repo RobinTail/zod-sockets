@@ -15,8 +15,7 @@
   "scripts": {
     "build": "tsdown",
     "pretest": "tsc --noEmit",
-    "test": "vitest run --coverage",
-    "posttest": "make-coverage-badge --output-path ../coverage.svg"
+    "test": "vitest run --coverage"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -47,7 +46,6 @@
   },
   "devDependencies": {
     "@types/ramda": "^0.31.0",
-    "make-coverage-badge": "^1.2.0",
     "socket.io": "catalog:dev",
     "typescript": "catalog:dev",
     "vitest": "^4.0.4",

@@ -12,7 +12,7 @@
     "build:client": "pnpm -F example build:client",
     "build:docs": "pnpm -F example build:docs",
     "build:tests": "tsx tools/make-tests.ts",
-    "precommit": "pnpm lint && pnpm test && pnpm build && git add example/example*.ts coverage.svg",
+    "precommit": "pnpm lint && pnpm test && pnpm build && git add example/example*.ts",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "pnpm lint && pnpm test && pnpm build",
     "hooks": "husky"
@@ -27,7 +27,6 @@
     "eslint-plugin-allowed-dependencies": "^2.1.0",
     "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.0.10",
-    "make-coverage-badge": "^1.2.0",
     "prettier": "3.8.1",
     "tsdown": "^0.21.3",
     "tsx": "^4.7.0",

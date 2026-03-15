@@ -63,9 +63,6 @@ importers:
       husky:
         specifier: ^9.0.10
         version: 9.1.7
-      make-coverage-badge:
-        specifier: ^1.2.0
-        version: 1.2.0
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -187,9 +184,6 @@ importers:
       '@types/ramda':
         specifier: ^0.31.0
         version: 0.31.1
-      make-coverage-badge:
-        specifier: ^1.2.0
-        version: 1.2.0
       socket.io:
         specifier: catalog:dev
         version: 4.8.3
@@ -1374,11 +1368,6 @@ packages:
   magicast@0.5.2:
     resolution: {integrity: sha512-E3ZJh4J3S9KfwdjZhe2afj6R9lGIN5Pher1pF39UGrXRqq/VDaGVIGN13BjHd2u8B61hArAGOnso7nBOouW3TQ==}
 
-  make-coverage-badge@1.2.0:
-    resolution: {integrity: sha512-nA1eQZJ9vcY2UoQLVIdzqyRoNtAZHWlXJfrHkaMB/pQgTYBPmbImkykfxWeAtUQuLJXzb6eAhbR7nEgrt+S7FA==}
-    engines: {node: '>=6.11', npm: '>=5.3'}
-    hasBin: true
-
   make-dir@4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
@@ -1433,10 +1422,6 @@ packages:
   minimatch@9.0.9:
     resolution: {integrity: sha512-OBwBN9AL4dqmETlpS2zasx+vTeWclWzkblfZk7KTA5j3jeOONz/tRCnZomUyvNg83wL5Zv9Ss6HMJXAgL8R2Yg==}
     engines: {node: '>=16 || 14 >=14.17'}
-
-  mri@1.1.4:
-    resolution: {integrity: sha512-6y7IjGPm8AzlvoUrwAaw1tLnUBudaS3752vcd8JtrpGGQn+rXIe63LFVHm/YMwtqAuh+LJPCFdlLYPWM1nYn6w==}
-    engines: {node: '>=4'}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -3044,10 +3029,6 @@ snapshots:
       '@babel/types': 7.29.0
       source-map-js: 1.2.1
 
-  make-coverage-badge@1.2.0:
-    dependencies:
-      mri: 1.1.4
-
   make-dir@4.0.0:
     dependencies:
       semver: 7.7.4
@@ -3085,8 +3066,6 @@ snapshots:
   minimatch@9.0.9:
     dependencies:
       brace-expansion: 2.0.2
-
-  mri@1.1.4: {}
 
   ms@2.1.3: {}
 

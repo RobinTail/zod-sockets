@@ -9,7 +9,7 @@
     "build:docs": "tsx generate-documentation.ts",
     "build:client": "tsx generate-client.ts && prettier --write example-client.ts",
     "pretest": "tsc --noEmit",
-    "test": "vitest run tests"
+    "test": "vitest run --globals"
   },
   "devDependencies": {
     "socket.io": "catalog:dev",

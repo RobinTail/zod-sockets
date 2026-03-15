@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { io } from "socket.io-client";
 import { z } from "zod";
-import { waitFor } from "../../tools/helpers";
+import { waitFor } from "../tools/helpers";
 
 describe("System test on Example", async () => {
   let out = "";
@@ -9,9 +9,7 @@ describe("System test on Example", async () => {
     out += chunk.toString();
   };
 
-  const example = spawn("tsx", ["index.ts"], {
-    cwd: "./example",
-  });
+  const example = spawn("tsx", ["index.ts"]);
   example.stdout.on("data", listener);
   await waitFor(() => out.indexOf("Listening") > -1);
   const client = io("ws://localhost:8090");

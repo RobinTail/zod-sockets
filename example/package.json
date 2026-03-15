@@ -12,6 +12,7 @@
     "test": "vitest run tests"
   },
   "devDependencies": {
+    "socket.io": "catalog:dev",
     "socket.io-client": "catalog:dev",
     "typescript": "catalog:dev",
     "zod": "catalog:dev",

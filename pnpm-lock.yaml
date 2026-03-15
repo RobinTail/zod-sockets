@@ -69,12 +69,6 @@ importers:
       prettier:
         specifier: 3.8.1
         version: 3.8.1
-      socket.io:
-        specifier: catalog:dev
-        version: 4.8.3
-      socket.io-client:
-        specifier: catalog:dev
-        version: 4.8.3
       tsdown:
         specifier: ^0.21.3
         version: 0.21.3(@arethetypeswrong/core@0.18.2)(synckit@0.11.12)(typescript@5.9.3)
@@ -93,6 +87,9 @@ importers:
 
   cjs-test:
     devDependencies:
+      socket.io:
+        specifier: catalog:dev
+        version: 4.8.3
       typescript:
         specifier: catalog:dev
         version: 5.9.3
@@ -114,6 +111,9 @@ importers:
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
+      socket.io:
+        specifier: catalog:dev
+        version: 4.8.3
       typescript:
         specifier: catalog:dev
         version: 5.9.3
@@ -126,6 +126,9 @@ importers:
 
   esm-test:
     devDependencies:
+      socket.io:
+        specifier: catalog:dev
+        version: 4.8.3
       typescript:
         specifier: catalog:dev
         version: 5.9.3
@@ -138,6 +141,9 @@ importers:
 
   example:
     devDependencies:
+      socket.io:
+        specifier: catalog:dev
+        version: 4.8.3
       socket.io-client:
         specifier: catalog:dev
         version: 4.8.3
@@ -153,6 +159,9 @@ importers:
 
   issue952-test:
     devDependencies:
+      socket.io:
+        specifier: catalog:dev
+        version: 4.8.3
       typescript:
         specifier: catalog:dev
         version: 5.9.3

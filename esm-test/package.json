@@ -8,6 +8,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "socket.io": "catalog:dev",
     "typescript": "catalog:dev",
     "zod": "catalog:dev",
     "zod-sockets": "workspace:*"

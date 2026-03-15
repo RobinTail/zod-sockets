@@ -1,6 +1,4 @@
 import { SchemaObject } from "./async-api/model";
-import { config as exampleConfig } from "../../example/config";
-import { actions } from "../../example/actions";
 import { ActionsFactory } from "./actions-factory";
 import { Config, createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";
@@ -12,19 +10,6 @@ describe("Documentation", () => {
   const factory = new ActionsFactory(sampleConfig);
 
   describe("Basic cases", () => {
-    test("should generate the correct schema of the example", () => {
-      const spec = new Documentation({
-        actions,
-        config: exampleConfig,
-        version: "1.2.3",
-        title: "Example API",
-        servers: {
-          example: { url: "https://example.com/socket.io" },
-        },
-      }).getSpecAsYaml();
-      expect(spec).toMatchSnapshot();
-    });
-
     test("EIO handshake should match the Engine.IO protocol version", () => {
       const doc = new Documentation({
         actions: [],

@@ -12,6 +12,7 @@ import type { DisconnectReason } from "socket.io";
 export interface Hooks<E extends EmissionMap, D extends z.ZodObject> {
   /** @desc The place for emitting events regardless receiving events */
   onConnection: Handler<ClientContext<E, D>, void>;
+  /** @desc Called when a client disconnects, with the disconnect reason provided by Socket.IO */
   onDisconnect: Handler<
     ClientContext<E, D> & { reason: DisconnectReason },
     void

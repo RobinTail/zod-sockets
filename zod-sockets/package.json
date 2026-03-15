@@ -16,7 +16,8 @@
     "build": "tsdown",
     "pretest": "tsc --noEmit",
     "test": "vitest run --coverage",
-    "prepublishOnly": "eslint && pnpm build && pnpm test"
+    "prepublishOnly": "eslint && pnpm build && pnpm test",
+    "prepack": "cp ../*.md ../LICENSE ./"
   },
   "type": "module",
   "main": "dist/index.js",

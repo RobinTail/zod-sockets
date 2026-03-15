@@ -1,0 +1,19 @@
+{
+  "name": "compat-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "pretest": "tsc --noEmit",
+    "test": "vitest run --globals"
+  },
+  "devDependencies": {
+    "express": "^5.1.0",
+    "express-zod-api": "^27.1.0",
+    "http-errors": "^2.0.0",
+    "socket.io": "catalog:dev",
+    "typescript": "catalog:dev",
+    "zod": "^4.1.13",
+    "zod-sockets": "workspace:*"
+  }
+}

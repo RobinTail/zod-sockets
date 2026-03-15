@@ -1,9 +1,0 @@
-{
-  "extends": "@tsconfig/node20/tsconfig.json",
-  "compilerOptions": {
-    "noImplicitAny": true,
-    "noImplicitOverride": true,
-    "strictNullChecks": true,
-    "types": ["vitest/globals"]
-  }
-}

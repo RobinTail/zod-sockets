@@ -1,0 +1,16 @@
+{
+  "name": "issue952-test",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "pretest": "tsc -p tsconfig.json",
+    "test": "echo 'Type check passed'",
+    "posttest": "rm quick-start.d.ts"
+  },
+  "devDependencies": {
+    "socket.io": "catalog:dev",
+    "typescript": "catalog:dev",
+    "zod": "catalog:dev",
+    "zod-sockets": "workspace:*"
+  }
+}

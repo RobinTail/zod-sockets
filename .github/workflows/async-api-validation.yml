@@ -10,23 +10,15 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-    - name: Get yarn cache dir
-      id: yarnCache
-      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
+    - uses: pnpm/action-setup@v4
     - name: Install Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: 24
-    - name: Cache node modules
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-yarn
-      with:
-        path: ${{ steps.yarnCache.outputs.dir }}
-        key: async-validation-${{ hashFiles('**/yarn.lock') }}
+        cache: pnpm
     - name: Installing unreasonably large package
-      run: yarn global add @asyncapi/cli
+      run: pnpm add -g @asyncapi/cli
     - name: Validate
       run: asyncapi validate ./example/example-documentation.yaml

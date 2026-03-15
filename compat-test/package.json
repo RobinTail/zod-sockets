@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "pretest": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --globals"
   },
   "devDependencies": {
     "express": "^5.1.0",

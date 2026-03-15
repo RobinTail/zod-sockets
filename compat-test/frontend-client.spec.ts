@@ -6,9 +6,7 @@ describe("Express Zod API compatibility test", () => {
   const listener = (chunk: Buffer) => {
     out += chunk.toString();
   };
-  const integration = spawn("tsx", ["express-zod-api.ts"], {
-    cwd: "./tests/compat",
-  });
+  const integration = spawn("tsx", ["express-zod-api.ts"]);
   integration.stdout.on("data", listener);
   integration.stderr.on("data", listener);
 

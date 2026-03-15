@@ -21,7 +21,7 @@
     "@arethetypeswrong/core": "^0.18.1",
     "@tsconfig/node20": "^20.1.5",
     "@types/node": "^25.0.2",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^4.1.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-allowed-dependencies": "^2.1.0",
@@ -32,7 +32,7 @@
     "tsx": "^4.7.0",
     "typescript": "catalog:dev",
     "typescript-eslint": "~8.55.0",
-    "vitest": "^4.0.4"
+    "vitest": "^4.1.0"
   },
   "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
 }

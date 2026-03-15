@@ -9,7 +9,6 @@ gitChecks: false
 engineStrict: true
 autoInstallPeers: false
 publicHoistPattern:
-  - "@typescript-eslint/*"
   - "@vitest/*"
   - "@eslint/*"
   - "globals"

@@ -103,8 +103,8 @@ importers:
         specifier: ^5.1.0
         version: 5.2.1
       express-zod-api:
-        specifier: ^26.0.0-beta.2
-        version: 26.3.2(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6)
+        specifier: ^27.1.0
+        version: 27.1.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -298,11 +298,11 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@express-zod-api/zod-plugin@3.0.1':
-    resolution: {integrity: sha512-Ap7VzsjIt5//lu87rIBYyf1clvz2NiJ75sosiXY1Tnz79HEGxr26ycvKeCzWsdqNjiQoZJEdYjkcFmKXBd4ANQ==}
+  '@express-zod-api/zod-plugin@4.0.1':
+    resolution: {integrity: sha512-e5SfZsDMn+88CGqll3uHT0xlE9G4mutfefhV7rbn84+olMZnvVQD1ThwVrX+c/34FrW2RqLEX/dip5ISpG1lNQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
-      zod: ^4.1.13
+      zod: ^4.3.4
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -886,8 +886,8 @@ packages:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
 
-  express-zod-api@26.3.2:
-    resolution: {integrity: sha512-06uHKOX+MxN2PlyBgNeYgDQuIQAhH1rcPa2ufweh+uYyIu+WrS9U3h5ZyWDfi2RHLjWHaDrhVKY/Rv4Rz/gp3w==}
+  express-zod-api@27.1.0:
+    resolution: {integrity: sha512-SL5tGrinmebreq8n1a4YAUVnlTzf0cbUIFC+DcWi3TMu9i4xllqJN8E3EPZmAM7Phk5IqypYzzw5FKv5oyl0lQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
       '@types/compression': ^1.7.5
@@ -899,7 +899,7 @@ packages:
       express-fileupload: ^1.5.0
       http-errors: ^2.0.1
       typescript: ^5.1.3
-      zod: ^4.1.13
+      zod: ^4.3.4
     peerDependenciesMeta:
       '@types/compression':
         optional: true
@@ -912,6 +912,8 @@ packages:
       compression:
         optional: true
       express-fileupload:
+        optional: true
+      typescript:
         optional: true
 
   express@5.2.1:
@@ -1887,7 +1889,7 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@express-zod-api/zod-plugin@3.0.1(zod@4.3.6)':
+  '@express-zod-api/zod-plugin@4.0.1(zod@4.3.6)':
     dependencies:
       ramda: 0.32.0
       zod: 4.3.6
@@ -2471,17 +2473,18 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@26.3.2(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6):
+  express-zod-api@27.1.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6):
     dependencies:
-      '@express-zod-api/zod-plugin': 3.0.1(zod@4.3.6)
+      '@express-zod-api/zod-plugin': 4.0.1(zod@4.3.6)
       ansis: 4.2.0
       express: 5.2.1
       http-errors: 2.0.1
       node-mocks-http: 1.17.2(@types/node@25.5.0)
       openapi3-ts: 4.5.0
       ramda: 0.32.0
-      typescript: 5.9.3
       zod: 4.3.6
+    optionalDependencies:
+      typescript: 5.9.3
     transitivePeerDependencies:
       - '@types/node'
 

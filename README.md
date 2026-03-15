@@ -39,7 +39,7 @@ schemas, it can be exported to frontend side, thus ensuring that the established
 Install the package and its peer dependencies.
 
 ```shell
-yarn add zod-sockets zod socket.io typescript
+pnpm add zod-sockets zod socket.io typescript
 ```
 
 ## Set up config

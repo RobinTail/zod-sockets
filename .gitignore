@@ -1,6 +1,5 @@
 .idea
 node_modules
-yarn-error.log
 dist
 coverage
 *-test/quick-start.ts

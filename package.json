@@ -11,9 +11,9 @@
     "build:compile": "pnpm -F zod-sockets build",
     "build:client": "pnpm -F example build:client",
     "build:docs": "pnpm -F example build:docs",
-    "precommit": "pnpm lint && pnpm test && pnpm build && git add example/example*.*",
+    "precommit": "pnpm lint && pnpm build && pnpm test && git add example/example*.*",
     "postversion": "git push && git push --tags",
-    "prepublishOnly": "pnpm lint && pnpm test && pnpm build",
+    "prepublishOnly": "pnpm lint && pnpm build && pnpm test",
     "hooks": "husky"
   },
   "devDependencies": {

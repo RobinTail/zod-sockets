@@ -31,7 +31,7 @@ jobs:
       run: pnpm lint
     - name: Build
       run: pnpm build
-    - name: Unit test
+    - name: Tests
       run: pnpm test
     - name: Coveralls
       uses: coverallsapp/github-action@v2

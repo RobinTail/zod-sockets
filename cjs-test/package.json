@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "pretest": "tsc --noEmit",
-    "test": "vitest run",
-    "posttest": "rm *.js"
+    "test": "vitest run --globals"
   },
   "devDependencies": {
     "socket.io": "catalog:dev",

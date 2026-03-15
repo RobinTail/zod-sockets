@@ -6,9 +6,7 @@ describe("CJS Test", () => {
   const listener = (chunk: Buffer) => {
     out += chunk.toString();
   };
-  const quickStart = spawn("tsx", ["quick-start.ts"], {
-    cwd: "./tests/cjs",
-  });
+  const quickStart = spawn("tsx", ["quick-start.ts"]);
   quickStart.stdout.on("data", listener);
   quickStart.stderr.on("data", listener);
 

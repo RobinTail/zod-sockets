@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import { waitFor } from "../tools/helpers";
+import { givePort } from "../tools/ports";
 
 describe("Express Zod API compatibility test", () => {
   let out = "";
@@ -28,7 +29,7 @@ describe("Express Zod API compatibility test", () => {
 
   test("Should serve the FE client", async () => {
     const response = await fetch(
-      "http://localhost:8090/socket.io/socket.io.min.js",
+      `http://localhost:${givePort("compat")}/socket.io/socket.io.min.js`,
     );
     expect(response.ok).toBeTruthy();
     expect(response.status).toBe(200);

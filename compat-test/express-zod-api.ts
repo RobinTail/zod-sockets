@@ -1,8 +1,12 @@
 import { createConfig, createServer } from "express-zod-api";
 import { Server } from "socket.io";
 import { attachSockets, createSimpleConfig } from "zod-sockets";
+import { givePort } from "../tools/ports";
 
-const serverConfig = createConfig({ http: { listen: 8090 }, cors: false });
+const serverConfig = createConfig({
+  http: { listen: givePort("compat") },
+  cors: false,
+});
 
 const { servers, logger } = await createServer(serverConfig, {});
 

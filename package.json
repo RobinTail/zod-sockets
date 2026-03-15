@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint",
-    "pretest": "tsx tools/make-tests.ts",
+    "pretest": "unrun tools/make-tests.ts",
     "test": "pnpm -r test",
     "mdfix": "prettier *.md --write",
     "start": "pnpm -F example start",
@@ -23,7 +23,7 @@
     "husky": "^9.0.10",
     "prettier": "3.8.1",
     "tsdown": "^0.21.3",
-    "tsx": "^4.7.0",
+    "unrun": "^0.2.32",
     "typescript": "catalog:dev",
     "typescript-eslint": "~8.55.0",
     "vitest": "^4.1.0"

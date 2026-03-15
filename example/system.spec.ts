@@ -10,7 +10,7 @@ describe("System test on Example", async () => {
     out += chunk.toString();
   };
 
-  const example = spawn("tsx", ["index.ts"]);
+  const example = spawn("unrun", ["index.ts"]);
   example.stdout.on("data", listener);
   await waitFor(() => out.indexOf("Listening") > -1);
   const client = io(`ws://localhost:${givePort("example")}`);

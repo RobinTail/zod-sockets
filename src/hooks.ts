@@ -27,8 +27,8 @@ export interface Hooks<E extends EmissionMap, D extends z.ZodObject> {
 export const defaultHooks: Hooks<EmissionMap, z.ZodObject> = {
   onConnection: ({ client: { id, getData }, logger }) =>
     logger.debug("Client connected", { ...getData(), id }),
-  onDisconnect: ({ client: { id, getData }, logger }) =>
-    logger.debug("Client disconnected", { ...getData(), id }),
+  onDisconnect: ({ client: { id, getData }, logger, reason }) =>
+    logger.debug("Client disconnected", { ...getData(), id, reason }),
   onAnyIncoming: ({ event, client: { id, getData }, logger }) =>
     logger.debug(`${event} from ${id}`, getData()),
   onAnyOutgoing: ({ event, logger, payload }) =>

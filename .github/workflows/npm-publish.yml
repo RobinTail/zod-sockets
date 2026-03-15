@@ -16,6 +16,8 @@ on:
           - prev
 jobs:
   publish:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,5 +27,3 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: yarn install
       - run: npm publish --tag ${{ inputs.tag }}
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_KEY}}

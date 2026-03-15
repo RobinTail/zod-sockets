@@ -93,9 +93,6 @@ importers:
       vitest:
         specifier: ^4.0.4
         version: 4.1.0(@types/node@25.5.0)(esbuild@0.27.4)(tsx@4.21.0)(yaml@2.8.2)
-      zod:
-        specifier: catalog:dev
-        version: 4.3.6
 
   cjs-test:
     devDependencies:

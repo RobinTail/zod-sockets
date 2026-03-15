@@ -1,0 +1,72 @@
+{
+  "name": "zod-sockets",
+  "version": "5.2.0-beta.2",
+  "description": "Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobinTail/zod-sockets.git"
+  },
+  "author": {
+    "name": "Anna Bocharova",
+    "url": "https://robintail.cz",
+    "email": "me@robintail.cz"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "pretest": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "prepublishOnly": "eslint && pnpm build && pnpm test",
+    "prepack": "cp ../*.md ../LICENSE ./"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "*.md"
+  ],
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || ^24.0.0"
+  },
+  "dependencies": {
+    "ansis": "catalog:prod",
+    "ramda": "catalog:prod",
+    "yaml": "catalog:prod"
+  },
+  "peerDependencies": {
+    "socket.io": "catalog:peer",
+    "typescript": "catalog:peer",
+    "zod": "catalog:peer"
+  },
+  "devDependencies": {
+    "@types/ramda": "^0.31.0",
+    "socket.io": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vitest": "^4.0.4",
+    "zod": "catalog:dev"
+  },
+  "keywords": [
+    "nodejs",
+    "socket",
+    "validation",
+    "server",
+    "sockets",
+    "websocket",
+    "websockets",
+    "socket-io",
+    "zod",
+    "typescript-library",
+    "asyncapi",
+    "async-api",
+    "asyncapi-specification",
+    "asyncapi-tools"
+  ]
+}

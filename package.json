@@ -1,103 +1,32 @@
 {
-  "name": "zod-sockets",
-  "version": "5.1.0",
-  "description": "Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers",
+  "private": true,
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "module": "dist/index.js",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist",
-    "*.md"
-  ],
-  "engines": {
-    "node": "^20.19.0 || ^22.12.0 || ^24.0.0"
-  },
-  "author": {
-    "name": "Anna Bocharova",
-    "url": "https://robintail.cz",
-    "email": "me@robintail.cz"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RobinTail/zod-sockets.git"
-  },
-  "license": "MIT",
   "scripts": {
     "lint": "eslint",
-    "pretest": "tsc --noEmit",
-    "test": "vitest run --coverage src",
-    "posttest": "make-coverage-badge --output-path coverage.svg",
-    "test:cjs": "yarn --cwd tests/cjs && vitest run -r tests/cjs",
-    "test:esm": "yarn --cwd tests/esm && vitest run -r tests/esm",
-    "test:compat": "yarn --cwd tests/compat && vitest run -r tests/compat",
-    "test:952": "yarn --cwd tests/issue952 && yarn --cwd tests/issue952 test",
-    "test:system": "yarn --cwd tests/system && vitest run -r tests/system",
+    "pretest": "unrun tools/make-tests.ts",
+    "test": "pnpm -r test",
     "mdfix": "prettier *.md --write",
-    "start": "tsx example/index.ts",
-    "build": "yarn build:compile && yarn build:tests && yarn build:client && yarn build:docs",
-    "build:compile": "tsdown",
-    "build:client": "tsx example/generate-client.ts && prettier --write example/example*.ts",
-    "build:docs": "tsx example/generate-documentation.ts",
-    "build:tests": "tsx tools/make-tests.ts",
-    "precommit": "yarn lint && yarn test && yarn build && git add example/example* coverage.svg",
-    "postversion": "git push && git push --tags",
-    "prepublishOnly": "yarn lint && yarn test && yarn build",
+    "start": "pnpm -F example start",
+    "build": "pnpm -r build",
+    "precommit": "pnpm lint && pnpm build && pnpm test && git add example/example*.*",
     "hooks": "husky"
   },
-  "dependencies": {
-    "ansis": "^4.0.0",
-    "ramda": "^0.32.0",
-    "yaml": "^2.4.1"
-  },
-  "peerDependencies": {
-    "socket.io": "^4.7.4",
-    "typescript": "^5.3.3",
-    "zod": "^4.1.0"
-  },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.1",
+    "@arethetypeswrong/core": "^0.18.1",
     "@tsconfig/node20": "^20.1.5",
     "@types/node": "^25.0.2",
-    "@types/ramda": "^0.31.0",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^4.1.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-allowed-dependencies": "^2.1.0",
     "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.0.10",
-    "make-coverage-badge": "^1.2.0",
     "prettier": "3.8.1",
-    "socket.io": "^4.7.4",
-    "socket.io-client": "^4.7.4",
     "tsdown": "^0.21.3",
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.3",
+    "unrun": "^0.2.32",
+    "typescript": "catalog:dev",
     "typescript-eslint": "~8.55.0",
-    "vitest": "^4.0.4",
-    "zod": "^4.1.0"
+    "vitest": "^4.1.0"
   },
-  "keywords": [
-    "nodejs",
-    "socket",
-    "validation",
-    "server",
-    "sockets",
-    "websocket",
-    "websockets",
-    "socket-io",
-    "zod",
-    "typescript-library",
-    "asyncapi",
-    "async-api",
-    "asyncapi-specification",
-    "asyncapi-tools"
-  ],
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
 }

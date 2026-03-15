@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createSimpleConfig, InputValidationError } from "../src";
+import { createSimpleConfig, InputValidationError } from "zod-sockets";
 
 /**
  * @see onSubscribe

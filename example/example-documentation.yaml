@@ -1,7 +1,7 @@
 asyncapi: 3.0.0
 info:
   title: Example APP
-  version: 5.0.1
+  version: 5.1.0
   contact:
     name: Anna Bocharova
     url: https://robintail.cz
@@ -37,15 +37,15 @@ channels:
           type: object
           properties:
             EIO:
-              description: The version of the protocol
               type: string
               const: "4"
+              description: The version of the protocol
             transport:
-              description: The name of the transport
               type: string
               enum:
                 - polling
                 - websocket
+              description: The name of the transport
             sid:
               description: The session identifier
               type: string
@@ -77,20 +77,15 @@ channels:
         payload:
           type: array
           prefixItems:
-            - description: message
+            - type: string
+              description: message
               examples:
                 - Hello there!
-              type: string
-            - description: extra info
-              examples:
-                - from: 123abc
-                  features:
-                    - name: visitor
-              type: object
+            - type: object
               properties:
                 from:
-                  description: the ID of author
                   type: string
+                  description: the ID of author
                 features:
                   type: array
                   items:
@@ -99,6 +94,11 @@ channels:
                 - from
                 - features
               additionalProperties: false
+              description: extra info
+              examples:
+                - from: 123abc
+                  features:
+                    - name: visitor
           items:
             not: {}
         examples:
@@ -113,16 +113,16 @@ channels:
         payload:
           type: array
           prefixItems:
-            - description: room IDs
+            - type: array
+              items:
+                type: string
+              description: room IDs
               examples:
                 - - room1
                   - room2
                 - - room3
                   - room4
                   - room5
-              type: array
-              items:
-                type: string
           items:
             not: {}
         examples:
@@ -135,14 +135,14 @@ channels:
         payload:
           type: array
           prefixItems:
-            - description: name
+            - type: string
+              description: name
               examples:
                 - InputValidationError
-              type: string
-            - description: message
+            - type: string
+              description: message
               examples:
                 - "[1]: Required"
-              type: string
           items:
             not: {}
         examples:
@@ -155,10 +155,10 @@ channels:
         payload:
           type: array
           prefixItems:
-            - description: message
+            - type: string
+              description: message
               examples:
                 - Hello there
-              type: string
           items:
             not: {}
         examples:
@@ -182,11 +182,11 @@ channels:
         payload:
           type: array
           prefixItems:
-            - description: literally
+            - type: string
+              const: pong
+              description: literally
               examples:
                 - pong
-              type: string
-              const: pong
           items:
             description: echo
             examples:

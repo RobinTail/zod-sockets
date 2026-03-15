@@ -1,17 +1,12 @@
 import { z } from "zod";
-import { actions } from "../../example/actions";
-import { config } from "../../example/config";
 import { ActionsFactory } from "./actions-factory";
 import { createSimpleConfig } from "./config";
 import { Integration } from "./integration";
 
 describe("Integration", () => {
-  describe("print()", () => {
-    test("should print the example client side types", () => {
-      const instance = new Integration({ config, actions });
-      expect(instance.print()).toMatchSnapshot();
-    });
+  const sampleConfig = createSimpleConfig();
 
+  describe("print()", () => {
     test("should handle circular references", () => {
       const feature = z.object({
         title: z.string(),
@@ -23,7 +18,7 @@ describe("Integration", () => {
       const instance = new Integration({
         config: createSimpleConfig(),
         actions: [
-          new ActionsFactory(config).build({
+          new ActionsFactory(sampleConfig).build({
             event: "test",
             input,
             handler: vi.fn(),

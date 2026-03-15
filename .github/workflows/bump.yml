@@ -1,0 +1,44 @@
+name: Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'Version bump kind'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - premajor
+          - preminor
+          - prepatch
+          - prerelease
+
+permissions:
+  contents: write
+
+jobs:
+  bumpVersion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # for git describe --tags (used by bumpp internally)
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: fregante/setup-git-user@v2
+      - run: |
+          pnpm install
+          pnpm hooks
+      - name: Bumpp ${{inputs.kind}}
+        run: |
+          pnpm -F zod-sockets exec \
+            pnpm dlx bumpp ${{inputs.kind}} \
+            ${{ startsWith(inputs.kind, 'pre') && '--preid beta' || '' }} \
+            --tag=v%s --commit='%s' -y

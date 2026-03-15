@@ -2,6 +2,12 @@
 
 ## Version 5
 
+### v5.1.0
+
+- The `onDisconnect` hook is now equipped with `reason` property on its argument:
+  - The default hook logs that reason;
+  - This feature was suggested and implemented by [@Miodec](https://github.com/Miodec).
+
 ### v5.0.1
 
 - Fixed `withRooms().getClients()` to return remote clients correctly in action handlers:

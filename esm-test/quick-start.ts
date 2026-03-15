@@ -24,5 +24,5 @@ attachSockets({
   io: new Server(),
   config: config,
   actions: [onPing],
-  target: http.createServer().listen(8090),
+  target: http.createServer().listen(8092),
 });

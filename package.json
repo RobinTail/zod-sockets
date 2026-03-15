@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint",
-    "pretest": "tsc --noEmit",
+    "pretest": "tsx tools/make-tests.ts",
     "test": "pnpm -r test",
     "mdfix": "prettier *.md --write",
     "start": "pnpm -F example start",
@@ -11,7 +11,6 @@
     "build:compile": "pnpm -F zod-sockets build",
     "build:client": "pnpm -F example build:client",
     "build:docs": "pnpm -F example build:docs",
-    "build:tests": "tsx tools/make-tests.ts",
     "precommit": "pnpm lint && pnpm test && pnpm build && git add example/example*.ts",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "pnpm lint && pnpm test && pnpm build",

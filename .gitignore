@@ -3,5 +3,4 @@ node_modules
 yarn-error.log
 dist
 coverage
-tests/*/quick-start.ts
-tests/*/yarn.lock
+*-test/quick-start.ts

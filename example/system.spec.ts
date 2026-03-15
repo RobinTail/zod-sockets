@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { io } from "socket.io-client";
 import { z } from "zod";
 import { waitFor } from "../tools/helpers";
+import { givePort } from "../tools/ports";
 
 describe("System test on Example", async () => {
   let out = "";
@@ -12,7 +13,7 @@ describe("System test on Example", async () => {
   const example = spawn("tsx", ["index.ts"]);
   example.stdout.on("data", listener);
   await waitFor(() => out.indexOf("Listening") > -1);
-  const client = io("ws://localhost:8090");
+  const client = io(`ws://localhost:${givePort("example")}`);
   await waitFor(() => client.connected);
 
   afterAll(async () => {
@@ -57,7 +58,7 @@ describe("System test on Example", async () => {
   });
 
   describe("chat", async () => {
-    const partner = io("ws://localhost:8090");
+    const partner = io(`ws://localhost:${givePort("example")}`);
     await waitFor(() => partner.connected);
 
     test("should broadcast a message", async () => {

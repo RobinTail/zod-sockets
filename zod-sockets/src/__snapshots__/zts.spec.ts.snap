@@ -195,6 +195,8 @@ exports[`zod-to-ts > z.discriminatedUnion() > outputs correct typescript 1`] = `
 }"
 `;
 
+exports[`zod-to-ts > z.function() > should handle tuple with rest parameter with description 1`] = `"(p1: number, p2: boolean, ...extraArgs: string[]) => void"`;
+
 exports[`zod-to-ts > z.function() > should throw when the input schema is not a ZodTuple 1`] = `
 Error({
   "message": "z.function()::input must be a tuple",

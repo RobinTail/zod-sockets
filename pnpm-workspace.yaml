@@ -10,8 +10,6 @@ engineStrict: true
 autoInstallPeers: false
 publicHoistPattern:
   - "@vitest/*"
-  - "@eslint/*"
-  - "globals"
 catalogs:
   prod:
     "ansis": "^4.0.0"

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ActionsFactory } from "./actions-factory";
-import { createSimpleConfig } from "./config";
+import { Config, createSimpleConfig } from "./config";
 import { Integration } from "./integration";
 
 describe("Integration", () => {
@@ -24,6 +24,23 @@ describe("Integration", () => {
             handler: vi.fn(),
           }),
         ],
+      });
+      expect(instance.print()).toMatchSnapshot();
+    });
+
+    test("should handle namespaces with emission", () => {
+      const configWithEmission = new Config().addNamespace({
+        path: "/test",
+        emission: {
+          message: {
+            schema: z.tuple([z.string()]),
+            ack: z.tuple([z.number()]),
+          },
+        },
+      });
+      const instance = new Integration({
+        config: configWithEmission,
+        actions: [],
       });
       expect(instance.print()).toMatchSnapshot();
     });

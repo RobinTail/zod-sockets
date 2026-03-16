@@ -19,3 +19,19 @@ export namespace Root {
     export type Socket = SocketBase<Emission, Actions>;
 }"
 `;
+
+exports[`Integration > print() > should handle namespaces with emission 1`] = `
+"import type { Socket as SocketBase } from "socket.io-client";
+
+export namespace Test {
+    /** @desc The actual path of the Test namespace */
+    export const path = "/test";
+    export interface Emission {
+        message: (p1: string, cb2: (p1: number) => void) => void;
+    }
+    export interface Actions {
+    }
+    /** @example const socket: Test.Socket = io(Test.path) */
+    export type Socket = SocketBase<Emission, Actions>;
+}"
+`;

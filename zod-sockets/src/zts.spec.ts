@@ -179,6 +179,16 @@ describe("zod-to-ts", () => {
       });
       expect(() => zodToTs(schema, ctx)).toThrowErrorMatchingSnapshot();
     });
+
+    test("should handle tuple with rest parameter with description", () => {
+      const restParam = z.string().describe("extraArgs");
+      const schema = z.function({
+        input: z.tuple([z.number(), z.boolean()]).rest(restParam),
+        output: z.void(),
+      });
+      const node = zodToTs(schema, ctx);
+      expect(printNodeTest(node)).toMatchSnapshot();
+    });
   });
 
   describe("z.optional()", () => {

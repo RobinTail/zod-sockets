@@ -12,9 +12,9 @@ publicHoistPattern:
   - "@vitest/*"
 catalogs:
   prod:
-    "ansis": "^4.0.0"
+    "ansis": "^4.2.0"
     "ramda": "^0.32.0"
-    "yaml": "^2.4.1"
+    "yaml": "^2.8.2"
   peer:
     "socket.io": "^4.7.4"
     "typescript": "^5.3.3"

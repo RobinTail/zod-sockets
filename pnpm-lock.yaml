@@ -20,13 +20,13 @@ catalogs:
       version: 4.3.6
   prod:
     ansis:
-      specifier: ^4.0.0
+      specifier: ^4.2.0
       version: 4.2.0
     ramda:
       specifier: ^0.32.0
       version: 0.32.0
     yaml:
-      specifier: ^2.4.1
+      specifier: ^2.8.2
       version: 2.8.2
 
 overrides:

@@ -19,12 +19,12 @@ catalogs:
     "yaml": "^2.4.1"
   peer:
     "socket.io": "^4.7.4"
-    "typescript": "^5.3.3"
+    "typescript": "^5.9.3"
     "zod": "^4.1.0"
   dev:
     "socket.io": "^4.7.4"
     "socket.io-client": "^4.7.4"
-    "typescript": "^5.3.3"
+    "typescript": "^5.9.3"
     "zod": "^4.1.0"
 overrides:
   "@scarf/scarf": "npm:empty-npm-package@1.0.0"

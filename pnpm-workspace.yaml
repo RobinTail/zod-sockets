@@ -16,7 +16,7 @@ catalogs:
   prod:
     "ansis": "^4.0.0"
     "ramda": "^0.32.0"
-    "yaml": "^2.4.1"
+    "yaml": "^2.8.3"
   peer:
     "socket.io": "^4.7.4"
     "typescript": "^5.3.3"

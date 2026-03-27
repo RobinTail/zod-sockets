@@ -104,8 +104,8 @@ importers:
         specifier: ^5.1.0
         version: 5.2.1
       express-zod-api:
-        specifier: ^27.1.0
-        version: 27.1.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6)
+        specifier: ^27.2.0
+        version: 27.2.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -886,8 +886,8 @@ packages:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
 
-  express-zod-api@27.1.0:
-    resolution: {integrity: sha512-SL5tGrinmebreq8n1a4YAUVnlTzf0cbUIFC+DcWi3TMu9i4xllqJN8E3EPZmAM7Phk5IqypYzzw5FKv5oyl0lQ==}
+  express-zod-api@27.2.0:
+    resolution: {integrity: sha512-7L5PryyHZqli+1LAxOQgzVBahIGj1+4rkOt48zYu55KgU5z0IQK09zCtqOCCydVhqzT/qhoCTBL1SZhBAs7wKg==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
       '@types/compression': ^1.7.5
@@ -898,7 +898,7 @@ packages:
       express: ^5.1.0
       express-fileupload: ^1.5.0
       http-errors: ^2.0.1
-      typescript: ^5.1.3
+      typescript: ^5.1.3 || ^6.0.2
       zod: ^4.3.4
     peerDependenciesMeta:
       '@types/compression':
@@ -1687,11 +1687,6 @@ packages:
     resolution: {integrity: sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ==}
     engines: {node: '>=0.4.0'}
 
-  yaml@2.8.2:
-    resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
-    engines: {node: '>= 14.6'}
-    hasBin: true
-
   yaml@2.8.3:
     resolution: {integrity: sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==}
     engines: {node: '>= 14.6'}
@@ -2404,7 +2399,7 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@27.1.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6):
+  express-zod-api@27.2.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@express-zod-api/zod-plugin': 4.0.1(zod@4.3.6)
       ansis: 4.2.0
@@ -2720,7 +2715,7 @@ snapshots:
 
   openapi3-ts@4.5.0:
     dependencies:
-      yaml: 2.8.2
+      yaml: 2.8.3
 
   optionator@0.9.4:
     dependencies:
@@ -3151,8 +3146,6 @@ snapshots:
   ws@8.18.3: {}
 
   xmlhttprequest-ssl@2.1.2: {}
-
-  yaml@2.8.2: {}
 
   yaml@2.8.3: {}
 

@@ -16,7 +16,7 @@
     "@eslint/js": "^10.0.1",
     "@tsconfig/node22": "^22.0.5",
     "@types/node": "^25.0.2",
-    "@vitest/coverage-v8": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.2",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-allowed-dependencies": "^2.1.0",
@@ -24,11 +24,11 @@
     "globals": "^17.4.0",
     "husky": "^9.0.10",
     "prettier": "3.8.1",
-    "tsdown": "^0.21.3",
+    "tsdown": "^0.21.4",
     "typescript": "catalog:dev",
     "typescript-eslint": "^8.57.0",
     "unrun": "^0.2.32",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.2"
   },
-  "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }

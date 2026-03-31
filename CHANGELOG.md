@@ -8,6 +8,11 @@
 
 ## Version 5
 
+### v5.2.0
+
+- Supporting TypeScript 6:
+  - Supported `typescript` versions: `^5.3.3 || ^6.0.2`
+
 ### v5.1.0
 
 - The `onDisconnect` hook is now equipped with `reason` property on its argument:

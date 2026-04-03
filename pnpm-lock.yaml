@@ -45,10 +45,10 @@ importers:
         version: 20.1.9
       '@types/node':
         specifier: ^25.0.2
-        version: 25.5.0
+        version: 25.5.2
       '@vitest/coverage-v8':
         specifier: ^4.1.2
-        version: 4.1.2(vitest@4.1.2(@types/node@25.5.0)(yaml@2.8.3))
+        version: 4.1.2(vitest@4.1.2(@types/node@25.5.2)(yaml@2.8.3))
       eslint:
         specifier: ^9.39.4
         version: 9.39.4
@@ -81,7 +81,7 @@ importers:
         version: 0.2.34(synckit@0.11.12)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.2(@types/node@25.5.0)(yaml@2.8.3)
+        version: 4.1.2(@types/node@25.5.2)(yaml@2.8.3)
 
   cjs-test:
     devDependencies:
@@ -105,7 +105,7 @@ importers:
         version: 5.2.1
       express-zod-api:
         specifier: ^27.2.0
-        version: 27.2.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6)
+        version: 27.2.0(@types/node@25.5.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -193,7 +193,7 @@ importers:
         version: 6.0.2
       vitest:
         specifier: ^4.0.4
-        version: 4.1.2(@types/node@25.5.0)(yaml@2.8.3)
+        version: 4.1.2(@types/node@25.5.2)(yaml@2.8.3)
       zod:
         specifier: catalog:dev
         version: 4.3.6
@@ -472,8 +472,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@25.5.0':
-    resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
+  '@types/node@25.5.2':
+    resolution: {integrity: sha512-tO4ZIRKNC+MDWV4qKVZe3Ql/woTnmHDr5JD8UI5hn2pwBrHEwOEMZK7WlNb5RKB6EoJ02gwmQS9OrjuFnZYdpg==}
 
   '@types/ramda@0.31.1':
     resolution: {integrity: sha512-Vt6sFXnuRpzaEj+yeutA0q3bcAsK7wdPuASIzR9LXqL4gJPyFw8im9qchlbp4ltuf3kDEIRmPJTD/Fkg60dn7g==}
@@ -1906,7 +1906,7 @@ snapshots:
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
 
   '@types/deep-eql@4.0.2': {}
 
@@ -1916,7 +1916,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@25.5.0':
+  '@types/node@25.5.2':
     dependencies:
       undici-types: 7.18.2
 
@@ -1926,7 +1926,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
 
   '@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.4)(typescript@6.0.2))(eslint@9.39.4)(typescript@6.0.2)':
     dependencies:
@@ -2019,7 +2019,7 @@ snapshots:
       '@typescript-eslint/types': 8.55.0
       eslint-visitor-keys: 4.2.1
 
-  '@vitest/coverage-v8@4.1.2(vitest@4.1.2(@types/node@25.5.0)(yaml@2.8.3))':
+  '@vitest/coverage-v8@4.1.2(vitest@4.1.2(@types/node@25.5.2)(yaml@2.8.3))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.1.2
@@ -2031,7 +2031,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.2(@types/node@25.5.0)(yaml@2.8.3)
+      vitest: 4.1.2(@types/node@25.5.2)(yaml@2.8.3)
 
   '@vitest/expect@4.1.2':
     dependencies:
@@ -2042,13 +2042,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.2(vite@8.0.3(@types/node@25.5.0)(yaml@2.8.3))':
+  '@vitest/mocker@4.1.2(vite@8.0.3(@types/node@25.5.2)(yaml@2.8.3))':
     dependencies:
       '@vitest/spy': 4.1.2
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.3(@types/node@25.5.0)(yaml@2.8.3)
+      vite: 8.0.3(@types/node@25.5.2)(yaml@2.8.3)
 
   '@vitest/pretty-format@4.1.2':
     dependencies:
@@ -2251,7 +2251,7 @@ snapshots:
   engine.io@6.6.6:
     dependencies:
       '@types/cors': 2.8.19
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       '@types/ws': 8.18.1
       accepts: 1.3.8
       base64id: 2.0.0
@@ -2372,13 +2372,13 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@27.2.0(@types/node@25.5.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6):
+  express-zod-api@27.2.0(@types/node@25.5.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6):
     dependencies:
       '@express-zod-api/zod-plugin': 4.0.1(zod@4.3.6)
       ansis: 4.2.0
       express: 5.2.1
       http-errors: 2.0.1
-      node-mocks-http: 1.17.2(@types/node@25.5.0)
+      node-mocks-http: 1.17.2(@types/node@25.5.2)
       openapi3-ts: 4.5.0
       ramda: 0.32.0
       zod: 4.3.6
@@ -2657,7 +2657,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  node-mocks-http@1.17.2(@types/node@25.5.0):
+  node-mocks-http@1.17.2(@types/node@25.5.2):
     dependencies:
       accepts: 1.3.8
       content-disposition: 0.5.4
@@ -2670,7 +2670,7 @@ snapshots:
       range-parser: 1.2.1
       type-is: 1.6.18
     optionalDependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
 
   object-assign@4.1.1: {}
 
@@ -3061,7 +3061,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@8.0.3(@types/node@25.5.0)(yaml@2.8.3):
+  vite@8.0.3(@types/node@25.5.2)(yaml@2.8.3):
     dependencies:
       lightningcss: empty-npm-package@1.0.0
       picomatch: 4.0.4
@@ -3069,17 +3069,17 @@ snapshots:
       rolldown: 1.0.0-rc.12
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       fsevents: 2.3.3
       yaml: 2.8.3
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
 
-  vitest@4.1.2(@types/node@25.5.0)(yaml@2.8.3):
+  vitest@4.1.2(@types/node@25.5.2)(yaml@2.8.3):
     dependencies:
       '@vitest/expect': 4.1.2
-      '@vitest/mocker': 4.1.2(vite@8.0.3(@types/node@25.5.0)(yaml@2.8.3))
+      '@vitest/mocker': 4.1.2(vite@8.0.3(@types/node@25.5.2)(yaml@2.8.3))
       '@vitest/pretty-format': 4.1.2
       '@vitest/runner': 4.1.2
       '@vitest/snapshot': 4.1.2
@@ -3096,10 +3096,10 @@ snapshots:
       tinyexec: 1.0.4
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 8.0.3(@types/node@25.5.0)(yaml@2.8.3)
+      vite: 8.0.3(@types/node@25.5.2)(yaml@2.8.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'

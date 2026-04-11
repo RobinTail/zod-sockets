@@ -85,47 +85,6 @@ export class TypescriptAPI {
       ? this.makeId(name)
       : this.literally(name);
 
-  public makeParam = (
-    name: string | ts.Identifier,
-    {
-      type,
-      mod,
-      initId,
-      optional,
-    }: {
-      type?: Typeable;
-      mod?: ts.Modifier[];
-      initId?: string;
-      optional?: boolean;
-    } = {},
-  ) =>
-    this.f.createParameterDeclaration(
-      mod,
-      undefined,
-      name,
-      optional
-        ? this.f.createToken(this.ts.SyntaxKind.QuestionToken)
-        : undefined,
-      type ? this.ensureTypeNode(type) : undefined,
-      initId ? this.makeId(initId) : undefined,
-    );
-
-  public makeParams = (
-    params: Partial<
-      Record<string, Typeable | Parameters<typeof this.makeParam>[1]>
-    >,
-  ) =>
-    Object.entries(params).map(([name, value]) =>
-      this.makeParam(
-        name,
-        typeof value === "string" ||
-          typeof value === "number" ||
-          (typeof value === "object" && "kind" in value)
-          ? { type: value }
-          : value,
-      ),
-    );
-
   public ensureTypeNode = (
     subject: Typeable,
     args?: Typeable[], // only for string and id
@@ -227,9 +186,6 @@ export class TypescriptAPI {
     return comment ? this.addJsDoc(node, comment) : node;
   };
 
-  public makePromise = (subject: Typeable) =>
-    this.ensureTypeNode(Promise.name, [subject]);
-
   public makeInterface = (
     name: ts.Identifier | string,
     props: ts.PropertySignature[],
@@ -265,98 +221,6 @@ export class TypescriptAPI {
         init ? this.ensureTypeNode(init) : undefined,
       );
     });
-
-  public makeArrowFn = (
-    params:
-      | Array<Parameters<typeof this.makeParam>[0]>
-      | Parameters<typeof this.makeParams>[0],
-    body: ts.ConciseBody,
-    { isAsync }: { isAsync?: boolean } = {},
-  ) =>
-    this.f.createArrowFunction(
-      isAsync ? this.asyncModifier : undefined,
-      undefined,
-      Array.isArray(params)
-        ? R.map(this.makeParam, params)
-        : this.makeParams(params),
-      undefined,
-      undefined,
-      body,
-    );
-
-  public makeTernary = (
-    ...args: [
-      ts.Expression | string,
-      ts.Expression | string,
-      ts.Expression | string,
-    ]
-  ) => {
-    const [condition, positive, negative] = args.map((arg) =>
-      typeof arg === "string" ? this.makeId(arg) : arg,
-    );
-    return this.f.createConditionalExpression(
-      condition,
-      this.f.createToken(this.ts.SyntaxKind.QuestionToken),
-      positive,
-      this.f.createToken(this.ts.SyntaxKind.ColonToken),
-      negative,
-    );
-  };
-
-  public makeCall =
-    (
-      first: ts.Expression | string,
-      ...rest: Array<ts.Identifier | ts.ConditionalExpression | string>
-    ) =>
-    (...args: Array<ts.Expression | string>) =>
-      this.f.createCallExpression(
-        rest.reduce(
-          (acc, entry) =>
-            typeof entry === "string" || this.ts.isIdentifier(entry)
-              ? this.f.createPropertyAccessExpression(acc, entry)
-              : this.f.createElementAccessExpression(acc, entry),
-          typeof first === "string" ? this.makeId(first) : first,
-        ),
-        undefined,
-        args.map((arg) => (typeof arg === "string" ? this.makeId(arg) : arg)),
-      );
-
-  public makeNew = (cls: string, ...args: ts.Expression[]) =>
-    this.f.createNewExpression(this.makeId(cls), undefined, args);
-
-  public makeExtract = (base: Typeable, narrow: ts.TypeNode) =>
-    this.ensureTypeNode("Extract", [base, narrow]);
-
-  public makeAssignment = (
-    left: ts.Expression | string,
-    right: ts.Expression,
-  ) =>
-    this.f.createExpressionStatement(
-      this.f.createBinaryExpression(
-        typeof left === "string" ? this.makeId(left) : left,
-        this.f.createToken(this.ts.SyntaxKind.EqualsToken),
-        right,
-      ),
-    );
-
-  public makeIndexed = (subject: Typeable, index: Typeable) =>
-    this.f.createIndexedAccessTypeNode(
-      this.ensureTypeNode(subject),
-      this.ensureTypeNode(index),
-    );
-
-  public makeMaybeAsync = (subj: Typeable) =>
-    this.makeUnion([this.ensureTypeNode(subj), this.makePromise(subj)]);
-
-  public makeFnType = (
-    params: Parameters<typeof this.makeParams>[0],
-    returns: Typeable,
-  ) =>
-    this.f.createFunctionTypeNode(
-      undefined,
-      this.makeParams(params),
-      this.ensureTypeNode(returns),
-    );
 
   /* eslint-disable prettier/prettier -- shorter and works better this way than overrides */
   public literally = <T extends string | null | boolean | number | bigint>(subj: T) => (

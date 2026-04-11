@@ -1,16 +1,18 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
 import { z } from "zod";
-import { f, printNode } from "./typescript-api";
+import { TypescriptAPI } from "./typescript-api";
 import { zodToTs } from "./zts";
 import { ZTSContext } from "./zts-helpers";
 
 describe("zod-to-ts", () => {
+  const api = new TypescriptAPI(ts);
   const printNodeTest = (node: ts.Node) =>
-    printNode(node, { newLine: ts.NewLineKind.LineFeed });
+    api.printNode(node, { newLine: ts.NewLineKind.LineFeed });
   const ctx: ZTSContext = {
     isResponse: false,
-    makeAlias: vi.fn(() => f.createTypeReferenceNode("SomeType")),
+    makeAlias: vi.fn(() => api.f.createTypeReferenceNode("SomeType")),
+    api,
   };
 
   describe("z.array()", () => {
@@ -163,11 +165,18 @@ describe("zod-to-ts", () => {
       catch: z.number().catch(123),
       pipeline: z.string().regex(/\d+/).transform(Number).pipe(z.number()),
       readonly: z.string().readonly(),
+      extended: z.object({}).extend({ hex: z.hex(), hash: z.hash("sha256") }),
+      codec: z.codec(z.string(), z.number(), {
+        encode: String,
+        decode: Number,
+      }),
+      slug: z.string().slugify(),
+      xor: z.xor([z.string(), z.number()]),
     });
 
     test("should produce the expected results", () => {
       const node = zodToTs(example, ctx);
-      expect(printNode(node)).toMatchSnapshot();
+      expect(api.printNode(node)).toMatchSnapshot();
     });
   });
 
@@ -211,6 +220,7 @@ describe("zod-to-ts", () => {
           }),
         ])
         .optional(),
+      exact: z.string().exactOptional(),
     });
 
     test("Zod 4: does not add undefined to it, unwrap as is", () => {

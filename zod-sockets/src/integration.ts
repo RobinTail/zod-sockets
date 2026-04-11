@@ -70,7 +70,7 @@ export class Integration {
       this.api.f.createImportDeclaration(
         undefined,
         this.api.f.createImportClause(
-          true,
+          this.api.ts.SyntaxKind.TypeKeyword,
           undefined,
           this.api.f.createNamedImports([
             this.api.f.createImportSpecifier(

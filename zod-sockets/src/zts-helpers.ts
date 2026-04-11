@@ -1,4 +1,4 @@
-import ts from "typescript";
+import type ts from "typescript";
 import { FlatObject } from "./common-helpers";
 import { SchemaHandler } from "./schema-walker";
 import { TypescriptAPI } from "./typescript-api";

@@ -15,10 +15,6 @@ export class TypescriptAPI {
   public ts: typeof ts;
   public f: typeof ts.factory;
   public exportModifier: ts.ModifierToken<ts.SyntaxKind.ExportKeyword>[];
-  public accessModifiers: Record<
-    "public" | "publicStatic" | "protectedReadonly",
-    ts.Modifier[]
-  >;
   #primitives: ts.KeywordTypeSyntaxKind[];
   static #safePropRegex = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 
@@ -28,17 +24,6 @@ export class TypescriptAPI {
     this.exportModifier = [
       this.f.createModifier(this.ts.SyntaxKind.ExportKeyword),
     ];
-    this.accessModifiers = {
-      public: [this.f.createModifier(this.ts.SyntaxKind.PublicKeyword)],
-      publicStatic: [
-        this.f.createModifier(this.ts.SyntaxKind.PublicKeyword),
-        this.f.createModifier(this.ts.SyntaxKind.StaticKeyword),
-      ],
-      protectedReadonly: [
-        this.f.createModifier(this.ts.SyntaxKind.ProtectedKeyword),
-        this.f.createModifier(this.ts.SyntaxKind.ReadonlyKeyword),
-      ],
-    };
     this.#primitives = [
       this.ts.SyntaxKind.AnyKeyword,
       this.ts.SyntaxKind.BigIntKeyword,

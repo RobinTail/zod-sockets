@@ -125,19 +125,12 @@ export class Integration {
 
       const interfaces = Object.entries(this.registry[ns]).map(
         ([scope, events]) =>
-          this.api.f.createInterfaceDeclaration(
-            this.api.exportModifier,
+          this.api.makeInterface(
             makeCleanId(scope),
-            undefined,
-            undefined,
             events.map(({ event, node }) =>
-              this.api.f.createPropertySignature(
-                undefined,
-                event,
-                undefined,
-                node,
-              ),
+              this.api.makeInterfaceProp(event, node),
             ),
+            { expose: true },
           ),
       );
       const socketNode = this.api.makeType(

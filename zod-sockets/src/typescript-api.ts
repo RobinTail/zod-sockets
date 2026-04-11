@@ -227,64 +227,6 @@ export class TypescriptAPI {
     return comment ? this.addJsDoc(node, comment) : node;
   };
 
-  public makePublicProperty = (
-    name: string | ts.PropertyName,
-    type: Typeable,
-  ) =>
-    this.f.createPropertyDeclaration(
-      this.accessModifiers.public,
-      name,
-      undefined,
-      this.ensureTypeNode(type),
-      undefined,
-    );
-
-  public makePublicMethod = (
-    name: string,
-    params: ts.ParameterDeclaration[],
-    statements: ts.Statement[],
-    {
-      typeParams,
-      returns,
-      isStatic,
-    }: {
-      typeParams?: TypeParams;
-      returns?: ts.TypeNode;
-      isStatic?: boolean;
-    } = {},
-  ) =>
-    this.f.createMethodDeclaration(
-      isStatic
-        ? this.accessModifiers.publicStatic
-        : this.accessModifiers.public,
-      undefined,
-      name,
-      undefined,
-      typeParams && this.makeTypeParams(typeParams),
-      params,
-      returns,
-      this.f.createBlock(statements),
-    );
-
-  public makePublicClass = (
-    name: string,
-    statements: ts.ClassElement[],
-    { typeParams }: { typeParams?: TypeParams } = {},
-  ) =>
-    this.f.createClassDeclaration(
-      this.exportModifier,
-      name,
-      typeParams && this.makeTypeParams(typeParams),
-      undefined,
-      statements,
-    );
-
-  public makeKeyOf = (subj: Typeable) =>
-    this.f.createTypeOperatorNode(
-      this.ts.SyntaxKind.KeyOfKeyword,
-      this.ensureTypeNode(subj),
-    );
-
   public makePromise = (subject: Typeable) =>
     this.ensureTypeNode(Promise.name, [subject]);
 

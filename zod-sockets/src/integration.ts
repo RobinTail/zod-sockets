@@ -113,19 +113,10 @@ export class Integration {
     for (const ns in this.registry) {
       const publicName = makeCleanId(ns) || makeCleanId(fallbackNs);
 
-      const nsNameNode = this.api.f.createVariableStatement(
-        this.api.exportModifier,
-        this.api.f.createVariableDeclarationList(
-          [
-            this.api.f.createVariableDeclaration(
-              this.#ids.path,
-              undefined,
-              undefined,
-              this.api.f.createStringLiteral(normalizeNS(ns)),
-            ),
-          ],
-          this.api.ts.NodeFlags.Const,
-        ),
+      const nsNameNode = this.api.makeConst(
+        this.#ids.path,
+        this.api.f.createStringLiteral(normalizeNS(ns)),
+        { expose: true },
       );
       this.api.addJsDoc(
         nsNameNode,

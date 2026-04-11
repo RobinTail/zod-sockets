@@ -85,22 +85,6 @@ export class TypescriptAPI {
       ? this.makeId(name)
       : this.literally(name);
 
-  public makeTemplate = (
-    head: string,
-    ...rest: [ts.Expression | string, string?][]
-  ) =>
-    this.f.createTemplateExpression(
-      this.f.createTemplateHead(head),
-      rest.map(([id, str = ""], idx) =>
-        this.f.createTemplateSpan(
-          typeof id === "string" ? this.makeId(id) : id,
-          idx === rest.length - 1
-            ? this.f.createTemplateTail(str)
-            : this.f.createTemplateMiddle(str),
-        ),
-      ),
-    );
-
   public makeParam = (
     name: string | ts.Identifier,
     {
@@ -142,16 +126,6 @@ export class TypescriptAPI {
       ),
     );
 
-  public makePublicConstructor = (
-    params: ts.ParameterDeclaration[],
-    statements: ts.Statement[] = [],
-  ) =>
-    this.f.createConstructorDeclaration(
-      this.accessModifiers.public,
-      params,
-      this.f.createBlock(statements),
-    );
-
   public ensureTypeNode = (
     subject: Typeable,
     args?: Typeable[], // only for string and id
@@ -164,16 +138,6 @@ export class TypescriptAPI {
             args && R.map(this.ensureTypeNode, args),
           )
         : subject;
-
-  /**
-   * @internal
-   * @example Record<string, any>
-   * */
-  public makeRecordStringAny = () =>
-    this.ensureTypeNode("Record", [
-      this.ts.SyntaxKind.StringKeyword,
-      this.ts.SyntaxKind.AnyKeyword,
-    ]);
 
   /**
    * @internal
@@ -224,16 +188,6 @@ export class TypescriptAPI {
     ]);
     return jsdoc.length ? this.addJsDoc(node, jsdoc.join(" ")) : node;
   };
-
-  public makeOneLine = (subject: ts.TypeNode) =>
-    this.ts.setEmitFlags(subject, this.ts.EmitFlags.SingleLine);
-
-  public makeDeconstruction = (...names: string[]): ts.ArrayBindingPattern =>
-    this.f.createArrayBindingPattern(
-      names.map(
-        (name) => this.f.createBindingElement(undefined, undefined, name), // can also add default value at last
-      ),
-    );
 
   public makeConst = (
     name: string | ts.Identifier | ts.ArrayBindingPattern,

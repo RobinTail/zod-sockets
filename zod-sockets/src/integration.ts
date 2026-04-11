@@ -140,14 +140,13 @@ export class Integration {
             ),
           ),
       );
-      const socketNode = this.api.f.createTypeAliasDeclaration(
-        this.api.exportModifier,
+      const socketNode = this.api.makeType(
         this.#ids.socket,
-        undefined,
-        this.api.f.createTypeReferenceNode(this.#ids.socketBase, [
-          this.api.f.createTypeReferenceNode(this.#ids.emission),
-          this.api.f.createTypeReferenceNode(this.#ids.actions),
+        this.api.ensureTypeNode(this.#ids.socketBase, [
+          this.#ids.emission,
+          this.#ids.actions,
         ]),
+        { expose: true },
       );
       this.api.addJsDoc(
         socketNode,

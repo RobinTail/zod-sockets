@@ -209,14 +209,6 @@ export class TypescriptAPI {
       ),
     );
 
-  public makePublicLiteralType = (
-    name: ts.Identifier | string,
-    literals: string[],
-  ) =>
-    this.makeType(name, this.makeUnion(R.map(this.makeLiteralType, literals)), {
-      expose: true,
-    });
-
   public makeType = (
     name: ts.Identifier | string,
     value: ts.TypeNode,

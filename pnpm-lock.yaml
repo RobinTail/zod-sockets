@@ -105,7 +105,7 @@ importers:
         version: 5.2.1
       express-zod-api:
         specifier: ^27.2.0
-        version: 27.2.0(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6)
+        version: 27.2.2(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -290,8 +290,8 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@express-zod-api/zod-plugin@4.0.1':
-    resolution: {integrity: sha512-e5SfZsDMn+88CGqll3uHT0xlE9G4mutfefhV7rbn84+olMZnvVQD1ThwVrX+c/34FrW2RqLEX/dip5ISpG1lNQ==}
+  '@express-zod-api/zod-plugin@4.1.0':
+    resolution: {integrity: sha512-nHUlO2Hd71lDvi2LN9OBQ81VwXmSpOaMtZIcqeVyuMidrdu2rrURz+4nlD5b7p8dzNkzJZ7EogHgREUwAPXPPw==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
       zod: ^4.3.4
@@ -876,8 +876,8 @@ packages:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
 
-  express-zod-api@27.2.0:
-    resolution: {integrity: sha512-7L5PryyHZqli+1LAxOQgzVBahIGj1+4rkOt48zYu55KgU5z0IQK09zCtqOCCydVhqzT/qhoCTBL1SZhBAs7wKg==}
+  express-zod-api@27.2.2:
+    resolution: {integrity: sha512-92CcamxNzTguCtzqZzu41LWSQtT0hyPpmQ9JRI/6WEjxct9KlKfiL9Ub5M9akFGCeSHDcxO7r41MdEERerrbAw==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
       '@types/compression': ^1.7.5
@@ -1789,7 +1789,7 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@express-zod-api/zod-plugin@4.0.1(zod@4.3.6)':
+  '@express-zod-api/zod-plugin@4.1.0(zod@4.3.6)':
     dependencies:
       ramda: 0.32.0
       zod: 4.3.6
@@ -2372,9 +2372,9 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@27.2.0(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6):
+  express-zod-api@27.2.2(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6):
     dependencies:
-      '@express-zod-api/zod-plugin': 4.0.1(zod@4.3.6)
+      '@express-zod-api/zod-plugin': 4.1.0(zod@4.3.6)
       ansis: 4.2.0
       express: 5.2.1
       http-errors: 2.0.1

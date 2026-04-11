@@ -213,7 +213,10 @@ const onPipeline: Producer = (
     [api.ts.SyntaxKind.UndefinedKeyword]: undefined,
   } satisfies Partial<Record<ts.KeywordTypeSyntaxKind, unknown>>;
   const sample = samples[opposingType.kind as keyof typeof samples];
-  const targetType = getTransformedType(target, sample);
+  const targetType = getTransformedType(
+    target,
+    isSchema<z.core.$ZodDate>(opposite, "date") ? new Date() : sample,
+  );
   const resolutions: Partial<
     Record<NonNullable<typeof targetType>, ts.KeywordTypeSyntaxKind>
   > = {

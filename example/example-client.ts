@@ -8,7 +8,7 @@ export namespace Root {
     features?: Type1[] | undefined;
   };
   export interface Emission {
-    time: (currentIsoTime: unknown) => void;
+    time: (currentIsoTime: string) => void;
     chat: (
       message: string,
       extraInfo: {

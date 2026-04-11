@@ -238,5 +238,3 @@ export class TypescriptAPI {
   public isPrimitive = (node: ts.TypeNode): node is ts.KeywordTypeNode =>
     (this.#primitives as ts.SyntaxKind[]).includes(node.kind);
 }
-
-export const propOf = <T>(name: keyof NoInfer<T>) => name as string;

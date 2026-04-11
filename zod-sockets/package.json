@@ -46,6 +46,11 @@
     "typescript": "catalog:peer",
     "zod": "catalog:peer"
   },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/ramda": "^0.31.0",
     "socket.io": "catalog:dev",

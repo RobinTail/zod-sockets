@@ -48,10 +48,10 @@ importers:
         version: 22.0.5
       '@types/node':
         specifier: ^25.0.2
-        version: 25.5.2
+        version: 25.6.0
       '@vitest/coverage-v8':
         specifier: ^4.1.2
-        version: 4.1.2(vitest@4.1.2(@types/node@25.5.2)(yaml@2.8.3))
+        version: 4.1.2(vitest@4.1.2(@types/node@25.6.0)(yaml@2.8.3))
       eslint:
         specifier: ^10.0.3
         version: 10.0.3
@@ -63,7 +63,7 @@ importers:
         version: 2.1.0(eslint@10.0.3)(typescript-eslint@8.58.0(eslint@10.0.3)(typescript@6.0.2))
       eslint-plugin-prettier:
         specifier: ^5.5.5
-        version: 5.5.5(eslint-config-prettier@10.1.8(eslint@10.0.3))(eslint@10.0.3)(prettier@3.8.1)
+        version: 5.5.5(eslint-config-prettier@10.1.8(eslint@10.0.3))(eslint@10.0.3)(prettier@3.8.2)
       globals:
         specifier: ^17.4.0
         version: 17.4.0
@@ -71,8 +71,8 @@ importers:
         specifier: ^9.0.10
         version: 9.1.7
       prettier:
-        specifier: 3.8.1
-        version: 3.8.1
+        specifier: 3.8.2
+        version: 3.8.2
       tsdown:
         specifier: ^0.21.4
         version: 0.21.7(@arethetypeswrong/core@0.18.2)(synckit@0.11.12)(typescript@6.0.2)
@@ -87,7 +87,7 @@ importers:
         version: 0.2.34(synckit@0.11.12)
       vitest:
         specifier: ^4.1.2
-        version: 4.1.2(@types/node@25.5.2)(yaml@2.8.3)
+        version: 4.1.2(@types/node@25.6.0)(yaml@2.8.3)
 
   cjs-test:
     devDependencies:
@@ -111,7 +111,7 @@ importers:
         version: 5.2.1
       express-zod-api:
         specifier: ^27.2.0
-        version: 27.2.0(@types/node@25.5.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6)
+        version: 27.2.2(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -199,7 +199,7 @@ importers:
         version: 6.0.2
       vitest:
         specifier: ^4.0.4
-        version: 4.1.2(@types/node@25.5.2)(yaml@2.8.3)
+        version: 4.1.2(@types/node@25.6.0)(yaml@2.8.3)
       zod:
         specifier: catalog:dev
         version: 4.3.6
@@ -297,8 +297,8 @@ packages:
     resolution: {integrity: sha512-iH1B076HoAshH1mLpHMgwdGeTs0CYwL0SPMkGuSebZrwBp16v415e9NZXg2jtrqPVQjf6IANe2Vtlr5KswtcZQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@express-zod-api/zod-plugin@4.0.1':
-    resolution: {integrity: sha512-e5SfZsDMn+88CGqll3uHT0xlE9G4mutfefhV7rbn84+olMZnvVQD1ThwVrX+c/34FrW2RqLEX/dip5ISpG1lNQ==}
+  '@express-zod-api/zod-plugin@4.1.0':
+    resolution: {integrity: sha512-nHUlO2Hd71lDvi2LN9OBQ81VwXmSpOaMtZIcqeVyuMidrdu2rrURz+4nlD5b7p8dzNkzJZ7EogHgREUwAPXPPw==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
       zod: ^4.3.4
@@ -482,8 +482,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@25.5.2':
-    resolution: {integrity: sha512-tO4ZIRKNC+MDWV4qKVZe3Ql/woTnmHDr5JD8UI5hn2pwBrHEwOEMZK7WlNb5RKB6EoJ02gwmQS9OrjuFnZYdpg==}
+  '@types/node@25.6.0':
+    resolution: {integrity: sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==}
 
   '@types/ramda@0.31.1':
     resolution: {integrity: sha512-Vt6sFXnuRpzaEj+yeutA0q3bcAsK7wdPuASIzR9LXqL4gJPyFw8im9qchlbp4ltuf3kDEIRmPJTD/Fkg60dn7g==}
@@ -860,8 +860,8 @@ packages:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
 
-  express-zod-api@27.2.0:
-    resolution: {integrity: sha512-7L5PryyHZqli+1LAxOQgzVBahIGj1+4rkOt48zYu55KgU5z0IQK09zCtqOCCydVhqzT/qhoCTBL1SZhBAs7wKg==}
+  express-zod-api@27.2.2:
+    resolution: {integrity: sha512-92CcamxNzTguCtzqZzu41LWSQtT0hyPpmQ9JRI/6WEjxct9KlKfiL9Ub5M9akFGCeSHDcxO7r41MdEERerrbAw==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
       '@types/compression': ^1.7.5
@@ -1251,8 +1251,8 @@ packages:
     resolution: {integrity: sha512-SxToR7P8Y2lWmv/kTzVLC1t/GDI2WGjMwNhLLE9qtH8Q13C+aEmuRlzDst4Up4s0Wc8sF2M+J57iB3cMLqftfg==}
     engines: {node: '>=6.0.0'}
 
-  prettier@3.8.1:
-    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
+  prettier@3.8.2:
+    resolution: {integrity: sha512-8c3mgTe0ASwWAJK+78dpviD+A8EqhndQPUBpNUIPt6+xWlIigCwfN01lWr9MAede4uqXGTEKeQWTvzb3vjia0Q==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -1497,8 +1497,8 @@ packages:
   unconfig-core@7.5.0:
     resolution: {integrity: sha512-Su3FauozOGP44ZmKdHy2oE6LPjk51M/TRRjHv2HNCWiDvfvCoxC2lno6jevMA91MYAdCdwP05QnWdWpSbncX/w==}
 
-  undici-types@7.18.2:
-    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
+  undici-types@7.19.2:
+    resolution: {integrity: sha512-qYVnV5OEm2AW8cJMCpdV20CDyaN3g0AjDlOGf1OW4iaDEx8MwdtChUp4zu4H0VP3nDRF/8RKWH+IPp9uW0YGZg==}
 
   unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
@@ -1735,7 +1735,7 @@ snapshots:
       '@eslint/core': 1.1.1
       levn: 0.4.1
 
-  '@express-zod-api/zod-plugin@4.0.1(zod@4.3.6)':
+  '@express-zod-api/zod-plugin@4.1.0(zod@4.3.6)':
     dependencies:
       ramda: 0.32.0
       zod: 4.3.6
@@ -1852,7 +1852,7 @@ snapshots:
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 25.5.2
+      '@types/node': 25.6.0
 
   '@types/deep-eql@4.0.2': {}
 
@@ -1864,9 +1864,9 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@25.5.2':
+  '@types/node@25.6.0':
     dependencies:
-      undici-types: 7.18.2
+      undici-types: 7.19.2
 
   '@types/ramda@0.31.1':
     dependencies:
@@ -1874,7 +1874,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 25.5.2
+      '@types/node': 25.6.0
 
   '@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.58.0(eslint@10.0.3)(typescript@6.0.2))(eslint@10.0.3)(typescript@6.0.2)':
     dependencies:
@@ -1967,7 +1967,7 @@ snapshots:
       '@typescript-eslint/types': 8.58.0
       eslint-visitor-keys: 5.0.1
 
-  '@vitest/coverage-v8@4.1.2(vitest@4.1.2(@types/node@25.5.2)(yaml@2.8.3))':
+  '@vitest/coverage-v8@4.1.2(vitest@4.1.2(@types/node@25.6.0)(yaml@2.8.3))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.1.2
@@ -1979,7 +1979,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.2(@types/node@25.5.2)(yaml@2.8.3)
+      vitest: 4.1.2(@types/node@25.6.0)(yaml@2.8.3)
 
   '@vitest/expect@4.1.2':
     dependencies:
@@ -1990,13 +1990,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.2(vite@8.0.5(@types/node@25.5.2)(yaml@2.8.3))':
+  '@vitest/mocker@4.1.2(vite@8.0.5(@types/node@25.6.0)(yaml@2.8.3))':
     dependencies:
       '@vitest/spy': 4.1.2
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.5(@types/node@25.5.2)(yaml@2.8.3)
+      vite: 8.0.5(@types/node@25.6.0)(yaml@2.8.3)
 
   '@vitest/pretty-format@4.1.2':
     dependencies:
@@ -2173,7 +2173,7 @@ snapshots:
   engine.io@6.6.6:
     dependencies:
       '@types/cors': 2.8.19
-      '@types/node': 25.5.2
+      '@types/node': 25.6.0
       '@types/ws': 8.18.1
       accepts: 1.3.8
       base64id: 2.0.0
@@ -2211,10 +2211,10 @@ snapshots:
       ramda: 0.32.0
       typescript-eslint: 8.58.0(eslint@10.0.3)(typescript@6.0.2)
 
-  eslint-plugin-prettier@5.5.5(eslint-config-prettier@10.1.8(eslint@10.0.3))(eslint@10.0.3)(prettier@3.8.1):
+  eslint-plugin-prettier@5.5.5(eslint-config-prettier@10.1.8(eslint@10.0.3))(eslint@10.0.3)(prettier@3.8.2):
     dependencies:
       eslint: 10.0.3
-      prettier: 3.8.1
+      prettier: 3.8.2
       prettier-linter-helpers: 1.0.1
       synckit: 0.11.12
     optionalDependencies:
@@ -2292,13 +2292,13 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@27.2.0(@types/node@25.5.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6):
+  express-zod-api@27.2.2(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.2)(zod@4.3.6):
     dependencies:
-      '@express-zod-api/zod-plugin': 4.0.1(zod@4.3.6)
+      '@express-zod-api/zod-plugin': 4.1.0(zod@4.3.6)
       ansis: 4.2.0
       express: 5.2.1
       http-errors: 2.0.1
-      node-mocks-http: 1.17.2(@types/node@25.5.2)
+      node-mocks-http: 1.17.2(@types/node@25.6.0)
       openapi3-ts: 4.5.0
       ramda: 0.32.0
       zod: 4.3.6
@@ -2562,7 +2562,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  node-mocks-http@1.17.2(@types/node@25.5.2):
+  node-mocks-http@1.17.2(@types/node@25.6.0):
     dependencies:
       accepts: 1.3.8
       content-disposition: 0.5.4
@@ -2575,7 +2575,7 @@ snapshots:
       range-parser: 1.2.1
       type-is: 1.6.18
     optionalDependencies:
-      '@types/node': 25.5.2
+      '@types/node': 25.6.0
 
   object-assign@4.1.1: {}
 
@@ -2638,7 +2638,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@3.8.1: {}
+  prettier@3.8.2: {}
 
   proxy-addr@2.0.7:
     dependencies:
@@ -2937,7 +2937,7 @@ snapshots:
       '@quansync/fs': 1.0.0
       quansync: 1.0.0
 
-  undici-types@7.18.2: {}
+  undici-types@7.19.2: {}
 
   unpipe@1.0.0: {}
 
@@ -2958,7 +2958,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@8.0.5(@types/node@25.5.2)(yaml@2.8.3):
+  vite@8.0.5(@types/node@25.6.0)(yaml@2.8.3):
     dependencies:
       lightningcss: empty-npm-package@1.0.0
       picomatch: 4.0.4
@@ -2966,17 +2966,17 @@ snapshots:
       rolldown: 1.0.0-rc.12
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 25.5.2
+      '@types/node': 25.6.0
       fsevents: 2.3.3
       yaml: 2.8.3
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
 
-  vitest@4.1.2(@types/node@25.5.2)(yaml@2.8.3):
+  vitest@4.1.2(@types/node@25.6.0)(yaml@2.8.3):
     dependencies:
       '@vitest/expect': 4.1.2
-      '@vitest/mocker': 4.1.2(vite@8.0.5(@types/node@25.5.2)(yaml@2.8.3))
+      '@vitest/mocker': 4.1.2(vite@8.0.5(@types/node@25.6.0)(yaml@2.8.3))
       '@vitest/pretty-format': 4.1.2
       '@vitest/runner': 4.1.2
       '@vitest/snapshot': 4.1.2
@@ -2993,10 +2993,10 @@ snapshots:
       tinyexec: 1.0.4
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 8.0.5(@types/node@25.5.2)(yaml@2.8.3)
+      vite: 8.0.5(@types/node@25.6.0)(yaml@2.8.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.5.2
+      '@types/node': 25.6.0
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'

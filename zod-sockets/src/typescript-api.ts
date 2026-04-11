@@ -15,7 +15,6 @@ export class TypescriptAPI {
   public ts: typeof ts;
   public f: typeof ts.factory;
   public exportModifier: ts.ModifierToken<ts.SyntaxKind.ExportKeyword>[];
-  public asyncModifier: ts.ModifierToken<ts.SyntaxKind.AsyncKeyword>[];
   public accessModifiers: Record<
     "public" | "publicStatic" | "protectedReadonly",
     ts.Modifier[]
@@ -28,9 +27,6 @@ export class TypescriptAPI {
     this.f = this.ts.factory;
     this.exportModifier = [
       this.f.createModifier(this.ts.SyntaxKind.ExportKeyword),
-    ];
-    this.asyncModifier = [
-      this.f.createModifier(this.ts.SyntaxKind.AsyncKeyword),
     ];
     this.accessModifiers = {
       public: [this.f.createModifier(this.ts.SyntaxKind.PublicKeyword)],

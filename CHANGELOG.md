@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 6
+
+### v6.0.0
+
+- Supported Node.js versions: `^22.19.0 || ^24.0.0`;
+- Supported Zod version: `^4.3.4`;
+- The `typescript` dependency is now optional and only required for making `Integration`:
+  - Either import and assign the `typescript` property to its constructor argument;
+  - Or use the new static async method `create()` to delegate the import;
+  - This change addresses the potential memory consumption issue.
+
 ## Version 5
 
 ### v5.2.0

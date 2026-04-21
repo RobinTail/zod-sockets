@@ -34,7 +34,7 @@
     "*.md"
   ],
   "engines": {
-    "node": "^20.19.0 || ^22.12.0 || ^24.0.0"
+    "node": "^22.19.0 || ^24.0.0"
   },
   "dependencies": {
     "ansis": "catalog:prod",
@@ -45,6 +45,11 @@
     "socket.io": "catalog:peer",
     "typescript": "catalog:peer",
     "zod": "catalog:peer"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/ramda": "^0.31.0",

@@ -5,16 +5,16 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main, make-v5 ]
+    branches: [ main, make-v6 ]
   pull_request:
-    branches: [ main, make-v5 ]
+    branches: [ main, make-v6 ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.19.0, 20.x, 22.12.0, 22.x, 24.0.0, 24.x]
+        node-version: [22.19.0, 22.x, 24.0.0, 24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - name: Checkout

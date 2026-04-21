@@ -1,4 +1,4 @@
-import ts from "typescript";
+import type ts from "typescript";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
@@ -6,15 +6,10 @@ import { Config } from "./config";
 import { makeEventFnSchema } from "./integration-helpers";
 import { Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
-import {
-  addJsDoc,
-  makeType,
-  printNode,
-  f,
-  exportModifier,
-} from "./typescript-api";
+import { TypescriptAPI } from "./typescript-api";
 
-interface IntegrationProps {
+interface IntegrationParams {
+  typescript: typeof ts;
   config: Config<Namespaces>;
   actions: AbstractAction[];
   /**
@@ -30,18 +25,20 @@ const fallbackNs = "root";
 const registryScopes = ["emission", "actions"];
 
 export class Integration {
+  /** @internal */
+  protected readonly api: TypescriptAPI;
   #program: ts.Node[] = [];
   #aliases: Record<
     string, // namespace
     Map<object, ts.TypeAliasDeclaration>
   > = {};
   #ids = {
-    path: f.createIdentifier("path"),
-    socket: f.createIdentifier("Socket"),
-    socketBase: f.createIdentifier("SocketBase"),
-    ioClient: f.createStringLiteral("socket.io-client"),
-    emission: f.createIdentifier(makeCleanId(registryScopes[0])),
-    actions: f.createIdentifier(makeCleanId(registryScopes[1])),
+    path: "path",
+    socket: "Socket",
+    socketBase: "SocketBase",
+    ioClient: "socket.io-client",
+    emission: makeCleanId(registryScopes[0]),
+    actions: makeCleanId(registryScopes[1]),
   };
   protected registry: Record<
     string, // namespace
@@ -51,48 +48,49 @@ export class Integration {
     >
   > = {};
 
-  #makeAlias(
-    ns: string,
-    key: object,
-    produce: () => ts.TypeNode,
-  ): ts.TypeReferenceNode {
+  #makeAlias(ns: string, key: object, produce: () => ts.TypeNode): ts.TypeNode {
     let name = this.#aliases[ns].get(key)?.name?.text;
     if (!name) {
       name = `Type${this.#aliases[ns].size + 1}`;
-      const temp = f.createLiteralTypeNode(f.createNull());
-      this.#aliases[ns].set(key, makeType(name, temp));
-      this.#aliases[ns].set(key, makeType(name, produce()));
+      const temp = this.api.makeLiteralType(null);
+      this.#aliases[ns].set(key, this.api.makeType(name, temp));
+      this.#aliases[ns].set(key, this.api.makeType(name, produce()));
     }
-    return f.createTypeReferenceNode(name);
+    return this.api.ensureTypeNode(name);
   }
 
   constructor({
+    typescript,
     config: { namespaces },
     actions,
     maxOverloads = 3,
-  }: IntegrationProps) {
+  }: IntegrationParams) {
+    this.api = new TypescriptAPI(typescript);
     this.#program.push(
-      f.createImportDeclaration(
+      this.api.f.createImportDeclaration(
         undefined,
-        f.createImportClause(
-          true,
+        this.api.f.createImportClause(
+          this.api.ts.SyntaxKind.TypeKeyword,
           undefined,
-          f.createNamedImports([
-            f.createImportSpecifier(
+          this.api.f.createNamedImports([
+            this.api.f.createImportSpecifier(
               false,
-              this.#ids.socket,
-              this.#ids.socketBase,
+              this.api.f.createIdentifier(this.#ids.socket),
+              this.api.f.createIdentifier(this.#ids.socketBase),
             ),
           ]),
         ),
-        this.#ids.ioClient,
+        this.api.f.createStringLiteral(this.#ids.ioClient),
       ),
     );
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
       this.#aliases[ns] = new Map<z.ZodTypeAny, ts.TypeAliasDeclaration>();
       this.registry[ns] = { emission: [], actions: [] };
-      const commons = { makeAlias: this.#makeAlias.bind(this, ns) };
+      const commons = {
+        makeAlias: this.#makeAlias.bind(this, ns),
+        api: this.api,
+      };
       for (const [event, { schema, ack }] of Object.entries(emission)) {
         const node = zodToTs(makeEventFnSchema(schema, ack, maxOverloads), {
           isResponse: true,
@@ -115,69 +113,64 @@ export class Integration {
     for (const ns in this.registry) {
       const publicName = makeCleanId(ns) || makeCleanId(fallbackNs);
 
-      const nsNameNode = f.createVariableStatement(
-        exportModifier,
-        f.createVariableDeclarationList(
-          [
-            f.createVariableDeclaration(
-              this.#ids.path,
-              undefined,
-              undefined,
-              f.createStringLiteral(normalizeNS(ns)),
-            ),
-          ],
-          ts.NodeFlags.Const,
-        ),
+      const nsNameNode = this.api.makeConst(
+        this.#ids.path,
+        this.api.f.createStringLiteral(normalizeNS(ns)),
+        { expose: true },
       );
-      addJsDoc(
+      this.api.addJsDoc(
         nsNameNode,
         `@desc The actual path of the ${publicName} namespace`,
       );
 
       const interfaces = Object.entries(this.registry[ns]).map(
         ([scope, events]) =>
-          f.createInterfaceDeclaration(
-            exportModifier,
+          this.api.makeInterface(
             makeCleanId(scope),
-            undefined,
-            undefined,
             events.map(({ event, node }) =>
-              f.createPropertySignature(undefined, event, undefined, node),
+              this.api.makeInterfaceProp(event, node),
             ),
+            { expose: true },
           ),
       );
-      const socketNode = f.createTypeAliasDeclaration(
-        exportModifier,
+      const socketNode = this.api.makeType(
         this.#ids.socket,
-        undefined,
-        f.createTypeReferenceNode(this.#ids.socketBase, [
-          f.createTypeReferenceNode(this.#ids.emission),
-          f.createTypeReferenceNode(this.#ids.actions),
+        this.api.ensureTypeNode(this.#ids.socketBase, [
+          this.#ids.emission,
+          this.#ids.actions,
         ]),
+        { expose: true },
       );
-      addJsDoc(
+      this.api.addJsDoc(
         socketNode,
-        `@example const socket: ${publicName}.${this.#ids.socket.text} = io(${publicName}.${this.#ids.path.text})`,
+        `@example const socket: ${publicName}.${this.#ids.socket} = io(${publicName}.${this.#ids.path})`,
       );
       this.#program.push(
-        f.createModuleDeclaration(
-          exportModifier,
-          f.createIdentifier(publicName),
-          f.createModuleBlock([
+        this.api.f.createModuleDeclaration(
+          this.api.exportModifier,
+          this.api.f.createIdentifier(publicName),
+          this.api.f.createModuleBlock([
             nsNameNode,
             ...this.#aliases[ns].values(),
             ...interfaces,
             socketNode,
           ]),
-          ts.NodeFlags.Namespace,
+          this.api.ts.NodeFlags.Namespace,
         ),
       );
     }
   }
 
+  public static async create(params: Omit<IntegrationParams, "typescript">) {
+    return new Integration({
+      ...params,
+      typescript: (await import("typescript"))["default"],
+    });
+  }
+
   public print(printerOptions?: ts.PrinterOptions) {
     return this.#program
-      .map((node) => printNode(node, printerOptions))
+      .map((node) => this.api.printNode(node, printerOptions))
       .join("\n\n");
   }
 }

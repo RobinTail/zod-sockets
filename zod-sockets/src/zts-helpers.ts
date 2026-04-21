@@ -1,10 +1,13 @@
-import ts from "typescript";
+import type ts from "typescript";
 import { FlatObject } from "./common-helpers";
 import { SchemaHandler } from "./schema-walker";
+import { TypescriptAPI } from "./typescript-api";
 
 export interface ZTSContext extends FlatObject {
   isResponse: boolean;
   makeAlias: (key: object, produce: () => ts.TypeNode) => ts.TypeNode;
+  /** @internal */
+  api: TypescriptAPI;
 }
 
 export type Producer = SchemaHandler<ts.TypeNode, ZTSContext>;

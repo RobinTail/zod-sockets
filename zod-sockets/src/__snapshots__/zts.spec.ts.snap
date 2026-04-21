@@ -52,7 +52,7 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
             ] | bigint)[];
         };
     }>;
-    looseRecord: Record<"one" | "two", boolean>;
+    looseRecord: Record<"one" | "two", boolean> & Record<PropertyKey, boolean>;
     map: any;
     set: any;
     intersection: (string & number) | bigint;
@@ -77,6 +77,13 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
     catch: number;
     pipeline: string;
     readonly: string;
+    extended: {
+        hex: string;
+        hash: string;
+    };
+    codec: string;
+    slug: string;
+    xor: string | number;
 }"
 `;
 
@@ -277,6 +284,7 @@ exports[`zod-to-ts > z.optional() > Zod 4: should add question mark only to opti
             required: string;
         }
     ] | undefined;
+    exact?: string;
 }"
 `;
 

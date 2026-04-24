@@ -105,7 +105,7 @@ importers:
         version: 5.2.1
       express-zod-api:
         specifier: ^27.2.0
-        version: 27.2.3(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6)
+        version: 27.2.4(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -885,8 +885,8 @@ packages:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
 
-  express-zod-api@27.2.3:
-    resolution: {integrity: sha512-dcDEYFtxzpX0/rRleUqOTUTuT6B9m8hs81G3UKsA1Aik891oWaY8LpGw98t9cqTuP0BCGg/0nfklazG0NKp/9g==}
+  express-zod-api@27.2.4:
+    resolution: {integrity: sha512-KJu9sRmLzGNE/5I7cupujOIGg3PyfdGwzm2ioNoOQurleC81q+2BCIJSh9BSYDiHPMfNpSBYbhnOhotvVWrLog==}
     engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
     peerDependencies:
       '@types/compression': ^1.7.5
@@ -2404,7 +2404,7 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@27.2.3(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6):
+  express-zod-api@27.2.4(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6):
     dependencies:
       '@express-zod-api/zod-plugin': 4.1.0(zod@4.3.6)
       ansis: 4.2.0

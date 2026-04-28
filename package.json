@@ -18,7 +18,7 @@
     "@vitest/coverage-v8": "^4.1.2",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-allowed-dependencies": "^2.1.0",
+    "eslint-plugin-allowed-dependencies": "^2.2.0-beta.1",
     "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.0.10",
     "prettier": "3.8.3",

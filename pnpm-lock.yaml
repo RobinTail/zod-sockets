@@ -16,8 +16,8 @@ catalogs:
       specifier: ^6.0.2
       version: 6.0.3
     zod:
-      specifier: ^4.1.0
-      version: 4.1.0
+      specifier: ^4.4.1
+      version: 4.4.1
   prod:
     ansis:
       specifier: ^4.0.0
@@ -93,7 +93,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.1.0
+        version: 4.4.1
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -132,7 +132,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.1.0
+        version: 4.4.1
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -150,7 +150,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.1.0
+        version: 4.4.1
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -165,7 +165,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.1.0
+        version: 4.4.1
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -196,7 +196,7 @@ importers:
         version: 4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(yaml@2.8.3)
       zod:
         specifier: catalog:dev
-        version: 4.1.0
+        version: 4.4.1
 
 packages:
 
@@ -1704,6 +1704,9 @@ packages:
   zod@4.1.0:
     resolution: {integrity: sha512-UWxluYj2IDX9MHRXTMbB/2eeWrAMmmMSESM+MfT9MQw8U1qo9q5ASW08anoJh6AJ7pkt099fLdNFmfI+4aChHg==}
 
+  zod@4.4.1:
+    resolution: {integrity: sha512-a6ENMBBGZBsnlSebQ/eKCguSBeGKSf4O7BPnqVPmYGtpBYI7VSqoVqw+QcB7kPRjbqPwhYTpFbVj/RqNz/CT0Q==}
+
 snapshots:
 
   '@andrewbranch/untar.js@1.0.3': {}
@@ -3158,3 +3161,5 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   zod@4.1.0: {}
+
+  zod@4.4.1: {}

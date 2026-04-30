@@ -13,7 +13,7 @@
     "http-errors": "^2.0.0",
     "socket.io": "catalog:dev",
     "typescript": "catalog:dev",
-    "zod": "4.1.0",
+    "zod": "4.4.1",
     "zod-sockets": "workspace:*"
   }
 }

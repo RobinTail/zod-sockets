@@ -105,7 +105,7 @@ importers:
         version: 5.2.1
       express-zod-api:
         specifier: ^27.2.0
-        version: 27.2.5(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.1.0)
+        version: 27.2.5(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.4.1)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -116,8 +116,8 @@ importers:
         specifier: catalog:dev
         version: 6.0.3
       zod:
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: 4.4.1
+        version: 4.4.1
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -1701,9 +1701,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@4.1.0:
-    resolution: {integrity: sha512-UWxluYj2IDX9MHRXTMbB/2eeWrAMmmMSESM+MfT9MQw8U1qo9q5ASW08anoJh6AJ7pkt099fLdNFmfI+4aChHg==}
-
   zod@4.4.1:
     resolution: {integrity: sha512-a6ENMBBGZBsnlSebQ/eKCguSBeGKSf4O7BPnqVPmYGtpBYI7VSqoVqw+QcB7kPRjbqPwhYTpFbVj/RqNz/CT0Q==}
 
@@ -1823,10 +1820,10 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@express-zod-api/zod-plugin@4.1.0(zod@4.1.0)':
+  '@express-zod-api/zod-plugin@4.1.0(zod@4.4.1)':
     dependencies:
       ramda: 0.32.0
-      zod: 4.1.0
+      zod: 4.4.1
 
   '@humanfs/core@0.19.1': {}
 
@@ -2407,16 +2404,16 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@27.2.5(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.1.0):
+  express-zod-api@27.2.5(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.4.1):
     dependencies:
-      '@express-zod-api/zod-plugin': 4.1.0(zod@4.1.0)
+      '@express-zod-api/zod-plugin': 4.1.0(zod@4.4.1)
       ansis: 4.2.0
       express: 5.2.1
       http-errors: 2.0.1
       node-mocks-http: 1.17.2(@types/node@25.6.0)
       openapi3-ts: 4.5.0
       ramda: 0.32.0
-      zod: 4.1.0
+      zod: 4.4.1
     optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -3159,7 +3156,5 @@ snapshots:
   yaml@2.8.3: {}
 
   yocto-queue@0.1.0: {}
-
-  zod@4.1.0: {}
 
   zod@4.4.1: {}

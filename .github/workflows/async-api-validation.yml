@@ -19,6 +19,6 @@ jobs:
         node-version: 24
         cache: pnpm
     - name: Installing unreasonably large package
-      run: pnpm add -g @asyncapi/cli@^5
+      run: pnpm add -g @asyncapi/cli@^4
     - name: Validate
       run: asyncapi validate ./example/example-documentation.yaml

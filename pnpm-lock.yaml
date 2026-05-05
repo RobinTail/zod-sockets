@@ -56,8 +56,8 @@ importers:
         specifier: ^10.1.8
         version: 10.1.8(eslint@9.39.4)
       eslint-plugin-allowed-dependencies:
-        specifier: ^2.2.0-beta.1
-        version: 2.2.0-beta.1(eslint@9.39.4)(typescript-eslint@8.55.0(eslint@9.39.4)(typescript@6.0.3))
+        specifier: ^2.2.0
+        version: 2.2.0(eslint@9.39.4)(typescript-eslint@8.55.0(eslint@9.39.4)(typescript@6.0.3))
       eslint-plugin-prettier:
         specifier: ^5.5.5
         version: 5.5.5(eslint-config-prettier@10.1.8(eslint@9.39.4))(eslint@9.39.4)(prettier@3.8.3)
@@ -104,8 +104,8 @@ importers:
         specifier: ^5.1.0
         version: 5.2.1
       express-zod-api:
-        specifier: ^27.2.0
-        version: 27.2.4(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6)
+        specifier: ^27.3.0
+        version: 27.3.0(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -299,11 +299,11 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@express-zod-api/zod-plugin@4.1.0':
-    resolution: {integrity: sha512-nHUlO2Hd71lDvi2LN9OBQ81VwXmSpOaMtZIcqeVyuMidrdu2rrURz+4nlD5b7p8dzNkzJZ7EogHgREUwAPXPPw==}
-    engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
+  '@express-zod-api/zod-plugin@4.2.0':
+    resolution: {integrity: sha512-97XFUytU6vj5wtjX8pAt3fR9DTRaQHu8e8GpiYuRw5RXRPnBMahryD218L5RVIDEFNaVno6w6kNmevNKo/9dmg==}
+    engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0 || ^26.0.0}
     peerDependencies:
-      zod: ^4.3.4
+      zod: ~4.3.4
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -811,9 +811,9 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-plugin-allowed-dependencies@2.2.0-beta.1:
-    resolution: {integrity: sha512-6oBtz0VtRIfq3oKE1bMm9V4lGIVunz+0PVbWTkUUchyIjulv48b2HgUzmqNd5x68c5OhmKEsuD5LqOwvWQKYiw==}
-    engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0 || ^26.0.0-rc.1}
+  eslint-plugin-allowed-dependencies@2.2.0:
+    resolution: {integrity: sha512-Hsr8OsRkPOEcHvqrQZ+PLKMe8yv3RGGOpbHcC/HAFJwtkAPhMtWMfu9PQXOdFJq1B0/5n+YSfWnp6LWhRx598A==}
+    engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0 || ^26.0.0}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
       typescript-eslint: ^8.0.0
@@ -885,9 +885,9 @@ packages:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
 
-  express-zod-api@27.2.4:
-    resolution: {integrity: sha512-KJu9sRmLzGNE/5I7cupujOIGg3PyfdGwzm2ioNoOQurleC81q+2BCIJSh9BSYDiHPMfNpSBYbhnOhotvVWrLog==}
-    engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0}
+  express-zod-api@27.3.0:
+    resolution: {integrity: sha512-UH6t2sF70yalvx+aqWrdxr66Q4NnPx/nBPJ+wXf4MzoWime58v8EzabsCVdaNpmniPhVL0f72rPlJZ2Lj3TK4w==}
+    engines: {node: ^20.19.0 || ^22.12.0 || ^24.0.0 || ^26.0.0}
     peerDependencies:
       '@types/compression': ^1.7.5
       '@types/express': ^5.0.0
@@ -898,7 +898,7 @@ packages:
       express-fileupload: ^1.5.0
       http-errors: ^2.0.1
       typescript: ^5.1.3 || ^6.0.2
-      zod: ^4.3.4
+      zod: ~4.3.4
     peerDependenciesMeta:
       '@types/compression':
         optional: true
@@ -1820,7 +1820,7 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@express-zod-api/zod-plugin@4.1.0(zod@4.3.6)':
+  '@express-zod-api/zod-plugin@4.2.0(zod@4.3.6)':
     dependencies:
       ramda: 0.32.0
       zod: 4.3.6
@@ -2315,7 +2315,7 @@ snapshots:
     dependencies:
       eslint: 9.39.4
 
-  eslint-plugin-allowed-dependencies@2.2.0-beta.1(eslint@9.39.4)(typescript-eslint@8.55.0(eslint@9.39.4)(typescript@6.0.3)):
+  eslint-plugin-allowed-dependencies@2.2.0(eslint@9.39.4)(typescript-eslint@8.55.0(eslint@9.39.4)(typescript@6.0.3)):
     dependencies:
       eslint: 9.39.4
       ramda: 0.32.0
@@ -2404,9 +2404,9 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@27.2.4(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6):
+  express-zod-api@27.3.0(@types/node@25.6.0)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.3.6):
     dependencies:
-      '@express-zod-api/zod-plugin': 4.1.0(zod@4.3.6)
+      '@express-zod-api/zod-plugin': 4.2.0(zod@4.3.6)
       ansis: 4.2.0
       express: 5.2.1
       http-errors: 2.0.1

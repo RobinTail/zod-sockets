@@ -13,6 +13,10 @@
 
 ## Version 5
 
+### v5.3.0
+
+- Supporting Node 26.
+
 ### v5.2.0
 
 - Supporting TypeScript 6:

@@ -15,7 +15,7 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
     } | "hi";
     enum: "hi" | "bye";
     intersectionWithTransform: (number & bigint) & (number & string);
-    undefined?: undefined;
+    undefined: undefined;
     null: null;
     void: void;
     any: any;
@@ -74,7 +74,7 @@ exports[`zod-to-ts > Example > should produce the expected results 1`] = `
         y: number;
     };
     branded: string;
-    catch: number;
+    catch?: number | undefined;
     pipeline: string;
     readonly: string;
     extended: {
@@ -152,7 +152,7 @@ exports[`zod-to-ts > PrimitiveSchema (isResponse=false) > outputs correct typesc
     string: string;
     number: number;
     boolean: boolean;
-    undefined?: undefined;
+    undefined: undefined;
     null: null;
     void: void;
     any: any;
@@ -166,7 +166,7 @@ exports[`zod-to-ts > PrimitiveSchema (isResponse=true) > outputs correct typescr
     string: string;
     number: number;
     boolean: boolean;
-    undefined?: undefined;
+    undefined: undefined;
     null: null;
     void: void;
     any: any;
@@ -244,7 +244,7 @@ exports[`zod-to-ts > z.object() > escapes correctly 1`] = `
     $e: any;
     "4t": any;
     _r: any;
-    "-r"?: undefined;
+    "-r": undefined;
 }"
 `;
 

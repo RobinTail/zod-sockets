@@ -1,6 +1,6 @@
 {
   "name": "zod-sockets",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers",
   "license": "MIT",
   "repository": {
@@ -34,7 +34,7 @@
     "*.md"
   ],
   "engines": {
-    "node": "^22.19.0 || ^24.0.0"
+    "node": "^22.19.0 || ^24.0.0 || ^26.0.0"
   },
   "dependencies": {
     "ansis": "catalog:prod",

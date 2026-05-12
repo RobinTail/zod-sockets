@@ -1,8 +1,13 @@
 import { z } from "zod";
-import { SecuritySchemeObject } from "./async-api/security";
-import { EmptyObject } from "./common-helpers";
-import { EmissionMap } from "./emission";
-import { Namespace, Namespaces, RootNS, rootNS } from "./namespace";
+import type { SecuritySchemeObject } from "./async-api/security";
+import type { EmptyObject } from "./common-helpers";
+import type { EmissionMap } from "./emission";
+import {
+  type Namespace,
+  type Namespaces,
+  type RootNS,
+  rootNS,
+} from "./namespace";
 
 interface ConstructorOptions<NS extends Namespaces> {
   /**

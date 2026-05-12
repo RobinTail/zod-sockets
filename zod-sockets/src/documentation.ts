@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { AbstractAction } from "./action";
-import {
+import type {
   ContactObject,
   LicenseObject,
   MessagesObject,
@@ -8,7 +8,7 @@ import {
   SchemaObject,
 } from "./async-api/model";
 import { AsyncApiBuilder } from "./async-api/builder";
-import { WS } from "./async-api/websockets";
+import type { WS } from "./async-api/websockets";
 import { lcFirst, makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import {
@@ -16,7 +16,7 @@ import {
   depictMessage,
   depictOperation,
 } from "./documentation-helpers";
-import { Namespaces, normalizeNS } from "./namespace";
+import { type Namespaces, normalizeNS } from "./namespace";
 
 interface DocumentationParams {
   title: string;

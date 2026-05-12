@@ -1,15 +1,15 @@
 import http from "node:http";
 import type { Server } from "socket.io";
 import { AbstractAction } from "./action";
-import { Client } from "./client";
+import type { Client } from "./client";
 import { ensureError } from "./common-helpers";
 import { Config } from "./config";
 import { makeDistribution } from "./distribution";
-import { EmitterConfig, makeEmitter, makeRoomService } from "./emission";
-import { ClientContext, IndependentContext } from "./handler";
+import { type EmitterConfig, makeEmitter, makeRoomService } from "./emission";
+import type { ClientContext, IndependentContext } from "./handler";
 import { defaultHooks } from "./hooks";
-import { AbstractLogger } from "./logger";
-import { Namespaces, normalizeNS } from "./namespace";
+import type { AbstractLogger } from "./logger";
+import { type Namespaces, normalizeNS } from "./namespace";
 import { makeRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 

@@ -1,6 +1,6 @@
 import { createConfig, createServer } from "express-zod-api";
 import { Server } from "socket.io";
-import { attachSockets, createSimpleConfig } from "zod-sockets";
+import { attachSockets, createSimpleConfig, Integration } from "zod-sockets";
 import { givePort } from "../tools/ports";
 
 const serverConfig = createConfig({
@@ -11,6 +11,16 @@ const serverConfig = createConfig({
 const { servers, logger } = await createServer(serverConfig, {});
 
 const socketsConfig = createSimpleConfig();
+
+logger.info(
+  "Integration sample",
+  (
+    await Integration.create({
+      config: socketsConfig,
+      actions: [],
+    })
+  ).print(),
+);
 
 const io = new Server();
 await attachSockets({

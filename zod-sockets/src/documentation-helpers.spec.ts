@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  AsyncAPIContext,
+  type AsyncAPIContext,
   depictNullable,
   depictUnion,
   depictBigInt,
@@ -9,7 +9,7 @@ import {
   getExamples,
 } from "./documentation-helpers";
 import assert from "node:assert/strict";
-import { SchemaObject } from "./async-api/model";
+import type { SchemaObject } from "./async-api/model";
 
 describe("Documentation helpers", () => {
   const requestCtx: AsyncAPIContext = {

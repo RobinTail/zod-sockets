@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { z } from "zod";
 import { AbstractAction, Action } from "./action";
-import { AbstractLogger } from "./logger";
+import type { AbstractLogger } from "./logger";
 
 describe("Action", () => {
   const simpleHandler = vi.fn();

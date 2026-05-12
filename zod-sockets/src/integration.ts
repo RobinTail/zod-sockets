@@ -4,7 +4,7 @@ import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { makeEventFnSchema } from "./integration-helpers";
-import { Namespaces, normalizeNS } from "./namespace";
+import { type Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
 import { TypescriptAPI } from "./typescript-api";
 

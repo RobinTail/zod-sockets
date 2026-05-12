@@ -1,7 +1,7 @@
 import { createConfig, createServer } from "express-zod-api";
 import { Server } from "socket.io";
 import { attachSockets, createSimpleConfig, Integration } from "zod-sockets";
-import { givePort } from "../tools/ports";
+import { givePort } from "../tools/ports.ts";
 
 const serverConfig = createConfig({
   http: { listen: givePort("compat") },

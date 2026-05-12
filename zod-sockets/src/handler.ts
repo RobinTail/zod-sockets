@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { Client } from "./client";
-import { Broadcaster, EmissionMap, RoomService } from "./emission";
-import { AbstractLogger } from "./logger";
-import { RemoteClient } from "./remote-client";
+import type { Client } from "./client";
+import type { Broadcaster, EmissionMap, RoomService } from "./emission";
+import type { AbstractLogger } from "./logger";
+import type { RemoteClient } from "./remote-client";
 
 export interface IndependentContext<
   E extends EmissionMap,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionsFactory } from "../factories";
+import { actionsFactory } from "../factories.ts";
 
 export const onChat = actionsFactory.build({
   event: "chat",

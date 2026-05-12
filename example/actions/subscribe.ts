@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { subscribersRoom } from "../config";
-import { actionsFactory } from "../factories";
+import { subscribersRoom } from "../config.ts";
+import { actionsFactory } from "../factories.ts";
 
 /** @desc The action demonstrates no acknowledgement and the client distribution abilities */
 export const onSubscribe = actionsFactory.build({

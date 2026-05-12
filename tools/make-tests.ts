@@ -1,6 +1,6 @@
-import { extractReadmeQuickStart } from "./extract-quick-start";
+import { extractReadmeQuickStart } from "./extract-quick-start.ts";
 import { writeFile } from "node:fs/promises";
-import { givePort } from "./ports";
+import { givePort } from "./ports.ts";
 
 const quickStart = await extractReadmeQuickStart();
 

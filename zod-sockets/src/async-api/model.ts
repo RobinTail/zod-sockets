@@ -1,5 +1,5 @@
-import { SecuritySchemeObject } from "./security";
-import { WS } from "./websockets";
+import type { SecuritySchemeObject } from "./security";
+import type { WS } from "./websockets";
 
 /**
  * @fileoverview AsyncAPI specification

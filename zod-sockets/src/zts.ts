@@ -7,9 +7,13 @@ import {
   isSchema,
 } from "./common-helpers";
 import { hasCycle } from "./integration-helpers";
-import { FirstPartyKind, HandlingRules, walkSchema } from "./schema-walker";
+import {
+  type FirstPartyKind,
+  type HandlingRules,
+  walkSchema,
+} from "./schema-walker";
 import * as R from "ramda";
-import { Producer, ZTSContext } from "./zts-helpers";
+import { type Producer, type ZTSContext } from "./zts-helpers";
 import { TypescriptAPI } from "./typescript-api";
 
 const nodePath = {

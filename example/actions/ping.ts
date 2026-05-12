@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actionsFactory } from "../factories";
+import { actionsFactory } from "../factories.ts";
 
 /** @desc The action demonstrates acknowledgements by replying "pong" to "ping" event with an echo of payload */
 export const onPing = actionsFactory.build({

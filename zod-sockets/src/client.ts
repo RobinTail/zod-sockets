@@ -1,8 +1,8 @@
 import type { IncomingMessage } from "node:http";
 import type { Socket } from "socket.io";
 import { z } from "zod";
-import { Distribution } from "./distribution";
-import { Broadcaster, EmissionMap, Emitter } from "./emission";
+import type { Distribution } from "./distribution";
+import type { Broadcaster, EmissionMap, Emitter } from "./emission";
 
 export interface Client<
   E extends EmissionMap,

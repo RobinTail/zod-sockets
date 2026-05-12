@@ -6,7 +6,7 @@ describe("ESM Test", () => {
   const listener = (chunk: Buffer) => {
     out += chunk.toString();
   };
-  const quickStart = spawn("unrun", ["quick-start.ts"]);
+  const quickStart = spawn("node", ["quick-start.ts"]);
   quickStart.stdout.on("data", listener);
   quickStart.stderr.on("data", listener);
 

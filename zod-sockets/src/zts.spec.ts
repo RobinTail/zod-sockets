@@ -3,7 +3,7 @@ import ts from "typescript";
 import { z } from "zod";
 import { TypescriptAPI } from "./typescript-api";
 import { zodToTs } from "./zts";
-import { ZTSContext } from "./zts-helpers";
+import type { ZTSContext } from "./zts-helpers";
 
 describe("zod-to-ts", () => {
   const api = new TypescriptAPI(ts);

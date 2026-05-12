@@ -1,9 +1,9 @@
 import http from "node:http";
 import { attachSockets } from "zod-sockets";
-import { actions } from "./actions";
-import { config } from "./config";
+import { actions } from "./actions/index.ts";
+import { config } from "./config.ts";
 import { Server } from "socket.io";
-import { givePort } from "../tools/ports";
+import { givePort } from "../tools/ports.ts";
 
 attachSockets({
   io: new Server(),

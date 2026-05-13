@@ -10,7 +10,7 @@ engineStrict: true
 autoInstallPeers: false
 dedupePeers: true
 minimumReleaseAge: 10080
-minimumReleaseAgeStrict: true
+# todo: remove later:
 minimumReleaseAgeExclude:
   - "@types/node"
   - yaml

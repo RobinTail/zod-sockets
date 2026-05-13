@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: [ main, make-v5 ]
 
+permissions:
+  id-token: none
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest

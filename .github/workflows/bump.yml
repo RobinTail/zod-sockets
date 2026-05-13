@@ -18,6 +18,7 @@ on:
           - prerelease
 
 permissions:
+  id-token: none
   contents: write
 
 jobs:

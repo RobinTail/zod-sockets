@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, make-v6 ]
 
+permissions:
+  id-token: none
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest

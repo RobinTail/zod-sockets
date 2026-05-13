@@ -3,6 +3,7 @@
   "extends": ["config:recommended"],
   "dependencyDashboard": false,
   "postUpdateOptions": ["pnpmDedupe"],
+  "minimumReleaseAge": "7 days",
   "ignorePaths": ["compat-test/**"],
   "packageRules": [
     {

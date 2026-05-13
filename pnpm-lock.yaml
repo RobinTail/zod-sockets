@@ -2,6 +2,7 @@ lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: false
+  dedupePeers: true
   excludeLinksFromLockfile: false
 
 catalogs:
@@ -57,10 +58,10 @@ importers:
         version: 10.1.8(eslint@9.39.4)
       eslint-plugin-allowed-dependencies:
         specifier: ^2.2.0
-        version: 2.2.0(eslint@9.39.4)(typescript-eslint@8.55.0(eslint@9.39.4)(typescript@6.0.3))
+        version: 2.2.0(eslint@9.39.4)(typescript-eslint@8.55.0)
       eslint-plugin-prettier:
         specifier: ^5.5.5
-        version: 5.5.5(eslint-config-prettier@10.1.8(eslint@9.39.4))(eslint@9.39.4)(prettier@3.8.3)
+        version: 5.5.5(eslint-config-prettier@10.1.8)(eslint@9.39.4)(prettier@3.8.3)
       husky:
         specifier: ^9.0.10
         version: 9.1.7
@@ -1963,7 +1964,7 @@ snapshots:
     dependencies:
       '@types/node': 25.6.2
 
-  '@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.4)(typescript@6.0.3))(eslint@9.39.4)(typescript@6.0.3)':
+  '@typescript-eslint/eslint-plugin@8.55.0(@typescript-eslint/parser@8.55.0)(eslint@9.39.4)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
       '@typescript-eslint/parser': 8.55.0(eslint@9.39.4)(typescript@6.0.3)
@@ -2077,7 +2078,7 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.5(vite@8.0.10(@types/node@25.6.2)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.5(vite@8.0.10)':
     dependencies:
       '@vitest/spy': 4.1.5
       estree-walker: 3.0.3
@@ -2318,13 +2319,13 @@ snapshots:
     dependencies:
       eslint: 9.39.4
 
-  eslint-plugin-allowed-dependencies@2.2.0(eslint@9.39.4)(typescript-eslint@8.55.0(eslint@9.39.4)(typescript@6.0.3)):
+  eslint-plugin-allowed-dependencies@2.2.0(eslint@9.39.4)(typescript-eslint@8.55.0):
     dependencies:
       eslint: 9.39.4
       ramda: 0.32.0
       typescript-eslint: 8.55.0(eslint@9.39.4)(typescript@6.0.3)
 
-  eslint-plugin-prettier@5.5.5(eslint-config-prettier@10.1.8(eslint@9.39.4))(eslint@9.39.4)(prettier@3.8.3):
+  eslint-plugin-prettier@5.5.5(eslint-config-prettier@10.1.8)(eslint@9.39.4)(prettier@3.8.3):
     dependencies:
       eslint: 9.39.4
       prettier: 3.8.3
@@ -3052,7 +3053,7 @@ snapshots:
 
   typescript-eslint@8.55.0(eslint@9.39.4)(typescript@6.0.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.55.0(@typescript-eslint/parser@8.55.0(eslint@9.39.4)(typescript@6.0.3))(eslint@9.39.4)(typescript@6.0.3)
+      '@typescript-eslint/eslint-plugin': 8.55.0(@typescript-eslint/parser@8.55.0)(eslint@9.39.4)(typescript@6.0.3)
       '@typescript-eslint/parser': 8.55.0(eslint@9.39.4)(typescript@6.0.3)
       '@typescript-eslint/typescript-estree': 8.55.0(typescript@6.0.3)
       '@typescript-eslint/utils': 8.55.0(eslint@9.39.4)(typescript@6.0.3)
@@ -3103,7 +3104,7 @@ snapshots:
   vitest@4.1.5(@types/node@25.6.2)(@vitest/coverage-v8@4.1.5)(yaml@2.9.0):
     dependencies:
       '@vitest/expect': 4.1.5
-      '@vitest/mocker': 4.1.5(vite@8.0.10(@types/node@25.6.2)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.5(vite@8.0.10)
       '@vitest/pretty-format': 4.1.5
       '@vitest/runner': 4.1.5
       '@vitest/snapshot': 4.1.5

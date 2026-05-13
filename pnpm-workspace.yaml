@@ -8,6 +8,12 @@ packages:
 gitChecks: false
 engineStrict: true
 autoInstallPeers: false
+dedupePeers: true
+minimumReleaseAge: 10080
+# todo: remove later:
+minimumReleaseAgeExclude:
+  - "@types/node"
+  - yaml
 publicHoistPattern:
   - "@vitest/*"
   - "@eslint/*"

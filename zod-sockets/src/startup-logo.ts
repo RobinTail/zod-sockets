@@ -1,7 +1,7 @@
 import { hex, bgHex, italic } from "ansis";
 import * as R from "ramda";
 
-const dedication = italic("for Ociel".padEnd(40));
+const dedication = italic("for Jennie".padEnd(40));
 const proud = "Proudly supports non-binary community.".padStart(57);
 
 const georgia11 = `

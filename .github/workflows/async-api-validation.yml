@@ -22,5 +22,7 @@ jobs:
       with:
         node-version: 24
         cache: pnpm
-    - name: Validate
-      run: pnpm dlx --config.minimum-release-age=0 @asyncapi/cli validate ./example/example-documentation.yaml
+    - name: Install CLI tool and Validate
+      run: |
+        pnpm dlx --config.minimum-release-age=0 @asyncapi/cli@6 \
+          validate ./example/example-documentation.yaml

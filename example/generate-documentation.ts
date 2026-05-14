@@ -1,8 +1,8 @@
 import { writeFile } from "node:fs/promises";
 import { Documentation } from "zod-sockets";
-import { actions } from "./actions";
-import { config } from "./config";
-import manifest from "../zod-sockets/package.json";
+import { actions } from "./actions/index.ts";
+import { config } from "./config.ts";
+import manifest from "../zod-sockets/package.json" with { type: "json" };
 
 await writeFile(
   "example-documentation.yaml",

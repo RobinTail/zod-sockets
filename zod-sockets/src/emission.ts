@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import type { Namespace, RemoteSocket, Server, Socket } from "socket.io";
 import { z } from "zod";
 import {
-  RemoteClient,
-  SomeRemoteSocket,
+  type RemoteClient,
+  type SomeRemoteSocket,
   makeRemoteClients,
 } from "./remote-client";
 

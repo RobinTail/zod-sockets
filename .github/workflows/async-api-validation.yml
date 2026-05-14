@@ -2,9 +2,9 @@ name: AsyncAPI Validation
 
 on:
   push:
-    branches: [ main, make-v4 ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, make-v4 ]
+    branches: [ main ]
 
 permissions:
   id-token: none

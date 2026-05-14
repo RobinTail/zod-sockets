@@ -4,7 +4,7 @@ import { z } from "zod";
 import { attachSockets } from "./attach";
 import { ensureError } from "./common-helpers";
 import { createSimpleConfig } from "./config";
-import { AbstractLogger } from "./logger";
+import type { AbstractLogger } from "./logger";
 
 describe("Attach", () => {
   describe("attachSockets()", () => {

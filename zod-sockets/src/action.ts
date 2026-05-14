@@ -1,10 +1,10 @@
 import * as R from "ramda";
 import { z } from "zod";
-import { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
-import { EmissionMap } from "./emission";
+import type { ActionNoAckDef, ActionWithAckDef } from "./actions-factory";
+import type { EmissionMap } from "./emission";
 import { OutputValidationError, InputValidationError } from "./errors";
-import { ActionContext, ClientContext, Handler } from "./handler";
-import { Namespaces, rootNS } from "./namespace";
+import type { ActionContext, ClientContext, Handler } from "./handler";
+import { type Namespaces, rootNS } from "./namespace";
 
 export abstract class AbstractAction {
   /** @internal */

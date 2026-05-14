@@ -1,6 +1,6 @@
 import * as R from "ramda";
 import { globalRegistry, z } from "zod";
-import {
+import type {
   MessageObject,
   OperationObject,
   ReferenceObject,
@@ -9,7 +9,7 @@ import {
 } from "./async-api/model";
 import { isReferenceObject } from "./async-api/helpers";
 import { getTransformedType, isObject, isSchema } from "./common-helpers";
-import { FirstPartyKind } from "./schema-walker";
+import type { FirstPartyKind } from "./schema-walker";
 
 export interface AsyncAPIContext {
   isResponse: boolean;

@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     "module": "preserve",
     "moduleResolution": "bundler",
@@ -8,6 +8,8 @@
     "noImplicitOverride": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
     "types": ["vitest/globals"]
   }
 }

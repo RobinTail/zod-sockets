@@ -1,7 +1,12 @@
 import type { RemoteSocket } from "socket.io";
 import { z } from "zod";
-import { Distribution, makeDistribution } from "./distribution";
-import { EmissionMap, Emitter, EmitterConfig, makeEmitter } from "./emission";
+import { type Distribution, makeDistribution } from "./distribution";
+import {
+  type EmissionMap,
+  type Emitter,
+  type EmitterConfig,
+  makeEmitter,
+} from "./emission";
 
 export type SomeRemoteSocket = RemoteSocket<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- meant to be any for assignment compatibility

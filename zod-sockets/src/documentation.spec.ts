@@ -1,4 +1,4 @@
-import { SchemaObject } from "./async-api/model";
+import type { SchemaObject } from "./async-api/model";
 import { ActionsFactory } from "./actions-factory";
 import { Config, createSimpleConfig } from "./config";
 import { Documentation } from "./documentation";

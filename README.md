@@ -39,7 +39,7 @@ schemas, it can be exported to frontend side, thus ensuring that the established
 Install the package and its peer dependencies.
 
 ```shell
-pnpm add zod-sockets zod socket.io typescript
+pnpm add zod-sockets zod socket.io
 ```
 
 ## Set up config
@@ -577,8 +577,9 @@ In order to establish constraints for events on the client side you can generate
 
 ```typescript
 import { Integration } from "zod-sockets";
+import typescript from "typescript";
 
-const integration = new Integration({ config, actions });
+const integration = new Integration({ typescript, config, actions });
 const typescriptCode = integration.print(); // write this to a file
 ```
 

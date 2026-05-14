@@ -1,4 +1,4 @@
-import {
+import type {
   AsyncApiObject,
   ChannelObject,
   OperationObject,
@@ -7,7 +7,7 @@ import {
   ServerObject,
 } from "./model";
 import yaml from "yaml";
-import { SecuritySchemeObject } from "./security";
+import type { SecuritySchemeObject } from "./security";
 
 export class AsyncApiBuilder {
   protected readonly document: AsyncApiObject;

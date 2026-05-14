@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SomeRemoteSocket, makeRemoteClients } from "./remote-client";
+import { type SomeRemoteSocket, makeRemoteClients } from "./remote-client";
 
 describe("RemoteClient", () => {
   describe("makeRemoteClients()", () => {

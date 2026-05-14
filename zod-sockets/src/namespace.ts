@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { SecuritySchemeObject } from "./async-api/security";
-import { EmissionMap } from "./emission";
-import { Hooks } from "./hooks";
+import type { SecuritySchemeObject } from "./async-api/security";
+import type { EmissionMap } from "./emission";
+import type { Hooks } from "./hooks";
 
 export const rootNS = "/";
 export type RootNS = typeof rootNS;

@@ -1,5 +1,5 @@
 import type { Socket } from "socket.io";
-import { SomeRemoteSocket } from "./remote-client";
+import type { SomeRemoteSocket } from "./remote-client";
 
 export interface Distribution {
   join: (rooms: string | string[]) => Promise<void>;

@@ -1,4 +1,4 @@
-import { ReferenceObject, SchemaObject } from "./model";
+import type { ReferenceObject, SchemaObject } from "./model";
 
 export function isReferenceObject(
   obj: SchemaObject | ReferenceObject,

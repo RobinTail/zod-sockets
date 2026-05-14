@@ -1,3 +1,4 @@
+import ts from "typescript";
 import { z } from "zod";
 import { ActionsFactory } from "./actions-factory";
 import { Config, createSimpleConfig } from "./config";
@@ -16,6 +17,7 @@ describe("Integration", () => {
       });
       const input = z.tuple([feature.array()]);
       const instance = new Integration({
+        typescript: ts,
         config: sampleConfig,
         actions: [
           new ActionsFactory(sampleConfig).build({
@@ -28,7 +30,7 @@ describe("Integration", () => {
       expect(instance.print()).toMatchSnapshot();
     });
 
-    test("should handle namespaces with emission", () => {
+    test("should handle namespaces with emission", async () => {
       const configWithEmission = new Config().addNamespace({
         path: "/test",
         emission: {
@@ -38,7 +40,7 @@ describe("Integration", () => {
           },
         },
       });
-      const instance = new Integration({
+      const instance = await Integration.create({
         config: configWithEmission,
         actions: [],
       });

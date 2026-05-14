@@ -14,6 +14,7 @@ minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - "@types/node"
   - express-zod-api
+  - vite
   - yaml
 publicHoistPattern:
   - "@vitest/*"

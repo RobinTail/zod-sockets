@@ -22,7 +22,7 @@ catalogs:
   prod:
     ansis:
       specifier: ^4.2.0
-      version: 4.3.0
+      version: 4.3.1
     ramda:
       specifier: ^0.32.0
       version: 0.32.0
@@ -180,7 +180,7 @@ importers:
     dependencies:
       ansis:
         specifier: catalog:prod
-        version: 4.3.0
+        version: 4.3.1
       ramda:
         specifier: catalog:prod
         version: 0.32.0
@@ -620,8 +620,8 @@ packages:
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
 
-  ansis@4.3.0:
-    resolution: {integrity: sha512-44mvgtPvohuU/70DdY5Oz2AIrLJ9k6/5x4KmoSvPwO+5Moijo0+N9D0fKbbYZQWP1hNm5CpOf+E01jhxG/r8xg==}
+  ansis@4.3.1:
+    resolution: {integrity: sha512-BJ8/l4R5LRE7hW9WdSuGYrLSHi2ynxeFpDFbH0K/CgNeY/tyhk+vO6TYxXC5r5CpUhNVX310xzPsN/H9lCdfOA==}
     engines: {node: '>=14'}
 
   assertion-error@2.0.1:
@@ -2089,7 +2089,7 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  ansis@4.3.0: {}
+  ansis@4.3.1: {}
 
   assertion-error@2.0.1: {}
 
@@ -2338,7 +2338,7 @@ snapshots:
 
   express-zod-api@28.0.0(@types/node@25.9.1)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4):
     dependencies:
-      ansis: 4.3.0
+      ansis: 4.3.1
       express: 5.2.1
       http-errors: 2.0.1
       node-mocks-http: 1.17.2(@types/node@25.9.1)
@@ -2905,7 +2905,7 @@ snapshots:
 
   tsdown@0.22.0(@arethetypeswrong/core@0.18.3)(typescript@6.0.3):
     dependencies:
-      ansis: 4.3.0
+      ansis: 4.3.1
       cac: 7.0.0
       defu: 6.1.7
       empathic: 2.0.0

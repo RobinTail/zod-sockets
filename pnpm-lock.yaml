@@ -51,7 +51,7 @@ importers:
         version: 22.0.5
       '@types/node':
         specifier: ^25.0.2
-        version: 25.9.3
+        version: 25.9.4
       '@vitest/coverage-v8':
         specifier: ^4.1.5
         version: 4.1.9(vitest@4.1.9)
@@ -87,7 +87,7 @@ importers:
         version: 8.61.1(eslint@10.5.0)(typescript@6.0.3)
       vitest:
         specifier: ^4.1.5
-        version: 4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0)
+        version: 4.1.9(@types/node@25.9.4)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0)
 
   cjs-test:
     devDependencies:
@@ -111,7 +111,7 @@ importers:
         version: 5.2.1
       express-zod-api:
         specifier: ^28.0.0
-        version: 28.0.0(@types/node@25.9.3)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4)
+        version: 28.0.0(@types/node@25.9.4)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -199,7 +199,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.0.4
-        version: 4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0)
+        version: 4.1.9(@types/node@25.9.4)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0)
       zod:
         specifier: catalog:dev
         version: 4.4.3
@@ -489,8 +489,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@25.9.3':
-    resolution: {integrity: sha512-603BddQMv3pUcr4U2dhujk83N2tTDVr/34wII2B6bJy6g+8WD6yUb11jszNs0gdi4PesVWl7ABt8nYMVpnLUcg==}
+  '@types/node@25.9.4':
+    resolution: {integrity: sha512-dszCsrKb5U7ZsVZBWiHFklTloVl0mSEnWH/iZXfZUlI4rzCUnsvGmgqfuVRHL54ugE7/wRuxEIXRa2iMZ+BG6g==}
 
   '@types/ramda@0.31.1':
     resolution: {integrity: sha512-Vt6sFXnuRpzaEj+yeutA0q3bcAsK7wdPuASIzR9LXqL4gJPyFw8im9qchlbp4ltuf3kDEIRmPJTD/Fkg60dn7g==}
@@ -1164,8 +1164,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  nanoid@3.3.12:
-    resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
+  nanoid@3.3.13:
+    resolution: {integrity: sha512-sPdqC6ByMVVGvF1ynvvMo0/o+oD1VX7DaHhijt1bFgjvBkHBib4t49GoNDhf2NDta4oeUNlaGbSt5K7qjZ955Q==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -1891,7 +1891,7 @@ snapshots:
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 25.9.3
+      '@types/node': 25.9.4
 
   '@types/deep-eql@4.0.2': {}
 
@@ -1903,7 +1903,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@25.9.3':
+  '@types/node@25.9.4':
     dependencies:
       undici-types: 7.24.6
 
@@ -1913,7 +1913,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 25.9.3
+      '@types/node': 25.9.4
 
   '@typescript-eslint/eslint-plugin@8.61.1(@typescript-eslint/parser@8.61.1)(eslint@10.5.0)(typescript@6.0.3)':
     dependencies:
@@ -2018,7 +2018,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0)
+      vitest: 4.1.9(@types/node@25.9.4)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0)
 
   '@vitest/expect@4.1.9':
     dependencies:
@@ -2035,7 +2035,7 @@ snapshots:
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.16(@types/node@25.9.3)(yaml@2.9.0)
+      vite: 8.0.16(@types/node@25.9.4)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.9':
     dependencies:
@@ -2212,7 +2212,7 @@ snapshots:
   engine.io@6.6.8:
     dependencies:
       '@types/cors': 2.8.19
-      '@types/node': 25.9.3
+      '@types/node': 25.9.4
       '@types/ws': 8.18.1
       accepts: 1.3.8
       base64id: 2.0.0
@@ -2331,12 +2331,12 @@ snapshots:
 
   expect-type@1.3.0: {}
 
-  express-zod-api@28.0.0(@types/node@25.9.3)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4):
+  express-zod-api@28.0.0(@types/node@25.9.4)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4):
     dependencies:
       ansis: 4.3.1
       express: 5.2.1
       http-errors: 2.0.1
-      node-mocks-http: 1.17.2(@types/node@25.9.3)
+      node-mocks-http: 1.17.2(@types/node@25.9.4)
       openapi3-ts: 4.5.0
       ramda: 0.32.0
       zod: 4.3.4
@@ -2592,7 +2592,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  nanoid@3.3.12: {}
+  nanoid@3.3.13: {}
 
   natural-compare@1.4.0: {}
 
@@ -2600,7 +2600,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  node-mocks-http@1.17.2(@types/node@25.9.3):
+  node-mocks-http@1.17.2(@types/node@25.9.4):
     dependencies:
       accepts: 1.3.8
       content-disposition: 0.5.4
@@ -2613,7 +2613,7 @@ snapshots:
       range-parser: 1.2.1
       type-is: 1.6.18
     optionalDependencies:
-      '@types/node': 25.9.3
+      '@types/node': 25.9.4
 
   object-assign@4.1.1: {}
 
@@ -2666,7 +2666,7 @@ snapshots:
 
   postcss@8.5.15:
     dependencies:
-      nanoid: 3.3.12
+      nanoid: 3.3.13
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -2980,7 +2980,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@8.0.16(@types/node@25.9.3)(yaml@2.9.0):
+  vite@8.0.16(@types/node@25.9.4)(yaml@2.9.0):
     dependencies:
       lightningcss: empty-npm-package@1.0.0
       picomatch: 4.0.4
@@ -2988,11 +2988,11 @@ snapshots:
       rolldown: 1.0.3
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 25.9.3
+      '@types/node': 25.9.4
       fsevents: 2.3.3
       yaml: 2.9.0
 
-  vitest@4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0):
+  vitest@4.1.9(@types/node@25.9.4)(@vitest/coverage-v8@4.1.9)(yaml@2.9.0):
     dependencies:
       '@vitest/expect': 4.1.9
       '@vitest/mocker': 4.1.9(vite@8.0.16)
@@ -3012,10 +3012,10 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.0.16(@types/node@25.9.3)(yaml@2.9.0)
+      vite: 8.0.16(@types/node@25.9.4)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.9.3
+      '@types/node': 25.9.4
       '@vitest/coverage-v8': 4.1.9(vitest@4.1.9)
     transitivePeerDependencies:
       - '@vitejs/devtools'

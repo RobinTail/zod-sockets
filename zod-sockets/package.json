@@ -52,7 +52,7 @@
     }
   },
   "devDependencies": {
-    "@types/ramda": "^0.31.0",
+    "@types/ramda": "^0.32.0",
     "socket.io": "catalog:dev",
     "typescript": "catalog:dev",
     "vitest": "^4.0.4",

@@ -95,13 +95,7 @@ export interface ServerVariableObject {
 }
 
 export type SchemaObjectType =
-  | "integer"
-  | "number"
-  | "string"
-  | "boolean"
-  | "object"
-  | "null"
-  | "array";
+  "integer" | "number" | "string" | "boolean" | "object" | "null" | "array";
 
 /**
  * @desc DRAFT-07

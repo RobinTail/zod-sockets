@@ -56,8 +56,7 @@ export class ActionsFactory<NS extends Namespaces> {
     K extends keyof NS = RootNS,
   >(
     def:
-      | ActionNoAckDef<IN, NS, K>
-      | ActionWithAckDef<IN, NonNullable<OUT>, NS, K>,
+      ActionNoAckDef<IN, NS, K> | ActionWithAckDef<IN, NonNullable<OUT>, NS, K>,
   ): Action<NS, IN, OUT> {
     return new Action(def);
   }

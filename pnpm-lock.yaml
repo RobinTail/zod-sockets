@@ -42,7 +42,7 @@ importers:
     devDependencies:
       '@arethetypeswrong/core':
         specifier: ^0.18.1
-        version: 0.18.4
+        version: 0.18.5
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.6.0)
@@ -78,7 +78,7 @@ importers:
         version: 3.9.4
       tsdown:
         specifier: ^0.22.0
-        version: 0.22.1(@arethetypeswrong/core@0.18.4)(typescript@6.0.3)
+        version: 0.22.1(@arethetypeswrong/core@0.18.5)(typescript@6.0.3)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -209,8 +209,8 @@ packages:
   '@andrewbranch/untar.js@1.0.3':
     resolution: {integrity: sha512-Jh15/qVmrLGhkKJBdXlK1+9tY4lZruYjsgkDFj08ZmDiWVBLJcqkok7Z0/R0In+i1rScBpJlSvrTS2Lm41Pbnw==}
 
-  '@arethetypeswrong/core@0.18.4':
-    resolution: {integrity: sha512-M5F0ePyN6h2Z6XxRiyIPqjGbltotXLjR0CKA0uKspsDu0QmgTNYvRb4RSQPMUs2ZXZHCCYpbaZbFbYOXLxCjUA==}
+  '@arethetypeswrong/core@0.18.5':
+    resolution: {integrity: sha512-9ytjzGwxjm9Uz7I9avfbt5vlQt6uk9uRRESzJjqrznl6WKvI6dwYTo+vJ3U02Wrq/mR3iql/PzhvHhKdJIAjDQ==}
     engines: {node: '>=20'}
 
   '@babel/generator@8.0.0-rc.6':
@@ -1099,8 +1099,8 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
-  lru-cache@11.5.1:
-    resolution: {integrity: sha512-RPimw/7aMdv2oqRrxKwvZXcPfwBrn/JZ2xYcY9Hus/6LaS3VOAKVWKWgNLCFSiOm1ESXinjsDlidVU7JlnCN2A==}
+  lru-cache@11.5.2:
+    resolution: {integrity: sha512-4pfM1Ff0x50o0tQwb5ucw/RzNyD0/YJME6IVcStalZuMWxdt3sR3huStTtxz4PUmvZfRguvDejasvQ2kifR11g==}
     engines: {node: 20 || >=22}
 
   magic-string@0.30.21:
@@ -1673,13 +1673,13 @@ snapshots:
 
   '@andrewbranch/untar.js@1.0.3': {}
 
-  '@arethetypeswrong/core@0.18.4':
+  '@arethetypeswrong/core@0.18.5':
     dependencies:
       '@andrewbranch/untar.js': 1.0.3
       '@loaderkit/resolve': 1.0.6
       cjs-module-lexer: 1.4.3
       fflate: 0.8.3
-      lru-cache: 11.5.1
+      lru-cache: 11.5.2
       semver: 7.8.5
       typescript: 5.6.1-rc
       validate-npm-package-name: 5.0.1
@@ -2544,7 +2544,7 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
-  lru-cache@11.5.1: {}
+  lru-cache@11.5.2: {}
 
   magic-string@0.30.21:
     dependencies:
@@ -2898,7 +2898,7 @@ snapshots:
 
   ts-toolbelt@9.6.0: {}
 
-  tsdown@0.22.1(@arethetypeswrong/core@0.18.4)(typescript@6.0.3):
+  tsdown@0.22.1(@arethetypeswrong/core@0.18.5)(typescript@6.0.3):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -2916,7 +2916,7 @@ snapshots:
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
     optionalDependencies:
-      '@arethetypeswrong/core': 0.18.4
+      '@arethetypeswrong/core': 0.18.5
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@ts-macro/tsc'

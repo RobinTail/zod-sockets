@@ -34,7 +34,7 @@ overrides:
   '@scarf/scarf': npm:empty-npm-package@1.0.0
   lightningcss: npm:empty-npm-package@1.0.0
 
-pnpmfileChecksum: sha256-YDrL38AkX5yQ+KXYaGBrzm2DQS06AJRgUhGwY3D8HPc=
+pnpmfileChecksum: sha256-pGg05AHd/xw2BncJ0iVVQansBAdm3Fkrkqr+bxzw2tY=
 
 importers:
 
@@ -1385,7 +1385,7 @@ packages:
 
   rolldown-plugin-dts@0.27.4:
     resolution: {integrity: sha512-z1uz1gH2sJ55i6JY/xi3q7gsI5CPthefDp5HYXnBlrkN1L3K4tx+gyAQO3Udt69ASWItWKwXJ55nKQq2HCMVfA==}
-    engines: {node: ^22.18.0 || >=24.11.0}
+    engines: {node: ^22.18.0 || >=24.0.0}
     peerDependencies:
       '@ts-macro/tsc': ^0.3.6
       '@typescript/native-preview': '>=7.0.0-dev.20260325.1'
@@ -1531,7 +1531,7 @@ packages:
 
   tsdown@0.22.4:
     resolution: {integrity: sha512-3a5FsNL2fH2jw3ozvFUuPMBgS0xXjX9wpZShHyB4klXelVhyaNw5Q5WA9TPCNeoGYpRZEc4OZdMx5wT4Fkma3A==}
-    engines: {node: ^22.18.0 || >=24.11.0}
+    engines: {node: ^22.18.0 || >=24.0.0}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1

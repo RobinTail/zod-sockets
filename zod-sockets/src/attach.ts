@@ -13,6 +13,7 @@ import { type Namespaces, normalizeNS } from "./namespace";
 import { makeRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
+/** @todo return nsCtx in next major https://github.com/RobinTail/zod-sockets/discussions/801 */
 export const attachSockets = async <NS extends Namespaces>({
   io,
   actions,

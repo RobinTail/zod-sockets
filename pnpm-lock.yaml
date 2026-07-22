@@ -110,8 +110,8 @@ importers:
         specifier: ^5.1.0
         version: 5.2.1
       express-zod-api:
-        specifier: ^28.0.0
-        version: 28.0.0(@types/node@25.9.5)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4)
+        specifier: ^29.0.0-beta.4
+        version: 29.0.0-beta.4(@types/node@25.9.5)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4)
       http-errors:
         specifier: ^2.0.0
         version: 2.0.1
@@ -958,18 +958,21 @@ packages:
     resolution: {integrity: sha512-KfYbmpRm0VbLjEvVa9yGwCi9GI34xvi7A/HXYWQO65CSD2u3MczUJSuwXKFIxlGsgBQizV9q5J9NHj4VG0n+pA==}
     engines: {node: '>=12.0.0'}
 
-  express-zod-api@28.0.0:
-    resolution: {integrity: sha512-JRe7FSi8K21pguNLBNwGnl1BD8GEEfH2qrZDJ2teEUBFrs03HF8LCh3T/r+GBqFZku5Z3UXQJYjpyBL4NnvGMg==}
-    engines: {node: ^22.19.0 || ^24.0.0 || ^26.0.0}
+  express-zod-api@29.0.0-beta.4:
+    resolution: {integrity: sha512-Q2yVf3xJ9jYHXJq55bZglccgXuQnBthwEBI/8iMn1zi1gsNu/ZBy3eLsQNujzO+E75IyqWaskutxvahXWTPVwA==}
+    engines: {node: ^22.19.0 || ^24.11.0 || ^26.0.0}
     peerDependencies:
-      '@express-zod-api/zod-plugin': ^5.0.0
+      '@express-zod-api/zod-plugin': ^6.0.0-beta.0
       '@types/compression': ^1.7.5
+      '@types/cookie-parser': ^1.4.10
       '@types/express': ^5.0.0
       '@types/express-fileupload': ^1.5.0
       '@types/http-errors': ^2.0.2
       compression: ^1.8.0
+      cookie-parser: ^1.4.7
       express: ^5.1.0
       express-fileupload: ^1.5.0
+      express-rate-limit: ^7.5.1 || ^8.0.0
       http-errors: ^2.0.1
       typescript: ^5.1.3 || ^6.0.2
       zod: ^4.3.4
@@ -977,6 +980,8 @@ packages:
       '@express-zod-api/zod-plugin':
         optional: true
       '@types/compression':
+        optional: true
+      '@types/cookie-parser':
         optional: true
       '@types/express':
         optional: true
@@ -986,7 +991,11 @@ packages:
         optional: true
       compression:
         optional: true
+      cookie-parser:
+        optional: true
       express-fileupload:
+        optional: true
+      express-rate-limit:
         optional: true
       typescript:
         optional: true
@@ -1266,8 +1275,8 @@ packages:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
 
-  node-mocks-http@1.17.2:
-    resolution: {integrity: sha512-HVxSnjNzE9NzoWMx9T9z4MLqwMpLwVvA0oVZ+L+gXskYXEJ6tFn3Kx4LargoB6ie7ZlCLplv7QbWO6N+MysWGA==}
+  node-mocks-http@1.18.0:
+    resolution: {integrity: sha512-arItRIarSUnpHAagCV5SB0DARvPXTA2ur+cVPCMm8d/KT2sqr9AF/QuHOoT3/PZ5cYFaQrpVkmoDUmMxuGW1Cw==}
     engines: {node: '>=14'}
     peerDependencies:
       '@types/express': ^4.17.21 || ^5.0.0
@@ -1297,8 +1306,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  openapi3-ts@4.5.0:
-    resolution: {integrity: sha512-jaL+HgTq2Gj5jRcfdutgRGLosCy/hT8sQf6VOy+P+g36cZOjI1iukdPnijC+4CmeRzg/jEllJUboEic2FhxhtQ==}
+  openapi3-ts@4.6.0:
+    resolution: {integrity: sha512-a4sfn6L2sIShhtzJqmjGrARvxAW/3F2BJDdyRVvNF9VhAsZSh5hSyI3a9TNvmzBxXmq66nY5LNT5bQcBxYAZZg==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -2457,13 +2466,13 @@ snapshots:
 
   expect-type@1.4.0: {}
 
-  express-zod-api@28.0.0(@types/node@25.9.5)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4):
+  express-zod-api@29.0.0-beta.4(@types/node@25.9.5)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4):
     dependencies:
       ansis: 4.3.1
       express: 5.2.1
       http-errors: 2.0.1
-      node-mocks-http: 1.17.2(@types/node@25.9.5)
-      openapi3-ts: 4.5.0
+      node-mocks-http: 1.18.0(@types/node@25.9.5)
+      openapi3-ts: 4.6.0
       ramda: 0.32.0
       zod: 4.3.4
     optionalDependencies:
@@ -2724,7 +2733,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  node-mocks-http@1.17.2(@types/node@25.9.5):
+  node-mocks-http@1.18.0(@types/node@25.9.5):
     dependencies:
       accepts: 1.3.8
       content-disposition: 0.5.4
@@ -2733,7 +2742,6 @@ snapshots:
       merge-descriptors: 1.0.3
       methods: 1.1.2
       mime: 1.6.0
-      parseurl: 1.3.3
       range-parser: 1.2.1
       type-is: 1.6.18
     optionalDependencies:
@@ -2753,7 +2761,7 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  openapi3-ts@4.5.0:
+  openapi3-ts@4.6.0:
     dependencies:
       yaml: 2.9.0
 

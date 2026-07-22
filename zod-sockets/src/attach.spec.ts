@@ -46,7 +46,7 @@ describe("Attach", () => {
       ]),
     };
     const ioMock = {
-      attach: vi.fn(),
+      attach: vi.fn(() => ioMock),
       of: vi.fn(() => nsMock),
     };
     const targetMock = {
@@ -64,7 +64,7 @@ describe("Attach", () => {
     ];
 
     test("should set the listeners", async () => {
-      await attachSockets({
+      const { io, ns } = await attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
         actions: actionsMock,
@@ -81,6 +81,11 @@ describe("Attach", () => {
         "connection",
         expect.any(Function),
       );
+
+      // returns
+      expect(io).toEqual(ioMock);
+      expect(ns).toHaveProperty("/");
+      expectTypeOf(ns).toHaveProperty("/");
 
       // on connection:
       await nsMock.on.mock.lastCall![1](socketMock);

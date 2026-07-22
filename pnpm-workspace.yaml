@@ -10,12 +10,8 @@ engineStrict: true
 autoInstallPeers: false
 dedupePeers: true
 minimumReleaseAge: 10080
-# todo: remove later:
 minimumReleaseAgeExclude:
-  - "@types/node"
   - express-zod-api
-  - vite
-  - yaml
 publicHoistPattern:
   - "@vitest/*"
 catalogs:

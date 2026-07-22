@@ -130,8 +130,6 @@ export const attachSockets = async <NS extends Namespaces>({
   (startupLogo ? console.log : () => {})(getStartupLogo());
   rootLogger.debug("Running", process.env.TSDOWN_BUILD || "from sources");
   rootLogger.info("Listening", target.address());
-  return {
-    io: io.attach(target),
-    ns: contexts,
-  };
+  io.attach(target);
+  return contexts;
 };

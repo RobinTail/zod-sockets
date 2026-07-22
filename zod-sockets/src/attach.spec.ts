@@ -64,7 +64,7 @@ describe("Attach", () => {
     ];
 
     test("should set the listeners", async () => {
-      const { io, ns } = await attachSockets({
+      const contexts = await attachSockets({
         io: ioMock as unknown as Server,
         target: targetMock as unknown as http.Server,
         actions: actionsMock,
@@ -83,9 +83,8 @@ describe("Attach", () => {
       );
 
       // returns
-      expect(io).toEqual(ioMock);
-      expect(ns).toHaveProperty("/");
-      expectTypeOf(ns).toHaveProperty("/");
+      expect(contexts).toHaveProperty("/");
+      expectTypeOf(contexts).toHaveProperty("/");
 
       // on connection:
       await nsMock.on.mock.lastCall![1](socketMock);

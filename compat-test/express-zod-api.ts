@@ -9,7 +9,7 @@ const serverConfig = createConfig({
   cors: false,
 });
 
-const { servers, logger } = await createServer(serverConfig, {});
+const { servers, logger } = createServer(serverConfig, {});
 
 const socketsConfig = createSimpleConfig();
 

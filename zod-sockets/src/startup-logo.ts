@@ -1,6 +1,6 @@
 import { hex, italic, whiteBright as wht } from "ansis";
 
-const dedication = italic("for Jennie".padStart(22));
+const dedication = italic("for Tortuguita".padStart(22));
 
 const yel = hex("#FCF434");
 const pur = hex("#9C59D1");

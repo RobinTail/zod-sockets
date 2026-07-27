@@ -577,9 +577,8 @@ In order to establish constraints for events on the client side you can generate
 
 ```typescript
 import { Integration } from "zod-sockets/integration";
-import typescript from "typescript";
 
-const integration = new Integration({ typescript, config, actions });
+const integration = new Integration({ config, actions });
 const typescriptCode = integration.print(); // write this to a file
 ```
 

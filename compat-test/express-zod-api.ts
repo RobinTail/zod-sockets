@@ -15,12 +15,10 @@ const socketsConfig = createSimpleConfig();
 
 logger.info(
   "Integration sample",
-  (
-    await Integration.create({
-      config: socketsConfig,
-      actions: [],
-    })
-  ).print(),
+  new Integration({
+    config: socketsConfig,
+    actions: [],
+  }).print(),
 );
 
 const io = new Server();

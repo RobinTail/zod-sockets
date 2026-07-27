@@ -1,4 +1,3 @@
-import type ts from "typescript";
 import { z } from "zod";
 import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
@@ -6,10 +5,9 @@ import { Config } from "./config";
 import { makeEventFnSchema } from "./integration-helpers";
 import { type Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
-import { TypescriptAPI } from "./typescript-api";
+import { TypescriptAPI, ts, f } from "./typescript-api";
 
 interface IntegrationParams {
-  typescript: typeof ts;
   config: Config<Namespaces>;
   actions: AbstractAction[];
   /**
@@ -60,27 +58,26 @@ export class Integration {
   }
 
   constructor({
-    typescript,
     config: { namespaces },
     actions,
     maxOverloads = 3,
   }: IntegrationParams) {
-    this.api = new TypescriptAPI(typescript);
+    this.api = new TypescriptAPI();
     this.#program.push(
-      this.api.f.createImportDeclaration(
+      f.createImportDeclaration(
         undefined,
-        this.api.f.createImportClause(
-          this.api.ts.SyntaxKind.TypeKeyword,
+        f.createImportClause(
+          ts.SyntaxKind.TypeKeyword,
           undefined,
-          this.api.f.createNamedImports([
-            this.api.f.createImportSpecifier(
+          f.createNamedImports([
+            f.createImportSpecifier(
               false,
-              this.api.f.createIdentifier(this.#ids.socket),
-              this.api.f.createIdentifier(this.#ids.socketBase),
+              f.createIdentifier(this.#ids.socket),
+              f.createIdentifier(this.#ids.socketBase),
             ),
           ]),
         ),
-        this.api.f.createStringLiteral(this.#ids.ioClient),
+        f.createStringLiteral(this.#ids.ioClient),
       ),
     );
 
@@ -115,7 +112,7 @@ export class Integration {
 
       const nsNameNode = this.api.makeConst(
         this.#ids.path,
-        this.api.f.createStringLiteral(normalizeNS(ns)),
+        f.createStringLiteral(normalizeNS(ns)),
         { expose: true },
       );
       this.api.addJsDoc(
@@ -146,26 +143,19 @@ export class Integration {
         `@example const socket: ${publicName}.${this.#ids.socket} = io(${publicName}.${this.#ids.path})`,
       );
       this.#program.push(
-        this.api.f.createModuleDeclaration(
+        f.createModuleDeclaration(
           this.api.exportModifier,
-          this.api.f.createIdentifier(publicName),
-          this.api.f.createModuleBlock([
+          f.createIdentifier(publicName),
+          f.createModuleBlock([
             nsNameNode,
             ...this.#aliases[ns].values(),
             ...interfaces,
             socketNode,
           ]),
-          this.api.ts.NodeFlags.Namespace,
+          ts.NodeFlags.Namespace,
         ),
       );
     }
-  }
-
-  public static async create(params: Omit<IntegrationParams, "typescript">) {
-    return new Integration({
-      ...params,
-      typescript: (await import("typescript"))["default"],
-    });
   }
 
   public print(printerOptions?: ts.PrinterOptions) {

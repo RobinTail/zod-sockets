@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import { Documentation } from "zod-sockets";
+import { Documentation } from "zod-sockets/documentation";
 import { actions } from "./actions/index.ts";
 import { config } from "./config.ts";
 import manifest from "../zod-sockets/package.json" with { type: "json" };

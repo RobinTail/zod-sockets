@@ -1,6 +1,7 @@
 import { createConfig, createServer } from "express-zod-api";
 import { Server } from "socket.io";
-import { attachSockets, createSimpleConfig, Integration } from "zod-sockets";
+import { attachSockets, createSimpleConfig } from "zod-sockets";
+import { Integration } from "zod-sockets/integration";
 import { givePort } from "../tools/ports.ts";
 
 const serverConfig = createConfig({

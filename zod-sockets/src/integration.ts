@@ -26,18 +26,19 @@ interface IntegrationParams {
 
 const fallbackNs = "root";
 
+const ids = {
+  path: "path",
+  socket: "Socket",
+  socketBase: "SocketBase",
+  ioClient: "socket.io-client",
+  emission: "Emission",
+  actions: "Actions",
+};
+
 export class Integration {
   readonly #program: Array<string | ((opts?: ts.PrinterOptions) => string)> =
     [];
   readonly #aliases: Record<string, Map<object, string>> = {}; // by namespace
-  #ids = {
-    path: "path",
-    socket: "Socket",
-    socketBase: "SocketBase",
-    ioClient: "socket.io-client",
-    emission: "Emission",
-    actions: "Actions",
-  };
 
   #makeAlias(ns: string, key: object, produce: () => ts.TypeNode): ts.TypeNode {
     let name = this.#aliases[ns].get(key);
@@ -58,7 +59,7 @@ export class Integration {
     maxOverloads = 3,
   }: IntegrationParams) {
     this.#program.push(
-      `import type { ${this.#ids.socket} as ${this.#ids.socketBase} } from "${this.#ids.ioClient}";`,
+      `import type { ${ids.socket} as ${ids.socketBase} } from "${ids.ioClient}";`,
     );
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
@@ -70,7 +71,7 @@ export class Integration {
         [
           `export namespace ${publicName} {`,
           `  /** @desc The actual path of the ${publicName} namespace */`,
-          `  export const ${this.#ids.path} = ${printNode(f.createStringLiteral(normalizeNS(ns)), opts)};`,
+          `  export const ${ids.path} = ${printNode(f.createStringLiteral(normalizeNS(ns)), opts)};`,
         ].join("\n"),
       );
 
@@ -86,7 +87,7 @@ export class Integration {
 
       this.#program.push((opts?: ts.PrinterOptions) =>
         [
-          `  export interface ${this.#ids.emission} {`,
+          `  export interface ${ids.emission} {`,
           ...emissionNodes.map(
             ({ event, node }) =>
               `    ${printNode(makeInterfaceProp(event, node), opts)}`,
@@ -107,7 +108,7 @@ export class Integration {
 
       this.#program.push((opts) =>
         [
-          `  export interface ${this.#ids.actions} {`,
+          `  export interface ${ids.actions} {`,
           ...actionNodes.map(
             ({ event, node }) =>
               `    ${printNode(makeInterfaceProp(event, node), opts)}`,
@@ -118,8 +119,8 @@ export class Integration {
 
       this.#program.push(
         [
-          `  /** @example const socket: ${publicName}.${this.#ids.socket} = io(${publicName}.${this.#ids.path}) */`,
-          `  export type ${this.#ids.socket} = ${this.#ids.socketBase}<${this.#ids.emission}, ${this.#ids.actions}>;`,
+          `  /** @example const socket: ${publicName}.${ids.socket} = io(${publicName}.${ids.path}) */`,
+          `  export type ${ids.socket} = ${ids.socketBase}<${ids.emission}, ${ids.actions}>;`,
           `}`,
         ].join("\n"),
       );

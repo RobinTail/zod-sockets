@@ -13,7 +13,14 @@ import {
 } from "./schema-walker";
 import * as R from "ramda";
 import { type Producer, type ZTSContext } from "./zts-helpers";
-import { TypescriptAPI, ts, f } from "./typescript-api";
+import {
+  ts,
+  f,
+  ensureTypeNode,
+  makeLiteralType,
+  makeUnion,
+  makeInterfaceProp,
+} from "./typescript-api";
 
 const nodePath = {
   name: R.path([
@@ -27,21 +34,18 @@ const nodePath = {
   optional: R.path(["questionToken" satisfies keyof ts.TypeElement]),
 };
 
-const onLiteral: Producer = (
-  { _zod: { def } }: z.core.$ZodLiteral,
-  { api },
-) => {
+const onLiteral: Producer = ({ _zod: { def } }: z.core.$ZodLiteral) => {
   const values = def.values.map((entry) =>
     entry === undefined
-      ? api.ensureTypeNode(ts.SyntaxKind.UndefinedKeyword)
-      : api.makeLiteralType(entry),
+      ? ensureTypeNode(ts.SyntaxKind.UndefinedKeyword)
+      : makeLiteralType(entry),
   );
-  return values.length === 1 ? values[0] : api.makeUnion(values);
+  return values.length === 1 ? values[0] : makeUnion(values);
 };
 
 const onTemplateLiteral: Producer = (
   { _zod: { def } }: z.core.$ZodTemplateLiteral,
-  { next, api },
+  { next },
 ) => {
   const parts = [...def.parts];
   const shiftText = () => {
@@ -66,13 +70,13 @@ const onTemplateLiteral: Producer = (
       : f.createTemplateTail;
     spans.push(f.createTemplateLiteralTypeSpan(schema, textWrapper(text)));
   }
-  if (!spans.length) return api.makeLiteralType(head.text);
+  if (!spans.length) return makeLiteralType(head.text);
   return f.createTemplateLiteralType(head, spans);
 };
 
 const onObject: Producer = (
   obj: z.core.$ZodObject,
-  { isResponse, next, makeAlias, api },
+  { isResponse, next, makeAlias },
 ) => {
   const produce = () => {
     const members = Object.entries(obj._zod.def.shape).map<ts.TypeElement>(
@@ -83,7 +87,7 @@ const onObject: Producer = (
           (isResponse ? value._zod.optout : value._zod.optin) === "optional";
         const hasUndefined =
           isOptional && !(value instanceof z.core.$ZodExactOptional);
-        return api.makeInterfaceProp(key, next(value), {
+        return makeInterfaceProp(key, next(value), {
           comment,
           isDeprecated,
           isOptional,
@@ -101,18 +105,18 @@ const onObject: Producer = (
 const onArray: Producer = ({ _zod: { def } }: z.core.$ZodArray, { next }) =>
   f.createArrayTypeNode(next(def.element));
 
-const onEnum: Producer = ({ _zod: { def } }: z.core.$ZodEnum, { api }) =>
-  api.makeUnion(R.map(api.makeLiteralType, Object.values(def.entries)));
+const onEnum: Producer = ({ _zod: { def } }: z.core.$ZodEnum) =>
+  makeUnion(R.map(makeLiteralType, Object.values(def.entries)));
 
 const onSomeUnion: Producer = (
   { _zod: { def } }: z.core.$ZodUnion | z.core.$ZodDiscriminatedUnion,
-  { next, api },
-) => api.makeUnion(def.options.map(next));
+  { next },
+) => makeUnion(def.options.map(next));
 
 const onNullable: Producer = (
   { _zod: { def } }: z.core.$ZodNullable,
-  { next, api },
-) => api.makeUnion([next(def.innerType), api.makeLiteralType(null)]);
+  { next },
+) => makeUnion([next(def.innerType), makeLiteralType(null)]);
 
 const onTuple: Producer = ({ _zod: { def } }: z.core.$ZodTuple, { next }) =>
   f.createTupleTypeNode(
@@ -121,22 +125,19 @@ const onTuple: Producer = ({ _zod: { def } }: z.core.$ZodTuple, { next }) =>
       .concat(def.rest === null ? [] : f.createRestTypeNode(next(def.rest))),
   );
 
-const onRecord: Producer = (
-  { _zod: { def } }: z.core.$ZodRecord,
-  { next, api },
-) => {
+const onRecord: Producer = ({ _zod: { def } }: z.core.$ZodRecord, { next }) => {
   const [keyNode, valueNode] = [def.keyType, def.valueType].map(next);
-  const primary = api.ensureTypeNode("Record", [keyNode, valueNode]);
+  const primary = ensureTypeNode("Record", [keyNode, valueNode]);
   const isLoose = def.mode === "loose";
   if (!isLoose) return primary;
   return f.createIntersectionTypeNode([
     primary,
-    api.ensureTypeNode("Record", ["PropertyKey", valueNode]),
+    ensureTypeNode("Record", ["PropertyKey", valueNode]),
   ]);
 };
 
 const intersect = R.tryCatch(
-  (api: TypescriptAPI, nodes: ts.TypeNode[]) => {
+  (nodes: ts.TypeNode[]) => {
     if (!nodes.every(ts.isTypeLiteralNode)) throw new Error("Not objects");
     const members = R.chain(R.prop("members"), nodes);
     const uniqs = R.uniqWith((...props) => {
@@ -147,29 +148,18 @@ const intersect = R.tryCatch(
     }, members);
     return f.createTypeLiteralNode(uniqs);
   },
-  (_err, api, nodes) => f.createIntersectionTypeNode(nodes),
+  (_err, nodes) => f.createIntersectionTypeNode(nodes),
 );
 
 const onIntersection: Producer = (
   { _zod: { def } }: z.core.$ZodIntersection,
-  { next, api },
-) => intersect(api, [def.left, def.right].map(next));
+  { next },
+) => intersect([def.left, def.right].map(next));
 
 const onPrimitive =
-  (
-    syntaxKind:
-      | "AnyKeyword"
-      | "BigIntKeyword"
-      | "BooleanKeyword"
-      | "NeverKeyword"
-      | "NumberKeyword"
-      | "StringKeyword"
-      | "UndefinedKeyword"
-      | "UnknownKeyword"
-      | "VoidKeyword",
-  ): Producer =>
-  ({}, { api }) =>
-    api.ensureTypeNode(ts.SyntaxKind[syntaxKind]);
+  (syntaxKind: ts.KeywordTypeSyntaxKind): Producer =>
+  () =>
+    ensureTypeNode(syntaxKind);
 
 const onWrapped: Producer = (
   {
@@ -184,14 +174,14 @@ const onWrapped: Producer = (
   { next },
 ) => next(def.innerType);
 
-const getFallback = (api: TypescriptAPI, isResponse: boolean) =>
-  api.ensureTypeNode(
+const getFallback = (isResponse: boolean) =>
+  ensureTypeNode(
     isResponse ? ts.SyntaxKind.UnknownKeyword : ts.SyntaxKind.AnyKeyword,
   );
 
 const onPipeline: Producer = (
   { _zod: { def } }: z.core.$ZodPipe,
-  { next, isResponse, api },
+  { next, isResponse },
 ) => {
   const target = def[isResponse ? "out" : "in"];
   const opposite = def[isResponse ? "in" : "out"];
@@ -221,12 +211,12 @@ const onPipeline: Producer = (
     undefined: ts.SyntaxKind.UndefinedKeyword,
     object: ts.SyntaxKind.ObjectKeyword,
   };
-  return api.ensureTypeNode(
-    (targetType && resolutions[targetType]) || getFallback(api, isResponse),
+  return ensureTypeNode(
+    (targetType && resolutions[targetType]) || getFallback(isResponse),
   );
 };
 
-const onNull: Producer = ({}, { api }) => api.makeLiteralType(null);
+const onNull: Producer = () => makeLiteralType(null);
 
 const onLazy: Producer = (
   { _zod: { def } }: z.core.$ZodLazy,
@@ -270,15 +260,15 @@ const onFunction: Producer = (schema: z.core.$ZodFunction, { next }) => {
 };
 
 const producers: HandlingRules<ts.TypeNode, ZTSContext, FirstPartyKind> = {
-  string: onPrimitive("StringKeyword"),
-  number: onPrimitive("NumberKeyword"),
-  bigint: onPrimitive("BigIntKeyword"),
-  boolean: onPrimitive("BooleanKeyword"),
-  any: onPrimitive("AnyKeyword"),
-  undefined: onPrimitive("UndefinedKeyword"),
-  never: onPrimitive("NeverKeyword"),
-  void: onPrimitive("VoidKeyword"),
-  unknown: onPrimitive("UnknownKeyword"),
+  string: onPrimitive(ts.SyntaxKind.StringKeyword),
+  number: onPrimitive(ts.SyntaxKind.NumberKeyword),
+  bigint: onPrimitive(ts.SyntaxKind.BigIntKeyword),
+  boolean: onPrimitive(ts.SyntaxKind.BooleanKeyword),
+  any: onPrimitive(ts.SyntaxKind.AnyKeyword),
+  undefined: onPrimitive(ts.SyntaxKind.UndefinedKeyword),
+  never: onPrimitive(ts.SyntaxKind.NeverKeyword),
+  void: onPrimitive(ts.SyntaxKind.VoidKeyword),
+  unknown: onPrimitive(ts.SyntaxKind.UnknownKeyword),
   null: onNull,
   array: onArray,
   tuple: onTuple,
@@ -303,6 +293,6 @@ const producers: HandlingRules<ts.TypeNode, ZTSContext, FirstPartyKind> = {
 export const zodToTs = (schema: z.ZodType, ctx: ZTSContext) =>
   walkSchema(schema, {
     rules: producers,
-    onMissing: ({}, { isResponse, api }) => getFallback(api, isResponse),
+    onMissing: ({}, { isResponse }) => getFallback(isResponse),
     ctx,
   });

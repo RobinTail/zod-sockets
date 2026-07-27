@@ -45,7 +45,9 @@ export class Integration {
       name = `Type${this.#aliases[ns].size + 1}`;
       this.#aliases[ns].set(key, name);
       const node = produce();
-      this.#program.push((opts) => `type ${name} = ${printNode(node, opts)};`);
+      this.#program.push(
+        (opts) => `  type ${name} = ${printNode(node, opts)};`,
+      );
     }
     return ensureTypeNode(name);
   }

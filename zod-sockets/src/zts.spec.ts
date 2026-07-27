@@ -1,17 +1,18 @@
 import assert from "node:assert/strict";
 import ts from "typescript";
 import { z } from "zod";
-import { TypescriptAPI } from "./typescript-api";
+import { TypescriptAPI, f } from "./typescript-api";
 import { zodToTs } from "./zts";
 import type { ZTSContext } from "./zts-helpers";
 
 describe("zod-to-ts", () => {
-  const api = new TypescriptAPI(ts);
+  const api = new TypescriptAPI();
+  // @todo rm when API simplified
   const printNodeTest = (node: ts.Node) =>
     api.printNode(node, { newLine: ts.NewLineKind.LineFeed });
   const ctx: ZTSContext = {
     isResponse: false,
-    makeAlias: vi.fn(() => api.f.createTypeReferenceNode("SomeType")),
+    makeAlias: vi.fn(() => f.createTypeReferenceNode("SomeType")),
     api,
   };
 

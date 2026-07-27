@@ -1,4 +1,3 @@
-import type ts from "typescript";
 import { globalRegistry, z } from "zod";
 import {
   lcFirst,
@@ -14,7 +13,7 @@ import {
 } from "./schema-walker";
 import * as R from "ramda";
 import { type Producer, type ZTSContext } from "./zts-helpers";
-import { TypescriptAPI } from "./typescript-api";
+import { TypescriptAPI, ts, f } from "./typescript-api";
 
 const nodePath = {
   name: R.path([
@@ -34,7 +33,7 @@ const onLiteral: Producer = (
 ) => {
   const values = def.values.map((entry) =>
     entry === undefined
-      ? api.ensureTypeNode(api.ts.SyntaxKind.UndefinedKeyword)
+      ? api.ensureTypeNode(ts.SyntaxKind.UndefinedKeyword)
       : api.makeLiteralType(entry),
   );
   return values.length === 1 ? values[0] : api.makeUnion(values);
@@ -57,18 +56,18 @@ const onTemplateLiteral: Producer = (
     }
     return text;
   };
-  const head = api.f.createTemplateHead(shiftText());
+  const head = f.createTemplateHead(shiftText());
   const spans: ts.TemplateLiteralTypeSpan[] = [];
   while (parts.length) {
     const schema = next(parts.shift() as z.core.$ZodType);
     const text = shiftText();
     const textWrapper = parts.length
-      ? api.f.createTemplateMiddle
-      : api.f.createTemplateTail;
-    spans.push(api.f.createTemplateLiteralTypeSpan(schema, textWrapper(text)));
+      ? f.createTemplateMiddle
+      : f.createTemplateTail;
+    spans.push(f.createTemplateLiteralTypeSpan(schema, textWrapper(text)));
   }
   if (!spans.length) return api.makeLiteralType(head.text);
-  return api.f.createTemplateLiteralType(head, spans);
+  return f.createTemplateLiteralType(head, spans);
 };
 
 const onObject: Producer = (
@@ -92,17 +91,15 @@ const onObject: Producer = (
         });
       },
     );
-    return api.f.createTypeLiteralNode(members);
+    return f.createTypeLiteralNode(members);
   };
   return hasCycle(obj, { io: isResponse ? "output" : "input" })
     ? makeAlias(obj, produce)
     : produce();
 };
 
-const onArray: Producer = (
-  { _zod: { def } }: z.core.$ZodArray,
-  { next, api },
-) => api.f.createArrayTypeNode(next(def.element));
+const onArray: Producer = ({ _zod: { def } }: z.core.$ZodArray, { next }) =>
+  f.createArrayTypeNode(next(def.element));
 
 const onEnum: Producer = ({ _zod: { def } }: z.core.$ZodEnum, { api }) =>
   api.makeUnion(R.map(api.makeLiteralType, Object.values(def.entries)));
@@ -117,16 +114,11 @@ const onNullable: Producer = (
   { next, api },
 ) => api.makeUnion([next(def.innerType), api.makeLiteralType(null)]);
 
-const onTuple: Producer = (
-  { _zod: { def } }: z.core.$ZodTuple,
-  { next, api },
-) =>
-  api.f.createTupleTypeNode(
+const onTuple: Producer = ({ _zod: { def } }: z.core.$ZodTuple, { next }) =>
+  f.createTupleTypeNode(
     def.items
       .map(next)
-      .concat(
-        def.rest === null ? [] : api.f.createRestTypeNode(next(def.rest)),
-      ),
+      .concat(def.rest === null ? [] : f.createRestTypeNode(next(def.rest))),
   );
 
 const onRecord: Producer = (
@@ -137,7 +129,7 @@ const onRecord: Producer = (
   const primary = api.ensureTypeNode("Record", [keyNode, valueNode]);
   const isLoose = def.mode === "loose";
   if (!isLoose) return primary;
-  return api.f.createIntersectionTypeNode([
+  return f.createIntersectionTypeNode([
     primary,
     api.ensureTypeNode("Record", ["PropertyKey", valueNode]),
   ]);
@@ -145,7 +137,7 @@ const onRecord: Producer = (
 
 const intersect = R.tryCatch(
   (api: TypescriptAPI, nodes: ts.TypeNode[]) => {
-    if (!nodes.every(api.ts.isTypeLiteralNode)) throw new Error("Not objects");
+    if (!nodes.every(ts.isTypeLiteralNode)) throw new Error("Not objects");
     const members = R.chain(R.prop("members"), nodes);
     const uniqs = R.uniqWith((...props) => {
       if (!R.eqBy(nodePath.name, ...props)) return false;
@@ -153,9 +145,9 @@ const intersect = R.tryCatch(
         return true;
       throw new Error("Has conflicting prop");
     }, members);
-    return api.f.createTypeLiteralNode(uniqs);
+    return f.createTypeLiteralNode(uniqs);
   },
-  (_err, api, nodes) => api.f.createIntersectionTypeNode(nodes),
+  (_err, api, nodes) => f.createIntersectionTypeNode(nodes),
 );
 
 const onIntersection: Producer = (
@@ -177,7 +169,7 @@ const onPrimitive =
       | "VoidKeyword",
   ): Producer =>
   ({}, { api }) =>
-    api.ensureTypeNode(api.ts.SyntaxKind[syntaxKind]);
+    api.ensureTypeNode(ts.SyntaxKind[syntaxKind]);
 
 const onWrapped: Producer = (
   {
@@ -194,9 +186,7 @@ const onWrapped: Producer = (
 
 const getFallback = (api: TypescriptAPI, isResponse: boolean) =>
   api.ensureTypeNode(
-    isResponse
-      ? api.ts.SyntaxKind.UnknownKeyword
-      : api.ts.SyntaxKind.AnyKeyword,
+    isResponse ? ts.SyntaxKind.UnknownKeyword : ts.SyntaxKind.AnyKeyword,
   );
 
 const onPipeline: Producer = (
@@ -208,13 +198,13 @@ const onPipeline: Producer = (
   if (!isSchema<z.core.$ZodTransform>(target, "transform")) return next(target);
   const opposingType = next(opposite);
   const samples = {
-    [api.ts.SyntaxKind.AnyKeyword]: "",
-    [api.ts.SyntaxKind.BigIntKeyword]: BigInt(0),
-    [api.ts.SyntaxKind.BooleanKeyword]: false,
-    [api.ts.SyntaxKind.NumberKeyword]: 0,
-    [api.ts.SyntaxKind.ObjectKeyword]: {},
-    [api.ts.SyntaxKind.StringKeyword]: "",
-    [api.ts.SyntaxKind.UndefinedKeyword]: undefined,
+    [ts.SyntaxKind.AnyKeyword]: "",
+    [ts.SyntaxKind.BigIntKeyword]: BigInt(0),
+    [ts.SyntaxKind.BooleanKeyword]: false,
+    [ts.SyntaxKind.NumberKeyword]: 0,
+    [ts.SyntaxKind.ObjectKeyword]: {},
+    [ts.SyntaxKind.StringKeyword]: "",
+    [ts.SyntaxKind.UndefinedKeyword]: undefined,
   } satisfies Partial<Record<ts.KeywordTypeSyntaxKind, unknown>>;
   const sample = samples[opposingType.kind as keyof typeof samples];
   const targetType = getTransformedType(
@@ -224,12 +214,12 @@ const onPipeline: Producer = (
   const resolutions: Partial<
     Record<NonNullable<typeof targetType>, ts.KeywordTypeSyntaxKind>
   > = {
-    number: api.ts.SyntaxKind.NumberKeyword,
-    bigint: api.ts.SyntaxKind.BigIntKeyword,
-    boolean: api.ts.SyntaxKind.BooleanKeyword,
-    string: api.ts.SyntaxKind.StringKeyword,
-    undefined: api.ts.SyntaxKind.UndefinedKeyword,
-    object: api.ts.SyntaxKind.ObjectKeyword,
+    number: ts.SyntaxKind.NumberKeyword,
+    bigint: ts.SyntaxKind.BigIntKeyword,
+    boolean: ts.SyntaxKind.BooleanKeyword,
+    string: ts.SyntaxKind.StringKeyword,
+    undefined: ts.SyntaxKind.UndefinedKeyword,
+    object: ts.SyntaxKind.ObjectKeyword,
   };
   return api.ensureTypeNode(
     (targetType && resolutions[targetType]) || getFallback(api, isResponse),
@@ -243,16 +233,16 @@ const onLazy: Producer = (
   { makeAlias, next },
 ) => makeAlias(def.getter, () => next(def.getter()));
 
-const onFunction: Producer = (schema: z.core.$ZodFunction, { next, api }) => {
+const onFunction: Producer = (schema: z.core.$ZodFunction, { next }) => {
   const { input, output } = schema._zod.def;
   if (!isSchema<z.core.$ZodTuple>(input, "tuple"))
     throw new Error("z.function()::input must be a tuple");
   const params = input._zod.def.items.map((subject, index) => {
     const { description } = globalRegistry.get(subject) || {};
-    return api.f.createParameterDeclaration(
+    return f.createParameterDeclaration(
       undefined,
       undefined,
-      api.f.createIdentifier(
+      f.createIdentifier(
         description
           ? lcFirst(makeCleanId(description))
           : `${isSchema(subject, "function") ? "cb" : "p"}${index + 1}`,
@@ -265,10 +255,10 @@ const onFunction: Producer = (schema: z.core.$ZodFunction, { next, api }) => {
   if (rest) {
     const { description } = globalRegistry.get(rest) || {};
     params.push(
-      api.f.createParameterDeclaration(
+      f.createParameterDeclaration(
         undefined,
-        api.f.createToken(api.ts.SyntaxKind.DotDotDotToken),
-        api.f.createIdentifier(
+        f.createToken(ts.SyntaxKind.DotDotDotToken),
+        f.createIdentifier(
           description ? lcFirst(makeCleanId(description)) : "rest",
         ),
         undefined,
@@ -276,7 +266,7 @@ const onFunction: Producer = (schema: z.core.$ZodFunction, { next, api }) => {
       ),
     );
   }
-  return api.f.createFunctionTypeNode(undefined, params, next(output));
+  return f.createFunctionTypeNode(undefined, params, next(output));
 };
 
 const producers: HandlingRules<ts.TypeNode, ZTSContext, FirstPartyKind> = {

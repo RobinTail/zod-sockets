@@ -1,4 +1,3 @@
-import ts from "typescript";
 import { z } from "zod";
 import { ActionsFactory } from "./actions-factory";
 import { Config, createSimpleConfig } from "./config";
@@ -17,7 +16,6 @@ describe("Integration", () => {
       });
       const input = z.tuple([feature.array()]);
       const instance = new Integration({
-        typescript: ts,
         config: sampleConfig,
         actions: [
           new ActionsFactory(sampleConfig).build({
@@ -40,7 +38,7 @@ describe("Integration", () => {
           },
         },
       });
-      const instance = await Integration.create({
+      const instance = new Integration({
         config: configWithEmission,
         actions: [],
       });

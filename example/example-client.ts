@@ -11,7 +11,6 @@ export namespace Root {
 
   export interface Emission {
     time: (currentIsoTime: string) => void;
-
     chat: (
       message: string,
       extraInfo: {
@@ -20,15 +19,12 @@ export namespace Root {
         features: Type1[];
       },
     ) => void;
-
     rooms: (roomIds: string[]) => void;
-
     error: (name: string, message: string) => void;
   }
 
   export interface Actions {
     chat: (message: string) => void;
-
     ping:
       | ((cb1: (literally: "pong", ...echo: unknown[]) => void) => void)
       | ((
@@ -40,11 +36,10 @@ export namespace Root {
           anything2: unknown,
           cb3: (literally: "pong", ...echo: unknown[]) => void,
         ) => void);
-
     subscribe: (...doesNotMatter: unknown[]) => void;
-
     unsubscribe: (...doesNotMatter: unknown[]) => void;
   }
+
   /** @example const socket: Root.Socket = io(Root.path) */
   export type Socket = SocketBase<Emission, Actions>;
 }

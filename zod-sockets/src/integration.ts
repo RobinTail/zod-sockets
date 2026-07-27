@@ -82,15 +82,16 @@ export class Integration {
         }),
       );
 
-      this.#program.push(`  export interface ${this.#ids.emission} {`);
-      for (const { event, node } of emissionNodes) {
-        this.#program.push(
-          (opts?: ts.PrinterOptions) =>
-            `    ${printNode(makeInterfaceProp(event, node), opts)}`,
-        );
-      }
-
-      this.#program.push(`  }`);
+      this.#program.push((opts?: ts.PrinterOptions) =>
+        [
+          `  export interface ${this.#ids.emission} {`,
+          ...emissionNodes.map(
+            ({ event, node }) =>
+              `    ${printNode(makeInterfaceProp(event, node), opts)}`,
+          ),
+          `  }`,
+        ].join("\n"),
+      );
 
       const actionNodes = actions
         .filter(({ namespace }) => namespace === ns)
@@ -102,18 +103,19 @@ export class Integration {
           ),
         }));
 
-      this.#program.push(`  export interface ${this.#ids.actions} {`);
-
-      for (const { event, node } of actionNodes) {
-        this.#program.push(
-          (opts?: ts.PrinterOptions) =>
-            `    ${printNode(makeInterfaceProp(event, node), opts)}`,
-        );
-      }
+      this.#program.push((opts) =>
+        [
+          `  export interface ${this.#ids.actions} {`,
+          ...actionNodes.map(
+            ({ event, node }) =>
+              `    ${printNode(makeInterfaceProp(event, node), opts)}`,
+          ),
+          `  }`,
+        ].join("\n"),
+      );
 
       this.#program.push(
         [
-          `  }`,
           `  /** @example const socket: ${publicName}.${this.#ids.socket} = io(${publicName}.${this.#ids.path}) */`,
           `  export type ${this.#ids.socket} = ${this.#ids.socketBase}<${this.#ids.emission}, ${this.#ids.actions}>;`,
           `}`,

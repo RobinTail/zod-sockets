@@ -2,8 +2,6 @@ export { attachSockets } from "./attach";
 export { Config, createSimpleConfig } from "./config";
 export { ActionsFactory } from "./actions-factory";
 export { AbstractAction } from "./action";
-export { Integration } from "./integration";
-export { Documentation } from "./documentation";
 export { InputValidationError, OutputValidationError } from "./errors";
 
 // issue 952

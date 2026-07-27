@@ -576,7 +576,7 @@ const config = new Config()
 In order to establish constraints for events on the client side you can generate their Typescript definitions.
 
 ```typescript
-import { Integration } from "zod-sockets";
+import { Integration } from "zod-sockets/integration";
 import typescript from "typescript";
 
 const integration = new Integration({ typescript, config, actions });
@@ -610,7 +610,7 @@ Alternatively, you can avoid installing and importing `socket.io-client` module 
 You can generate the AsyncAPI specification of your API and write it into a file, that can be used as the documentation:
 
 ```typescript
-import { Documentation } from "zod-sockets";
+import { Documentation } from "zod-sockets/documentation";
 
 const yamlString = new Documentation({
   config,

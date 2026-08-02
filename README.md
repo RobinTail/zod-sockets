@@ -341,10 +341,10 @@ const config = createSimpleConfig({
 });
 ```
 
-### Outside hooks
+### Elsewhere in your application
 
-The `attachSockets()` function returns the per-namespace contexts, so you can emit events from anywhere — for instance
-in an endpoint handler.
+The `attachSockets()` function returns the per-namespace contexts, so you can emit events from anywhere — for instance,
+in an endpoint handler of your HTTP server.
 
 ```typescript
 import { createServer } from "node:http";
@@ -353,11 +353,7 @@ import { Server } from "socket.io";
 import { z } from "zod";
 
 const config = createSimpleConfig({
-  emission: {
-    notify: {
-      schema: z.tuple([z.string()]),
-    },
-  },
+  emission: { notify: { schema: z.tuple([z.string()]) } },
 });
 
 const httpServer = createServer();
@@ -369,7 +365,7 @@ const contexts = await attachSockets({
 });
 
 httpServer.on("request", (req, res) => {
-  const url = new URL(req.url!, `http://${req.headers.host}`);
+  const url = new URL(req.url, `https://${req.headers.host}`);
   if (url.pathname === "/notify") {
     const message = url.searchParams.get("message") || "Hello";
     contexts["/"].all.broadcast("notify", message);

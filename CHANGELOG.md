@@ -30,7 +30,7 @@
 -   typescript,
   });
 - const ioCopy =
-- const contexts =
++ const contexts =
     await attachSockets({ io, actions, target, config });
 ```
 

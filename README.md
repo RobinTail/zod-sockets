@@ -5,7 +5,7 @@
 ![NPM Downloads](https://img.shields.io/npm/dw/zod-sockets)
 ![NPM License](https://img.shields.io/npm/l/zod-sockets)
 
-**Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers.**
+**Socket.IO solution with I/O validation that generates AsyncAPI specs and consumer contracts.**
 
 # How it works
 

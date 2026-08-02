@@ -1,7 +1,7 @@
 {
   "name": "zod-sockets",
   "version": "7.0.0",
-  "description": "Socket.IO solution with I/O validation and the ability to generate AsyncAPI specification and a contract for consumers",
+  "description": "Socket.IO solution with I/O validation that generates AsyncAPI specs and consumer contracts",
   "license": "MIT",
   "repository": {
     "type": "git",

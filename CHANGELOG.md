@@ -9,7 +9,7 @@
   - `zod-sockets/integration`;
   - `zod-sockets/documentation`.
 - The `Integration` class
-  - `::conctructor()` no longer accepts `typescript` argument (imports statically);
+  - `::constructor()` no longer accepts `typescript` argument (imports statically);
   - `create()` method removed.
 - Changed `attachSockets()` to return (async) an object of `IndependentContext` for each namespace:
   - You can now use those contexts to emit outside the hooks elsewhere in your application;

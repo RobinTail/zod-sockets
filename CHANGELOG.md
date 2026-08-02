@@ -11,7 +11,7 @@
 - The `Integration` class
   - `::conctructor()` no longer accepts `typescript` argument (imports statically);
   - `create()` method removed.
-- Changed `attachSockets()` to return an object of `IndependentContext` for each namespace:
+- Changed `attachSockets()` to return (async) an object of `IndependentContext` for each namespace:
   - You can now use those contexts to emit outside the hooks elsewhere in your application;
   - See the discussions [#801](https://github.com/RobinTail/zod-sockets/discussions/801),
     [#272](https://github.com/RobinTail/zod-sockets/discussions/272) and
@@ -31,7 +31,7 @@
   });
 - const ioCopy =
 - const contexts =
-    attachSockets({ io, actions, target, config });
+    await attachSockets({ io, actions, target, config });
 ```
 
 ## Version 6

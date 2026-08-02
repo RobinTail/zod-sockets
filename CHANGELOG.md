@@ -1,5 +1,39 @@
 # Changelog
 
+## Version 7
+
+### v7.0.0
+
+- Supported Node.js versions: `^22.19.0 || ^24.11.0 || ^26.0.0`;
+- The `Integration` and `Documentation` generators moved to dedicated subpaths:
+  - `zod-sockets/integration`;
+  - `zod-sockets/documentation`.
+- The `Integration` class
+  - `::constructor()` no longer accepts `typescript` argument (imports statically);
+  - `create()` method removed.
+- Changed `attachSockets()` to return (async) an object of `IndependentContext` for each namespace:
+  - You can now use those contexts to emit outside the hooks elsewhere in your application;
+  - See the discussions [#801](https://github.com/RobinTail/zod-sockets/discussions/801),
+    [#272](https://github.com/RobinTail/zod-sockets/discussions/272) and
+    [#188](https://github.com/RobinTail/zod-sockets/discussions/188) for details.
+  - Though it was not originally designed to work this way, the feature is long-anticipated and can simplify
+    integrating `zod-sockets` into existing applications and endpoint handlers in particular.
+
+```diff
+- import { Integration, Documentation } from "zod-sockets";
++ import { Integration } from "zod-sockets/integration";
++ import { Documentation } from "zod-sockets/documentation";
+
+- await Integration.create({});
++ new Integration({});
+  new Integration({
+-   typescript,
+  });
+- const ioCopy =
++ const contexts =
+    await attachSockets({ io, actions, target, config });
+```
+
 ## Version 6
 
 ### v6.0.0

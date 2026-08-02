@@ -1,218 +1,123 @@
 import * as R from "ramda";
-import type ts from "typescript";
+import ts from "typescript"; // eslint-disable-line allowed/dependencies -- opt-in export
+
+export { ts };
+
+export const f = ts.factory;
+
+const safePropRegex = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+
+const primitives: ts.KeywordTypeSyntaxKind[] = [
+  ts.SyntaxKind.AnyKeyword,
+  ts.SyntaxKind.BigIntKeyword,
+  ts.SyntaxKind.BooleanKeyword,
+  ts.SyntaxKind.NeverKeyword,
+  ts.SyntaxKind.NumberKeyword,
+  ts.SyntaxKind.ObjectKeyword,
+  ts.SyntaxKind.StringKeyword,
+  ts.SyntaxKind.SymbolKeyword,
+  ts.SyntaxKind.UndefinedKeyword,
+  ts.SyntaxKind.UnknownKeyword,
+  ts.SyntaxKind.VoidKeyword,
+];
 
 export type Typeable =
   ts.TypeNode | ts.Identifier | string | ts.KeywordTypeSyntaxKind;
 
-type TypeParams =
-  | string[]
-  | Partial<Record<string, Typeable | { type?: ts.TypeNode; init: Typeable }>>;
+/* eslint-disable prettier/prettier -- shorter and works better this way than overrides */
+export const literally = <T extends string | null | boolean | number | bigint>(subj: T) => (
+    typeof subj === "number" ? f.createNumericLiteral(subj)
+        : typeof subj === "bigint" ? f.createBigIntLiteral(subj.toString())
+            : typeof subj === "boolean" ? subj ? f.createTrue() : f.createFalse()
+                : subj === null ? f.createNull() : f.createStringLiteral(subj)
+) as T extends string ? ts.StringLiteral : T extends number ? ts.NumericLiteral
+    : T extends boolean ? ts.BooleanLiteral : T extends bigint ? ts.BigIntLiteral : ts.NullLiteral;
+/* eslint-enable prettier/prettier */
 
-export class TypescriptAPI {
-  public ts: typeof ts;
-  public f: typeof ts.factory;
-  public exportModifier: ts.ModifierToken<ts.SyntaxKind.ExportKeyword>[];
-  #primitives: ts.KeywordTypeSyntaxKind[];
-  static #safePropRegex = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+export const makeId = (name: string) => f.createIdentifier(name);
 
-  constructor(typescript: typeof ts) {
-    this.ts = typescript;
-    this.f = this.ts.factory;
-    this.exportModifier = [
-      this.f.createModifier(this.ts.SyntaxKind.ExportKeyword),
-    ];
-    this.#primitives = [
-      this.ts.SyntaxKind.AnyKeyword,
-      this.ts.SyntaxKind.BigIntKeyword,
-      this.ts.SyntaxKind.BooleanKeyword,
-      this.ts.SyntaxKind.NeverKeyword,
-      this.ts.SyntaxKind.NumberKeyword,
-      this.ts.SyntaxKind.ObjectKeyword,
-      this.ts.SyntaxKind.StringKeyword,
-      this.ts.SyntaxKind.SymbolKeyword,
-      this.ts.SyntaxKind.UndefinedKeyword,
-      this.ts.SyntaxKind.UnknownKeyword,
-      this.ts.SyntaxKind.VoidKeyword,
-    ];
-  }
+export const makePropertyIdentifier = (name: string | number) =>
+  typeof name === "string" && safePropRegex.test(name)
+    ? makeId(name)
+    : literally(name);
 
-  public addJsDoc = <T extends ts.Node>(node: T, text: string) =>
-    this.ts.addSyntheticLeadingComment(
-      node,
-      this.ts.SyntaxKind.MultiLineCommentTrivia,
-      `* ${text} `,
-      true,
-    );
+export const ensureTypeNode = (
+  subject: Typeable,
+  args?: Typeable[], // only for string and id
+): ts.TypeNode =>
+  typeof subject === "number"
+    ? f.createKeywordTypeNode(subject)
+    : typeof subject === "string" || ts.isIdentifier(subject)
+      ? f.createTypeReferenceNode(subject, args && R.map(ensureTypeNode, args))
+      : subject;
 
-  public printNode = (node: ts.Node, printerOptions?: ts.PrinterOptions) => {
-    const sourceFile = this.ts.createSourceFile(
-      "print.ts",
-      "",
-      this.ts.ScriptTarget.Latest,
-      false,
-      this.ts.ScriptKind.TS,
-    );
-    const printer = this.ts.createPrinter(printerOptions);
-    return printer.printNode(this.ts.EmitHint.Unspecified, node, sourceFile);
-  };
+/**
+ * @internal
+ * ensures distinct union (unique primitives)
+ * */
+export const makeUnion = (entries: ts.TypeNode[]) => {
+  const nodes = new Map<ts.TypeNode | ts.KeywordTypeSyntaxKind, ts.TypeNode>();
+  for (const entry of entries)
+    nodes.set(isPrimitive(entry) ? entry.kind : entry, entry);
+  return f.createUnionTypeNode(Array.from(nodes.values()));
+};
 
-  public makeId = (name: string) => this.f.createIdentifier(name);
+const isPrimitive = (node: ts.TypeNode): node is ts.KeywordTypeNode =>
+  (primitives as ts.SyntaxKind[]).includes(node.kind);
 
-  public makePropertyIdentifier = (name: string | number) =>
-    typeof name === "string" && TypescriptAPI.#safePropRegex.test(name)
-      ? this.makeId(name)
-      : this.literally(name);
+const addJsDoc = <T extends ts.Node>(node: T, text: string) =>
+  ts.addSyntheticLeadingComment(
+    node,
+    ts.SyntaxKind.MultiLineCommentTrivia,
+    `* ${text} `,
+    true,
+  );
 
-  public ensureTypeNode = (
-    subject: Typeable,
-    args?: Typeable[], // only for string and id
-  ): ts.TypeNode =>
-    typeof subject === "number"
-      ? this.f.createKeywordTypeNode(subject)
-      : typeof subject === "string" || this.ts.isIdentifier(subject)
-        ? this.f.createTypeReferenceNode(
-            subject,
-            args && R.map(this.ensureTypeNode, args),
-          )
-        : subject;
+export const printNode = (
+  node: ts.Node,
+  printerOptions?: ts.PrinterOptions,
+) => {
+  const sourceFile = ts.createSourceFile(
+    "print.ts",
+    "",
+    ts.ScriptTarget.Latest,
+    false,
+    ts.ScriptKind.TS,
+  );
+  const printer = ts.createPrinter(printerOptions);
+  return printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
+};
 
-  /**
-   * @internal
-   * ensures distinct union (unique primitives)
-   * */
-  public makeUnion = (entries: ts.TypeNode[]) => {
-    const nodes = new Map<
-      ts.TypeNode | ts.KeywordTypeSyntaxKind,
-      ts.TypeNode
-    >();
-    for (const entry of entries)
-      nodes.set(this.isPrimitive(entry) ? entry.kind : entry, entry);
-    return this.f.createUnionTypeNode(Array.from(nodes.values()));
-  };
+export const makeInterfaceProp = (
+  name: string | number,
+  value: Typeable,
+  {
+    isOptional,
+    hasUndefined = isOptional,
+    isDeprecated,
+    comment,
+  }: {
+    isOptional?: boolean;
+    hasUndefined?: boolean;
+    isDeprecated?: boolean;
+    comment?: string;
+  } = {},
+) => {
+  const propType = ensureTypeNode(value);
+  const node = f.createPropertySignature(
+    undefined,
+    makePropertyIdentifier(name),
+    isOptional ? f.createToken(ts.SyntaxKind.QuestionToken) : undefined,
+    hasUndefined
+      ? makeUnion([propType, ensureTypeNode(ts.SyntaxKind.UndefinedKeyword)])
+      : propType,
+  );
+  const jsdoc = R.reject(R.isNil, [
+    isDeprecated ? "@deprecated" : undefined,
+    comment,
+  ]);
+  return jsdoc.length ? addJsDoc(node, jsdoc.join(" ")) : node;
+};
 
-  public makeInterfaceProp = (
-    name: string | number,
-    value: Typeable,
-    {
-      isOptional,
-      hasUndefined = isOptional,
-      isDeprecated,
-      comment,
-    }: {
-      isOptional?: boolean;
-      hasUndefined?: boolean;
-      isDeprecated?: boolean;
-      comment?: string;
-    } = {},
-  ) => {
-    const propType = this.ensureTypeNode(value);
-    const node = this.f.createPropertySignature(
-      undefined,
-      this.makePropertyIdentifier(name),
-      isOptional
-        ? this.f.createToken(this.ts.SyntaxKind.QuestionToken)
-        : undefined,
-      hasUndefined
-        ? this.makeUnion([
-            propType,
-            this.ensureTypeNode(this.ts.SyntaxKind.UndefinedKeyword),
-          ])
-        : propType,
-    );
-    const jsdoc = R.reject(R.isNil, [
-      isDeprecated ? "@deprecated" : undefined,
-      comment,
-    ]);
-    return jsdoc.length ? this.addJsDoc(node, jsdoc.join(" ")) : node;
-  };
-
-  public makeConst = (
-    name: string | ts.Identifier | ts.ArrayBindingPattern,
-    value: ts.Expression,
-    { type, expose }: { type?: Typeable; expose?: true } = {},
-  ) =>
-    this.f.createVariableStatement(
-      expose && this.exportModifier,
-      this.f.createVariableDeclarationList(
-        [
-          this.f.createVariableDeclaration(
-            name,
-            undefined,
-            type ? this.ensureTypeNode(type) : undefined,
-            value,
-          ),
-        ],
-        this.ts.NodeFlags.Const,
-      ),
-    );
-
-  public makeType = (
-    name: ts.Identifier | string,
-    value: ts.TypeNode,
-    {
-      expose,
-      comment,
-      params,
-    }: { expose?: boolean; comment?: string; params?: TypeParams } = {},
-  ) => {
-    const node = this.f.createTypeAliasDeclaration(
-      expose ? this.exportModifier : undefined,
-      name,
-      params && this.makeTypeParams(params),
-      value,
-    );
-    return comment ? this.addJsDoc(node, comment) : node;
-  };
-
-  public makeInterface = (
-    name: ts.Identifier | string,
-    props: ts.PropertySignature[],
-    { expose, comment }: { expose?: boolean; comment?: string } = {},
-  ) => {
-    const node = this.f.createInterfaceDeclaration(
-      expose ? this.exportModifier : undefined,
-      name,
-      undefined,
-      undefined,
-      props,
-    );
-    return comment ? this.addJsDoc(node, comment) : node;
-  };
-
-  public makeTypeParams = (
-    params:
-      | string[]
-      | Partial<
-          Record<string, Typeable | { type?: ts.TypeNode; init: Typeable }>
-        >,
-  ) =>
-    (Array.isArray(params)
-      ? params.map((name) => R.pair(name, undefined))
-      : Object.entries(params)
-    ).map(([name, val]) => {
-      const { type, init } =
-        typeof val === "object" && "init" in val ? val : { type: val };
-      return this.f.createTypeParameterDeclaration(
-        [],
-        name,
-        type ? this.ensureTypeNode(type) : undefined,
-        init ? this.ensureTypeNode(init) : undefined,
-      );
-    });
-
-  /* eslint-disable prettier/prettier -- shorter and works better this way than overrides */
-  public literally = <T extends string | null | boolean | number | bigint>(subj: T) => (
-      typeof subj === "number" ? this.f.createNumericLiteral(subj)
-          : typeof subj === "bigint" ? this.f.createBigIntLiteral(subj.toString())
-              : typeof subj === "boolean" ? subj ? this.f.createTrue() : this.f.createFalse()
-                  : subj === null ? this.f.createNull() : this.f.createStringLiteral(subj)
-  ) as T extends string ? ts.StringLiteral : T extends number ? ts.NumericLiteral
-      : T extends boolean ? ts.BooleanLiteral : ts.NullLiteral;
-  /* eslint-enable prettier/prettier */
-
-  public makeLiteralType = (subj: Parameters<typeof this.literally>[0]) =>
-    this.f.createLiteralTypeNode(this.literally(subj));
-
-  public isPrimitive = (node: ts.TypeNode): node is ts.KeywordTypeNode =>
-    (this.#primitives as ts.SyntaxKind[]).includes(node.kind);
-}
+export const makeLiteralType = (subj: Parameters<typeof literally>[0]) =>
+  f.createLiteralTypeNode(literally(subj));

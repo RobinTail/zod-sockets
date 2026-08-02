@@ -1,15 +1,18 @@
-import type ts from "typescript";
-import { z } from "zod";
 import { AbstractAction } from "./action";
 import { makeCleanId } from "./common-helpers";
 import { Config } from "./config";
 import { makeEventFnSchema } from "./integration-helpers";
 import { type Namespaces, normalizeNS } from "./namespace";
 import { zodToTs } from "./zts";
-import { TypescriptAPI } from "./typescript-api";
+import {
+  ts,
+  f,
+  ensureTypeNode,
+  printNode,
+  makeInterfaceProp,
+} from "./typescript-api";
 
 interface IntegrationParams {
-  typescript: typeof ts;
   config: Config<Namespaces>;
   actions: AbstractAction[];
   /**
@@ -22,155 +25,112 @@ interface IntegrationParams {
 }
 
 const fallbackNs = "root";
-const registryScopes = ["emission", "actions"];
+
+const ids = {
+  path: "path",
+  socket: "Socket",
+  socketBase: "SocketBase",
+  ioClient: "socket.io-client",
+  emission: "Emission",
+  actions: "Actions",
+};
 
 export class Integration {
-  /** @internal */
-  protected readonly api: TypescriptAPI;
-  #program: ts.Node[] = [];
-  #aliases: Record<
-    string, // namespace
-    Map<object, ts.TypeAliasDeclaration>
-  > = {};
-  #ids = {
-    path: "path",
-    socket: "Socket",
-    socketBase: "SocketBase",
-    ioClient: "socket.io-client",
-    emission: makeCleanId(registryScopes[0]),
-    actions: makeCleanId(registryScopes[1]),
-  };
-  protected registry: Record<
-    string, // namespace
-    Record<
-      (typeof registryScopes)[number],
-      { event: string; node: ts.TypeNode }[]
-    >
-  > = {};
+  readonly #program: Array<string | ((opts?: ts.PrinterOptions) => string)> =
+    [];
+  readonly #aliases: Record<string, Map<object, string>> = {}; // by namespace
 
   #makeAlias(ns: string, key: object, produce: () => ts.TypeNode): ts.TypeNode {
-    let name = this.#aliases[ns].get(key)?.name?.text;
+    let name = this.#aliases[ns].get(key);
     if (!name) {
       name = `Type${this.#aliases[ns].size + 1}`;
-      const temp = this.api.makeLiteralType(null);
-      this.#aliases[ns].set(key, this.api.makeType(name, temp));
-      this.#aliases[ns].set(key, this.api.makeType(name, produce()));
+      this.#aliases[ns].set(key, name);
+      const node = produce();
+      this.#program.push(
+        (opts) => `  type ${name} = ${printNode(node, opts)};`,
+      );
     }
-    return this.api.ensureTypeNode(name);
+    return ensureTypeNode(name);
   }
 
   constructor({
-    typescript,
     config: { namespaces },
     actions,
     maxOverloads = 3,
   }: IntegrationParams) {
-    this.api = new TypescriptAPI(typescript);
     this.#program.push(
-      this.api.f.createImportDeclaration(
-        undefined,
-        this.api.f.createImportClause(
-          this.api.ts.SyntaxKind.TypeKeyword,
-          undefined,
-          this.api.f.createNamedImports([
-            this.api.f.createImportSpecifier(
-              false,
-              this.api.f.createIdentifier(this.#ids.socket),
-              this.api.f.createIdentifier(this.#ids.socketBase),
-            ),
-          ]),
-        ),
-        this.api.f.createStringLiteral(this.#ids.ioClient),
-      ),
+      `import type { ${ids.socket} as ${ids.socketBase} } from "${ids.ioClient}";`,
     );
 
     for (const [ns, { emission }] of Object.entries(namespaces)) {
-      this.#aliases[ns] = new Map<z.ZodTypeAny, ts.TypeAliasDeclaration>();
-      this.registry[ns] = { emission: [], actions: [] };
-      const commons = {
-        makeAlias: this.#makeAlias.bind(this, ns),
-        api: this.api,
-      };
-      for (const [event, { schema, ack }] of Object.entries(emission)) {
-        const node = zodToTs(makeEventFnSchema(schema, ack, maxOverloads), {
-          isResponse: true,
-          ...commons,
-        });
-        this.registry[ns].emission.push({ event, node });
-      }
-      for (const action of actions) {
-        if (action.namespace === ns) {
-          const { event, inputSchema, outputSchema } = action;
-          const node = zodToTs(
+      this.#aliases[ns] = new Map();
+      const publicName = makeCleanId(ns) || makeCleanId(fallbackNs);
+      const commons = { makeAlias: this.#makeAlias.bind(this, ns) };
+
+      this.#program.push((opts) =>
+        [
+          `export namespace ${publicName} {`,
+          `  /** @desc The actual path of the ${publicName} namespace */`,
+          `  export const ${ids.path} = ${printNode(f.createStringLiteral(normalizeNS(ns)), opts)};`,
+        ].join("\n"),
+      );
+
+      const emissionNodes = Object.entries(emission).map(
+        ([event, { schema, ack }]) => ({
+          event,
+          node: zodToTs(makeEventFnSchema(schema, ack, maxOverloads), {
+            isResponse: true,
+            ...commons,
+          }),
+        }),
+      );
+
+      this.#program.push((opts?: ts.PrinterOptions) =>
+        [
+          `  export interface ${ids.emission} {`,
+          ...emissionNodes.map(
+            ({ event, node }) =>
+              `    ${printNode(makeInterfaceProp(event, node), opts)}`,
+          ),
+          `  }`,
+        ].join("\n"),
+      );
+
+      const actionNodes = actions
+        .filter(({ namespace }) => namespace === ns)
+        .map(({ event, inputSchema, outputSchema }) => ({
+          event,
+          node: zodToTs(
             makeEventFnSchema(inputSchema, outputSchema, maxOverloads),
             { isResponse: false, ...commons },
-          );
-          this.registry[ns].actions.push({ event, node });
-        }
-      }
-    }
-
-    for (const ns in this.registry) {
-      const publicName = makeCleanId(ns) || makeCleanId(fallbackNs);
-
-      const nsNameNode = this.api.makeConst(
-        this.#ids.path,
-        this.api.f.createStringLiteral(normalizeNS(ns)),
-        { expose: true },
-      );
-      this.api.addJsDoc(
-        nsNameNode,
-        `@desc The actual path of the ${publicName} namespace`,
-      );
-
-      const interfaces = Object.entries(this.registry[ns]).map(
-        ([scope, events]) =>
-          this.api.makeInterface(
-            makeCleanId(scope),
-            events.map(({ event, node }) =>
-              this.api.makeInterfaceProp(event, node),
-            ),
-            { expose: true },
           ),
+        }));
+
+      this.#program.push((opts) =>
+        [
+          `  export interface ${ids.actions} {`,
+          ...actionNodes.map(
+            ({ event, node }) =>
+              `    ${printNode(makeInterfaceProp(event, node), opts)}`,
+          ),
+          `  }`,
+        ].join("\n"),
       );
-      const socketNode = this.api.makeType(
-        this.#ids.socket,
-        this.api.ensureTypeNode(this.#ids.socketBase, [
-          this.#ids.emission,
-          this.#ids.actions,
-        ]),
-        { expose: true },
-      );
-      this.api.addJsDoc(
-        socketNode,
-        `@example const socket: ${publicName}.${this.#ids.socket} = io(${publicName}.${this.#ids.path})`,
-      );
+
       this.#program.push(
-        this.api.f.createModuleDeclaration(
-          this.api.exportModifier,
-          this.api.f.createIdentifier(publicName),
-          this.api.f.createModuleBlock([
-            nsNameNode,
-            ...this.#aliases[ns].values(),
-            ...interfaces,
-            socketNode,
-          ]),
-          this.api.ts.NodeFlags.Namespace,
-        ),
+        [
+          `  /** @example const socket: ${publicName}.${ids.socket} = io(${publicName}.${ids.path}) */`,
+          `  export type ${ids.socket} = ${ids.socketBase}<${ids.emission}, ${ids.actions}>;`,
+          `}`,
+        ].join("\n"),
       );
     }
-  }
-
-  public static async create(params: Omit<IntegrationParams, "typescript">) {
-    return new Integration({
-      ...params,
-      typescript: (await import("typescript"))["default"],
-    });
   }
 
   public print(printerOptions?: ts.PrinterOptions) {
-    return this.#program
-      .map((node) => this.api.printNode(node, printerOptions))
-      .join("\n\n");
+    const parts = this.#program.map((entry) =>
+      typeof entry === "function" ? entry(printerOptions) : entry,
+    );
+    return parts.join("\n\n");
   }
 }

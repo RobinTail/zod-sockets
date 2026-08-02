@@ -341,6 +341,40 @@ const config = createSimpleConfig({
 });
 ```
 
+### Elsewhere in your application
+
+The `attachSockets()` function returns the per-namespace contexts, so you can emit events from anywhere — for instance,
+in an endpoint handler of your HTTP server.
+
+```typescript
+import { createServer } from "node:http";
+import { createSimpleConfig, attachSockets, ActionsFactory } from "zod-sockets";
+import { Server } from "socket.io";
+import { z } from "zod";
+
+const config = createSimpleConfig({
+  emission: { notify: { schema: z.tuple([z.string()]) } },
+});
+
+const httpServer = createServer();
+const contexts = await attachSockets({
+  io: new Server(),
+  config,
+  target: httpServer.listen(8090),
+  actions: [],
+});
+
+httpServer.on("request", (req, res) => {
+  const url = new URL(req.url, `https://${req.headers.host}`);
+  if (url.pathname === "/notify") {
+    const message = url.searchParams.get("message") || "Hello";
+    contexts["/"].all.broadcast("notify", message);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ sent: true }));
+  }
+});
+```
+
 ## Handling errors
 
 ### Error context
@@ -576,10 +610,9 @@ const config = new Config()
 In order to establish constraints for events on the client side you can generate their Typescript definitions.
 
 ```typescript
-import { Integration } from "zod-sockets";
-import typescript from "typescript";
+import { Integration } from "zod-sockets/integration";
 
-const integration = new Integration({ typescript, config, actions });
+const integration = new Integration({ config, actions });
 const typescriptCode = integration.print(); // write this to a file
 ```
 
@@ -610,7 +643,7 @@ Alternatively, you can avoid installing and importing `socket.io-client` module 
 You can generate the AsyncAPI specification of your API and write it into a file, that can be used as the documentation:
 
 ```typescript
-import { Documentation } from "zod-sockets";
+import { Documentation } from "zod-sockets/documentation";
 
 const yamlString = new Documentation({
   config,

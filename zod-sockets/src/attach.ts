@@ -13,7 +13,6 @@ import { type Namespaces, normalizeNS } from "./namespace";
 import { makeRemoteClients } from "./remote-client";
 import { getStartupLogo } from "./startup-logo";
 
-/** @todo return nsCtx in next major https://github.com/RobinTail/zod-sockets/discussions/801 */
 export const attachSockets = async <NS extends Namespaces>({
   io,
   actions,
@@ -43,10 +42,14 @@ export const attachSockets = async <NS extends Namespaces>({
    * @default console
    * */
   logger?: AbstractLogger;
-}): Promise<Server> => {
+}) => {
+  type NSEmissions<K extends keyof NS> = NS[K]["emission"];
+  type NSMeta<K extends keyof NS> = NS[K]["metadata"];
+  const contexts = {} as {
+    [K in keyof NS]: IndependentContext<NSEmissions<K>, NSMeta<K>>;
+  };
   for (const name in namespaces) {
-    type NSEmissions = NS[typeof name]["emission"];
-    type NSMeta = NS[typeof name]["metadata"];
+    type Name = typeof name;
     const ns = io.of(normalizeNS(name));
     const { emission, hooks, metadata } = namespaces[name];
     const {
@@ -57,8 +60,8 @@ export const attachSockets = async <NS extends Namespaces>({
       onStartup,
       onError,
     } = { ...defaultHooks, ...hooks };
-    const emitCfg: EmitterConfig<NSEmissions> = { emission, timeout };
-    const nsCtx: IndependentContext<NSEmissions, NSMeta> = {
+    const emitCfg: EmitterConfig<NSEmissions<Name>> = { emission, timeout };
+    const nsCtx: IndependentContext<NSEmissions<Name>, NSMeta<Name>> = {
       logger: rootLogger,
       withRooms: makeRoomService({ subject: io, metadata, ...emitCfg }),
       all: {
@@ -72,10 +75,11 @@ export const attachSockets = async <NS extends Namespaces>({
         broadcast: makeEmitter({ subject: io, ...emitCfg }),
       },
     };
+    contexts[name] = nsCtx;
     ns.on("connection", async (socket) => {
       const emit = makeEmitter({ subject: socket, ...emitCfg });
       const broadcast = makeEmitter({ subject: socket.broadcast, ...emitCfg });
-      const client: Client<NSEmissions, NSMeta> = {
+      const client: Client<NSEmissions<Name>, NSMeta<Name>> = {
         emit,
         broadcast,
         id: socket.id,
@@ -90,7 +94,7 @@ export const attachSockets = async <NS extends Namespaces>({
         },
         ...makeDistribution(socket),
       };
-      const ctx: ClientContext<NSEmissions, NSMeta> = {
+      const ctx: ClientContext<NSEmissions<Name>, NSMeta<Name>> = {
         ...nsCtx,
         client,
         withRooms: makeRoomService({ subject: ns, metadata, ...emitCfg }),
@@ -126,5 +130,6 @@ export const attachSockets = async <NS extends Namespaces>({
   (startupLogo ? console.log : () => {})(getStartupLogo());
   rootLogger.debug("Running", process.env.TSDOWN_BUILD || "from sources");
   rootLogger.info("Listening", target.address());
-  return io.attach(target);
+  io.attach(target);
+  return contexts;
 };

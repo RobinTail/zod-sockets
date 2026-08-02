@@ -3,10 +3,12 @@ import type { Socket as SocketBase } from "socket.io-client";
 export namespace Root {
   /** @desc The actual path of the Root namespace */
   export const path = "/";
+
   type Type1 = {
     name: string;
     features?: Type1[] | undefined;
   };
+
   export interface Emission {
     time: (currentIsoTime: string) => void;
     chat: (
@@ -20,6 +22,7 @@ export namespace Root {
     rooms: (roomIds: string[]) => void;
     error: (name: string, message: string) => void;
   }
+
   export interface Actions {
     chat: (message: string) => void;
     ping:
@@ -36,6 +39,7 @@ export namespace Root {
     subscribe: (...doesNotMatter: unknown[]) => void;
     unsubscribe: (...doesNotMatter: unknown[]) => void;
   }
+
   /** @example const socket: Root.Socket = io(Root.path) */
   export type Socket = SocketBase<Emission, Actions>;
 }

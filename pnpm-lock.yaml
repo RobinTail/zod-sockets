@@ -8,10 +8,10 @@ settings:
 catalogs:
   dev:
     socket.io:
-      specifier: ^4.7.4
+      specifier: ^4.8.3
       version: 4.8.3
     socket.io-client:
-      specifier: ^4.7.4
+      specifier: ^4.8.3
       version: 4.8.3
     typescript:
       specifier: ^6.0.2
@@ -1478,8 +1478,8 @@ packages:
     resolution: {integrity: sha512-uP0bpjWrjQmUt5DTHq9RuoCBdFJF10cdX9X+a368j/Ft0wmaVgxlrjvK3kjvgCODOMMOz9lcaRzxmso0bTWZ/g==}
     engines: {node: '>=10.0.0'}
 
-  socket.io-parser@4.2.6:
-    resolution: {integrity: sha512-asJqbVBDsBCJx0pTqw3WfesSY0iRX+2xzWEWzrpcH7L6fLzrhyF8WPI8UaeM4YCuDfpwA/cgsdugMsmtz8EJeg==}
+  socket.io-parser@4.2.7:
+    resolution: {integrity: sha512-IH/iSeO9T6gz1KkFleGDWkG9N3dl4jXVYUtMhIqH10Md0ttMer8nUNWiP1DKuNrybD2xBrixLJdCC9J6ECoYkg==}
     engines: {node: '>=10.0.0'}
 
   socket.io@4.8.3:
@@ -2970,13 +2970,13 @@ snapshots:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@7.2.0)
       engine.io-client: 6.6.6(supports-color@7.2.0)
-      socket.io-parser: 4.2.6(supports-color@7.2.0)
+      socket.io-parser: 4.2.7(supports-color@7.2.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  socket.io-parser@4.2.6(supports-color@7.2.0):
+  socket.io-parser@4.2.7(supports-color@7.2.0):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@7.2.0)
@@ -2991,7 +2991,7 @@ snapshots:
       debug: 4.4.3(supports-color@7.2.0)
       engine.io: 6.6.9(supports-color@7.2.0)
       socket.io-adapter: 2.5.8(supports-color@7.2.0)
-      socket.io-parser: 4.2.6(supports-color@7.2.0)
+      socket.io-parser: 4.2.7(supports-color@7.2.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color

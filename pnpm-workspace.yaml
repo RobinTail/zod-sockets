@@ -24,8 +24,8 @@ catalogs:
     "typescript": "^5.3.3 || ^6.0.2"
     "zod": "^4.3.4"
   dev:
-    "socket.io": "^4.7.4"
-    "socket.io-client": "^4.7.4"
+    "socket.io": "^4.8.3"
+    "socket.io-client": "^4.8.3"
     "typescript": "^6.0.2"
     "zod": "^4.4.1"
 overrides:

@@ -87,7 +87,6 @@ export default tsPlugin.config(
     files: ["example/example-client.ts", "*-test/**/quick-start.ts"],
     rules: {
       "@typescript-eslint/no-namespace": "off",
-      "prettier/prettier": "off",
     },
   },
 );

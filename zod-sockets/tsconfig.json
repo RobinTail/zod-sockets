@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "stripInternal": true,
+    "stripInternal": true
   },
   "include": ["src", "*.config.ts", "*.setup.ts"]
 }

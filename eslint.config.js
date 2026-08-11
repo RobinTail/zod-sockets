@@ -1,8 +1,6 @@
 import globals from "globals";
 import jsPlugin from "@eslint/js";
 import tsPlugin from "typescript-eslint";
-import prettierOverrides from "eslint-config-prettier/flat";
-import prettierRules from "eslint-plugin-prettier/recommended";
 import allowedDepsPlugin from "eslint-plugin-allowed-dependencies";
 import { builtinModules } from "node:module";
 import { dirname, join } from "node:path";
@@ -37,8 +35,6 @@ export default tsPlugin.config(
   },
   jsPlugin.configs.recommended,
   tsPlugin.configs.recommended,
-  prettierOverrides,
-  prettierRules,
   // Things to turn off globally
   { ignores: ["**/dist/", "coverage/", "**/node_modules/"] },
   {
@@ -91,7 +87,6 @@ export default tsPlugin.config(
     files: ["example/example-client.ts", "*-test/**/quick-start.ts"],
     rules: {
       "@typescript-eslint/no-namespace": "off",
-      "prettier/prettier": "off",
     },
   },
 );

@@ -7,7 +7,6 @@ const cwd = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   $schema: "./node_modules/oxlint/configuration_schema.json",
   ignorePatterns: ["**/dist/", "coverage/", "**/node_modules/"],
-  plugins: ["typescript"],
   jsPlugins: [
     {
       name: "allowed",
@@ -22,6 +21,8 @@ export default defineConfig({
     node: true,
   },
   rules: {
+    "unicorn/prefer-node-protocol": "warn",
+    "unicorn/no-abusive-eslint-disable": "warn",
     "constructor-super": "error",
     "for-direction": "error",
     "getter-return": "error",

@@ -62,6 +62,9 @@ importers:
       oxlint:
         specifier: ^1.77.0
         version: 1.77.0
+      oxlint-plugin-eslint:
+        specifier: ^1.77.0
+        version: 1.77.0
       tsdown:
         specifier: ^0.22.0
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(typescript@6.0.3)
@@ -1257,6 +1260,10 @@ packages:
         optional: true
       vite-plus:
         optional: true
+
+  oxlint-plugin-eslint@1.77.0:
+    resolution: {integrity: sha512-9IMswrFzZPY/OZruaz17W7O8aohZhByTggPEzSfOzrQIIK6ko4fFjR8Nus3HlcUhraQ52stEU06993GHWTeNFA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
 
   oxlint@1.77.0:
     resolution: {integrity: sha512-qnGh8XJHaQ0dprrDXNQZgS0FgjI6v+V3+X8DwmaV++5Aamy6jGKfDdQ1TUvhUxtmKFAbEf4/WeO5QZX+5WSngg==}
@@ -2475,6 +2482,8 @@ snapshots:
       '@oxfmt/binding-win32-arm64-msvc': 0.62.0
       '@oxfmt/binding-win32-ia32-msvc': 0.62.0
       '@oxfmt/binding-win32-x64-msvc': 0.62.0
+
+  oxlint-plugin-eslint@1.77.0: {}
 
   oxlint@1.77.0:
     optionalDependencies:

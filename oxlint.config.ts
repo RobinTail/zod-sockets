@@ -4,14 +4,25 @@ import { fileURLToPath } from "node:url";
 
 const cwd = dirname(fileURLToPath(import.meta.url));
 
+const importConcerns = [
+  {
+    selector:
+      "ImportDeclaration[source.value='ramda'] > ImportSpecifier, " +
+      "ImportDeclaration[source.value='ramda'] > ImportDefaultSpecifier",
+    message: "use import * as R from 'ramda'",
+  },
+  {
+    selector: "ImportDeclaration[source.value=/^zod/] > ImportDefaultSpecifier",
+    message: "do import { z } instead",
+  },
+];
+
 export default defineConfig({
   $schema: "./node_modules/oxlint/configuration_schema.json",
   ignorePatterns: ["**/dist/", "coverage/", "**/node_modules/"],
   jsPlugins: [
-    {
-      name: "allowed",
-      specifier: "eslint-plugin-allowed-dependencies",
-    },
+    { name: "allowed", specifier: "eslint-plugin-allowed-dependencies" },
+    { name: "eslint-js", specifier: "oxlint-plugin-eslint" },
   ],
   categories: {
     correctness: "error",
@@ -111,6 +122,7 @@ export default defineConfig({
     {
       files: ["zod-sockets/src/*.ts"],
       rules: {
+        "eslint-js/no-restricted-syntax": ["warn", ...importConcerns],
         "allowed/dependencies": [
           "error",
           { packageDir: join(cwd, "zod-sockets") },

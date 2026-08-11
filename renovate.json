@@ -9,6 +9,10 @@
     {
       "groupName": "Vitest and its coverage provider",
       "matchPackageNames": ["vitest", "@vitest/*"]
+    },
+    {
+      "groupName": "OxLint and its plugins",
+      "matchPackageNames": ["oxlint", "oxlint-plugin-*"]
     }
   ]
 }

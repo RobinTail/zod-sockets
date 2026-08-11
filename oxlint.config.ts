@@ -1,0 +1,166 @@
+import { defineConfig } from "oxlint";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const cwd = dirname(fileURLToPath(import.meta.url));
+
+const importConcerns = [
+  {
+    selector:
+      "ImportDeclaration[source.value='ramda'] > ImportSpecifier, " +
+      "ImportDeclaration[source.value='ramda'] > ImportDefaultSpecifier",
+    message: "use import * as R from 'ramda'",
+  },
+  {
+    selector: "ImportDeclaration[source.value=/^zod/] > ImportDefaultSpecifier",
+    message: "do import { z } instead",
+  },
+];
+
+export default defineConfig({
+  $schema: "./node_modules/oxlint/configuration_schema.json",
+  ignorePatterns: ["**/dist/", "coverage/", "**/node_modules/"],
+  jsPlugins: [
+    { name: "allowed", specifier: "eslint-plugin-allowed-dependencies" },
+    { name: "eslint-js", specifier: "oxlint-plugin-eslint" },
+  ],
+  categories: {
+    correctness: "error",
+  },
+  env: {
+    builtin: true,
+    node: true,
+  },
+  rules: {
+    "unicorn/prefer-node-protocol": "warn",
+    "unicorn/no-abusive-eslint-disable": "warn",
+    "constructor-super": "error",
+    "for-direction": "error",
+    "getter-return": "error",
+    "no-async-promise-executor": "error",
+    "no-case-declarations": "error",
+    "no-class-assign": "error",
+    "no-compare-neg-zero": "error",
+    "no-cond-assign": "error",
+    "no-const-assign": "error",
+    "no-constant-binary-expression": "error",
+    "no-constant-condition": "error",
+    "no-control-regex": "error",
+    "no-debugger": "error",
+    "no-delete-var": "error",
+    "no-dupe-class-members": "error",
+    "no-dupe-else-if": "error",
+    "no-dupe-keys": "error",
+    "no-duplicate-case": "error",
+    "no-empty": ["error", { allowEmptyCatch: true }],
+    "no-empty-character-class": "error",
+    "no-empty-pattern": ["error", { allowObjectPatternsAsParameters: true }],
+    "no-empty-static-block": "error",
+    "no-ex-assign": "error",
+    "no-extra-boolean-cast": "error",
+    "no-fallthrough": "error",
+    "no-func-assign": "error",
+    "no-global-assign": "error",
+    "no-import-assign": "error",
+    "no-invalid-regexp": "error",
+    "no-irregular-whitespace": "error",
+    "no-loss-of-precision": "error",
+    "no-misleading-character-class": "error",
+    "no-new-native-nonconstructor": "error",
+    "no-nonoctal-decimal-escape": "error",
+    "no-obj-calls": "error",
+    "no-prototype-builtins": "error",
+    "no-redeclare": "error",
+    "no-regex-spaces": "error",
+    "no-self-assign": "error",
+    "no-setter-return": "error",
+    "no-shadow-restricted-names": "error",
+    "no-sparse-arrays": "error",
+    "no-this-before-super": "error",
+    "no-unassigned-vars": "error",
+    "no-unexpected-multiline": "error",
+    "no-unreachable": "error",
+    "no-unsafe-finally": "error",
+    "no-unsafe-negation": "error",
+    "no-unsafe-optional-chaining": "error",
+    "no-unused-labels": "error",
+    "no-unused-private-class-members": "error",
+    "no-unused-vars": "error",
+    "no-useless-backreference": "error",
+    "no-useless-catch": "error",
+    "no-useless-escape": "error",
+    "no-with": "error",
+    "preserve-caught-error": "error",
+    "require-yield": "error",
+    "use-isnan": "error",
+    "valid-typeof": "error",
+    "no-array-constructor": "error",
+    "no-unused-expressions": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-duplicate-enum-values": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-extra-non-null-assertion": "error",
+    "typescript/no-misused-new": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-non-null-asserted-optional-chain": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-this-alias": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-unsafe-declaration-merging": "error",
+    "typescript/no-unsafe-function-type": "error",
+    "typescript/no-wrapper-object-types": "error",
+    "typescript/prefer-as-const": "error",
+    "typescript/prefer-namespace-keyword": "error",
+    "typescript/triple-slash-reference": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+  },
+  overrides: [
+    {
+      files: ["zod-sockets/src/*.ts"],
+      rules: {
+        "eslint-js/no-restricted-syntax": ["warn", ...importConcerns],
+        "allowed/dependencies": [
+          "error",
+          { packageDir: join(cwd, "zod-sockets") },
+        ],
+        "typescript/no-empty-object-type": [
+          "error",
+          {
+            allowWithName: "LoggerOverrides",
+          },
+        ],
+      },
+    },
+    {
+      files: [
+        "*-test/**/*.ts",
+        "zod-sockets/src/*.spec.ts",
+        "example/tests/**/*.ts",
+      ],
+      rules: {
+        "allowed/dependencies": "off",
+        "typescript/no-explicit-any": "off",
+        "eslint/no-unsafe-optional-chaining": "off",
+        "typescript/no-empty-object-type": "warn",
+      },
+    },
+    {
+      files: ["zod-sockets/src/async-api/*.ts"],
+      rules: {
+        "typescript/no-explicit-any": "off",
+        "typescript/no-namespace": "off",
+        "typescript/no-empty-object-type": "off",
+      },
+    },
+    {
+      files: ["example/example-client.ts", "*-test/**/quick-start.ts"],
+      rules: {
+        "typescript/no-namespace": "off",
+      },
+    },
+  ],
+});

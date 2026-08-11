@@ -12,7 +12,7 @@ dedupePeers: true
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - express-zod-api
-  - eslint-plugin-allowed-dependencies@3.1.0
+  - eslint-plugin-allowed-dependencies
 publicHoistPattern:
   - "@vitest/*"
 catalogs:

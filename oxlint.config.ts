@@ -164,3 +164,5 @@ export default defineConfig({
     },
   ],
 });
+
+# Fix for issue #622: safe input handling

@@ -18,7 +18,7 @@
     "@vitest/coverage-v8": "^4.1.5",
     "eslint-plugin-allowed-dependencies": "^3.1.0",
     "husky": "^9.0.10",
-    "oxfmt": "0.63.0",
+    "oxfmt": "0.64.0",
     "oxlint": "^1.77.0",
     "oxlint-plugin-eslint": "^1.77.0",
     "tsdown": "^0.22.0",

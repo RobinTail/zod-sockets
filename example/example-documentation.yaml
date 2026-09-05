@@ -68,6 +68,8 @@ channels:
               type: string
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
         examples:
           - payload:
               - 2024-03-28T21:13:15.084Z
@@ -101,6 +103,8 @@ channels:
                     - name: visitor
           items:
             not: {}
+          minItems: 2
+          maxItems: 2
         examples:
           - payload:
               - Hello there!
@@ -125,6 +129,8 @@ channels:
                   - room5
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
         examples:
           - payload:
               - - room1
@@ -145,6 +151,8 @@ channels:
                 - "[1]: Required"
           items:
             not: {}
+          minItems: 2
+          maxItems: 2
         examples:
           - payload:
               - InputValidationError
@@ -161,6 +169,8 @@ channels:
                 - Hello there
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
         examples:
           - payload:
               - Hello there
@@ -191,6 +201,7 @@ channels:
             description: echo
             examples:
               - something
+          minItems: 1
         examples:
           - payload:
               - pong

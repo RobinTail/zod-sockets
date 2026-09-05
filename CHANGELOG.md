@@ -2,6 +2,10 @@
 
 ## Version 7
 
+### v7.0.1
+
+- Compatibility fix for Zod 4.5.
+
 ### v7.0.0
 
 - Supported Node.js versions: `^22.19.0 || ^24.11.0 || ^26.0.0`;

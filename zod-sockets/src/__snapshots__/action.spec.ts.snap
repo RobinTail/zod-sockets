@@ -3,6 +3,9 @@
 exports[`Action > .inputSchema > should be the schema 1`] = `
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "items": false,
+  "maxItems": 1,
+  "minItems": 1,
   "prefixItems": [
     {
       "type": "string",
@@ -15,6 +18,9 @@ exports[`Action > .inputSchema > should be the schema 1`] = `
 exports[`Action > .outputSchema > should be the schema 1`] = `
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "items": false,
+  "maxItems": 1,
+  "minItems": 1,
   "prefixItems": [
     {
       "type": "number",

@@ -5,6 +5,9 @@ exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "x-input": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "items": false,
+    "maxItems": 2,
+    "minItems": 2,
     "prefixItems": [
       {
         "type": "string",
@@ -12,6 +15,9 @@ exports[`Integration helpers > makeEventFnSchema() > should add ack when no rest
       {
         "x-input": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "items": false,
+          "maxItems": 1,
+          "minItems": 1,
           "prefixItems": [
             {
               "type": "number",
@@ -39,6 +45,9 @@ exports[`Integration helpers > makeEventFnSchema() > should simply use base when
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "x-input": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "items": false,
+    "maxItems": 1,
+    "minItems": 1,
     "prefixItems": [
       {
         "type": "string",
@@ -60,6 +69,9 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
     {
       "x-input": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "items": false,
+        "maxItems": 2,
+        "minItems": 2,
         "prefixItems": [
           {
             "type": "string",
@@ -67,6 +79,9 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
           {
             "x-input": {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "items": false,
+              "maxItems": 1,
+              "minItems": 1,
               "prefixItems": [
                 {
                   "type": "number",
@@ -90,6 +105,9 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
     {
       "x-input": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "items": false,
+        "maxItems": 3,
+        "minItems": 3,
         "prefixItems": [
           {
             "type": "string",
@@ -100,6 +118,9 @@ exports[`Integration helpers > makeEventFnSchema() > should use overloads when b
           {
             "x-input": {
               "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "items": false,
+              "maxItems": 1,
+              "minItems": 1,
               "prefixItems": [
                 {
                   "type": "number",

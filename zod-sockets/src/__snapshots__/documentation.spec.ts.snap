@@ -66,6 +66,8 @@ channels:
             - type: string
           items:
             not: {}
+          minItems: 3
+          maxItems: 3
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -76,6 +78,8 @@ channels:
             - type: number
           items:
             not: {}
+          minItems: 2
+          maxItems: 2
 components: {}
 operations:
   RootRecvOperationTest:
@@ -176,6 +180,8 @@ channels:
                 propertyName: type
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -213,6 +219,8 @@ channels:
                 propertyName: status
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -288,45 +296,40 @@ channels:
         payload:
           type: array
           prefixItems:
-            - allOf:
-                - type: object
-                  properties:
-                    one:
-                      type: string
-                  required:
-                    - one
-                - type: object
-                  properties:
-                    two:
-                      type: string
-                  required:
-                    - two
+            - type: object
+              properties:
+                one:
+                  type: string
+                two:
+                  type: string
+              required:
+                - one
+                - two
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
           type: array
           prefixItems:
-            - allOf:
-                - type: object
-                  properties:
-                    five:
-                      type: integer
-                      minimum: 0
-                      maximum: 9007199254740991
-                  required:
-                    - five
-                  additionalProperties: false
-                - type: object
-                  properties:
-                    six:
-                      type: string
-                  required:
-                    - six
-                  additionalProperties: false
+            - type: object
+              properties:
+                five:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+                six:
+                  type: string
+              required:
+                - five
+                - six
+              additionalProperties: false
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -416,6 +419,7 @@ channels:
               maximum: 9007199254740991
           items:
             not: {}
+          maxItems: 4
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -426,6 +430,8 @@ channels:
                 - "null"
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -526,6 +532,8 @@ channels:
                     - three
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingName:
         title: Acknowledgement for name
         payload:
@@ -538,6 +546,8 @@ channels:
                   maximum: 9007199254740991
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationName:
@@ -615,9 +625,11 @@ channels:
           prefixItems:
             - type: string
               format: date-time
-              pattern: ^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$
+              pattern: ^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -625,9 +637,11 @@ channels:
           prefixItems:
             - type: string
               format: date-time
-              pattern: ^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$
+              pattern: ^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -717,6 +731,8 @@ channels:
                 - boolean
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -725,6 +741,8 @@ channels:
             - type: "null"
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -803,6 +821,8 @@ channels:
             - $ref: "#/components/schemas/Schema1"
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -942,6 +962,8 @@ channels:
               maximum: 0
           items:
             not: {}
+          minItems: 8
+          maxItems: 9
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -952,6 +974,8 @@ channels:
               pattern: ^-?\\d+$
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1049,13 +1073,13 @@ channels:
               pattern: ^[0-9a-z]+$
             - type: string
               format: ulid
-              pattern: ^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$
+              pattern: ^[0-7][0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{25}$
             - type: string
               format: ipv4
               pattern: ^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$
             - type: string
               format: emoji
-              pattern: ^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$
+              pattern: ^[\\p{Extended_Pictographic}\\p{Emoji_Component}]+$
             - type: string
               format: uri
             - type: string
@@ -1068,6 +1092,8 @@ channels:
                 - pattern: .*@example\\.com
           items:
             not: {}
+          minItems: 14
+          maxItems: 14
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1077,6 +1103,8 @@ channels:
               minLength: 1
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1158,6 +1186,8 @@ channels:
                 - DEF
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1169,6 +1199,8 @@ channels:
                 - 2
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1246,6 +1278,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1304,6 +1337,8 @@ channels:
                 - option2
           items:
             not: {}
+          minItems: 6
+          maxItems: 6
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1392,6 +1427,8 @@ channels:
                 - two
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1400,6 +1437,8 @@ channels:
             - type: number
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1478,6 +1517,8 @@ channels:
             - type: boolean
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1485,6 +1526,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1566,6 +1608,8 @@ channels:
                 - "null"
           items:
             not: {}
+          minItems: 2
+          maxItems: 2
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1573,6 +1617,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1655,6 +1700,8 @@ channels:
               maximum: 9007199254740991
           items:
             not: {}
+          minItems: 3
+          maxItems: 3
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1662,6 +1709,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1739,6 +1787,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1746,6 +1795,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
 components: {}
 operations:
   RootRecvOperationTest:
@@ -1824,6 +1874,8 @@ channels:
             - {}
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1832,6 +1884,8 @@ channels:
             - {}
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
   Test:
     address: /test
     title: Namespace /test
@@ -1846,6 +1900,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
       testAckForOutgoingWithAck:
         title: Acknowledgement for withAck
         payload:
@@ -1853,6 +1908,7 @@ channels:
           prefixItems:
             - {}
           items: {}
+          minItems: 1
           examples:
             - - something
         examples:
@@ -1956,6 +2012,8 @@ channels:
               format: integer (preprocessed)
           items:
             not: {}
+          minItems: 2
+          maxItems: 2
       rootAckForIncomingTest:
         title: Acknowledgement for test
         payload:
@@ -1964,6 +2022,8 @@ channels:
             - type: boolean
           items:
             not: {}
+          minItems: 1
+          maxItems: 1
 components: {}
 operations:
   RootRecvOperationTest:
@@ -2048,6 +2108,7 @@ channels:
           prefixItems: []
           items:
             not: {}
+          maxItems: 0
 components:
   securitySchemes:
     serverSecurity0:

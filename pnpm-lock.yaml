@@ -18,7 +18,7 @@ catalogs:
       version: 6.0.3
     zod:
       specifier: ^4.4.1
-      version: 4.5.2
+      version: 4.5.4
   prod:
     ansis:
       specifier: ^4.2.0
@@ -85,7 +85,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.5.2
+        version: 4.5.4
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -124,7 +124,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.5.2
+        version: 4.5.4
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -142,7 +142,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.5.2
+        version: 4.5.4
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -157,7 +157,7 @@ importers:
         version: 6.0.3
       zod:
         specifier: catalog:dev
-        version: 4.5.2
+        version: 4.5.4
       zod-sockets:
         specifier: workspace:*
         version: link:../zod-sockets
@@ -188,7 +188,7 @@ importers:
         version: 4.1.11(@types/node@25.9.5)(@vitest/coverage-v8@4.1.11)(yaml@2.9.0)
       zod:
         specifier: catalog:dev
-        version: 4.5.2
+        version: 4.5.4
 
 packages:
 
@@ -1639,8 +1639,8 @@ packages:
   zod@4.3.4:
     resolution: {integrity: sha512-Zw/uYiiyF6pUT1qmKbZziChgNPRu+ZRneAsMUDU6IwmXdWt5JwcUfy2bvLOCUtz5UniaN/Zx5aFttZYbYc7O/A==}
 
-  zod@4.5.2:
-    resolution: {integrity: sha512-XkYXCol10+ba/6F/cueWV+TezUeOqXW0hdeJt5CdXjTYeAgAQg5N03RQdJ80mhfFE72+pblvYMW4wy2Qp4Qbrg==}
+  zod@4.5.4:
+    resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
 
 snapshots:
 
@@ -2831,4 +2831,4 @@ snapshots:
 
   zod@4.3.4: {}
 
-  zod@4.5.2: {}
+  zod@4.5.4: {}

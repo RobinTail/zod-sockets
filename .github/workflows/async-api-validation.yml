@@ -16,13 +16,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v7
-    - uses: pnpm/action-setup@v6
-    - name: Install Node.js
-      uses: actions/setup-node@v7
+    - name: Validate AsyncAPI document
+      uses: asyncapi/cli@v6.0.2
       with:
-        node-version: 24
-        cache: pnpm
-    - name: Install CLI tool and Validate
-      run: |
-        pnpm dlx --config.minimum-release-age=0 @asyncapi/cli@6 \
-          validate ./example/example-documentation.yaml
+        command: validate
+        filepath: example/example-documentation.yaml

@@ -1,10 +1,9 @@
-import { expect } from "vitest";
-import type { NewPlugin } from "@vitest/pretty-format";
+import type { SnapshotSerializer } from "vitest";
 import { z } from "zod";
 import { isSchema } from "./src/common-helpers";
 
 /** Takes cause and certain props of custom errors into account */
-const errorSerializer: NewPlugin = {
+const errorSerializer: SnapshotSerializer = {
   test: (subject) => subject instanceof Error,
   serialize: (error: Error, config, indentation, depth, refs, printer) => {
     const { name, message, cause } = error;
@@ -33,7 +32,7 @@ const customSerializer = (entity: z.core.$ZodType) =>
     },
   });
 
-const schemaSerializer: NewPlugin = {
+const schemaSerializer: SnapshotSerializer = {
   test: (subject) => subject instanceof z.ZodType,
   serialize: (entity: z.ZodType, config, indentation, depth, refs, printer) => {
     const serialization = customSerializer(entity);

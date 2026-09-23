@@ -180,7 +180,7 @@ catalogs:
   prod:
     ansis:
       specifier: ^4.2.0
-      version: 4.3.1
+      version: 4.4.0
     ramda:
       specifier: ^0.32.0
       version: 0.32.0
@@ -324,7 +324,7 @@ importers:
     dependencies:
       ansis:
         specifier: catalog:prod
-        version: 4.3.1
+        version: 4.4.0
       ramda:
         specifier: catalog:prod
         version: 0.32.0
@@ -948,8 +948,8 @@ packages:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
     engines: {node: '>= 0.6'}
 
-  ansis@4.3.1:
-    resolution: {integrity: sha512-BJ8/l4R5LRE7hW9WdSuGYrLSHi2ynxeFpDFbH0K/CgNeY/tyhk+vO6TYxXC5r5CpUhNVX310xzPsN/H9lCdfOA==}
+  ansis@4.4.0:
+    resolution: {integrity: sha512-9k3v7xcHwgdO/DruxGIg4HtjvlAZlcnsX/mzqUb1t3NkYnl9kK2UJ+Gq0io+vQf7iT//BD/HB/NBkUR1LWxoeA==}
     engines: {node: '>=14'}
 
   assertion-error@2.0.1:
@@ -2143,7 +2143,7 @@ snapshots:
       mime-types: 3.0.2
       negotiator: 1.0.0
 
-  ansis@4.3.1: {}
+  ansis@4.4.0: {}
 
   assertion-error@2.0.1: {}
 
@@ -2294,7 +2294,7 @@ snapshots:
 
   express-zod-api@29.0.0(@types/node@25.9.5)(express@5.2.1)(http-errors@2.0.1)(typescript@5.3.3)(zod@4.3.4):
     dependencies:
-      ansis: 4.3.1
+      ansis: 4.4.0
       express: 5.2.1(supports-color@7.2.0)
       http-errors: 2.0.1
       node-mocks-http: 1.18.0(@types/node@25.9.5)

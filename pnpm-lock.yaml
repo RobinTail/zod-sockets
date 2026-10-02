@@ -167,10 +167,10 @@ catalogs:
   dev:
     socket.io:
       specifier: ^4.8.3
-      version: 4.8.3
+      version: 4.8.4
     socket.io-client:
       specifier: ^4.8.3
-      version: 4.8.3
+      version: 4.8.4
     typescript:
       specifier: ^6.0.2
       version: 6.0.3
@@ -237,7 +237,7 @@ importers:
     devDependencies:
       socket.io:
         specifier: catalog:dev
-        version: 4.8.3(supports-color@7.2.0)
+        version: 4.8.4(supports-color@7.2.0)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -261,7 +261,7 @@ importers:
         version: 2.0.1
       socket.io:
         specifier: catalog:dev
-        version: 4.8.3(supports-color@7.2.0)
+        version: 4.8.4(supports-color@7.2.0)
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -276,7 +276,7 @@ importers:
     devDependencies:
       socket.io:
         specifier: catalog:dev
-        version: 4.8.3(supports-color@7.2.0)
+        version: 4.8.4(supports-color@7.2.0)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -291,10 +291,10 @@ importers:
     devDependencies:
       socket.io:
         specifier: catalog:dev
-        version: 4.8.3(supports-color@7.2.0)
+        version: 4.8.4(supports-color@7.2.0)
       socket.io-client:
         specifier: catalog:dev
-        version: 4.8.3(supports-color@7.2.0)
+        version: 4.8.4(supports-color@7.2.0)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -309,7 +309,7 @@ importers:
     devDependencies:
       socket.io:
         specifier: catalog:dev
-        version: 4.8.3(supports-color@7.2.0)
+        version: 4.8.4(supports-color@7.2.0)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -337,7 +337,7 @@ importers:
         version: 0.32.0
       socket.io:
         specifier: catalog:dev
-        version: 4.8.3(supports-color@7.2.0)
+        version: 4.8.4(supports-color@7.2.0)
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -1512,16 +1512,16 @@ packages:
   socket.io-adapter@2.5.8:
     resolution: {integrity: sha512-6Oy52pbg+kvdCVvjcN+FnY7BvxZ7cIHNScbvztT/It5d0vbwoJoVZmF2gjJmnV0/4WlXRfG15zc45ySk9Ah8bw==}
 
-  socket.io-client@4.8.3:
-    resolution: {integrity: sha512-uP0bpjWrjQmUt5DTHq9RuoCBdFJF10cdX9X+a368j/Ft0wmaVgxlrjvK3kjvgCODOMMOz9lcaRzxmso0bTWZ/g==}
+  socket.io-client@4.8.4:
+    resolution: {integrity: sha512-7wjKAvVXYOJsbmUgkWbnhPD4bFpkqrUR0++XOjpGFmqDqsqV1CI93VTraeExLxpjxEqrWgFoSRZu1ihjLWfkAA==}
     engines: {node: '>=10.0.0'}
 
   socket.io-parser@4.2.7:
     resolution: {integrity: sha512-IH/iSeO9T6gz1KkFleGDWkG9N3dl4jXVYUtMhIqH10Md0ttMer8nUNWiP1DKuNrybD2xBrixLJdCC9J6ECoYkg==}
     engines: {node: '>=10.0.0'}
 
-  socket.io@4.8.3:
-    resolution: {integrity: sha512-2Dd78bqzzjE6KPkD5fHZmDAKRNe3J15q+YHDrIsy9WEkqttc7GY+kT9OBLSMaPbQaEd0x1BjcmtMtXkfpc+T5A==}
+  socket.io@4.8.4:
+    resolution: {integrity: sha512-9ZV9zg8vN8hO3Y25DhR7nUkJ1VDnBhq5O/JrXhFT9s6+F0gqytSASTHVfCFc2mJXaTfARroErplXlzFWwETZqQ==}
     engines: {node: '>=10.2.0'}
 
   source-map-js@1.2.1:
@@ -2708,7 +2708,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  socket.io-client@4.8.3(supports-color@7.2.0):
+  socket.io-client@4.8.4(supports-color@7.2.0):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@7.2.0)
@@ -2726,10 +2726,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  socket.io@4.8.3(supports-color@7.2.0):
+  socket.io@4.8.4(supports-color@7.2.0):
     dependencies:
       accepts: 1.3.8
-      base64id: 2.0.0
       cors: 2.8.6
       debug: 4.4.3(supports-color@7.2.0)
       engine.io: 6.6.9(supports-color@7.2.0)

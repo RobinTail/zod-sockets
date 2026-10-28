@@ -14,7 +14,7 @@
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.1",
     "@tsconfig/node22": "^22.0.5",
-    "@types/node": "^25.0.2",
+    "@types/node": "^26.0.0",
     "@vitest/coverage-v8": "^5.0.0",
     "eslint-plugin-allowed-dependencies": "^3.1.0",
     "husky": "^9.0.10",

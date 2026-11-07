@@ -28,7 +28,7 @@ catalogs:
     "socket.io": "^4.8.3"
     "socket.io-client": "^4.8.3"
     "typescript": "^6.0.2"
-    "zod": "^4.4.1"
+    "zod": "^4.6.7"
 overrides:
   "@scarf/scarf": "npm:empty-npm-package@1.0.0"
   "lightningcss": "npm:empty-npm-package@1.0.0"

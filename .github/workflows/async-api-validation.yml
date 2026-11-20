@@ -17,7 +17,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v7
     - name: Validate AsyncAPI document
-      uses: asyncapi/cli@v6.2.3
+      uses: asyncapi/cli@v6.3.0
       with:
         command: validate
         filepath: example/example-documentation.yaml
